@@ -25,18 +25,9 @@ class Id3TagsMixin:
         if artwork_format is None:
             artwork_format = config.ImageFileType.JPEG
 
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
-            return None
-
         # Read tags from audio file
-        if verbose:
-            logger.log_info(f"Reading ID3 tags from {audio_file}")
-        try:
-            audio = self.open_id3_file(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
+        audio = self.load_id3_file(audio_file, f"Reading ID3 tags from {audio_file}", verbose, exit_on_failure)
+        if audio is None:
             return None
         if audio.tags is None:
             return {}
@@ -49,57 +40,63 @@ class Id3TagsMixin:
 
         # Extract comments
         if not exclude_comments:
-            comments = []
-            for frame in audio.tags.values():
-                if isinstance(frame, self.comment_class):
-                    comment_data = {
-                        "desc": frame.desc,
-                        "lang": frame.lang,
-                        "text": str(frame)
-                    }
-                    comments.append(comment_data)
+            comments = self.read_id3_comments(audio)
             if comments:
                 tags["comments"] = comments
 
         # Extract artwork
         if include_artwork:
-            artwork = []
-            for frame in audio.tags.values():
-                if isinstance(frame, self.artwork_class):
-                    image_data = frame.data
-                    mime_type = frame.mime
-
-                    # Check if image needs conversion
-                    target_mime = f"image/{artwork_format.val().lower()}"
-                    if mime_type != target_mime:
-                        converted_b64_data = image.convert_image_data_to_format(
-                            image_data = image_data,
-                            target_format = artwork_format)
-                        if converted_b64_data:
-                            artwork_data = {
-                                "type": frame.type,
-                                "desc": frame.desc,
-                                "mime": target_mime,
-                                "data": converted_b64_data
-                            }
-                        else:
-                            artwork_data = {
-                                "type": frame.type,
-                                "desc": frame.desc,
-                                "mime": mime_type,
-                                "data": base64.b64encode(image_data).decode("utf-8")
-                            }
-                    else:
-                        artwork_data = {
-                            "type": frame.type,
-                            "desc": frame.desc,
-                            "mime": mime_type,
-                            "data": base64.b64encode(image_data).decode("utf-8")
-                        }
-                    artwork.append(artwork_data)
+            artwork = self.read_id3_artwork(audio, artwork_format)
             if artwork:
                 tags["artwork"] = artwork
         return tags
+
+    # The MP3's comment frames as desc, lang and text dicts
+    def read_id3_comments(self, audio):
+        comments = []
+        for frame in audio.tags.values():
+            if isinstance(frame, self.comment_class):
+                comment_data = {
+                    "desc": frame.desc,
+                    "lang": frame.lang,
+                    "text": str(frame)
+                }
+                comments.append(comment_data)
+        return comments
+
+    # The MP3's picture frames as type, desc, mime and base64 data dicts
+    def read_id3_artwork(self, audio, artwork_format):
+        artwork = []
+        for frame in audio.tags.values():
+            if isinstance(frame, self.artwork_class):
+                artwork.append(self.read_id3_artwork_frame(frame, artwork_format))
+        return artwork
+
+    # One picture frame as a dict, converted to the format; the original image when it
+    # already is that format or the conversion fails
+    def read_id3_artwork_frame(self, frame, artwork_format):
+        image_data = frame.data
+        mime_type = frame.mime
+
+        # Check if image needs conversion
+        target_mime = f"image/{artwork_format.val().lower()}"
+        if mime_type != target_mime:
+            converted_b64_data = image.convert_image_data_to_format(
+                image_data = image_data,
+                target_format = artwork_format)
+            if converted_b64_data:
+                return {
+                    "type": frame.type,
+                    "desc": frame.desc,
+                    "mime": target_mime,
+                    "data": converted_b64_data
+                }
+        return {
+            "type": frame.type,
+            "desc": frame.desc,
+            "mime": mime_type,
+            "data": base64.b64encode(image_data).decode("utf-8")
+        }
 
     # Write text frames, comments and base64 artwork from the dict into the MP3, optionally clearing it first; skips the save in a pretend run
     def set_id3_tags(
@@ -111,18 +108,9 @@ class Id3TagsMixin:
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
-            return False
-
         # Load audio file
-        if verbose:
-            logger.log_info(f"Setting ID3 tags on {audio_file}")
-        try:
-            audio = self.open_id3_file(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
+        audio = self.load_id3_file(audio_file, f"Setting ID3 tags on {audio_file}", verbose, exit_on_failure)
+        if audio is None:
             return False
 
         # Add ID3 tags if they don"t exist
@@ -140,28 +128,36 @@ class Id3TagsMixin:
 
         # Set comments
         if "comments" in tags:
-            for comment in tags["comments"]:
-                audio.tags[f"COMM:{comment.get('desc', '')}"] = self.comment_class(
-                    encoding = 3,
-                    lang = comment.get("lang", "eng"),
-                    desc = comment.get("desc", ""),
-                    text = comment.get("text", ""))
+            self.write_id3_comments(audio, tags["comments"])
 
         # Set artwork
         if "artwork" in tags:
-            for artwork in tags["artwork"]:
-                image_data = base64.b64decode(artwork["data"])
-                audio.tags[f"APIC:{artwork['desc']}"] = self.artwork_class(
-                    encoding = 3,
-                    mime = artwork["mime"],
-                    type = artwork["type"],
-                    desc = artwork["desc"],
-                    data = image_data)
+            self.write_id3_artwork(audio, tags["artwork"])
 
         # Save changes
         if not pretend_run:
             audio.save()
         return True
+
+    # Store each comment dict as a COMM frame keyed by its desc
+    def write_id3_comments(self, audio, comments):
+        for comment in comments:
+            audio.tags[f"COMM:{comment.get('desc', '')}"] = self.comment_class(
+                encoding = 3,
+                lang = comment.get("lang", "eng"),
+                desc = comment.get("desc", ""),
+                text = comment.get("text", ""))
+
+    # Store each base64 artwork dict as an APIC frame keyed by its desc
+    def write_id3_artwork(self, audio, artworks):
+        for artwork in artworks:
+            image_data = base64.b64decode(artwork["data"])
+            audio.tags[f"APIC:{artwork['desc']}"] = self.artwork_class(
+                encoding = 3,
+                mime = artwork["mime"],
+                type = artwork["type"],
+                desc = artwork["desc"],
+                data = image_data)
 
     # Delete the MP3's ID3 tag, optionally putting its artwork frames back; True when there was nothing to remove
     def remove_id3_tags(
@@ -172,18 +168,9 @@ class Id3TagsMixin:
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
-            return False
-
         # Load audio file
-        if verbose:
-            logger.log_info(f"Removing ID3 tags from {audio_file}")
-        try:
-            audio = self.open_id3_file(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
+        audio = self.load_id3_file(audio_file, f"Removing ID3 tags from {audio_file}", verbose, exit_on_failure)
+        if audio is None:
             return False
 
         # No tags to remove
@@ -210,6 +197,24 @@ class Id3TagsMixin:
         # Save changes
         audio.save()
         return True
+
+    # The file opened for its ID3 tag, logging the action when verbose; None, after
+    # logging the error, when the file is missing or unreadable
+    def load_id3_file(self, audio_file, action_message, verbose, exit_on_failure):
+
+        # Check file exists
+        if not paths.is_path_file(audio_file):
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
+            return None
+
+        # Load audio file
+        if verbose:
+            logger.log_info(action_message)
+        try:
+            return self.open_id3_file(audio_file)
+        except self.mutagen.MutagenError as e:
+            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
+            return None
 
     # The file's audio and ID3 tag: an ADTS stream's standalone tag for a raw .aac, else the MP3 reader
     def open_id3_file(self, audio_file):

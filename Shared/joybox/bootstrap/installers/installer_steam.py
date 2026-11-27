@@ -46,46 +46,16 @@ class Steam(installer.Installer):
         # Start install
         logger.log_info("Installing Steam and SteamCMD")
 
-        # Add i386 architecture for 32-bit support
-        logger.log_info("Adding i386 architecture")
-        code = self.connection.run_blocking([self.aptgetinstall_tool, "--add-architecture", "i386"], sudo=True)
-        if code != 0:
-            logger.log_error("Failed to add i386 architecture")
-            return False
-
-        # Update package lists
-        logger.log_info("Updating package lists")
-        code = self.connection.run_blocking([self.aptget_tool, "update"], sudo=True)
-        if code != 0:
-            logger.log_error("Failed to update package lists")
+        # Add i386 architecture and update package lists
+        if not self._prepare_apt():
             return False
 
         # Install Steam
-        logger.log_info("Installing Steam")
-        code = self.connection.run_blocking(
-            [self.aptget_tool, "install", "-y", "steam-installer"],
-            sudo=True
-        )
-        if code != 0:
-            logger.log_warning("steam-installer failed, trying steam package")
-            code = self.connection.run_blocking(
-                [self.aptget_tool, "install", "-y", "steam"],
-                sudo=True
-            )
-            if code != 0:
-                logger.log_error("Failed to install Steam")
-                return False
+        if not self._install_steam_package():
+            return False
 
         # Pre-accept Steam license for SteamCMD
-        logger.log_info("Accepting Steam license for SteamCMD")
-        self.connection.run_blocking(
-            ["sh", "-c", 'echo "steam steam/question select I AGREE" | debconf-set-selections'],
-            sudo=True
-        )
-        self.connection.run_blocking(
-            ["sh", "-c", 'echo "steam steam/license note \\"\\\"" | debconf-set-selections'],
-            sudo=True
-        )
+        self._accept_steam_license()
 
         # Install SteamCMD
         logger.log_info("Installing SteamCMD")
@@ -100,6 +70,54 @@ class Steam(installer.Installer):
         # All done
         logger.log_info("Steam and SteamCMD installed successfully")
         return True
+
+    # Enable the i386 architecture for 32-bit support, then apt-get update; False when either fails
+    def _prepare_apt(self):
+
+        # Add i386 architecture for 32-bit support
+        logger.log_info("Adding i386 architecture")
+        code = self.connection.run_blocking([self.aptgetinstall_tool, "--add-architecture", "i386"], sudo=True)
+        if code != 0:
+            logger.log_error("Failed to add i386 architecture")
+            return False
+
+        # Update package lists
+        logger.log_info("Updating package lists")
+        code = self.connection.run_blocking([self.aptget_tool, "update"], sudo=True)
+        if code != 0:
+            logger.log_error("Failed to update package lists")
+            return False
+        return True
+
+    # apt-get install steam-installer, falling back to the steam package; False when both fail
+    def _install_steam_package(self):
+        logger.log_info("Installing Steam")
+        code = self.connection.run_blocking(
+            [self.aptget_tool, "install", "-y", "steam-installer"],
+            sudo=True
+        )
+        if code != 0:
+            logger.log_warning("steam-installer failed, trying steam package")
+            code = self.connection.run_blocking(
+                [self.aptget_tool, "install", "-y", "steam"],
+                sudo=True
+            )
+            if code != 0:
+                logger.log_error("Failed to install Steam")
+                return False
+        return True
+
+    # Preseed debconf so SteamCMD installs without the license prompt
+    def _accept_steam_license(self):
+        logger.log_info("Accepting Steam license for SteamCMD")
+        self.connection.run_blocking(
+            ["sh", "-c", 'echo "steam steam/question select I AGREE" | debconf-set-selections'],
+            sudo=True
+        )
+        self.connection.run_blocking(
+            ["sh", "-c", 'echo "steam steam/license note \\"\\\"" | debconf-set-selections'],
+            sudo=True
+        )
 
     # apt-get remove steamcmd, steam-installer and steam
     def uninstall(self):

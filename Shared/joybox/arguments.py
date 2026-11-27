@@ -3,11 +3,13 @@ import os
 import os.path
 import argparse
 import enum
+import functools
 
 # Local imports
 from joybox import config
 from joybox import logger
 from joybox import paths
+from joybox import serialization
 
 # Enum parser
 def parse_enum_value(enum_type, enum_value):
@@ -39,24 +41,46 @@ class HelpFormatter(argparse.RawDescriptionHelpFormatter, argparse.ArgumentDefau
             return action.help
         return super()._get_help_string(action)
 
+# The folder holding each command's help text, one <command>.toml per command
+def get_command_help_dir():
+    return paths.join_paths(os.path.dirname(os.path.abspath(__file__)), "clidata")
+
+# A command's help text from its data file: description, details, examples as
+# [summary, command line] pairs, notes, see_also and section; read once per command
+@functools.cache
+def load_command_help(command):
+    data = serialization.read_toml_file(paths.join_paths(get_command_help_dir(), command + ".toml"), exit_on_failure = True)
+    return {
+        "description": data.get("description"),
+        "details": data.get("details"),
+        "examples": [tuple(example) for example in data.get("examples", [])],
+        "notes": list(data.get("notes", [])),
+        "see_also": list(data.get("see_also", [])),
+        "section": data.get("section"),
+    }
+
 # Argument parser
 class ArgumentParser:
+    # The help text is given directly, or read from the command's data file when
+    # command names one; a value given directly wins over the file's
     def __init__(
         self,
-        description,
+        description = None,
         details = None,
         examples = None,
         notes = None,
         see_also = None,
-        section = None):
-        self.description = description
-        self.details = details
-        self.examples = list(examples or [])
-        self.notes = list(notes or [])
-        self.see_also = list(see_also or [])
-        self.section = section
+        section = None,
+        command = None):
+        written = load_command_help(command) if command else {}
+        self.description = description or written.get("description")
+        self.details = details or written.get("details")
+        self.examples = list(examples or written.get("examples") or [])
+        self.notes = list(notes or written.get("notes") or [])
+        self.see_also = list(see_also or written.get("see_also") or [])
+        self.section = section or written.get("section")
         self.parser = argparse.ArgumentParser(
-            description = description,
+            description = self.description,
             epilog = self._build_epilog(),
             formatter_class = HelpFormatter)
         self._target = self.parser

@@ -677,3 +677,43 @@ def sync_lockers(
             if exit_on_failure:
                 return False
     return all_success
+
+###########################################################
+
+# The locker types named in a comma-separated list, quitting on an unknown name or when none is named
+def parse_locker_types(locker_names):
+    locker_types = []
+    for locker_str in locker_names.split(","):
+        locker_str = locker_str.strip()
+        if not locker_str:
+            continue
+        locker_type = config.LockerType.from_string(locker_str)
+        if locker_type:
+            locker_types.append(locker_type)
+        else:
+            logger.log_error("Unknown locker type: %s" % locker_str, quit_program = True)
+    if not locker_types:
+        logger.log_error("No valid secondary locker types specified", quit_program = True)
+    return locker_types
+
+# Sync the primary locker to each secondary named in the comma-separated list, clearing the
+# hash map cache first when asked; False, logged, when the sync fails
+def run_locker_sync(primary_locker_type, secondary_locker_names, skip_cache = False, clear_hash_cache = False, verbose = False, pretend_run = False, exit_on_failure = False):
+    secondary_locker_types = parse_locker_types(secondary_locker_names)
+    if clear_hash_cache:
+        logger.log_info("Clearing hash map cache...")
+        clear_cache()
+    logger.log_info("Primary locker: %s" % primary_locker_type)
+    logger.log_info("Secondary lockers: %s" % ", ".join([lt.val() for lt in secondary_locker_types]))
+    success = sync_lockers(
+        primary_locker_type = primary_locker_type,
+        secondary_locker_types = secondary_locker_types,
+        skip_cache = skip_cache,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if success:
+        logger.log_info("Locker sync completed successfully")
+    else:
+        logger.log_error("Locker sync failed")
+    return success

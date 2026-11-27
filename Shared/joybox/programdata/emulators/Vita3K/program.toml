@@ -43,3 +43,31 @@ md5 = "301589989b48da90e6db41b85d2b0acc"
 [[system_files]]
 path = "sa0.zip"
 md5 = "c248704ab44184c7c47f9bcc27854696"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "Vita3K"
+github_repo = "Vita3K"
+starts_with = "windows-latest"
+ends_with = ".zip"
+search_file = "Vita3K.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "Vita3K"
+github_repo = "Vita3K"
+starts_with = "Vita3K-x86_64"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Vita3K.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

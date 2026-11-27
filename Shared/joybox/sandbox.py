@@ -157,6 +157,46 @@ def install_dlls(
 
 ###########################################################
 
+# Set Wine's blocking processes and env vars on the options, and link the cwd into the prefix when mapped
+def setup_wine_prefix_environment(
+    new_options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Add blocking processes
+    new_options.add_blocking_processes(get_wine_blocking_processes())
+
+    # Improve performance by not showing everything
+    # To show only errors, change to fixme-all
+    new_options.set_env_var("WINEDEBUG", "-all")
+
+    # Set prefix location
+    if new_options.has_valid_prefix_dir():
+        new_options.set_env_var("WINEPREFIX", new_options.get_prefix_dir())
+
+    # Set prefix bitness
+    if new_options.is_32_bit():
+        new_options.set_env_var("WINEARCH", "win32")
+    else:
+        new_options.set_env_var("WINEARCH", "win64")
+
+    # Set prefix overrides
+    wine_overrides = ["winemenubuilder.exe=d"]
+    wine_overrides += new_options.get_overrides()
+    new_options.set_env_var("WINEDLLOVERRIDES", ";".join(wine_overrides))
+
+    # Map the current working directory to the prefix
+    if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd() and new_options.has_valid_prefix_dir():
+        fileops.create_symlink(
+            src = new_options.get_cwd(),
+            dest = prefixlayout.get_real_drive_path(
+                options = new_options,
+                drive = config.DRIVE_PREFIX_CWD),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
 # Copies of cmd and options with Wine env vars, cwd drive mapping and blocking processes set for the prefix
 # Unchanged when the options are not a prefix
 def setup_prefix_environment(
@@ -180,39 +220,7 @@ def setup_prefix_environment(
 
     # Modify for wine
     if new_options.is_wine_prefix():
-
-        # Add blocking processes
-        new_options.add_blocking_processes(get_wine_blocking_processes())
-
-        # Improve performance by not showing everything
-        # To show only errors, change to fixme-all
-        new_options.set_env_var("WINEDEBUG", "-all")
-
-        # Set prefix location
-        if new_options.has_valid_prefix_dir():
-            new_options.set_env_var("WINEPREFIX", new_options.get_prefix_dir())
-
-        # Set prefix bitness
-        if new_options.is_32_bit():
-            new_options.set_env_var("WINEARCH", "win32")
-        else:
-            new_options.set_env_var("WINEARCH", "win64")
-
-        # Set prefix overrides
-        wine_overrides = ["winemenubuilder.exe=d"]
-        wine_overrides += new_options.get_overrides()
-        new_options.set_env_var("WINEDLLOVERRIDES", ";".join(wine_overrides))
-
-        # Map the current working directory to the prefix
-        if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd() and new_options.has_valid_prefix_dir():
-            fileops.create_symlink(
-                src = new_options.get_cwd(),
-                dest = prefixlayout.get_real_drive_path(
-                    options = new_options,
-                    drive = config.DRIVE_PREFIX_CWD),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        setup_wine_prefix_environment(new_options, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Modify for sandboxie
     else:
@@ -222,6 +230,35 @@ def setup_prefix_environment(
 
     # Return results
     return (new_cmd, new_options)
+
+# Wine launcher, in a virtual desktop when asked, or Sandboxie launcher for the prefix's box, hidden for tools
+def get_prefix_command_starter(options):
+    if options.is_wine_prefix():
+        new_cmd = [get_wine_command()]
+        if options.use_virtual_desktop():
+            new_cmd += ["explorer", "/desktop=" + options.get_desktop_dimensions()]
+        return new_cmd
+    new_cmd = [
+        get_sandboxie_command(),
+        "/box:%s" % options.get_prefix_name().val()
+    ]
+    if options.get_prefix_name() == config.PrefixType.TOOL:
+        new_cmd += ["/hide_window"]
+    return new_cmd
+
+# Target and args of a .lnk, setting the options' cwd to its own; shows an error popup when either does not exist
+def get_link_target_command(lnk_path, options):
+    info = fileops.get_link_info(
+        lnk_path = lnk_path,
+        lnk_base_path = options.get_lnk_base_path())
+    has_valid_target = paths.does_path_exist(info["target"])
+    has_valid_cwd = paths.does_path_exist(info["cwd"])
+    if not has_valid_target or not has_valid_cwd:
+        gui.display_error_popup(
+            title_text = "Unable to resolve LNK file",
+            message_text = "Unable to resolve LNK file %s to an actual target" % lnk_path)
+    options.set_cwd(info["cwd"])
+    return [info["target"]] + info["args"]
 
 # Wrap cmd to run under Wine or Sandboxie, resolving .lnk targets and running .bat via cmd /c in Sandboxie
 # Returns the new command and options; unchanged when the options are not a prefix
@@ -248,32 +285,11 @@ def setup_prefix_command(
     new_options = options.copy()
 
     # Create command
-    if new_options.is_wine_prefix():
-        new_cmd = [get_wine_command()]
-        if new_options.use_virtual_desktop():
-            new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
-    else:
-        new_cmd = [
-            get_sandboxie_command(),
-            "/box:%s" % options.get_prefix_name().val()
-        ]
-        if new_options.get_prefix_name() == config.PrefixType.TOOL:
-            new_cmd += ["/hide_window"]
+    new_cmd = get_prefix_command_starter(new_options)
 
     # Adjust command based on executable type
     if orig_cmd_starter.endswith(".lnk"):
-        info = fileops.get_link_info(
-            lnk_path = orig_cmd_starter,
-            lnk_base_path = options.get_lnk_base_path())
-        has_valid_target = paths.does_path_exist(info["target"])
-        has_valid_cwd = paths.does_path_exist(info["cwd"])
-        if not has_valid_target or not has_valid_cwd:
-            gui.display_error_popup(
-                title_text = "Unable to resolve LNK file",
-                message_text = "Unable to resolve LNK file %s to an actual target" % orig_cmd_starter)
-        new_cmd += [info["target"]]
-        new_cmd += info["args"]
-        new_options.set_cwd(info["cwd"])
+        new_cmd += get_link_target_command(orig_cmd_starter, new_options)
     elif orig_cmd_starter.endswith(".bat"):
         if options.is_sandboxie_prefix():
             new_cmd += ["cmd", "/c"]

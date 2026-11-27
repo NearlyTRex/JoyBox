@@ -257,6 +257,13 @@ def test_no_browser_gives_no_metadata(epic_store, browser):
     assert browser.disconnected == []
 
 
+def test_no_browser_in_a_pretend_run_gives_no_metadata_without_retrying(epic_store, browser):
+    browser.connect_ok = False
+
+    assert epic_store.get_latest_metadata(URL, pretend_run = True) is None
+    assert browser.connects == 1
+
+
 def test_an_invalid_metadata_identifier_opens_no_browser(epic_store, browser):
     assert epic_store.get_latest_metadata("") is None
     assert browser.connects == 0

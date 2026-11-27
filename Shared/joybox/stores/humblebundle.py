@@ -187,37 +187,67 @@ class HumbleBundle(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "humble_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_purchases):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
+        # Load from cache if recent
+        cached_purchases = self._read_purchases_cache(
+            cache_file_purchases = cache_file_purchases,
+            verbose = verbose)
+        if cached_purchases is not None:
+            return cached_purchases
 
-        # Load from cache if available
-        if use_cache:
-            cached_data = serialization.read_json_file(
-                src = cache_file_purchases,
-                verbose = verbose,
-                exit_on_failure = False)
-            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
-            if verbose:
-                logger.log_warning("Failed to load Humble Bundle cache, will fetch fresh data")
-            use_cache = False
+        # Fetch purchases from the manager
+        fetched = self._fetch_purchases(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if fetched is None:
+            return None
+
+        # Save to cache
+        purchases, purchases_data = fetched
+        self._write_purchases_cache(
+            cache_dir = cache_dir,
+            cache_file_purchases = cache_file_purchases,
+            purchases_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run)
+        return purchases
+
+    # Purchases and their cache dicts from the manager's listing and per-game details; None on any failure
+    def _fetch_purchases(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Get manager
         manager_cmd = self.get_manager_cmd()
         if not manager_cmd:
             return None
+
+        # Get library listing
+        list_output = self._fetch_purchase_list(
+            manager_cmd = manager_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not list_output:
+            return None
+
+        # Parse output
+        return self._parse_purchase_list(
+            manager_cmd = manager_cmd,
+            list_output = list_output,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # The manager's appname listing for the preferred platform; None (after logging) when empty
+    def _fetch_purchase_list(
+        self,
+        manager_cmd,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Get list command
         list_cmd = manager_cmd + [
@@ -235,8 +265,46 @@ class HumbleBundle(storebase.StoreBase):
         if not list_output:
             logger.log_error("Unable to find humble purchases")
             return None
+        return list_output
 
-        # Parse output
+    # Cached purchases when the cache is under a day old and well formed; None otherwise
+    def _read_purchases_cache(self, cache_file_purchases, verbose = False):
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        if not paths.does_path_exist(cache_file_purchases):
+            return None
+        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
+        if cache_age_hours >= 24:
+            return None
+        if verbose:
+            logger.log_info("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache
+        cached_data = serialization.read_json_file(
+            src = cache_file_purchases,
+            verbose = verbose,
+            exit_on_failure = False)
+        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+            cached_purchases = []
+            for purchase_data in cached_data:
+                purchase = jsondata.JsonData(
+                    json_data = purchase_data,
+                    json_platform = self.get_platform())
+                cached_purchases.append(purchase)
+            return cached_purchases
+        if verbose:
+            logger.log_warning("Failed to load Humble Bundle cache, will fetch fresh data")
+        return None
+
+    # Purchases and their cacheable dicts for each appname line of the listing; None when a
+    # purchase cannot be described or the output names no games
+    def _parse_purchase_list(
+        self,
+        manager_cmd,
+        list_output,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         purchases = []
         purchases_data = []
         for line in list_output.split("\n"):
@@ -257,31 +325,47 @@ class HumbleBundle(storebase.StoreBase):
             if humble_json is None:
                 return None
 
-            # Gather info
-            line_appid = strings.generate_unique_id()
-            line_name = self.get_purchase_name(humble_json)
-
             # Create purchase
-            purchase = jsondata.JsonData(json_data = {}, json_platform = self.get_platform())
-            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
-            purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
-            purchase.set_value(config.JSON_KEY_STORE_NAME, line_name)
+            purchase, purchase_data = self._create_purchase(line_appname, humble_json)
             purchases.append(purchase)
-
-            # Store data for caching
-            purchases_data.append({
-                config.JSON_KEY_STORE_APPID: line_appid,
-                config.JSON_KEY_STORE_APPNAME: line_appname,
-                config.JSON_KEY_STORE_NAME: line_name
-            })
+            purchases_data.append(purchase_data)
 
         # Output without any game names is not a library listing
         if not purchases:
             logger.log_error("Unable to find humble purchases")
             logger.log_error("Received output:\n%s" % list_output)
             return None
+        return purchases, purchases_data
 
-        # Save to cache
+    # A purchase with a fresh appid, the appname and the details' name, plus the same values as a cache dict
+    def _create_purchase(self, line_appname, humble_json):
+
+        # Gather info
+        line_appid = strings.generate_unique_id()
+        line_name = self.get_purchase_name(humble_json)
+
+        # Create purchase
+        purchase = jsondata.JsonData(json_data = {}, json_platform = self.get_platform())
+        purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+        purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+        purchase.set_value(config.JSON_KEY_STORE_NAME, line_name)
+
+        # Store data for caching
+        purchase_data = {
+            config.JSON_KEY_STORE_APPID: line_appid,
+            config.JSON_KEY_STORE_APPNAME: line_appname,
+            config.JSON_KEY_STORE_NAME: line_name
+        }
+        return purchase, purchase_data
+
+    # Write the purchases cache, logging the outcome when verbose
+    def _write_purchases_cache(
+        self,
+        cache_dir,
+        cache_file_purchases,
+        purchases_data,
+        verbose = False,
+        pretend_run = False):
         fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
         success = serialization.write_json_file(
             src = cache_file_purchases,
@@ -293,7 +377,6 @@ class HumbleBundle(storebase.StoreBase):
             logger.log_info("Saved Humble Bundle purchases data to cache")
         elif not success and verbose:
             logger.log_warning("Failed to save Humble Bundle cache")
-        return purchases
 
     ############################################################
     # Json
@@ -370,26 +453,42 @@ class HumbleBundle(storebase.StoreBase):
         if not manager_cmd:
             return False
 
+        # Download and archive
+        return self._download_and_archive(
+            manager_cmd = manager_cmd,
+            identifier = identifier,
+            output_dir = output_dir,
+            output_name = output_name,
+            clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Download the game into a temp dir and archive it into output_dir; True when output_dir ends up with files
+    def _download_and_archive(
+        self,
+        manager_cmd,
+        identifier,
+        output_dir,
+        output_name,
+        clean_output,
+        show_progress,
+        skip_existing,
+        skip_identical,
+        verbose,
+        pretend_run,
+        exit_on_failure):
+
         # Download into a temporary directory and archive it
         with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
             if not tmp_dir_result:
                 return False
 
-            # Get download command
-            download_cmd = manager_cmd + [
-                "--download", identifier,
-                "--platform", self.get_preferred_platform(),
-                "--path", tmp_dir_result,
-                "--quiet"
-            ]
-
             # Run download command
-            code = command.run_returncode_command(
-                cmd = download_cmd,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
+            if not self._run_download_command(manager_cmd, identifier, tmp_dir_result, verbose, pretend_run, exit_on_failure):
                 return False
 
             # Archive downloaded files
@@ -409,3 +508,29 @@ class HumbleBundle(storebase.StoreBase):
 
         # Check results
         return paths.does_directory_contain_files(output_dir)
+
+    # Download the preferred platform's build into download_dir; True when the manager exits cleanly
+    def _run_download_command(
+        self,
+        manager_cmd,
+        identifier,
+        download_dir,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get download command
+        download_cmd = manager_cmd + [
+            "--download", identifier,
+            "--platform", self.get_preferred_platform(),
+            "--path", download_dir,
+            "--quiet"
+        ]
+
+        # Run download command
+        code = command.run_returncode_command(
+            cmd = download_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0

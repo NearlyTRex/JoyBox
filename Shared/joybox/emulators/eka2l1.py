@@ -8,95 +8,32 @@ from joybox import environment
 from joybox import fileops
 from joybox import logger
 from joybox import paths
-from joybox import release
 from joybox import programs
 from joybox import archive
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
+# Unzip the locker's data archive into the platform's setup dir, keeping files
+# already there; True when the locker has no such archive
+def extract_system_archive(platform, obj, setup_params):
+    if not os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval())):
+        return True
+    success = archive.extract_archive(
+        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval()),
+        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("EKA2L1", "setup_dir", platform), obj),
+        skip_existing = True,
+        verbose = setup_params.verbose,
+        pretend_run = setup_params.pretend_run,
+        exit_on_failure = setup_params.exit_on_failure)
+    if not success:
+        logger.log_error("Could not extract EKA2L1 system files")
+        return False
+    return True
 
 # EKA2L1 emulator
 class EKA2L1(emulatorbase.EmulatorBase):
 
     NAME = "EKA2L1"
-
-    # Download the Windows zip and Linux AppImage from the EKA2L1 GitHub release
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("EKA2L1", "windows"):
-            success = release.download_github_release(
-                github_user = "EKA2L1",
-                github_repo = "EKA2L1",
-                starts_with = "EKA2L1-Windows-x86_64",
-                ends_with = ".zip",
-                search_file = "eka2l1_qt.exe",
-                install_name = "EKA2L1",
-                install_dir = programs.get_program_install_dir("EKA2L1", "windows"),
-                backups_dir = programs.get_program_backup_dir("EKA2L1", "windows"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup EKA2L1")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("EKA2L1", "linux"):
-            success = release.download_github_release(
-                github_user = "EKA2L1",
-                github_repo = "EKA2L1",
-                starts_with = "EKA2L1-Linux-x86_64",
-                ends_with = ".AppImage",
-                install_name = "EKA2L1",
-                install_dir = programs.get_program_install_dir("EKA2L1", "linux"),
-                backups_dir = programs.get_program_backup_dir("EKA2L1", "linux"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup EKA2L1")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("EKA2L1", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("EKA2L1", "windows"),
-                install_name = "EKA2L1",
-                install_dir = programs.get_program_install_dir("EKA2L1", "windows"),
-                search_file = "eka2l1_qt.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup EKA2L1")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("EKA2L1", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("EKA2L1", "linux"),
-                install_name = "EKA2L1",
-                install_dir = programs.get_program_install_dir("EKA2L1", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup EKA2L1")
-                return False
-        return True
 
     # Write its config files, verify the locker system files, then unzip the data archive
     # into each platform's setup dir, keeping files already there
@@ -123,17 +60,8 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["data"]:
-                if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval())):
-                    success = archive.extract_archive(
-                        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("EKA2L1", "setup_dir", platform), obj),
-                        skip_existing = True,
-                        verbose = setup_params.verbose,
-                        pretend_run = setup_params.pretend_run,
-                        exit_on_failure = setup_params.exit_on_failure)
-                    if not success:
-                        logger.log_error("Could not extract EKA2L1 system files")
-                        return False
+                if not extract_system_archive(platform, obj, setup_params):
+                    return False
         return True
 
     # Run EKA2L1 with the game dir mounted and the game name as the app to start

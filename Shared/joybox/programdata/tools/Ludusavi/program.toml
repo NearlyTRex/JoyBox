@@ -18,3 +18,37 @@ path = "Ludusavi/linux/ludusavi.portable"
 [[config_files]]
 path = "Ludusavi/linux/config.yaml"
 template = "linux-config.yaml"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "mtkennerly"
+github_repo = "ludusavi"
+starts_with = "ludusavi"
+ends_with = "win64.zip"
+search_file = "ludusavi.exe"
+install_files = ["ludusavi.exe"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "mtkennerly"
+github_repo = "ludusavi"
+starts_with = "ludusavi"
+ends_with = "linux.zip"
+search_file = "ludusavi"
+install_files = ["ludusavi"]
+chmod_files = [{ file = "ludusavi", perms = 755 }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "ludusavi.exe"
+install_files = ["ludusavi.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "ludusavi"
+install_files = ["ludusavi"]
+chmod_files = [{ file = "ludusavi", perms = 755 }]

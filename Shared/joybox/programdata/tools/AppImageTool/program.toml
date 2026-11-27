@@ -8,3 +8,17 @@ run_sandboxed = { windows = false, linux = false }
 [[config_files]]
 path = "AppImageTool/linux/app.desktop"
 template = "app.desktop"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "AppImage"
+github_repo = "AppImageKit"
+starts_with = "appimagetool-x86_64"
+ends_with = ".AppImage"
+search_file = "AppImageTool.AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "AppImageTool.AppImage"

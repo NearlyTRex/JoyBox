@@ -1,0 +1,18 @@
+# Help text for the check_computer_archives command, read by joybox/arguments.py
+
+description = "Find Windows executables that are larger than 4092 MB."
+details = """
+Finds every `.exe` file under the input path (or takes the one file given) and checks
+its size. The run stops with an error at the first one larger than 4092 MB
+(4,290,772,992 bytes), naming the file. 4092 MB is the volume size backup_tool uses
+when it splits archives.
+
+Nothing is written or changed, and there is no confirmation prompt."""
+section = "Files & Archives"
+see_also = [
+    "backup_tool",
+    "verify_archives",
+]
+examples = [
+    ["Check the installers in a folder of computer games", "check_computer_archives -i /path/to/computer/games"],
+]

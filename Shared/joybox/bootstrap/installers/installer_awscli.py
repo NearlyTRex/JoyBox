@@ -60,6 +60,30 @@ class AwsCli(installer.Installer):
         self.connection.remove_file_or_directory(temp_dir)
         self.connection.make_directory(temp_dir)
 
+        # Download, extract and run the installer
+        if not self._run_bundled_installer(temp_dir):
+            self.connection.remove_file_or_directory(temp_dir)
+            return False
+
+        # Cleanup
+        logger.log_info("Cleaning up")
+        self.connection.remove_file_or_directory(temp_dir)
+
+        # Verify installation
+        logger.log_info("Verifying installation")
+        code = self.connection.run_blocking([self.aws_binary_path, "--version"])
+        if code != 0:
+            logger.log_error("AWS CLI installation verification failed")
+            return False
+
+        # All done
+        logger.log_info("AWS CLI installed successfully")
+        return True
+
+    # Download Amazon's zip into temp_dir, unpack it and run its installer, updating
+    # an existing install; False after logging the step that failed
+    def _run_bundled_installer(self, temp_dir):
+
         # Download AWS CLI installer
         logger.log_info("Downloading AWS CLI installer")
         download_url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
@@ -67,7 +91,6 @@ class AwsCli(installer.Installer):
         self.connection.download_file(download_url, zip_path)
         if not self.connection.does_file_or_directory_exist(zip_path):
             logger.log_error("Failed to download AWS CLI installer")
-            self.connection.remove_file_or_directory(temp_dir)
             return False
 
         # Unzip the installer
@@ -77,7 +100,6 @@ class AwsCli(installer.Installer):
         )
         if code != 0:
             logger.log_error("Failed to extract AWS CLI installer")
-            self.connection.remove_file_or_directory(temp_dir)
             return False
 
         # Run the installer
@@ -95,22 +117,7 @@ class AwsCli(installer.Installer):
             )
         if code != 0:
             logger.log_error("Failed to run AWS CLI installer")
-            self.connection.remove_file_or_directory(temp_dir)
             return False
-
-        # Cleanup
-        logger.log_info("Cleaning up")
-        self.connection.remove_file_or_directory(temp_dir)
-
-        # Verify installation
-        logger.log_info("Verifying installation")
-        code = self.connection.run_blocking([self.aws_binary_path, "--version"])
-        if code != 0:
-            logger.log_error("AWS CLI installation verification failed")
-            return False
-
-        # All done
-        logger.log_info("AWS CLI installed successfully")
         return True
 
     # Remove /usr/local/aws-cli and the aws and aws_completer links in /usr/local/bin

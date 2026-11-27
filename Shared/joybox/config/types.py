@@ -128,15 +128,25 @@ class EnumType(enum.Enum):
         if isinstance(values, list):
             enum_list = []
             for value in values:
-                if isinstance(value, str):
-                    enum_value = cls.from_string(value)
-                    if enum_value:
-                        enum_list.append(enum_value)
-                elif isinstance(value, cls):
-                    enum_list.append(value)
+                member = cls.from_list_value(value)
+                if member is not None:
+                    enum_list.append(member)
             return enum_list if enum_list else None
         if isinstance(values, cls):
             return [values]
+        return None
+
+    # The member for one from_list entry: a name looked up like from_string, or a member
+    # as is; None for an unknown name or anything else
+    @classmethod
+    def from_list_value(cls, value):
+        if isinstance(value, str):
+            enum_value = cls.from_string(value)
+            if enum_value:
+                return enum_value
+            return None
+        if isinstance(value, cls):
+            return value
         return None
 
     # The canonical value for a member or a case-insensitive name; None when it matches nothing

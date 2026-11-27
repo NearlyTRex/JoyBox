@@ -36,3 +36,36 @@ md5 = "82a21c1890cae844b3df741f2762d48d"
 [[system_files]]
 path = "Kickstarts/kick40063.A600"
 md5 = "e40a5dfb3d017ba8779faba30cbd1c8e"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "FrodeSolheim"
+github_repo = "fs-uae"
+starts_with = "FS-UAE"
+ends_with = "Windows_x86-64.zip"
+search_file = "Plugin.ini"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz"
+output_file = "FS-UAE-x86_64.AppImage"
+build_cmd = ["cd", "fs-uae-3.1.66", "&&", "./configure", "&&", "make", "-j", "8"]
+internal_copies = [
+    { from = "Source/fs-uae-3.1.66/fs-uae-3.1.66/fs-uae", to = "AppImage/usr/bin/fs-uae" },
+    { from = "Source/fs-uae-3.1.66/fs-uae-3.1.66/share/applications/fs-uae.desktop", to = "AppImage/app.desktop" },
+    { from = "Source/fs-uae-3.1.66/fs-uae-3.1.66/share/icons/hicolor/256x256/apps/fs-uae.png", to = "AppImage/fs-uae.png" },
+]
+internal_symlinks = [{ from = "usr/bin/fs-uae", to = "AppRun" }]
+external_copies = [{ from = "Source/fs-uae-3.1.66/fs-uae-3.1.66/fs-uae.dat", to = "fs-uae.dat" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Plugin.ini"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

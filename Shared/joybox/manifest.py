@@ -8,6 +8,14 @@ from joybox import serialization
 from joybox import storepaths
 from joybox import strings
 
+# True when a "when" condition names Windows/DOS under Steam or no store, or Steam with no OS
+def is_windows_save_condition(when_info):
+    when_os = when_info["os"] if "os" in when_info else ""
+    when_store = when_info["store"] if "store" in when_info else ""
+    if when_os in ("windows", "dos") and when_store in ("steam", ""):
+        return True
+    return when_os == "" and when_store == "steam"
+
 # Manifest entry
 class ManifestEntry:
 
@@ -18,19 +26,14 @@ class ManifestEntry:
     # Tokenized save paths under base_path for the Windows, DOS and Steam file entries
     def get_paths(self, base_path):
         paths = []
-        if "files" in self.manifest_data:
-            for path_location, path_info in self.manifest_data["files"].items():
-                if "when" in path_info:
-                    for when_info in path_info["when"]:
-                        when_os = when_info["os"] if "os" in when_info else ""
-                        when_store = when_info["store"] if "store" in when_info else ""
-                        is_windows_path = False
-                        if when_os in ("windows", "dos") and when_store in ("steam", ""):
-                            is_windows_path = True
-                        elif when_os == "" and when_store == "steam":
-                            is_windows_path = True
-                        if is_windows_path:
-                            paths.append(storepaths.create_tokenized_path(path_location, base_path))
+        if "files" not in self.manifest_data:
+            return paths
+        for path_location, path_info in self.manifest_data["files"].items():
+            if "when" not in path_info:
+                continue
+            for when_info in path_info["when"]:
+                if is_windows_save_condition(when_info):
+                    paths.append(storepaths.create_tokenized_path(path_location, base_path))
         return paths
 
     # Registry keys the entry lists; empty when it has none

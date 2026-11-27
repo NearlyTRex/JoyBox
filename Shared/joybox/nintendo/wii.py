@@ -13,6 +13,28 @@ from joybox import serialization
 def _get_libwiipy():
     return importlib.import_module("libWiiPy")
 
+# The WAD file read and loaded as a libWiiPy title; None, after logging, when it cannot be read or loaded
+def load_wii_title(libwiipy, src_wad_file, verbose = False, exit_on_failure = False):
+
+    # Read wad
+    wad_data = serialization.read_binary_file(
+        src = src_wad_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if wad_data is None:
+        logger.log_error("Unable to read WAD %s" % src_wad_file)
+        return None
+
+    # Load title
+    try:
+        title = libwiipy.title.Title()
+        title.load_wad(wad_data)
+    except (ValueError, TypeError, IndexError, struct.error) as e:
+        logger.log_error("Unable to load WAD %s" % src_wad_file)
+        logger.log_error(e, quit_program = exit_on_failure)
+        return None
+    return title
+
 # Install Wii WAD file into an emulated NAND
 def install_wii_wad(
     src_wad_file,
@@ -22,22 +44,9 @@ def install_wii_wad(
     exit_on_failure = False):
     libwiipy = _get_libwiipy()
 
-    # Read wad
-    wad_data = serialization.read_binary_file(
-        src = src_wad_file,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
-    if wad_data is None:
-        logger.log_error("Unable to read WAD %s" % src_wad_file)
-        return False
-
-    # Load title
-    try:
-        title = libwiipy.title.Title()
-        title.load_wad(wad_data)
-    except (ValueError, TypeError, IndexError, struct.error) as e:
-        logger.log_error("Unable to load WAD %s" % src_wad_file)
-        logger.log_error(e, quit_program = exit_on_failure)
+    # Read and load wad
+    title = load_wii_title(libwiipy, src_wad_file, verbose = verbose, exit_on_failure = exit_on_failure)
+    if title is None:
         return False
 
     # Make nand directory

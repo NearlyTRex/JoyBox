@@ -72,3 +72,50 @@ md5 = "38179df8f4ac870017db21ebcbf53114"
 [[system_files]]
 path = "Bios/syscard3u.pce"
 md5 = "0754f903b52e3b3342202bdafb13efa5"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "ares-emulator"
+github_repo = "ares"
+starts_with = "ares"
+ends_with = "windows-x64.zip"
+search_file = "ares.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Ares.git"
+output_file = "ares-x86_64.AppImage"
+build_cmd = [
+    "cmake",
+    "-B",
+    "build",
+    "-G",
+    "Ninja",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "&&",
+    "cmake",
+    "--build",
+    "build",
+]
+internal_copies = [
+    { from = "Source/Ares/build/rundir/bin/ares", to = "AppImage/usr/bin/ares" },
+    { from = "Source/Ares/desktop-ui/resource/ares.desktop", to = "AppImage/ares.desktop" },
+    { from = "Source/Ares/desktop-ui/resource/ares.png", to = "AppImage/ares.png" },
+]
+internal_symlinks = [{ from = "usr/bin/ares", to = "AppRun" }]
+external_copies = [
+    { from = "Source/Ares/mia/Database", to = "Ares.AppImage.home/.local/share/ares/Database" },
+    { from = "Source/Ares/mia/Firmware", to = "Ares.AppImage.home/.local/share/ares/Firmware" },
+]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "ares.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

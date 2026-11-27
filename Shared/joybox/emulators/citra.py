@@ -7,7 +7,6 @@ from joybox import config
 from joybox import environment
 from joybox import fileops
 from joybox import logger
-from joybox import release
 from joybox import programs
 from joybox import archive
 from joybox.nintendo import threeds
@@ -15,6 +14,35 @@ from joybox import paths
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
+# Install every .cia under the dir into Citra's sdmc dir; False at the first failure
+def install_package_dir(package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    for cia_file in paths.build_file_list_by_extensions(package_dir, extensions = [".cia"]):
+        success = threeds.install_3ds_cia(
+            src_3ds_file = cia_file,
+            sdmc_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir"), "sdmc"),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Unzip the locker's archive of the system folder (nand or sysdata) into the platform's
+# setup dir, keeping files already there; True when the locker has no such archive
+def extract_system_archive(platform, obj, setup_params):
+    if not os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval())):
+        return True
+    success = archive.extract_archive(
+        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval()),
+        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir", platform), obj),
+        skip_existing = True,
+        verbose = setup_params.verbose,
+        pretend_run = setup_params.pretend_run,
+        exit_on_failure = setup_params.exit_on_failure)
+    if not success:
+        logger.log_error("Could not extract Citra system files")
+        return False
+    return True
 
 # Citra emulator
 class Citra(emulatorbase.EmulatorBase):
@@ -27,52 +55,8 @@ class Citra(emulatorbase.EmulatorBase):
         update_dirs = [] if update_dirs is None else update_dirs
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
-                for cia_file in paths.build_file_list_by_extensions(package_dir, extensions = [".cia"]):
-                    success = threeds.install_3ds_cia(
-                        src_3ds_file = cia_file,
-                        sdmc_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir"), "sdmc"),
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs;
-    # nothing is downloaded, and a missing archive is skipped
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Citra", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Citra", "windows"),
-                install_name = "Citra",
-                install_dir = programs.get_program_install_dir("Citra", "windows"),
-                search_file = "citra-qt.exe",
-                skip_if_missing = True,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Citra")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Citra", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Citra", "linux"),
-                install_name = "Citra",
-                install_dir = programs.get_program_install_dir("Citra", "linux"),
-                search_file = "citra-qt.AppImage",
-                skip_if_missing = True,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Citra")
-                return False
+                if not install_package_dir(package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                    return False
         return True
 
     # Same as setup, which already works only from stored releases
@@ -106,17 +90,8 @@ class Citra(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["nand", "sysdata"]:
-                if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval())):
-                    success = archive.extract_archive(
-                        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir", platform), obj),
-                        skip_existing = True,
-                        verbose = setup_params.verbose,
-                        pretend_run = setup_params.pretend_run,
-                        exit_on_failure = setup_params.exit_on_failure)
-                    if not success:
-                        logger.log_error("Could not extract Citra system files")
-                        return False
+                if not extract_system_archive(platform, obj, setup_params):
+                    return False
         return True
 
     # Run Citra on the game file

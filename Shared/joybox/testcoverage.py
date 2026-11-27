@@ -252,15 +252,25 @@ def render_table(headers, rows):
 # Render the report for the whole library
 def render_report(results, untested, ci_floor = None, limit = 20, tests_passed = None):
     files = results["files"]
+    nothing_run = sorted(n for n, e in files.items() if e["summary"]["num_statements"] and not e["summary"]["covered_lines"])
+    functions = [(name, f) for name, found in untested.items() for f in found]
+    never_run = [(name, f) for name, f in functions if is_never_run(f)]
+    lines = _render_summary_lines(results, ci_floor, tests_passed, nothing_run, functions, never_run)
+    lines += _render_area_lines(files)
+    lines += _render_ranked_file_lines(files, never_run, limit)
+    lines += _render_never_run_lines(never_run, limit)
+    lines += _render_nothing_run_lines(nothing_run, limit)
+    return "\n".join(lines) + "\n"
+
+# The report's title, measurement time and summary bullets for overall cover, the CI floor, tests, files and functions
+def _render_summary_lines(results, ci_floor, tests_passed, nothing_run, functions, never_run):
+    files = results["files"]
     totals = results["totals"]
     percent = totals.get("percent_covered", get_percent(totals))
     missed_branches = totals.get("num_branches", 0) - totals.get("covered_branches", 0)
     measured = len(files)
     complete = sum(1 for e in files.values() if not e["summary"]["missing_lines"] and not e["summary"].get("missing_branches"))
     below_half = sum(1 for e in files.values() if get_percent(e["summary"]) < 50)
-    nothing_run = sorted(n for n, e in files.items() if e["summary"]["num_statements"] and not e["summary"]["covered_lines"])
-    functions = [(name, f) for name, found in untested.items() for f in found]
-    never_run = [(name, f) for name, f in functions if is_never_run(f)]
 
     # Summary
     lines = ["# Test coverage of %s" % LIBRARY_PREFIX.rstrip("/"), ""]
@@ -282,46 +292,57 @@ def render_report(results, untested, ci_floor = None, limit = 20, tests_passed =
         measured, complete, below_half, len(nothing_run)))
     lines.append("- **Functions:** %d have untested lines; %d of them never run at all." % (
         len(functions), len(never_run)))
+    return lines
 
-    # Areas
-    lines += ["", "## By area", ""]
+# The by-area table section
+def _render_area_lines(files):
+    lines = ["", "## By area", ""]
     lines += render_table(
         ["Area", "Files", "Statements", "Missed", "Branches", "Partial", "Cover"],
         [(a["area"], a["files"], format_count(a["num_statements"]), format_count(a["missing_lines"]),
           format_count(a["num_branches"]), format_count(a["num_partial_branches"]), format_percent(a["percent"]))
          for a in summarize_areas(files)])
+    return lines
 
-    # Files missing the most
+# The table of the limit files missing the most statements, with their never-run function counts; empty when none miss any
+def _render_ranked_file_lines(files, never_run, limit):
     ranked = sorted(files.items(), key = lambda item: (-item[1]["summary"]["missing_lines"], item[0]))
     ranked = [(n, e) for n, e in ranked if e["summary"]["missing_lines"]][:limit]
-    if ranked:
-        never_by_file = {}
-        for name, f in never_run:
-            never_by_file[name] = never_by_file.get(name, 0) + 1
-        lines += ["", "## Files missing the most (top %d)" % len(ranked), ""]
-        lines += render_table(
-            ["File", "Area", "Missed", "Partial", "Cover", "Never-run functions"],
-            [(normalize_name(n), get_area(n), e["summary"]["missing_lines"], e["summary"]["num_partial_branches"],
-              format_percent(get_percent(e["summary"])), never_by_file.get(n, 0)) for n, e in ranked])
+    if not ranked:
+        return []
+    never_by_file = {}
+    for name, _ in never_run:
+        never_by_file[name] = never_by_file.get(name, 0) + 1
+    lines = ["", "## Files missing the most (top %d)" % len(ranked), ""]
+    lines += render_table(
+        ["File", "Area", "Missed", "Partial", "Cover", "Never-run functions"],
+        [(normalize_name(n), get_area(n), e["summary"]["missing_lines"], e["summary"]["num_partial_branches"],
+          format_percent(get_percent(e["summary"])), never_by_file.get(n, 0)) for n, e in ranked])
+    return lines
 
-    # Never-run functions
-    if never_run:
-        by_file = {}
-        for name, f in never_run:
-            by_file.setdefault(name, []).append(f)
-        ordered = sorted(by_file.items(), key = lambda item: (-len(item[1]), item[0]))[:limit]
-        lines += ["", "## Functions never run (top %d files)" % len(ordered), ""]
-        lines += render_table(
-            ["File", "Count", "Functions"],
-            [(normalize_name(n), len(fs), list_names([f["name"] for f in fs])) for n, fs in ordered])
+# The table of never-run functions for the limit files with the most of them; empty when there are none
+def _render_never_run_lines(never_run, limit):
+    if not never_run:
+        return []
+    by_file = {}
+    for name, f in never_run:
+        by_file.setdefault(name, []).append(f)
+    ordered = sorted(by_file.items(), key = lambda item: (-len(item[1]), item[0]))[:limit]
+    lines = ["", "## Functions never run (top %d files)" % len(ordered), ""]
+    lines += render_table(
+        ["File", "Count", "Functions"],
+        [(normalize_name(n), len(fs), list_names([f["name"] for f in fs])) for n, fs in ordered])
+    return lines
 
-    # Files with nothing run
-    if nothing_run:
-        lines += ["", "## Files with nothing run", ""]
-        lines += ["- `%s`" % normalize_name(n) for n in nothing_run[:limit]]
-        if len(nothing_run) > limit:
-            lines.append("- ... and %d more" % (len(nothing_run) - limit))
-    return "\n".join(lines) + "\n"
+# The list of up to limit files with nothing run, noting how many more there are; empty when there are none
+def _render_nothing_run_lines(nothing_run, limit):
+    if not nothing_run:
+        return []
+    lines = ["", "## Files with nothing run", ""]
+    lines += ["- `%s`" % normalize_name(n) for n in nothing_run[:limit]]
+    if len(nothing_run) > limit:
+        lines.append("- ... and %d more" % (len(nothing_run) - limit))
+    return lines
 
 # Render the report for one module, optionally with the source of each
 # function that has untested lines, those lines marked with "!!"
@@ -384,12 +405,8 @@ def run_action(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if action not in ACTIONS:
-        logger.log_error("Unknown action '%s'. Available: %s" % (action, ", ".join(ACTIONS)))
-        return False
-    repo_dir = get_repo_dir()
-    if not paths.does_path_exist(paths.join_paths(repo_dir, "pyproject.toml")):
-        logger.log_error("No JoyBox checkout at %s" % repo_dir)
+    repo_dir = _get_checked_repo_dir(action)
+    if not repo_dir:
         return False
     data_file = get_data_file()
     json_file = get_json_file()
@@ -397,52 +414,90 @@ def run_action(
     # Measure
     tests_passed = None
     if action == ACTION_RUN:
-        if not pretend_run and not is_coverage_available():
-            logger.log_error("coverage.py is not installed in this venv; it comes with the dev extra (pip install -e .[dev])")
+        tests_passed = _measure_tests(repo_dir, data_file, include_integration, verbose, pretend_run, exit_on_failure)
+        if tests_passed is None:
             return False
-        logger.log_info("Running the tests under coverage in %s" % repo_dir)
-        code = measure(repo_dir, data_file, include_integration,
-            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         if pretend_run:
             return True
-        tests_passed = code == 0
-        if not tests_passed:
-            logger.log_warning("Some tests failed (exit code %d)" % code)
 
     # Load
-    if not paths.does_path_exist(data_file):
-        logger.log_error("No coverage data at %s; measure it first with the run action" % data_file)
-        return False
-    if not export_json(repo_dir, data_file, json_file, verbose = verbose):
-        logger.log_error("Could not export the coverage data")
-        return False
-    results = serialization.read_json_file(json_file)
-    if not results or "files" not in results:
-        logger.log_error("Could not read %s" % json_file)
+    results = _load_results(repo_dir, data_file, json_file, verbose)
+    if not results:
         return False
 
     # Render
-    if module:
-        name, matches = find_file(results["files"], module)
-        if not name:
-            if matches:
-                logger.log_error("'%s' matches several files: %s" % (module, ", ".join(matches)))
-            else:
-                logger.log_error("No measured file matches '%s'" % module)
-            return False
-        entry = results["files"][name]
-        source = serialization.read_text_file(paths.join_paths(repo_dir, name)) or ""
-        functions = find_functions(source, entry.get("executed_lines", []), entry.get("missing_lines", []))
-        report = render_module_report(name, entry, functions, source if show_source else None)
-    else:
-        untested = find_untested_functions(results["files"], repo_dir)
-        report = render_report(results, untested, read_ci_floor(repo_dir), limit, tests_passed)
+    report = _render_action_report(results, repo_dir, module, limit, show_source, tests_passed)
+    if report is None:
+        return False
 
     # Output
+    if not _output_report(report, output_file, verbose):
+        return False
+    return tests_passed is not False
+
+# The checkout to measure, or None after logging an unknown action or a missing checkout
+def _get_checked_repo_dir(action):
+    if action not in ACTIONS:
+        logger.log_error("Unknown action '%s'. Available: %s" % (action, ", ".join(ACTIONS)))
+        return None
+    repo_dir = get_repo_dir()
+    if not paths.does_path_exist(paths.join_paths(repo_dir, "pyproject.toml")):
+        logger.log_error("No JoyBox checkout at %s" % repo_dir)
+        return None
+    return repo_dir
+
+# Run the tests under coverage; whether they all passed, or None when coverage.py is missing
+def _measure_tests(repo_dir, data_file, include_integration, verbose, pretend_run, exit_on_failure):
+    if not pretend_run and not is_coverage_available():
+        logger.log_error("coverage.py is not installed in this venv; it comes with the dev extra (pip install -e .[dev])")
+        return None
+    logger.log_info("Running the tests under coverage in %s" % repo_dir)
+    code = measure(repo_dir, data_file, include_integration,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    if pretend_run:
+        return True
+    tests_passed = code == 0
+    if not tests_passed:
+        logger.log_warning("Some tests failed (exit code %d)" % code)
+    return tests_passed
+
+# Export the measured data to json and read it back; None after logging any step that fails
+def _load_results(repo_dir, data_file, json_file, verbose):
+    if not paths.does_path_exist(data_file):
+        logger.log_error("No coverage data at %s; measure it first with the run action" % data_file)
+        return None
+    if not export_json(repo_dir, data_file, json_file, verbose = verbose):
+        logger.log_error("Could not export the coverage data")
+        return None
+    results = serialization.read_json_file(json_file)
+    if not results or "files" not in results:
+        logger.log_error("Could not read %s" % json_file)
+        return None
+    return results
+
+# The report for the one file matching module, or the whole library; None when module matches no single file
+def _render_action_report(results, repo_dir, module, limit, show_source, tests_passed):
+    if not module:
+        untested = find_untested_functions(results["files"], repo_dir)
+        return render_report(results, untested, read_ci_floor(repo_dir), limit, tests_passed)
+    name, matches = find_file(results["files"], module)
+    if not name:
+        if matches:
+            logger.log_error("'%s' matches several files: %s" % (module, ", ".join(matches)))
+        else:
+            logger.log_error("No measured file matches '%s'" % module)
+        return None
+    entry = results["files"][name]
+    source = serialization.read_text_file(paths.join_paths(repo_dir, name)) or ""
+    functions = find_functions(source, entry.get("executed_lines", []), entry.get("missing_lines", []))
+    return render_module_report(name, entry, functions, source if show_source else None)
+
+# Print the report, and write it to output_file when one is given; False when writing fails
+def _output_report(report, output_file, verbose):
     terminal.write(report)
     if output_file:
         if not serialization.write_text_file(output_file, report, verbose = verbose):
             logger.log_error("Could not write %s" % output_file)
             return False
         logger.log_info("Report written to %s" % output_file)
-    return tests_passed is not False
+    return True

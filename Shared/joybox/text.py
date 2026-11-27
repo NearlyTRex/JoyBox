@@ -27,16 +27,24 @@ def capitalize_text(text):
         return text.upper()
     words = []
     for index, word in enumerate(text.split(" ")):
-        for filler_word in config.filler_words:
-            if index != 0 and word.lower() == filler_word.lower():
-                words.append(word)
-                break
-        else:
-            if len(word) == 1:
-                words.append(word[0].upper())
-            elif len(word) >= 2:
-                words.append(word[0].upper() + word[1:])
+        if index != 0 and _is_filler_word(word):
+            words.append(word)
+        elif len(word) > 0:
+            words.append(_capitalize_word(word))
     return " ".join(words)
+
+# Whether a word is one of the configured filler words, ignoring case
+def _is_filler_word(word):
+    for filler_word in config.filler_words:
+        if word.lower() == filler_word.lower():
+            return True
+    return False
+
+# A non-empty word with its first letter uppercased
+def _capitalize_word(word):
+    if len(word) == 1:
+        return word[0].upper()
+    return word[0].upper() + word[1:]
 
 # Lines wrapped to width, with a spacer line between the original paragraphs
 def wrap_text_to_lines(text, width = 80, spacer = "."):

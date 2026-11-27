@@ -1,8 +1,9 @@
 # Imports
-from abc import ABC, abstractmethod
+from abc import ABC
 
 # Local imports
 from joybox import programcatalog
+from joybox import programsetup
 from joybox import programs
 from joybox import environment
 from joybox import paths
@@ -106,15 +107,15 @@ class EmulatorBase(ABC):
         del dlc_dirs, update_dirs, verbose, pretend_run, exit_on_failure
         return True
 
-    # Download the emulator's releases for each platform it installs on, keeping backups
-    @abstractmethod
+    # Download the emulator's releases for each platform it installs on, keeping backups,
+    # by the [[setup]] steps in its program data
     def setup(self, setup_params = None):
-        ...
+        return programsetup.run_setup_steps(programcatalog.FAMILY_EMULATORS, self.get_name(), setup_params = setup_params)
 
-    # Install the emulator from its stored backup releases instead of downloading
-    @abstractmethod
+    # Install the emulator from its stored backup releases instead of downloading,
+    # by the [[setup_offline]] steps in its program data
     def setup_offline(self, setup_params = None):
-        ...
+        return programsetup.run_setup_steps(programcatalog.FAMILY_EMULATORS, self.get_name(), offline = True, setup_params = setup_params)
 
     # Write the config files and copy in verified system files after install; the base does nothing
     def configure(self, setup_params = None):

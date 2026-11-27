@@ -35,3 +35,15 @@ md5 = "7c9baaa35b620bbd2b18b4620e2831e1"
 [[system_files]]
 path = "sysdata.zip"
 md5 = "dcfa1fbaf7845c735b2c7d1ec9df2ed7"
+
+[[setup]]
+kind = "stored_release"
+platform = "windows"
+search_file = "citra-qt.exe"
+skip_if_missing = true
+
+[[setup]]
+kind = "stored_release"
+platform = "linux"
+search_file = "citra-qt.AppImage"
+skip_if_missing = true

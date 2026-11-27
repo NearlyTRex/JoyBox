@@ -71,15 +71,20 @@ class Connection(ABC):
             if not text:
                 continue
             logger.log_output(text)
-            for char in text:
-                if char in ("\n", "\r"):
-                    if line.strip():
-                        logger.record_output(line.strip())
-                    line = ""
-                else:
-                    line += char
+            line = self._record_completed_lines(line, text)
         if line.strip():
             logger.record_output(line.strip())
+
+    # Record each non-blank line that text completes; returns the unfinished tail
+    def _record_completed_lines(self, line, text):
+        for char in text:
+            if char not in ("\n", "\r"):
+                line += char
+                continue
+            if line.strip():
+                logger.record_output(line.strip())
+            line = ""
+        return line
 
     # Prefix a string or list command with sudo; other types pass through unchanged
     def mark_command_as_sudo(self, cmd):
@@ -327,15 +332,7 @@ class Connection(ABC):
                 ]
 
                 # Get profile
-                profile_candidates = [
-                    self.resolve_home_path(candidate) for candidate in profile_candidates]
-                if profile_candidates[0].startswith("~"):
-                    raise ValueError("the home directory is unknown, so no profile can be found")
-                profile_file = profile_candidates[0]
-                for candidate in profile_candidates:
-                    if self.does_file_or_directory_exist(candidate):
-                        profile_file = candidate
-                        break
+                profile_file = self._find_shell_profile(profile_candidates)
 
                 # Read current profile
                 existing_content = self.read_file(profile_file)
@@ -351,3 +348,14 @@ class Connection(ABC):
             return True
         except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to add {src} to path", e, return_value = False)
+
+    # First existing profile among the candidates, else the first one; ValueError when home is unknown
+    def _find_shell_profile(self, profile_candidates):
+        profile_candidates = [
+            self.resolve_home_path(candidate) for candidate in profile_candidates]
+        if profile_candidates[0].startswith("~"):
+            raise ValueError("the home directory is unknown, so no profile can be found")
+        for candidate in profile_candidates:
+            if self.does_file_or_directory_exist(candidate):
+                return candidate
+        return profile_candidates[0]

@@ -5,7 +5,6 @@ from joybox import fileops
 from joybox import filebulk
 from joybox import logger
 from joybox import paths
-from joybox import release
 from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
@@ -15,84 +14,6 @@ from joybox import emulatorbase
 class MGBA(emulatorbase.EmulatorBase):
 
     NAME = "mGBA"
-
-    # Download the Windows 7z and Linux AppImage from the mgba-emu GitHub release
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("mGBA", "windows"):
-            success = release.download_github_release(
-                github_user = "mgba-emu",
-                github_repo = "mgba",
-                starts_with = "mGBA",
-                ends_with = "win64.7z",
-                search_file = "mGBA.exe",
-                install_name = "mGBA",
-                install_dir = programs.get_program_install_dir("mGBA", "windows"),
-                backups_dir = programs.get_program_backup_dir("mGBA", "windows"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup mGBA")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("mGBA", "linux"):
-            success = release.download_github_release(
-                github_user = "mgba-emu",
-                github_repo = "mgba",
-                starts_with = "mGBA",
-                ends_with = ".appimage",
-                install_name = "mGBA",
-                install_dir = programs.get_program_install_dir("mGBA", "linux"),
-                backups_dir = programs.get_program_backup_dir("mGBA", "linux"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup mGBA")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("mGBA", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("mGBA", "windows"),
-                install_name = "mGBA",
-                install_dir = programs.get_program_install_dir("mGBA", "windows"),
-                search_file = "mGBA.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup mGBA")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("mGBA", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("mGBA", "linux"),
-                install_name = "mGBA",
-                install_dir = programs.get_program_install_dir("mGBA", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup mGBA")
-                return False
-        return True
 
     # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):

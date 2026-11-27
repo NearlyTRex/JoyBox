@@ -1,0 +1,42 @@
+# Help text for the scan_game_files command, read by joybox/arguments.py
+
+description = "Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing."
+details = """
+Runs, in order, for the `Roms` supercategory of the selected categories:
+
+1. Load the Ludusavi manifest of game save locations, only with `-m`.
+2. Import and refresh store purchases, as `build_game_store_purchases` does, unless
+   `--skip_purchases` is given. A store that is not signed in is skipped with a warning.
+   With `--skip_purchases`, steps 4 and 5 also cover only the games in the `-l` locker.
+3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does,
+   with `--create_playlists` also writing a `.m3u` playlist for multi-disc games that
+   have none yet.
+4. Build metadata entries, as `build_game_metadata_files` does.
+5. Download missing BoxFront and Video assets, only with `-a`.
+6. Publish the metadata to HTML, as `publish_game_metadata_files` does.
+
+Any failing step stops the run. Unlike the single-step tools, `-c` and `-s` here take
+comma-separated lists, and omitting them processes everything."""
+section = "Game Collection"
+see_also = [
+    "build_game_store_purchases",
+    "build_game_json_files",
+    "build_game_metadata_files",
+    "download_game_metadata_assets",
+    "publish_game_metadata_files",
+]
+notes = [
+    "The purchase step, and the asset step for non-store games, ask questions, so the run is interactive.",
+    "Stores that are not signed in, or whose purchases cannot be listed, are skipped and named at the end of the purchase step; sign in with `login_game_stores`.",
+    "Publishing always writes whole categories; `-s` does not narrow it.",
+    "Unrecognised names in `-c` or `-s` are dropped silently, and if none are left every category or subcategory is processed.",
+]
+examples = [
+    ["Run the pipeline for everything in the local locker", "scan_game_files -l Local"],
+    ["Scan two categories", "scan_game_files -c Nintendo,Sony -l Local"],
+    ["Scan only the games in the local locker, leaving the stores alone", "scan_game_files -l Local --skip_purchases"],
+    ["Scan two subcategories and download assets", "scan_game_files -s \"Nintendo Switch,Steam\" -l Local -a"],
+    ["Load the manifest, then scan", "scan_game_files -m -l Local"],
+    ["Scan the local locker, writing playlists for multi-disc games", "scan_game_files -l Local --create_playlists"],
+    ["Dry run", "scan_game_files -l Local -p -v"],
+]

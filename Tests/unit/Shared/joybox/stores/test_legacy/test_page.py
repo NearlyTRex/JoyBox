@@ -117,6 +117,14 @@ def test_a_browser_that_will_not_start_is_retried_then_given_up(legacy_store, br
     assert browser.disconnected == []
 
 
+def test_a_pretend_run_without_a_browser_gives_no_url_at_once(legacy_store, browser):
+    browser.failed_connects = 3
+
+    assert legacy_store.get_latest_url("Mystery Case Files", pretend_run = True) is None
+    assert browser.connects == [True]
+    assert browser.disconnected == []
+
+
 def test_a_browser_that_starts_on_retry_is_used_and_closed(legacy_store, browser):
     browser.add(result_cell())
     browser.failed_connects = 1

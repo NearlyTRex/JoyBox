@@ -44,6 +44,10 @@ def write(text):
     sys.stdout.write(text)
     sys.stdout.flush()
 
+# Print a line as it is, for plain interactive output
+def say(message = ""):
+    print(message)
+
 # Print a dimmed status line
 def status(message):
     print(paint(f"  {message}", DIM))

@@ -16,3 +16,18 @@ path = "Xenia/windows/portable.txt"
 [[config_files]]
 path = "Xenia/windows/xenia.config.toml"
 template = "xenia.config.toml"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "xenia-project"
+github_repo = "release-builds-windows"
+starts_with = "xenia_master"
+ends_with = "master.zip"
+search_file = "xenia.exe"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "xenia.exe"

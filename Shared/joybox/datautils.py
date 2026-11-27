@@ -107,6 +107,21 @@ def search_dictionary(data, search_value, search_keys = None):
 # Retry utilities
 ###########################################################
 
+# Run the cleanup between attempts, warning instead of raising when it fails with a retry_on error
+def _run_retry_cleanup(cleanup_func, retry_on, verbose):
+    try:
+        cleanup_func()
+    except retry_on as cleanup_error:
+        if verbose:
+            logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
+
+# Log, when verbose, that every attempt failed
+def _log_retries_exhausted(operation_name, max_retries, verbose):
+    if verbose and operation_name:
+        logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
+    elif verbose:
+        logger.log_error("Operation failed after %d attempts" % max_retries)
+
 # Retry function with exponential backoff and cleanup, retrying when it raises one of the
 # retry_on errors or returns None after such a failure; a first-attempt None is the answer
 def retry_with_backoff(
@@ -131,16 +146,9 @@ def retry_with_backoff(
         elif verbose:
             logger.log_warning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, reason))
         if cleanup_func:
-            try:
-                cleanup_func()
-            except retry_on as cleanup_error:
-                if verbose:
-                    logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
+            _run_retry_cleanup(cleanup_func, retry_on, verbose)
         if attempt == max_retries - 1:
-            if verbose and operation_name:
-                logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
-            elif verbose:
-                logger.log_error("Operation failed after %d attempts" % max_retries)
+            _log_retries_exhausted(operation_name, max_retries, verbose)
             return None
         delay = initial_delay * (backoff_factor ** attempt)
         if verbose:

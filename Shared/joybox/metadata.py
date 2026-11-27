@@ -9,7 +9,95 @@ from joybox import environment
 from joybox import gamenaming
 from joybox import metadataentry
 from joybox import paths
+from joybox import reports
 from joybox import serialization
+
+# Pegasus field prefixes before the description, with the MetadataEntry accessor suffix for each
+PEGASUS_FIELDS_BEFORE_DESCRIPTION = [
+    ("game:", "game"),
+    ("file:", "file"),
+    ("developer:", "developer"),
+    ("publisher:", "publisher"),
+    ("genre:", "genre"),
+]
+
+# Pegasus field prefixes after the description, with the MetadataEntry accessor suffix for each
+PEGASUS_FIELDS_AFTER_DESCRIPTION = [
+    ("release:", "release"),
+    ("players:", "players"),
+    ("assets.boxfront:", "boxfront"),
+    ("assets.boxback:", "boxback"),
+    ("assets.background:", "background"),
+    ("assets.screenshot:", "screenshot"),
+    ("assets.video:", "video"),
+    ("x-url:", "url"),
+    ("x-co-op:", "coop"),
+    ("x-playable:", "playable"),
+]
+
+# Collection name from the first "collection:" line of Pegasus text; empty when there is none
+def read_pegasus_collection_name(data):
+    for line in data.split("\n"):
+        if line.startswith("collection:"):
+            return line.replace("collection:", "").strip()
+    return ""
+
+# Apply one Pegasus line to the entry and return whether a description block continues after it
+def apply_pegasus_line(game_entry, line, in_description_section):
+    for prefix, field in PEGASUS_FIELDS_BEFORE_DESCRIPTION:
+        if line.startswith(prefix):
+            getattr(game_entry, "set_" + field)(line.replace(prefix, "").strip())
+            return False
+
+    # Tag (no field in the metadata model; ends a description)
+    if line.startswith("tag:"):
+        return False
+
+    # Description
+    if line.startswith("description:"):
+        game_entry.set_description([])
+        return True
+    if line.startswith("  ") and in_description_section:
+        description_lines = game_entry.get_description()
+        description_lines.append(line.strip())
+        game_entry.set_description(description_lines)
+        return True
+    for prefix, field in PEGASUS_FIELDS_AFTER_DESCRIPTION:
+        if line.startswith(prefix):
+            getattr(game_entry, "set_" + field)(line.replace(prefix, "").strip())
+            return False
+    return in_description_section
+
+# Metadata entry for the platform built from one blank-line separated Pegasus block
+def parse_pegasus_entry(token, game_platform):
+    game_entry = metadataentry.MetadataEntry()
+    game_entry.set_platform(game_platform)
+    in_description_section = False
+    for line in token.split("\n"):
+        in_description_section = apply_pegasus_line(game_entry, line, in_description_section)
+    return game_entry
+
+# Pegasus text pieces for one entry's set fields, ending with the entry divider
+def format_pegasus_entry(game_entry):
+    contents = []
+    for prefix, field in PEGASUS_FIELDS_BEFORE_DESCRIPTION:
+        value = getattr(game_entry, "get_" + field)()
+        if value:
+            contents.append(prefix + " " + value + "\n")
+
+    # Description
+    if game_entry.get_description():
+        contents.append("description:\n")
+        for desc_line in game_entry.get_description():
+            contents.append("  " + desc_line + "\n")
+    for prefix, field in PEGASUS_FIELDS_AFTER_DESCRIPTION:
+        value = getattr(game_entry, "get_" + field)()
+        if value:
+            contents.append(prefix + " " + value + "\n")
+
+    # Divider
+    contents.append("\n\n")
+    return contents
 
 # Metadata database class
 class Metadata:
@@ -161,123 +249,23 @@ class Metadata:
         pegasus_file,
         verbose = False,
         exit_on_failure = False):
-        if paths.does_path_exist(pegasus_file):
-            data = serialization.read_text_file(pegasus_file, verbose = verbose, exit_on_failure = exit_on_failure)
-            if data is not None:
+        if not paths.does_path_exist(pegasus_file):
+            return
+        data = serialization.read_text_file(pegasus_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        if data is None:
+            return
 
-                # Read header
-                collection_platform = ""
-                for line in data.split("\n"):
-                    if line.startswith("collection:"):
-                        collection_platform = line.replace("collection:", "").strip()
-                        break
-                game_platform = config.Platform.from_string(collection_platform)
-                if not game_platform:
-                    logger.log_error("No known collection platform in %s" % pegasus_file)
-                    return
+        # Read header
+        game_platform = config.Platform.from_string(read_pegasus_collection_name(data))
+        if not game_platform:
+            logger.log_error("No known collection platform in %s" % pegasus_file)
+            return
 
-                # Read game entries
-                for token in data.split("\n\n"):
-
-                    # Create new entry
-                    game_entry = metadataentry.MetadataEntry()
-                    game_entry.set_platform(game_platform)
-                    in_description_section = False
-
-                    # Parse entry tokens
-                    for line in token.split("\n"):
-
-                        # Game
-                        if line.startswith("game:"):
-                            in_description_section = False
-                            game_entry.set_game(line.replace("game:", "").strip())
-
-                        # File
-                        elif line.startswith("file:"):
-                            in_description_section = False
-                            game_entry.set_file(line.replace("file:", "").strip())
-
-                        # Developer
-                        elif line.startswith("developer:"):
-                            in_description_section = False
-                            game_entry.set_developer(line.replace("developer:", "").strip())
-
-                        # Publisher
-                        elif line.startswith("publisher:"):
-                            in_description_section = False
-                            game_entry.set_publisher(line.replace("publisher:", "").strip())
-
-                        # Genre
-                        elif line.startswith("genre:"):
-                            in_description_section = False
-                            game_entry.set_genre(line.replace("genre:", "").strip())
-
-                        # Tag (no field in the metadata model; ends a description)
-                        elif line.startswith("tag:"):
-                            in_description_section = False
-
-                        # Description
-                        elif line.startswith("description:"):
-                            in_description_section = True
-                            game_entry.set_description([])
-                        elif line.startswith("  ") and in_description_section:
-                            description_lines = game_entry.get_description()
-                            description_lines.append(line.strip())
-                            game_entry.set_description(description_lines)
-
-                        # Release
-                        elif line.startswith("release:"):
-                            in_description_section = False
-                            game_entry.set_release(line.replace("release:", "").strip())
-
-                        # Players
-                        elif line.startswith("players:"):
-                            in_description_section = False
-                            game_entry.set_players(line.replace("players:", "").strip())
-
-                        # Boxfront
-                        elif line.startswith("assets.boxfront:"):
-                            in_description_section = False
-                            game_entry.set_boxfront(line.replace("assets.boxfront:", "").strip())
-
-                        # Boxback
-                        elif line.startswith("assets.boxback:"):
-                            in_description_section = False
-                            game_entry.set_boxback(line.replace("assets.boxback:", "").strip())
-
-                        # Background
-                        elif line.startswith("assets.background:"):
-                            in_description_section = False
-                            game_entry.set_background(line.replace("assets.background:", "").strip())
-
-                        # Screenshot
-                        elif line.startswith("assets.screenshot:"):
-                            in_description_section = False
-                            game_entry.set_screenshot(line.replace("assets.screenshot:", "").strip())
-
-                        # Video
-                        elif line.startswith("assets.video:"):
-                            in_description_section = False
-                            game_entry.set_video(line.replace("assets.video:", "").strip())
-
-                        # Url
-                        elif line.startswith("x-url:"):
-                            in_description_section = False
-                            game_entry.set_url(line.replace("x-url:", "").strip())
-
-                        # Co-op
-                        elif line.startswith("x-co-op:"):
-                            in_description_section = False
-                            game_entry.set_coop(line.replace("x-co-op:", "").strip())
-
-                        # Playable
-                        elif line.startswith("x-playable:"):
-                            in_description_section = False
-                            game_entry.set_playable(line.replace("x-playable:", "").strip())
-
-                    # Add new entry
-                    if game_entry.has_minimum_keys():
-                        self.add_game(game_entry)
+        # Read game entries
+        for token in data.split("\n\n"):
+            game_entry = parse_pegasus_entry(token, game_platform)
+            if game_entry.has_minimum_keys():
+                self.add_game(game_entry)
 
     # Import a metadata file by its format; only Pegasus is handled
     def import_from_metadata_file(
@@ -324,75 +312,7 @@ class Metadata:
 
             # Write each entry
             for game_entry in self.get_sorted_entries(game_platform):
-
-                # Game
-                if game_entry.get_game():
-                    contents.append("game: " + game_entry.get_game() + "\n")
-
-                # File
-                if game_entry.get_file():
-                    contents.append("file: " + game_entry.get_file() + "\n")
-
-                # Developer
-                if game_entry.get_developer():
-                    contents.append("developer: " + game_entry.get_developer() + "\n")
-
-                # Publisher
-                if game_entry.get_publisher():
-                    contents.append("publisher: " + game_entry.get_publisher() + "\n")
-
-                # Genre
-                if game_entry.get_genre():
-                    contents.append("genre: " + game_entry.get_genre() + "\n")
-
-                # Description
-                if game_entry.get_description():
-                    contents.append("description:\n")
-                    for desc_line in game_entry.get_description():
-                        contents.append("  " + desc_line + "\n")
-
-                # Release
-                if game_entry.get_release():
-                    contents.append("release: " + game_entry.get_release() + "\n")
-
-                # Players
-                if game_entry.get_players():
-                    contents.append("players: " + game_entry.get_players() + "\n")
-
-                # Boxfront
-                if game_entry.get_boxfront():
-                    contents.append("assets.boxfront: " + game_entry.get_boxfront() + "\n")
-
-                # Boxback
-                if game_entry.get_boxback():
-                    contents.append("assets.boxback: " + game_entry.get_boxback() + "\n")
-
-                # Background
-                if game_entry.get_background():
-                    contents.append("assets.background: " + game_entry.get_background() + "\n")
-
-                # Screenshot
-                if game_entry.get_screenshot():
-                    contents.append("assets.screenshot: " + game_entry.get_screenshot() + "\n")
-
-                # Video
-                if game_entry.get_video():
-                    contents.append("assets.video: " + game_entry.get_video() + "\n")
-
-                # Url
-                if game_entry.get_url():
-                    contents.append("x-url: " + game_entry.get_url() + "\n")
-
-                # Co-op
-                if game_entry.get_coop():
-                    contents.append("x-co-op: " + game_entry.get_coop() + "\n")
-
-                # Playable
-                if game_entry.get_playable():
-                    contents.append("x-playable: " + game_entry.get_playable() + "\n")
-
-                # Divider
-                contents.append("\n\n")
+                contents += format_pegasus_entry(game_entry)
 
         # Write file
         return serialization.write_text_file(
@@ -418,3 +338,136 @@ class Metadata:
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+
+###########################################################
+# Missing asset and metadata reports
+###########################################################
+
+# (platform, entry) for every game entry of each Pegasus metadata file under the directory
+def _iterate_metadata_dir_entries(metadata_dir):
+    for filename in paths.build_file_list(metadata_dir):
+        if not environment.is_game_metadata_file(filename):
+            continue
+        metadata_obj = Metadata()
+        metadata_obj.import_from_metadata_file(filename)
+        for game_platform in metadata_obj.get_sorted_platforms():
+            for game_entry in metadata_obj.get_sorted_entries(game_platform):
+                yield game_platform, game_entry
+
+# (asset files present, missing asset files by asset type) over every asset type of every entry
+def _find_entry_asset_files(metadata_dir):
+    found_assets = set()
+    missing_assets = {}
+    for game_platform, game_entry in _iterate_metadata_dir_entries(metadata_dir):
+        for asset_type in config.AssetType.members():
+
+            # Get asset file
+            game_name = game_entry.get_game()
+            _, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
+            asset_file = environment.get_locker_gaming_asset_file(game_category, game_subcategory, game_name, asset_type)
+
+            # Check if asset exists
+            if paths.does_path_exist(asset_file):
+                found_assets.add(asset_file)
+            else:
+                missing_assets.setdefault(asset_type, set()).add(asset_file)
+    return found_assets, missing_assets
+
+# Report the Pegasus entries missing each asset type and the asset files no entry uses, writing
+# each list to a file
+def report_missing_game_assets(assets_dir, metadata_dir, verbose = False, pretend_run = False):
+    all_assets = set(paths.build_file_list(assets_dir))
+    found_assets, missing_assets = _find_entry_asset_files(metadata_dir)
+
+    # Report and write missing assets
+    for asset_type in config.AssetType.members():
+        reports.write_list_report(
+            items = sorted(missing_assets.get(asset_type, set())),
+            title = "\nMissing '%s':" % asset_type.val(),
+            max_display = 10 if verbose else 0,
+            report_file = "Missing_%s.txt" % asset_type.val(),
+            verbose = verbose,
+            pretend_run = pretend_run)
+
+    # Report and write extra assets
+    extra_assets = all_assets - found_assets
+    for asset_files in missing_assets.values():
+        extra_assets = extra_assets - asset_files
+    reports.write_list_report(
+        items = sorted(extra_assets),
+        title = "\nExtra assets:",
+        max_display = 10 if verbose else 0,
+        report_file = "Extras.txt",
+        verbose = verbose,
+        pretend_run = pretend_run)
+
+# The metadata keys a key set selects: the minimum, the downloadable or all of them
+def get_metadata_keys_to_check(key_type):
+    if key_type == config.MetadataKeyType.MINIMUM:
+        return config.metadata_keys_minimum
+    if key_type == config.MetadataKeyType.DOWNLOADABLE:
+        return config.metadata_keys_downloadable
+    return config.metadata_keys_all
+
+# Log a summary of the Pegasus entries missing any of the keys, then write per key the entries
+# missing it
+def report_missing_game_metadata(metadata_dir, keys_to_check, verbose = False, pretend_run = False):
+    missing_by_key = {key: [] for key in keys_to_check}
+    total_entries = 0
+    entries_with_missing = set()
+    for game_platform, game_entry in _iterate_metadata_dir_entries(metadata_dir):
+        total_entries += 1
+        entry_id = "%s - %s" % (game_platform, game_entry.get_game())
+        for key in keys_to_check:
+            if not game_entry.is_key_set(key) or game_entry.get_value(key) == "":
+                missing_by_key[key].append(entry_id)
+                entries_with_missing.add(entry_id)
+    logger.log_header("Scan complete: %d total entries, %d with missing metadata" % (total_entries, len(entries_with_missing)))
+
+    # Write results per key
+    for key in keys_to_check:
+        missing_items = sorted(missing_by_key[key])
+        if len(missing_items) > 0:
+            reports.write_list_report(
+                items = missing_items,
+                title = "\nMissing '%s':" % key,
+                max_display = 10 if verbose else 0,
+                report_file = "Missing_%s.txt" % key,
+                verbose = verbose,
+                pretend_run = pretend_run)
+
+###########################################################
+# Sorting metadata files
+###########################################################
+
+# The game metadata files anywhere under metadata_dir
+def find_game_metadata_files(metadata_dir):
+    metadata_files = []
+    for filename in paths.build_file_list(metadata_dir):
+        if environment.is_game_metadata_file(filename):
+            metadata_files.append(filename)
+    return metadata_files
+
+# Rewrite each metadata file in sorted order by importing it and exporting it back, logging
+# each and then the count; a pretend run only logs them
+def sort_game_metadata_files(metadata_files, verbose = False, pretend_run = False):
+    files_sorted = 0
+    for metadata_file in sorted(metadata_files):
+        logger.log_info("Sorting: %s" % metadata_file)
+        if not pretend_run:
+
+            # Import metadata
+            metadata_obj = Metadata()
+            metadata_obj.import_from_metadata_file(metadata_file)
+
+            # Export back
+            metadata_obj.export_to_metadata_file(
+                metadata_file = metadata_file,
+                append_existing = False,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+        files_sorted += 1
+
+    # Report results
+    logger.log_header("Sort complete: %d files sorted" % files_sorted)

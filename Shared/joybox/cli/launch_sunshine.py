@@ -8,23 +8,7 @@ from joybox import logger
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Start the Sunshine game-streaming host installed by setup_tools.",
-        details = (
-            "Runs the Sunshine program from the tools directory so a Moonlight client can stream\n"
-            "games from this machine. It waits for Sunshine to exit and logs an error if it exits\n"
-            "with a non-zero code. It takes only the common options."),
-        examples = [
-            ("Start Sunshine", "launch_sunshine"),
-            ("Dry run without starting Sunshine", "launch_sunshine -p -v"),
-        ],
-        notes = [
-            "Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if it is not found.",
-            "`setup_tools -k Sunshine -c` writes the apps clients can start (Desktop, Pegasus and Steam Big Picture); apps added in Sunshine's web page are replaced the next time it configures.",
-            "Set `[Tools.Sunshine] sunshine_streaming_host` and install the bootstrap's `autostart`, `ufw` and `udev` components to start it at every login, open its ports to the LAN and allow virtual controllers.",
-        ],
-        see_also = ["setup_tools", "launch_pegasus", "launch_moonlight"],
-        section = "Game Launching")
+    parser = arguments.ArgumentParser(command = "launch_sunshine")
     parser.add_common_arguments()
     return parser
 

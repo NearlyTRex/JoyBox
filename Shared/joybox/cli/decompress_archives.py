@@ -5,36 +5,11 @@ from joybox import archive
 from joybox import arguments
 from joybox import setup
 from joybox import logger
-from joybox import paths
 from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Extract archive files into a folder beside each archive.",
-        details = (
-            "Finds every archive of the chosen types under the input path (or takes the one file\n"
-            "given) and extracts it into a `<name>` folder next to it, or with `-s` straight into\n"
-            "the directory the archive is in. Tarballs are extracted with tar, RAR archives with\n"
-            "unrar, StuffIt archives with unar and everything else with 7-Zip. Names in LZH\n"
-            "archives are decoded from Shift-JIS to UTF-8.\n"
-            "\n"
-            "Existing files in the output folder are overwritten, and an archive is extracted again\n"
-            "even if its folder already exists."),
-        examples = [
-            ("Extract every zip in a folder", "decompress_archives -i /path/to/archives"),
-            ("Extract zip, 7z and RAR archives and delete them, previewing first", "decompress_archives -i /path/to/archives -a ZIP 7Z RAR -d -p -v"),
-            ("Extract Japanese LZH archives", "decompress_archives -i /path/to/archives -a LZH LHA"),
-            ("Extract classic Mac StuffIt archives", "decompress_archives -i /path/to/archives -a SIT"),
-            ("Extract a tarball next to itself", "decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s"),
-        ],
-        notes = [
-            "Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.",
-            "`APPIMAGE` archives are refused with an error.",
-            "7-Zip must be installed as a JoyBox tool, plus tar, unrar and unar for those formats.",
-        ],
-        see_also = ["compress_files", "compress_folders", "verify_archives", "isoextract"],
-        section = "Files & Archives")
+    parser = arguments.ArgumentParser(command = "decompress_archives")
     parser.add_input_path_argument(description = "An archive file, or a directory searched recursively for archives; must exist")
     parser.add_enum_argument(
         args = ("-a", "--archive_types"),
@@ -76,25 +51,14 @@ def main():
             return
 
     # Decompress archives
-    archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
-    for file in paths.build_file_list_by_extensions(input_path, extensions = archive_extensions):
-
-        # Get file info
-        current_file = file
-        file_dir = paths.get_filename_directory(current_file)
-        file_basename = paths.get_filename_basename(current_file)
-        output_dir = paths.join_paths(file_dir, file_basename)
-        if args.same_dir:
-            output_dir = file_dir
-
-        # Decompress file
-        archive.extract_archive(
-            archive_file = current_file,
-            extract_dir = output_dir,
-            delete_original = args.delete_originals,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+    archive.extract_archives_by_type(
+        input_path = input_path,
+        archive_types = args.archive_types,
+        same_dir = args.same_dir,
+        delete_originals = args.delete_originals,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

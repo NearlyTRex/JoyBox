@@ -1,0 +1,23 @@
+# Help text for the sanitize_filenames command, read by joybox/arguments.py
+
+description = "Rename files so their names are plain ASCII and safe on every filesystem."
+details = """
+Renames each file directly inside the input directory. Accented and other non-ASCII
+characters are transliterated to ASCII (`Pokémon` becomes `Pokemon`) or dropped, the
+characters `< > : " / \\ | ? *` and control characters are removed, trailing spaces and
+dots are stripped, and runs of spaces collapse to one.
+
+Subdirectories and the files inside them are not touched."""
+section = "Files & Archives"
+see_also = [
+    "make_folders",
+    "list_dupes",
+]
+notes = [
+    "If the cleaned name is already taken, that file is left with its old name.",
+    "It stops at the first rename that fails.",
+]
+examples = [
+    ["Sanitize the names of files in a directory", "sanitize_filenames -i ~/Downloads/Soundtrack"],
+    ["Preview the renames without the confirmation prompt", "sanitize_filenames -i ~/Downloads/Soundtrack -p -v --no-preview"],
+]

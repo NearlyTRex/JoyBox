@@ -3,6 +3,8 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, Recorder, assert_entry_points
+from joybox import command as joybox_command
+from joybox import hostsfile
 from joybox.cli import testvm
 
 
@@ -35,9 +37,9 @@ def tool(monkeypatch, isolated_settings):
     monkeypatch.setattr(vm, "list_snapshots", lambda name, verbose: ["clean", "after-tls"])
     monkeypatch.setattr(vm, "get_vm_ip", command.ip)
     monkeypatch.setattr(vm, "get_console_command", lambda name: ["virsh", "console", name])
-    monkeypatch.setattr(testvm.command, "run_interactive_command", command.console)
-    monkeypatch.setattr(testvm.hostsfile, "set_entries", command.set_hosts)
-    monkeypatch.setattr(testvm.hostsfile, "remove_entries", command.remove_hosts)
+    monkeypatch.setattr(joybox_command, "run_interactive_command", command.console)
+    monkeypatch.setattr(hostsfile, "set_entries", command.set_hosts)
+    monkeypatch.setattr(hostsfile, "remove_entries", command.remove_hosts)
     return command
 
 

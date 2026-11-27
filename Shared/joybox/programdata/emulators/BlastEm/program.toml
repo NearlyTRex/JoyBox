@@ -4,3 +4,17 @@
 [config.BlastEm]
 program = { windows = "BlastEm/windows/blastem.exe", linux = "BlastEm/windows/blastem.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://www.retrodev.com/blastem"
+webpage_base_url = "https://www.retrodev.com/blastem/"
+starts_with = "https://www.retrodev.com/blastem/blastem-win32"
+ends_with = ".zip"
+search_file = "blastem.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "blastem.exe"

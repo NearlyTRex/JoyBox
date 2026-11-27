@@ -80,9 +80,20 @@ class GameInfo:
         # Save json file
         self.json_file = json_file
 
-        ##############################
         # Fill basic info
-        ##############################
+        self._fill_basic_info(json_file)
+
+        # Get locker types
+        if remote_locker_type is None:
+            remote_locker_type = lockerinfo.get_primary_remote_locker_type()
+
+        # Fill cache paths, then locker paths
+        self._fill_cache_paths()
+        self._fill_locker_paths(remote_locker_type)
+
+    # Set the name, categories and platform from where the JSON file sits, then the metadata
+    # entry; ValueError when the categories can't be derived
+    def _fill_basic_info(self, json_file):
 
         # Get basic info based on json location
         self.game_name = paths.get_filename_basename(json_file)
@@ -107,13 +118,9 @@ class GameInfo:
         # Set metadata
         self.set_metadata(metadata_entry)
 
-        ##############################
-        # Fill path info
-        ##############################
-
-        # Get locker types
-        if remote_locker_type is None:
-            remote_locker_type = lockerinfo.get_primary_remote_locker_type()
+    # Set the save, general save, local cache and remote cache directories; computer games
+    # save under the Sandboxie or Wine layout for the host
+    def _fill_cache_paths(self):
 
         # Get paths
         save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name)
@@ -131,6 +138,17 @@ class GameInfo:
             self.game_category,
             self.game_subcategory,
             self.game_name)
+
+        # Set paths
+        self.set_value(config.JSON_KEY_SAVE_DIR, save_dir)
+        self.set_value(config.JSON_KEY_GENERAL_SAVE_DIR, general_save_dir)
+        self.set_value(config.JSON_KEY_LOCAL_CACHE_DIR, local_cache_dir)
+        self.set_value(config.JSON_KEY_REMOTE_CACHE_DIR, remote_cache_dir)
+
+    # Set the local and remote locker rom and save directories
+    def _fill_locker_paths(self, remote_locker_type):
+
+        # Get paths
         local_rom_dir = environment.get_locker_gaming_files_dir(
             self.game_supercategory,
             self.game_category,
@@ -155,10 +173,6 @@ class GameInfo:
             remote_locker_type)
 
         # Set paths
-        self.set_value(config.JSON_KEY_SAVE_DIR, save_dir)
-        self.set_value(config.JSON_KEY_GENERAL_SAVE_DIR, general_save_dir)
-        self.set_value(config.JSON_KEY_LOCAL_CACHE_DIR, local_cache_dir)
-        self.set_value(config.JSON_KEY_REMOTE_CACHE_DIR, remote_cache_dir)
         self.set_value(config.JSON_KEY_LOCAL_ROM_DIR, local_rom_dir)
         self.set_value(config.JSON_KEY_REMOTE_ROM_DIR, remote_rom_dir)
         self.set_value(config.JSON_KEY_LOCAL_SAVE_DIR, local_save_dir)
@@ -370,53 +384,37 @@ class GameInfo:
 
     ##############################
 
-    # Locker path the game's background image belongs at, whether or not it exists
-    def get_background_asset(self):
+    # Locker path the game's asset of the given type belongs at, whether or not it exists
+    def _get_asset_file(self, asset_type):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
-            asset_type = config.AssetType.BACKGROUND)
+            asset_type = asset_type)
+
+    # Locker path the game's background image belongs at, whether or not it exists
+    def get_background_asset(self):
+        return self._get_asset_file(config.AssetType.BACKGROUND)
 
     # Locker path the game's back cover image belongs at, whether or not it exists
     def get_boxback_asset(self):
-        return environment.get_locker_gaming_asset_file(
-            game_category = self.get_category(),
-            game_subcategory = self.get_subcategory(),
-            game_name = self.get_name(),
-            asset_type = config.AssetType.BOXBACK)
+        return self._get_asset_file(config.AssetType.BOXBACK)
 
     # Locker path the game's front cover image belongs at, whether or not it exists
     def get_boxfront_asset(self):
-        return environment.get_locker_gaming_asset_file(
-            game_category = self.get_category(),
-            game_subcategory = self.get_subcategory(),
-            game_name = self.get_name(),
-            asset_type = config.AssetType.BOXFRONT)
+        return self._get_asset_file(config.AssetType.BOXFRONT)
 
     # Locker path the game's disc or cartridge label image belongs at, whether or not it exists
     def get_label_asset(self):
-        return environment.get_locker_gaming_asset_file(
-            game_category = self.get_category(),
-            game_subcategory = self.get_subcategory(),
-            game_name = self.get_name(),
-            asset_type = config.AssetType.LABEL)
+        return self._get_asset_file(config.AssetType.LABEL)
 
     # Locker path the game's screenshot belongs at, whether or not it exists
     def get_screenshot_asset(self):
-        return environment.get_locker_gaming_asset_file(
-            game_category = self.get_category(),
-            game_subcategory = self.get_subcategory(),
-            game_name = self.get_name(),
-            asset_type = config.AssetType.SCREENSHOT)
+        return self._get_asset_file(config.AssetType.SCREENSHOT)
 
     # Locker path the game's preview video belongs at, whether or not it exists
     def get_video_asset(self):
-        return environment.get_locker_gaming_asset_file(
-            game_category = self.get_category(),
-            game_subcategory = self.get_subcategory(),
-            game_name = self.get_name(),
-            asset_type = config.AssetType.VIDEO)
+        return self._get_asset_file(config.AssetType.VIDEO)
 
     ##############################
 
@@ -709,50 +707,13 @@ class GameInfo:
     def select_store_launch_program(self, base_dir, store_key = None):
 
         # Get list of launch programs from the json
-        launch_programs = self.get_store_launch_programs(store_key)
-        if not launch_programs:
-            launch_programs = []
+        launch_programs = self.get_store_launch_programs(store_key) or []
 
-        # No existing entries
+        # No existing entries: scan the install and try to record these for later
         if len(launch_programs) == 0:
-
-            # Get the complete list of runnable files from the install
-            runnable_files_all = paths.build_file_list_by_extensions(
-                root = base_dir,
-                extensions = config.WindowsProgramFileType.cvalues(),
-                use_relative_paths = True,
-                follow_symlink_dirs = True)
-
-            # Parse down the complete list to the ones most likely to be games
-            runnable_files_likely = []
-            for relative_path in runnable_files_all:
-                path_to_add = paths.normalize_file_path(relative_path, separator = config.OS_PATHSEP)
-                should_ignore = False
-                for ignore_path in config.ignored_paths_install:
-                    if path_to_add.startswith(ignore_path):
-                        should_ignore = True
-                        break
-                if should_ignore:
-                    continue
-                runnable_files_likely.append(path_to_add)
-
-            # Add to launch programs
-            for runnable_file_likely in runnable_files_likely:
-                runnable_program = computer.Program()
-                runnable_program.set_exe(paths.get_filename_file(runnable_file_likely))
-                runnable_program.set_cwd(paths.get_filename_directory(runnable_file_likely))
-                launch_programs.append(runnable_program)
-
-            # Try to record these for later
+            launch_programs.extend(_scan_launch_programs(base_dir))
             self.set_store_launch_programs(launch_programs, store_key)
             self.update_json_file()
-
-        # Get launch info
-        def get_launch_info(game_exe):
-            for candidate in launch_programs:
-                if paths.join_paths(candidate.get_cwd(), candidate.get_exe()) == game_exe:
-                    return candidate
-            return None
 
         # Check that we have something to run
         if len(launch_programs) == 0:
@@ -764,30 +725,7 @@ class GameInfo:
         # If we have exactly one choice, use that
         if len(launch_programs) == 1:
             return launch_programs[0]
-
-        # Create launch program
-        launch_program = None
-
-        # Handle game selection
-        def handle_game_selection(selected_file):
-            nonlocal launch_program
-            launch_program = get_launch_info(selected_file)
-
-        # Build runnable choices list
-        runnable_choices = []
-        for candidate in launch_programs:
-            runnable_choices.append(paths.join_paths(candidate.get_cwd(), candidate.get_exe()))
-
-        # Display list of runnable files and let user decide which to run
-        gui.display_choices_window(
-            choice_list = runnable_choices,
-            title_text = "Select Program",
-            message_text = "Select program to run",
-            button_text = "Run program",
-            run_func = handle_game_selection)
-
-        # Return launch info
-        return launch_program
+        return _choose_launch_program(launch_programs)
 
     # Launch and installer programs under the store key whose store_subkey flag is set
     def find_store_matching_programs(self, store_key = None, store_subkey = None):
@@ -835,6 +773,68 @@ class GameInfo:
 
 ###########################################################
 
+# Programs for the runnable files under base_dir likely to be games, skipping the ignored
+# install paths
+def _scan_launch_programs(base_dir):
+
+    # Get the complete list of runnable files from the install
+    runnable_files_all = paths.build_file_list_by_extensions(
+        root = base_dir,
+        extensions = config.WindowsProgramFileType.cvalues(),
+        use_relative_paths = True,
+        follow_symlink_dirs = True)
+
+    # Parse down the complete list to the ones most likely to be games
+    runnable_files_likely = []
+    for relative_path in runnable_files_all:
+        path_to_add = paths.normalize_file_path(relative_path, separator = config.OS_PATHSEP)
+        if any(path_to_add.startswith(ignore_path) for ignore_path in config.ignored_paths_install):
+            continue
+        runnable_files_likely.append(path_to_add)
+
+    # Build launch programs
+    launch_programs = []
+    for runnable_file_likely in runnable_files_likely:
+        runnable_program = computer.Program()
+        runnable_program.set_exe(paths.get_filename_file(runnable_file_likely))
+        runnable_program.set_cwd(paths.get_filename_directory(runnable_file_likely))
+        launch_programs.append(runnable_program)
+    return launch_programs
+
+# The launch program the user picks from a choices window; None when nothing is picked
+def _choose_launch_program(launch_programs):
+
+    # Get launch info
+    def get_launch_info(game_exe):
+        for candidate in launch_programs:
+            if paths.join_paths(candidate.get_cwd(), candidate.get_exe()) == game_exe:
+                return candidate
+        return None
+
+    # Create launch program
+    launch_program = None
+
+    # Handle game selection
+    def handle_game_selection(selected_file):
+        nonlocal launch_program
+        launch_program = get_launch_info(selected_file)
+
+    # Build runnable choices list
+    runnable_choices = []
+    for candidate in launch_programs:
+        runnable_choices.append(paths.join_paths(candidate.get_cwd(), candidate.get_exe()))
+
+    # Display list of runnable files and let user decide which to run
+    gui.display_choices_window(
+        choice_list = runnable_choices,
+        title_text = "Select Program",
+        message_text = "Select program to run",
+        button_text = "Run program",
+        run_func = handle_game_selection)
+
+    # Return launch info
+    return launch_program
+
 # (supercategory, category, subcategory) from where a file sits under the locker, cache or
 # JSON metadata gaming roots; category falls back to Other; all None when the path doesn't fit
 def derive_game_categories_from_file(game_file):
@@ -874,16 +874,13 @@ def derive_game_categories_from_file(game_file):
         return (None, None, None)
 
     # Get derived category and subcategory
-    derived_category = None
     derived_subcategory = config.Subcategory.from_string(relative_file_path_tokens[1])
-    if relative_file_path.startswith(config.Category.COMPUTER.val()):
-        derived_category = config.Category.COMPUTER
-    elif relative_file_path.startswith(config.Category.MICROSOFT.val()):
-        derived_category = config.Category.MICROSOFT
-    elif relative_file_path.startswith(config.Category.NINTENDO.val()):
-        derived_category = config.Category.NINTENDO
-    elif relative_file_path.startswith(config.Category.SONY.val()):
-        derived_category = config.Category.SONY
-    else:
-        derived_category = config.Category.OTHER
+    derived_category = _derive_category_from_path(relative_file_path)
     return (derived_supercategory, derived_category, derived_subcategory)
+
+# The Computer, Microsoft, Nintendo or Sony category the relative path starts with, else Other
+def _derive_category_from_path(relative_file_path):
+    for category in (config.Category.COMPUTER, config.Category.MICROSOFT, config.Category.NINTENDO, config.Category.SONY):
+        if relative_file_path.startswith(category.val()):
+            return category
+    return config.Category.OTHER

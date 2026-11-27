@@ -18,6 +18,56 @@ from joybox import strings
 from joybox import metadataentry
 from joybox import paths
 
+# Link of the best-scoring result at or above the match threshold that has one; None otherwise
+def _find_best_result_link(scores_list, verbose = False):
+    min_match_score = webpage.get_min_match_score()
+    for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+        if score_entry["ratio"] < min_match_score:
+            break
+        game_cell = score_entry["element"]
+        game_link_element = webpage.get_element(
+            parent = game_cell,
+            locator = webpage.ElementLocator({"class": "css-1k3j1r9"}),
+            verbose = verbose)
+        if game_link_element:
+            return webpage.get_element_attribute(game_link_element, "href")
+    return None
+
+# Set developer, publisher or release date from one store page detail text
+def _read_detail_text(element_detail_text, metadata_entry):
+
+    # Developer
+    if strings.does_string_start_with_substring(element_detail_text, "Developer"):
+        developer_text = strings.trim_substring_from_start(element_detail_text, "Developer").strip()
+        metadata_entry.set_developer(developer_text)
+        return
+
+    # Publisher
+    if strings.does_string_start_with_substring(element_detail_text, "Publisher"):
+        published_text = strings.trim_substring_from_start(element_detail_text, "Publisher").strip()
+        metadata_entry.set_publisher(published_text)
+        return
+
+    # Release
+    if strings.does_string_start_with_substring(element_detail_text, "Release Date"):
+        release_text = strings.trim_substring_from_start(element_detail_text, "Release Date").strip()
+        release_text = strings.convert_date_string(release_text, "%m/%d/%y", "%Y-%m-%d")
+        if release_text:
+            metadata_entry.set_release(release_text)
+
+# Purchase fields for one Legendary list entry, with its Windows build version
+def _create_owned_game_data(entry):
+    windows_asset = (entry.get("asset_infos") or {}).get("Windows") or {}
+    line_appname = str(entry.get("app_name") or "")
+    line_title = str(entry.get("app_title") or "")
+    line_buildid = str(windows_asset.get("build_version") or config.DEFAULT_BUILDID)
+    return {
+        config.JSON_KEY_STORE_APPNAME: line_appname,
+        config.JSON_KEY_STORE_APPURL: "",
+        config.JSON_KEY_STORE_NAME: line_title,
+        config.JSON_KEY_STORE_BUILDID: line_buildid
+    }
+
 # Epic store
 class Epic(storebase.StoreBase):
 
@@ -184,40 +234,33 @@ class Epic(storebase.StoreBase):
             return None
 
         # Score each potential title compared to the original title
+        scores_list = self._score_search_results(element_search_result, identifier, verbose = verbose)
+
+        # Get the best url match among results close enough to the name
+        return _find_best_result_link(scores_list, verbose = verbose)
+
+    # Each search result cell with its title's similarity ratio to the identifier
+    def _score_search_results(self, element_search_result, identifier, verbose = False):
         scores_list = []
         game_cells = webpage.get_element(
             parent = element_search_result,
             locator = webpage.ElementLocator({"class": "css-2mlzob"}),
             all_elements = True)
-        if game_cells:
-            for game_cell in game_cells:
+        for game_cell in game_cells or []:
 
-                # Get possible title
-                game_title_element = webpage.get_element(
-                    parent = game_cell,
-                    locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
-                    verbose = verbose)
-                game_cell_text = webpage.get_element_children_text(game_title_element)
-
-                # Add comparison score
-                score_entry = {}
-                score_entry["element"] = game_cell
-                score_entry["ratio"] = strings.get_string_similarity_ratio(identifier, game_cell_text)
-                scores_list.append(score_entry)
-
-        # Get the best url match among results close enough to the name
-        min_match_score = webpage.get_min_match_score()
-        for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-            if score_entry["ratio"] < min_match_score:
-                break
-            game_cell = score_entry["element"]
-            game_link_element = webpage.get_element(
+            # Get possible title
+            game_title_element = webpage.get_element(
                 parent = game_cell,
-                locator = webpage.ElementLocator({"class": "css-1k3j1r9"}),
+                locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
                 verbose = verbose)
-            if game_link_element:
-                return webpage.get_element_attribute(game_link_element, "href")
-        return None
+            game_cell_text = webpage.get_element_children_text(game_title_element)
+
+            # Add comparison score
+            score_entry = {}
+            score_entry["element"] = game_cell
+            score_entry["ratio"] = strings.get_string_similarity_ratio(identifier, game_cell_text)
+            scores_list.append(score_entry)
+        return scores_list
 
     ############################################################
     # Purchases
@@ -234,32 +277,61 @@ class Epic(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "epic_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_purchases):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached Epic purchases data (%.1f hours old)" % cache_age_hours)
-
         # Load from cache if available
-        if use_cache:
-            cached_data = serialization.read_json_file(
-                src = cache_file_purchases,
-                verbose = verbose,
-                exit_on_failure = False)
-            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
-            if verbose:
-                logger.log_warning("Failed to load Epic cache, will fetch fresh data")
-            use_cache = False
+        cached_purchases = self._load_cached_purchases(cache_file_purchases, verbose = verbose)
+        if cached_purchases is not None:
+            return cached_purchases
+
+        # Get epic json
+        epic_json = self._list_owned_games(verbose = verbose, exit_on_failure = exit_on_failure)
+        if epic_json is None:
+            return None
+
+        # Parse output
+        purchases = []
+        purchases_data = []
+        for entry in epic_json:
+            purchase_data = _create_owned_game_data(entry)
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.get_platform())
+            for key, value in purchase_data.items():
+                purchase.set_value(key, value)
+            purchases.append(purchase)
+            purchases_data.append(purchase_data)
+
+        # Save to cache
+        self._save_purchases_cache(cache_dir, cache_file_purchases, purchases_data, verbose = verbose, pretend_run = pretend_run)
+        return purchases
+
+    # Cached purchases when the cache is under a day old and holds a list of dicts, else None
+    def _load_cached_purchases(self, cache_file_purchases, verbose = False):
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        if not paths.does_path_exist(cache_file_purchases):
+            return None
+        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
+        if cache_age_hours >= 24:
+            return None
+        if verbose:
+            logger.log_info("Using cached Epic purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache
+        cached_data = serialization.read_json_file(
+            src = cache_file_purchases,
+            verbose = verbose,
+            exit_on_failure = False)
+        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+            return [
+                jsondata.JsonData(json_data = purchase_data, json_platform = self.get_platform())
+                for purchase_data in cached_data
+            ]
+        if verbose:
+            logger.log_warning("Failed to load Epic cache, will fetch fresh data")
+        return None
+
+    # Legendary's JSON list of owned games; None, logged, when it gives no list
+    def _list_owned_games(self, verbose = False, exit_on_failure = False):
 
         # Get script command
         script_cmd = programs.get_python_script_command("Legendary")
@@ -287,37 +359,10 @@ class Epic(storebase.StoreBase):
             logger.log_error("Unable to parse epic game list")
             logger.log_error("Received output:\n%s" % list_output)
             return None
+        return epic_json
 
-        # Parse output
-        purchases = []
-        purchases_data = []
-        for entry in epic_json:
-
-            # Gather info
-            windows_asset = (entry.get("asset_infos") or {}).get("Windows") or {}
-            line_appname = str(entry.get("app_name") or "")
-            line_title = str(entry.get("app_title") or "")
-            line_buildid = str(windows_asset.get("build_version") or config.DEFAULT_BUILDID)
-
-            # Create purchase
-            purchase = jsondata.JsonData(
-                json_data = {},
-                json_platform = self.get_platform())
-            purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
-            purchase.set_value(config.JSON_KEY_STORE_APPURL, "")
-            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
-            purchase.set_value(config.JSON_KEY_STORE_BUILDID, line_buildid)
-            purchases.append(purchase)
-
-            # Store data for caching
-            purchases_data.append({
-                config.JSON_KEY_STORE_APPNAME: line_appname,
-                config.JSON_KEY_STORE_APPURL: "",
-                config.JSON_KEY_STORE_NAME: line_title,
-                config.JSON_KEY_STORE_BUILDID: line_buildid
-            })
-
-        # Save to cache
+    # Write the purchase fields to the cache file, logging the outcome when verbose
+    def _save_purchases_cache(self, cache_dir, cache_file_purchases, purchases_data, verbose = False, pretend_run = False):
         fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
         success = serialization.write_json_file(
             src = cache_file_purchases,
@@ -329,7 +374,6 @@ class Epic(storebase.StoreBase):
             logger.log_info("Saved Epic purchases data to cache")
         elif not success and verbose:
             logger.log_warning("Failed to save Epic cache")
-        return purchases
 
     ############################################################
     # Json
@@ -348,6 +392,31 @@ class Epic(storebase.StoreBase):
         if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
+
+        # Get game info
+        game_info = self._get_legendary_game_info(identifier, verbose = verbose, exit_on_failure = exit_on_failure)
+        if game_info is None:
+            return None
+
+        # Build jsondata
+        json_data = self.create_default_jsondata()
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_NAME, str(game_info.get("title") or "").strip())
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(game_info.get("version") or config.DEFAULT_BUILDID).strip())
+        cloud_save_folder = game_info.get("cloud_save_folder")
+        if cloud_save_folder:
+            json_data.set_value(config.JSON_KEY_STORE_PATHS, [
+                storepaths.create_tokenized_path(cloud_save_folder.strip())
+            ])
+        return self.augment_jsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # The "game" section of Legendary's info json for the appname; None, logged, when unavailable
+    def _get_legendary_game_info(self, identifier, verbose = False, exit_on_failure = False):
 
         # Get script command
         script_cmd = programs.get_python_script_command("Legendary")
@@ -376,23 +445,7 @@ class Epic(storebase.StoreBase):
             logger.log_error("Unable to parse epic game information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
-
-        # Build jsondata
-        json_data = self.create_default_jsondata()
-        json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
-        json_data.set_value(config.JSON_KEY_STORE_NAME, str(game_info.get("title") or "").strip())
-        json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(game_info.get("version") or config.DEFAULT_BUILDID).strip())
-        cloud_save_folder = game_info.get("cloud_save_folder")
-        if cloud_save_folder:
-            json_data.set_value(config.JSON_KEY_STORE_PATHS, [
-                storepaths.create_tokenized_path(cloud_save_folder.strip())
-            ])
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return game_info
 
     ############################################################
     # Metadata
@@ -411,6 +464,12 @@ class Epic(storebase.StoreBase):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
+        # Scrape the store page with retries
+        return self._scrape_metadata_with_retries(identifier, verbose = verbose, pretend_run = pretend_run)
+
+    # Retry the page scrape in a fresh headless driver, disconnecting it between attempts and at the end
+    def _scrape_metadata_with_retries(self, identifier, verbose = False, pretend_run = False):
+
         # Store web driver for cleanup
         web_driver = None
 
@@ -428,92 +487,10 @@ class Epic(storebase.StoreBase):
         # Fetch function
         def attempt_metadata_fetch():
             nonlocal web_driver
-
-            # Connect to web
-            web_driver = self.web_connect(
-                headless = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
+            web_driver = self._connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
             if not web_driver:
-                if pretend_run:
-                    return None
-                raise webpage.ScrapeFailed("Failed to connect to web driver")
-
-            # Load url
-            success = webpage.load_url(web_driver, identifier)
-            if not success:
-                raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
-
-            # Create metadata entry
-            metadata_entry = metadataentry.MetadataEntry()
-
-            # Look for game description
-            element_game_description = webpage.wait_for_element(
-                driver = web_driver,
-                locator = webpage.ElementLocator({"id": "about-long-description"}),
-                verbose = verbose,
-                exit_on_failure = False)
-            if element_game_description:
-                raw_game_description = webpage.get_element_children_text(element_game_description)
-                if raw_game_description:
-                    metadata_entry.set_description(raw_game_description)
-
-            # Look for game genres
-            elements_potential_genres = webpage.get_element(
-                parent = web_driver,
-                locator = webpage.ElementLocator({"class": "css-8f0505"}),
-                all_elements = True,
-                verbose = verbose,
-                exit_on_failure = False)
-            if elements_potential_genres:
-                for element_potential_genre in elements_potential_genres:
-                    potential_text = webpage.get_element_children_text(element_potential_genre)
-                    if potential_text and "Genres" in potential_text:
-                        element_game_genres = webpage.get_element(
-                            parent = element_potential_genre,
-                            locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
-                            all_elements = True,
-                            verbose = verbose,
-                            exit_on_failure = False)
-                        if element_game_genres:
-                            game_genres = []
-                            for element_game_genre in element_game_genres:
-                                game_genre_text = webpage.get_element_children_text(element_game_genre)
-                                if game_genre_text:
-                                    game_genres.append(game_genre_text)
-                            if game_genres:
-                                metadata_entry.set_genre(";".join(game_genres))
-
-            # Look for game details
-            elements_details = webpage.get_element(
-                parent = web_driver,
-                locator = webpage.ElementLocator({"class": "css-s97i32"}),
-                all_elements = True,
-                verbose = verbose,
-                exit_on_failure = False)
-            if elements_details:
-                for elements_detail in elements_details:
-                    element_detail_text = webpage.get_element_children_text(elements_detail)
-                    if element_detail_text:
-
-                        # Developer
-                        if strings.does_string_start_with_substring(element_detail_text, "Developer"):
-                            developer_text = strings.trim_substring_from_start(element_detail_text, "Developer").strip()
-                            metadata_entry.set_developer(developer_text)
-
-                        # Publisher
-                        elif strings.does_string_start_with_substring(element_detail_text, "Publisher"):
-                            published_text = strings.trim_substring_from_start(element_detail_text, "Publisher").strip()
-                            metadata_entry.set_publisher(published_text)
-
-                        # Release
-                        elif strings.does_string_start_with_substring(element_detail_text, "Release Date"):
-                            release_text = strings.trim_substring_from_start(element_detail_text, "Release Date").strip()
-                            release_text = strings.convert_date_string(release_text, "%m/%d/%y", "%Y-%m-%d")
-                            if release_text:
-                                metadata_entry.set_release(release_text)
-            return metadata_entry
+                return None
+            return self._scrape_metadata_page(web_driver, identifier, verbose = verbose)
 
         # Use retry function with cleanup
         try:
@@ -526,5 +503,82 @@ class Epic(storebase.StoreBase):
 
             # Final cleanup
             cleanup_driver()
+
+    # A headless web driver; None in a pretend run that got none, else ScrapeFailed without one
+    def _connect_scrape_driver(self, verbose = False, pretend_run = False):
+        web_driver = self.web_connect(
+            headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not web_driver:
+            if pretend_run:
+                return None
+            raise webpage.ScrapeFailed("Failed to connect to web driver")
+        return web_driver
+
+    # Load the store page and read its description, genres and details into a metadata entry
+    def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
+
+        # Load url
+        success = webpage.load_url(web_driver, identifier)
+        if not success:
+            raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
+
+        # Create metadata entry
+        metadata_entry = metadataentry.MetadataEntry()
+
+        # Look for game description
+        element_game_description = webpage.wait_for_element(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"id": "about-long-description"}),
+            verbose = verbose,
+            exit_on_failure = False)
+        if element_game_description:
+            raw_game_description = webpage.get_element_children_text(element_game_description)
+            if raw_game_description:
+                metadata_entry.set_description(raw_game_description)
+
+        # Look for game genres
+        self._read_page_genres(web_driver, metadata_entry, verbose = verbose)
+
+        # Look for game details
+        elements_details = webpage.get_element(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "css-s97i32"}),
+            all_elements = True,
+            verbose = verbose,
+            exit_on_failure = False)
+        for elements_detail in elements_details or []:
+            element_detail_text = webpage.get_element_children_text(elements_detail)
+            if element_detail_text:
+                _read_detail_text(element_detail_text, metadata_entry)
+        return metadata_entry
+
+    # Set the entry's genres, joined with ";", from the page section headed "Genres"
+    def _read_page_genres(self, web_driver, metadata_entry, verbose = False):
+        elements_potential_genres = webpage.get_element(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "css-8f0505"}),
+            all_elements = True,
+            verbose = verbose,
+            exit_on_failure = False)
+        for element_potential_genre in elements_potential_genres or []:
+            potential_text = webpage.get_element_children_text(element_potential_genre)
+            if not potential_text or "Genres" not in potential_text:
+                continue
+            element_game_genres = webpage.get_element(
+                parent = element_potential_genre,
+                locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
+                all_elements = True,
+                verbose = verbose,
+                exit_on_failure = False)
+            game_genres = []
+            for element_game_genre in element_game_genres or []:
+                game_genre_text = webpage.get_element_children_text(element_game_genre)
+                if game_genre_text:
+                    game_genres.append(game_genre_text)
+            if game_genres:
+                metadata_entry.set_genre(";".join(game_genres))
 
     ############################################################

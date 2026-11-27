@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
-from joybox import config
+from joybox import collection, config
 from joybox.cli import build_game_json_files
 
 
@@ -37,7 +37,7 @@ def tool(monkeypatch, isolated_settings):
         return harness.result
 
     monkeypatch.setattr(module.gamecollection, "find_locker_game_names", find_names)
-    monkeypatch.setattr(module.collection, "build_game_json_file", build)
+    monkeypatch.setattr(collection.jsondata, "build_game_json_file", build)
     return harness
 
 

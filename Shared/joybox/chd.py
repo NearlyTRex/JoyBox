@@ -53,6 +53,33 @@ def get_disc_sheet_converter(source_file):
             return converter
     return None
 
+# Run a chdman command that writes the output paths; True when it exits 0
+def _run_chdman_command(chd_tool, chdman_cmd, output_paths, verbose, pretend_run, exit_on_failure):
+    code = command.run_returncode_command(
+        cmd = chdman_cmd,
+        options = commandbase.create_command_options(
+            output_paths = output_paths,
+            blocking_processes = [chd_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Remove the file chdman read when delete_original is set
+def _remove_original_file(original_file, delete_original, verbose, pretend_run, exit_on_failure):
+    if delete_original:
+        fileops.remove_file(
+            src = original_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Whether chdman's output exists; always True in a pretend run, which writes nothing
+def _does_output_exist(output_file, pretend_run):
+    if pretend_run:
+        return True
+    return os.path.exists(output_file)
+
 # Compress a disc image into a chd with chdman createcd, converting formats chdman cannot read first
 def create_disc_chd(
     chd_file,
@@ -74,6 +101,12 @@ def create_disc_chd(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Otherwise chdman reads it directly
+    return _create_disc_chd_directly(chd_file, source_iso, delete_original, verbose, pretend_run, exit_on_failure)
+
+# Compress an image chdman reads into a chd with chdman createcd
+def _create_disc_chd_directly(chd_file, source_iso, delete_original, verbose, pretend_run, exit_on_failure):
+
     # Get tool
     chd_tool = programs.find_tool_program("MameChdman")
     if not chd_tool:
@@ -88,29 +121,14 @@ def create_disc_chd(
     ]
 
     # Run create command
-    code = command.run_returncode_command(
-        cmd = create_command,
-        options = commandbase.create_command_options(
-            output_paths = [chd_file],
-            blocking_processes = [chd_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_chdman_command(chd_tool, create_command, [chd_file], verbose, pretend_run, exit_on_failure):
         return False
 
     # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = source_iso,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    _remove_original_file(source_iso, delete_original, verbose, pretend_run, exit_on_failure)
 
     # Check result
-    if pretend_run:
-        return True
-    return os.path.exists(chd_file)
+    return _does_output_exist(chd_file, pretend_run)
 
 # Create disc chd from an image through its converter
 def create_disc_chd_with_converter(
@@ -175,29 +193,14 @@ def extract_disc_chd(
         extract_cmd += ["--force"]
 
     # Run extract command
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = commandbase.create_command_options(
-            output_paths = [toc_file, binary_file],
-            blocking_processes = [chd_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_chdman_command(chd_tool, extract_cmd, [toc_file, binary_file], verbose, pretend_run, exit_on_failure):
         return False
 
     # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = chd_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    _remove_original_file(chd_file, delete_original, verbose, pretend_run, exit_on_failure)
 
     # Check result
-    if pretend_run:
-        return True
-    return os.path.exists(binary_file)
+    return _does_output_exist(binary_file, pretend_run)
 
 # Track types bchunk can split
 bchunk_track_types = ["MODE1/2352", "MODE2/2352", "MODE2/2336", "AUDIO"]
@@ -436,3 +439,93 @@ def unmount_disc_chd(
 
     # Check result
     return not is_disc_chd_mounted(chd_file, mount_dir)
+
+# Path beside a file, with its extension replaced by the given suffix
+def _get_sibling_path(file, suffix):
+    return paths.join_paths(paths.get_filename_directory(file), paths.get_filename_basename(file) + suffix)
+
+# Convert each disc image of the given types under input_path into a chd beside it, skipping
+# images whose chd already exists
+def convert_disc_images_to_chd(
+    input_path,
+    disc_image_types,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    disc_image_extensions = [disc_image_type.cval() for disc_image_type in disc_image_types]
+    for current_file in paths.build_file_list_by_extensions(input_path, extensions = disc_image_extensions):
+        output_chd = _get_sibling_path(current_file, config.DiscImageFileType.CHD.cval())
+        if paths.does_path_exist(output_chd):
+            continue
+        create_disc_chd(
+            chd_file = output_chd,
+            source_iso = current_file,
+            delete_original = delete_originals,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Extract a chd into an iso beside it, unless the iso or its first numbered track exists
+def _extract_chd_to_sibling_iso(chd_file, delete_originals, verbose, pretend_run, exit_on_failure):
+    output_iso = _get_sibling_path(chd_file, ".iso")
+    output_track = _get_sibling_path(chd_file, "01.iso")
+    if paths.does_path_exist(output_iso) or paths.does_path_exist(output_track):
+        return
+    extract_disc_chd_to_iso(
+        chd_file = chd_file,
+        iso_file = output_iso,
+        delete_original = delete_originals,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Extract a chd into a binary and toc file beside it, unless either exists
+def _extract_chd_to_sibling_toc(chd_file, extract_format, bin_ext, delete_originals, verbose, pretend_run, exit_on_failure):
+    output_bin = _get_sibling_path(chd_file, bin_ext)
+    output_toc = _get_sibling_path(chd_file, extract_format.cval())
+    if paths.does_path_exist(output_bin) or paths.does_path_exist(output_toc):
+        return
+    extract_disc_chd(
+        chd_file = chd_file,
+        binary_file = output_bin,
+        toc_file = output_toc,
+        delete_original = delete_originals,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Extract each chd under input_path beside itself, as an iso for the ISO format or else as a
+# binary file with bin_ext and a toc of the format, skipping chds whose outputs exist
+def extract_disc_chds(
+    input_path,
+    extract_format,
+    bin_ext,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for current_file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):
+        if extract_format == config.DiscExtractFormatType.ISO:
+            _extract_chd_to_sibling_iso(current_file, delete_originals, verbose, pretend_run, exit_on_failure)
+        else:
+            _extract_chd_to_sibling_toc(current_file, extract_format, bin_ext, delete_originals, verbose, pretend_run, exit_on_failure)
+
+# Zip the files on each chd under input_path beside it, skipping chds whose zip exists
+def archive_disc_chds(
+    input_path,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for current_file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):
+        output_zip = _get_sibling_path(current_file, config.ArchiveFileType.ZIP.cval())
+        if paths.does_path_exist(output_zip):
+            continue
+        archive_disc_chd(
+            chd_file = current_file,
+            zip_file = output_zip,
+            delete_original = delete_originals,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

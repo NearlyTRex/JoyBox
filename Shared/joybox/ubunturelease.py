@@ -156,18 +156,9 @@ def verify_checksum_signature(
         logger.log_error("Signing keyring not found: %s" % keyring_file)
         return False
 
-    # Get verify command
-    verify_cmd = [
-        signature_tool,
-        "--no-default-keyring",
-        "--keyring", keyring_file,
-        "--status-fd", "1",
-        "--verify", signature_file, listing_file,
-    ]
-
     # Run verify command
     status_output = command.run_output_command(
-        cmd = verify_cmd,
+        cmd = _get_verify_command(signature_tool, keyring_file, signature_file, listing_file),
         verbose = verbose,
         pretend_run = False,
         exit_on_failure = exit_on_failure)
@@ -177,6 +168,20 @@ def verify_checksum_signature(
         return False
 
     # Check it was the expected key
+    return _is_expected_signer(verified, fingerprint)
+
+# The gpg command verifying signature_file over listing_file against only keyring_file, with machine-readable status
+def _get_verify_command(signature_tool, keyring_file, signature_file, listing_file):
+    return [
+        signature_tool,
+        "--no-default-keyring",
+        "--keyring", keyring_file,
+        "--status-fd", "1",
+        "--verify", signature_file, listing_file,
+    ]
+
+# Whether the verified fingerprint is the expected one, ignoring spaces and case; True when none is expected
+def _is_expected_signer(verified, fingerprint):
     if fingerprint and verified != fingerprint.replace(" ", "").upper():
         logger.log_error("The checksums were signed by an unexpected key")
         logger.log_error("  expected: %s" % fingerprint)
@@ -207,21 +212,7 @@ def fetch_release_checksums(
 
     # Check who signed it
     if verify_signature:
-        signature_file = paths.join_paths(work_dir, "SHA256SUMS.gpg")
-        success = network.download_url(
-            url = get_checksum_signature_url(version),
-            output_file = signature_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to download the signature for Ubuntu %s" % version)
-            return None
-        success = verify_checksum_signature(
-            listing_file = listing_file,
-            signature_file = signature_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        success = _verify_listing_signature(version, work_dir, listing_file, verbose, pretend_run, exit_on_failure)
         if not success:
             return None
 
@@ -230,6 +221,24 @@ def fetch_release_checksums(
         src = listing_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure))
+
+# Download the release's checksum signature into work_dir and check it over the listing
+def _verify_listing_signature(version, work_dir, listing_file, verbose, pretend_run, exit_on_failure):
+    signature_file = paths.join_paths(work_dir, "SHA256SUMS.gpg")
+    success = network.download_url(
+        url = get_checksum_signature_url(version),
+        output_file = signature_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to download the signature for Ubuntu %s" % version)
+        return False
+    return verify_checksum_signature(
+        listing_file = listing_file,
+        signature_file = signature_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Read the published checksums for a release
 def find_release_checksums(version, verbose = False, exit_on_failure = False):
@@ -294,6 +303,10 @@ def verify_image_checksum(
     if not expected:
         logger.log_error("No published checksum was found for %s" % image)
         return False
+    return _does_file_match_checksum(iso_file, expected, verbose, pretend_run, exit_on_failure)
+
+# Whether the file's sha256 is the expected checksum, logging both when it is not or cannot be read
+def _does_file_match_checksum(iso_file, expected, verbose, pretend_run, exit_on_failure):
     logger.log_info("Verifying %s" % iso_file)
     actual = hashutil.calculate_file_sha256(
         src = iso_file,

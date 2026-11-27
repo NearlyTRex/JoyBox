@@ -102,29 +102,41 @@ def clean_command_output(output):
 # Logging support
 ###########################################################
 
+# The string command with the value after each sensitive flag, spaced or joined by =, masked
+def _mask_sensitive_string(cmd):
+    for flag in SENSITIVE_FLAGS:
+        if flag in cmd:
+            cmd = re.sub(f"{re.escape(flag)}(\\s+|=)\\S+", f"{flag}\\g<1>****", cmd)
+    return cmd
+
+# The argument with its value masked when it is a sensitive flag joined to its value by =
+def _mask_joined_flag(arg):
+    joined_flag = None
+    for flag in SENSITIVE_FLAGS:
+        if isinstance(arg, str) and arg.startswith(flag + "="):
+            joined_flag = flag
+            break
+    return f"{joined_flag}=****" if joined_flag else arg
+
+# The argument list with the argument after each sensitive flag, and joined flag values, masked
+def _mask_sensitive_list(cmd):
+    masked = []
+    skip_next = False
+    for arg in cmd:
+        if skip_next:
+            masked.append("****")
+            skip_next = False
+        elif arg in SENSITIVE_FLAGS:
+            masked.append(arg)
+            skip_next = True
+        else:
+            masked.append(_mask_joined_flag(arg))
+    return masked
+
 # Mask the values following sensitive flags so commands can be safely logged.
 def mask_sensitive_args(cmd):
     if isinstance(cmd, str):
-        for flag in SENSITIVE_FLAGS:
-            if flag in cmd:
-                cmd = re.sub(f"{re.escape(flag)}(\\s+|=)\\S+", f"{flag}\\g<1>****", cmd)
-        return cmd
+        return _mask_sensitive_string(cmd)
     if isinstance(cmd, list):
-        masked = []
-        skip_next = False
-        for arg in cmd:
-            if skip_next:
-                masked.append("****")
-                skip_next = False
-            elif arg in SENSITIVE_FLAGS:
-                masked.append(arg)
-                skip_next = True
-            else:
-                joined_flag = None
-                for flag in SENSITIVE_FLAGS:
-                    if isinstance(arg, str) and arg.startswith(flag + "="):
-                        joined_flag = flag
-                        break
-                masked.append(f"{joined_flag}=****" if joined_flag else arg)
-        return masked
+        return _mask_sensitive_list(cmd)
     return cmd

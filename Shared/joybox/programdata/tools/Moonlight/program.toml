@@ -7,3 +7,29 @@ run_sandboxed = { windows = false, linux = false }
 
 [[config_files]]
 path = "Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Streaming Project/Moonlight.conf"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "moonlight-stream"
+github_repo = "moonlight-qt"
+starts_with = "MoonlightPortable-x64"
+ends_with = ".zip"
+search_file = "Moonlight.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "moonlight-stream"
+github_repo = "moonlight-qt"
+starts_with = "Moonlight"
+ends_with = "x86_64.AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Moonlight.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

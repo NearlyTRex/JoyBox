@@ -33,3 +33,35 @@ md5 = "ec00e31e746de2473acfe7903c5a4cb7"
 [[system_files]]
 path = "bios/complex_4627_v1.03.bin"
 md5 = "21445c6f28fca7285b0f167ea770d1e5"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "mborgerson"
+github_repo = "xemu"
+starts_with = "xemu"
+ends_with = "win-x86_64-release.zip"
+search_file = "xemu.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Xemu.git"
+output_file = "xemu-x86_64.AppImage"
+build_cmd = ["./build.sh"]
+internal_copies = [
+    { from = "Source/Xemu/dist/xemu", to = "AppImage/usr/bin/xemu" },
+    { from = "Source/Xemu/ui/xemu.desktop", to = "AppImage/xemu.desktop" },
+    { from = "Source/Xemu/ui/icons/xemu.svg", to = "AppImage/xemu.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/xemu", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "xemu.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

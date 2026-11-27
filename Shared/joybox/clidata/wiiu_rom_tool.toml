@@ -1,0 +1,30 @@
+# Help text for the wiiu_rom_tool command, read by joybox/arguments.py
+
+description = "Decrypt or test-decrypt Nintendo Wii U NUS packages."
+details = """
+A NUS package is a directory holding `title.tmd`, `title.tik` and the encrypted
+`.app`/`.h3` content files. The tool finds every `title.tik` under the input path and
+treats its directory as one package.
+
+`-r` runs CDecrypt inside the package directory, which writes the decrypted title
+(`code`, `content` and `meta` folders) alongside the encrypted files. With `-d`, the
+package's `.app`, `.h3`, `.tik`, `.tmd` and `.cert` files are then deleted, leaving
+only the decrypted title.
+
+`-e` copies each package to a temporary directory and decrypts the copy there to check
+that CDecrypt accepts it; the package itself is not changed."""
+section = "Game ROMs & Images"
+see_also = [
+    "3ds_rom_tool",
+    "switch_rom_tool",
+]
+notes = [
+    "Without `-r` or `-e` nothing is done. If both are given, `-r` wins.",
+    "`-e` copies the whole package, so the temporary directory needs room for it plus the decrypted output.",
+    "CDecrypt must be installed as a JoyBox tool.",
+]
+examples = [
+    ["Test that every package in a folder decrypts", "wiiu_rom_tool -i /path/to/wiiu -e"],
+    ["Decrypt every package in place", "wiiu_rom_tool -i /path/to/wiiu -r"],
+    ["Decrypt and remove the encrypted files, previewing first", "wiiu_rom_tool -i /path/to/wiiu -r -d -p -v"],
+]

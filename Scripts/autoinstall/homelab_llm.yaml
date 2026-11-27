@@ -171,16 +171,21 @@ autoinstall:
           # Memory
           ###########################################################
 
+          # Parse /proc/meminfo lines into {key: megabytes}, skipping lines without a number
+          def parse_meminfo(lines):
+              values = {}
+              for line in lines:
+                  key, _, rest = line.partition(":")
+                  fields = rest.split()
+                  if fields and fields[0].isdigit():
+                      values[key.strip()] = int(fields[0]) // 1024
+              return values
+
           # Read total and available RAM from /proc/meminfo, in megabytes
           def read_ram(meminfo_file = "/proc/meminfo"):
-              values = {}
               try:
                   with open(meminfo_file, encoding = "utf-8") as handle:
-                      for line in handle:
-                          key, _, rest = line.partition(":")
-                          fields = rest.split()
-                          if fields and fields[0].isdigit():
-                              values[key.strip()] = int(fields[0]) // 1024
+                      values = parse_meminfo(handle)
               except OSError:
                   return 0, 0
               return values.get("MemTotal", 0), values.get("MemAvailable", 0)

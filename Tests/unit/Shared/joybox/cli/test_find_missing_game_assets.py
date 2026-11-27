@@ -63,7 +63,7 @@ def tool(monkeypatch, tmp_path):
     monkeypatch.setattr(find_missing_game_assets.metadata, "Metadata", FakeMetadata)
     monkeypatch.setattr(find_missing_game_assets.environment, "get_locker_gaming_assets_root_dir", lambda: str(assets))
     monkeypatch.setattr(find_missing_game_assets.environment, "get_game_pegasus_metadata_root_dir", lambda: str(metadata_dir))
-    monkeypatch.setattr(find_missing_game_assets.gamenaming, "derive_game_categories_from_platform",
+    monkeypatch.setattr(find_missing_game_assets.metadata.gamenaming, "derive_game_categories_from_platform",
         lambda platform: (config.Supercategory.ROMS, config.Category.NINTENDO, config.Subcategory.NINTENDO_SWITCH))
     monkeypatch.setattr(find_missing_game_assets.environment, "get_locker_gaming_asset_file",
         lambda category, subcategory, name, asset_type: os.path.join(str(assets), "%s-%s%s" % (name, asset_type.val(), asset_type.cval())))
@@ -71,7 +71,7 @@ def tool(monkeypatch, tmp_path):
     def report(items, title, max_display, report_file, **kwargs):
         harness.reports[report_file] = (items, max_display)
 
-    monkeypatch.setattr(find_missing_game_assets.reports, "write_list_report", report)
+    monkeypatch.setattr(find_missing_game_assets.metadata.reports, "write_list_report", report)
     return harness
 
 

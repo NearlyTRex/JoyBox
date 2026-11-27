@@ -302,15 +302,7 @@ class ConnectionSSH(connection.Connection):
                 try:
                     channel.settimeout(5.0)
                     channel.send(cmd + "\nexit $?\n")
-                    while True:
-                        if channel.recv_ready():
-                            data = channel.recv(1024).decode("utf-8", errors="ignore")
-                            if self.flags.verbose:
-                                logger.log_info(data.strip())
-                        elif channel.exit_status_ready():
-                            break
-                        else:
-                            time.sleep(0.1)
+                    self._drain_shell_channel(channel)
                     return channel.recv_exit_status()
                 finally:
                     channel.close()
@@ -320,6 +312,18 @@ class ConnectionSSH(connection.Connection):
                 logger.log_error(e)
                 runtime.quit_program()
             return 1
+
+    # Read shell output until the exit status is ready, logging each chunk when verbose
+    def _drain_shell_channel(self, channel):
+        while True:
+            if channel.recv_ready():
+                data = channel.recv(1024).decode("utf-8", errors="ignore")
+                if self.flags.verbose:
+                    logger.log_info(data.strip())
+            elif channel.exit_status_ready():
+                break
+            else:
+                time.sleep(0.1)
 
     # Run blocking; on a nonzero exit raise ValueError when asked, otherwise quit with that code
     def run_checked(self, cmd, sudo = False, throw_exception = False):
@@ -375,19 +379,24 @@ class ConnectionSSH(connection.Connection):
                 if not all(uploaded):
                     return self.handle_error(f"Failed to transfer {src} to {dest}", "%d file(s) failed" % uploaded.count(False))
                 if sudo:
-                    if os.path.isdir(src):
-                        cmds = [["mkdir", "-p", dest], ["cp", "-r", upload_dest + "/.", dest]]
-                    else:
-                        cmds = [["cp", upload_dest, dest]]
-                    for cmd in cmds:
-                        if self.run_blocking(cmd, sudo = True) != 0:
-                            return self.handle_error(f"Failed to transfer {src} to {dest}", "copy failed")
+                    return self._copy_upload_as_root(src, upload_dest, dest)
                 return True
             finally:
                 if sudo:
                     self.run_blocking(["rm", "-rf", "--", upload_dest])
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Failed to transfer {src} to {dest}", e)
+
+    # Copy an upload staged in /tmp into dest as root, recursively when src is a directory
+    def _copy_upload_as_root(self, src, upload_dest, dest):
+        if os.path.isdir(src):
+            cmds = [["mkdir", "-p", dest], ["cp", "-r", upload_dest + "/.", dest]]
+        else:
+            cmds = [["cp", upload_dest, dest]]
+        for cmd in cmds:
+            if self.run_blocking(cmd, sudo = True) != 0:
+                return self.handle_error(f"Failed to transfer {src} to {dest}", "copy failed")
+        return True
 
     def _plan_upload(self, sftp, src, dest, excludes):
         if not os.path.isdir(src):
@@ -432,16 +441,16 @@ class ConnectionSSH(connection.Connection):
         try:
             if self.flags.verbose:
                 logger.log_info(f"Reading remote file {src}")
-            if not self.flags.pretend_run:
-                if sudo:
-                    return self.run_output(["cat", src], sudo = True)
-                sftp = self._open_sftp()
-                try:
-                    with sftp.file(src, "r") as f:
-                        return f.read().decode()
-                finally:
-                    sftp.close()
-            return None
+            if self.flags.pretend_run:
+                return None
+            if sudo:
+                return self.run_output(["cat", src], sudo = True)
+            sftp = self._open_sftp()
+            try:
+                with sftp.file(src, "r") as f:
+                    return f.read().decode()
+            finally:
+                sftp.close()
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Unable to read file from {src}", e, return_value = None)
 
@@ -450,31 +459,39 @@ class ConnectionSSH(connection.Connection):
         try:
             if self.flags.verbose:
                 logger.log_info(f"Writing remote file {src}")
-            if not self.flags.pretend_run:
-                if sudo:
-                    temp_path = "/tmp/tmp_write_file_" + uuid.uuid4().hex
-                    sftp = self._open_sftp()
-                    try:
-                        with sftp.file(temp_path, "w") as remote_file:
-                            remote_file.write(contents)
-                            remote_file.flush()
-                        code = self.run_blocking(["cp", temp_path, src], sudo = True)
-                    finally:
-                        sftp.remove(temp_path)
-                        sftp.close()
-                    if code != 0:
-                        return self.handle_error(f"Failed to write file {src}", "copy failed")
-                else:
-                    sftp = self._open_sftp()
-                    try:
-                        with sftp.file(src, "w") as remote_file:
-                            remote_file.write(contents)
-                            remote_file.flush()
-                    finally:
-                        sftp.close()
+            if self.flags.pretend_run:
+                return True
+            if sudo:
+                code = self._write_file_as_root(src, contents)
+                if code != 0:
+                    return self.handle_error(f"Failed to write file {src}", "copy failed")
+            else:
+                sftp = self._open_sftp()
+                try:
+                    self._write_sftp_file(sftp, src, contents)
+                finally:
+                    sftp.close()
             return True
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Failed to write file {src}", e)
+
+    # Write and flush text to a path through an open SFTP session
+    def _write_sftp_file(self, sftp, path, contents):
+        with sftp.file(path, "w") as remote_file:
+            remote_file.write(contents)
+            remote_file.flush()
+
+    # Upload contents to a /tmp file, cp it to dest as root, then remove it; the cp exit code
+    def _write_file_as_root(self, dest, contents):
+        temp_path = "/tmp/tmp_write_file_" + uuid.uuid4().hex
+        sftp = self._open_sftp()
+        try:
+            self._write_sftp_file(sftp, temp_path, contents)
+            code = self.run_blocking(["cp", temp_path, dest], sudo = True)
+        finally:
+            sftp.remove(temp_path)
+            sftp.close()
+        return code
 
     def _run_operation(self, cmd, sudo, message):
         try:

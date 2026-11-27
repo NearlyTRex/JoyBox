@@ -303,6 +303,132 @@ def run_returncode_command(
         exit_on_failure = exit_on_failure)
     return returncode
 
+# Write output to stdout straight away
+def _echo_output(output):
+    sys.stdout.write(output)
+    sys.stdout.flush()
+
+# Echo the Windows pseudo-terminal's output live until the process ends
+def _relay_winpty_output(pty_process):
+    while pty_process.isalive():
+        try:
+            output = pty_process.read(1024)
+            if output:
+                _echo_output(output)
+        except EOFError:
+            break
+
+# Forward the user's typed lines to the Windows pseudo-terminal until the process ends or is interrupted
+def _forward_winpty_input(pty_process):
+    try:
+        while pty_process.isalive():
+            user_input = sys.stdin.readline()
+            if user_input:
+                pty_process.write(user_input)
+    except KeyboardInterrupt:
+        pty_process.terminate()
+
+# Run the command on a Windows pseudo-terminal, relaying output on a thread; its exit status
+def _run_on_winpty(cmd, options):
+
+    # Open psuedo-terminal
+    with _get_winpty().PtyProcess.spawn(cmd, cwd = options.get_cwd(), env = options.get_env()) as pty_process:
+
+        # Create thread to handle real-time I/O
+        output_thread = threading.Thread(target = _relay_winpty_output, args = (pty_process,), daemon = True)
+        output_thread.start()
+
+        # Wait for process to complete
+        _forward_winpty_input(pty_process)
+        output_thread.join()
+        return pty_process.exitstatus
+
+# Echo whatever the pseudo-terminal has ready; False once it reaches the end of its stream
+def _echo_ready_pty_output(master_fd):
+    rlist, _, _ = select.select([master_fd], [], [], 0.1)
+    if not (rlist and master_fd in rlist):
+        return True
+    output = os.read(master_fd, 1024).decode(errors = "ignore")
+    if not output:
+        return False
+    _echo_output(output)
+    return True
+
+# Echo the pseudo-terminal's output live until its stream ends or fails
+def _relay_pty_output(master_fd):
+    while True:
+        try:
+            if not _echo_ready_pty_output(master_fd):
+                break
+        except (OSError, EOFError):
+            break
+
+# Forward a line the user has typed, when stdin has one ready, to the pseudo-terminal
+def _forward_ready_input(master_fd):
+    rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
+    if rlist and sys.stdin in rlist:
+        user_input = sys.stdin.readline()
+        if user_input:
+            os.write(master_fd, user_input.encode())
+
+# Forward typed input until the process ends; an interrupt terminates it and waits for it
+def _forward_pty_input(proc, master_fd):
+    try:
+        while proc.poll() is None:
+            _forward_ready_input(master_fd)
+    except KeyboardInterrupt:
+        proc.terminate()
+        proc.wait()
+
+# Run the command on a pseudo-terminal, relaying output on a thread; its exit code
+def _run_on_pty(cmd, options):
+
+    # Open pseudo-terminal
+    master_fd, slave_fd = _get_pty().openpty()
+    with spawn_on_terminal(cmd, options, slave_fd) as proc:
+
+        # Create thread to handle real-time I/O
+        output_thread = threading.Thread(target = _relay_pty_output, args = (master_fd,), daemon = True)
+        output_thread.start()
+
+        # Wait for process to complete
+        _forward_pty_input(proc, master_fd)
+        output_thread.join()
+        os.close(master_fd)
+        return proc.returncode
+
+# Prepare and run the command on the platform's pseudo-terminal, then finish it; its exit code
+def _run_prepared_interactive_command(cmd, options, verbose, pretend_run, exit_on_failure):
+    cmd, options = prepare_command(
+        cmd = cmd,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Log command
+    if verbose:
+        print_command(cmd)
+
+    # Handle shell commands
+    if options.is_shell():
+        cmd = cmdline.create_command_string(cmd)
+
+    # Run on a pseudo-terminal
+    if platform_info.is_windows_platform():
+        returncode = _run_on_winpty(cmd, options)
+    else:
+        returncode = _run_on_pty(cmd, options)
+
+    # Wait for blocking processes, then post-process
+    finish_command(
+        cmd = cmd,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return returncode
+
 # Run a command on a pseudo-terminal, relaying its output and the user's typed input live; returns its exit code
 def run_interactive_command(
     cmd,
@@ -312,102 +438,7 @@ def run_interactive_command(
     exit_on_failure = False):
     try:
         if not pretend_run:
-            cmd, options = prepare_command(
-                cmd = cmd,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-            # Log command
-            if verbose:
-                print_command(cmd)
-
-            # Handle shell commands
-            if options.is_shell():
-                cmd = cmdline.create_command_string(cmd)
-
-            # Create return code
-            returncode = 0
-
-            # Windows
-            if platform_info.is_windows_platform():
-
-                # Open psuedo-terminal
-                with _get_winpty().PtyProcess.spawn(cmd, cwd = options.get_cwd(), env = options.get_env()) as pty_process:
-
-                    # Reads from pseudo-terminal and displays it in real-time
-                    def read_output():
-                        while pty_process.isalive():
-                            try:
-                                output = pty_process.read(1024)
-                                if output:
-                                    sys.stdout.write(output)
-                                    sys.stdout.flush()
-                            except EOFError:
-                                break
-
-                    # Create thread to handle real-time I/O
-                    output_thread = threading.Thread(target = read_output, daemon = True)
-                    output_thread.start()
-
-                    # Wait for process to complete
-                    try:
-                        while pty_process.isalive():
-                            user_input = sys.stdin.readline()
-                            if user_input:
-                                pty_process.write(user_input)
-                    except KeyboardInterrupt:
-                        pty_process.terminate()
-                    output_thread.join()
-                    returncode = pty_process.exitstatus
-            else:
-
-                # Open pseudo-terminal
-                master_fd, slave_fd = _get_pty().openpty()
-                with spawn_on_terminal(cmd, options, slave_fd) as proc:
-
-                    # Reads from pseudo-terminal and displays it in real-time
-                    def read_output():
-                        while True:
-                            try:
-                                rlist, _, _ = select.select([master_fd], [], [], 0.1)
-                                if rlist and master_fd in rlist:
-                                    output = os.read(master_fd, 1024).decode(errors = "ignore")
-                                    if not output:
-                                        break
-                                    sys.stdout.write(output)
-                                    sys.stdout.flush()
-                            except (OSError, EOFError):
-                                break
-
-                    # Create thread to handle real-time I/O
-                    output_thread = threading.Thread(target = read_output, daemon = True)
-                    output_thread.start()
-
-                    # Wait for process to complete
-                    try:
-                        while proc.poll() is None:
-                            rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
-                            if rlist and sys.stdin in rlist:
-                                user_input = sys.stdin.readline()
-                                if user_input:
-                                    os.write(master_fd, user_input.encode())
-                    except KeyboardInterrupt:
-                        proc.terminate()
-                        proc.wait()
-                    output_thread.join()
-                    os.close(master_fd)
-                    returncode = proc.returncode
-
-            # Wait for blocking processes, then post-process
-            finish_command(
-                cmd = cmd,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return returncode
+            return _run_prepared_interactive_command(cmd, options, verbose, pretend_run, exit_on_failure)
         return 0
     except subprocess.CalledProcessError as e:
         if verbose or exit_on_failure:
@@ -419,6 +450,13 @@ def run_interactive_command(
         return 1
 
 ###########################################################
+
+# The installer type of the first marker found in the text, or None
+def _find_installer_marker(window, installer_markers):
+    for marker, installer_type in installer_markers:
+        if marker in window:
+            return installer_type
+    return None
 
 # Installer kind of a Windows setup file, from marker strings in its bytes; UNKNOWN when none matches
 def get_installer_type(installer_file):
@@ -437,9 +475,9 @@ def get_installer_type(installer_file):
             if not file_contents:
                 break
             window = carried + file_contents
-            for marker, installer_type in installer_markers:
-                if marker in window:
-                    return installer_type
+            installer_type = _find_installer_marker(window, installer_markers)
+            if installer_type is not None:
+                return installer_type
             carried = window[-overlap:]
     return config.InstallerType.UNKNOWN
 
@@ -476,6 +514,44 @@ def get_dos_disc_mount_args(disc_images):
         logger.log_warning("No free drive letter to mount %s" % disc_image)
     return mount_args
 
+# DOSBox-X with the named config file, the prefix's C drive and each of its CHD discs mounted
+def _get_dosbox_mount_command(options, config_name):
+
+    # Search for disc images
+    disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
+
+    # Create launch command
+    launch_cmd = [programs.get_emulator_program("DosBoxX")]
+
+    # Add config file
+    launch_cmd += [
+        "-conf",
+        programs.get_emulator_path_config_value("DosBoxX", config_name)
+    ]
+
+    # Add c drive mount
+    if options.has_valid_prefix_dos_c_drive():
+        launch_cmd += [
+            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
+        ]
+
+    # Add disc drive mounts
+    launch_cmd += get_dos_disc_mount_args(disc_images)
+    return launch_cmd
+
+# DOSBox-X commands switching to the start drive, then into the start folder when there is one
+def _get_dos_start_dir_args(start_letter, start_offset):
+    start_dir_args = ["-c", "%s:" % start_letter]
+    if paths.is_path_valid(start_offset):
+        start_dir_args += ["-c", "cd %s" % start_offset]
+    return start_dir_args
+
+# The start program's file name, followed by its arguments when there are any
+def _format_start_program(start_program, start_args):
+    if isinstance(start_args, list) and len(start_args) > 0:
+        return "%s %s" % (paths.get_filename_file(start_program), " ".join(start_args))
+    return paths.get_filename_file(start_program)
+
 # DOSBox-X arguments mounting the prefix's C drive and its CHD discs, then switching drive, folder and starting the program
 def get_dos_launch_command(
     options,
@@ -488,36 +564,13 @@ def get_dos_launch_command(
     # Get start args
     start_args = [] if start_args is None else start_args
 
-    # Search for disc images
-    disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
-
-    # Create launch command
-    launch_cmd = [programs.get_emulator_program("DosBoxX")]
-
-    # Add config file
-    launch_cmd += [
-        "-conf",
-        programs.get_emulator_path_config_value("DosBoxX", "config_file")
-    ]
-
-    # Add c drive mount
-    if options.has_valid_prefix_dos_c_drive():
-        launch_cmd += [
-            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
-        ]
-
-    # Add disc drive mounts
-    launch_cmd += get_dos_disc_mount_args(disc_images)
+    # Create launch command with its drives mounted
+    launch_cmd = _get_dosbox_mount_command(options, "config_file")
 
     # Add initial launch params
-    launch_cmd += ["-c", "%s:" % start_letter]
-    if paths.is_path_valid(start_offset):
-        launch_cmd += ["-c", "cd %s" % start_offset]
+    launch_cmd += _get_dos_start_dir_args(start_letter, start_offset)
     if paths.is_path_valid(start_program):
-        if isinstance(start_args, list) and len(start_args) > 0:
-            launch_cmd += ["-c", "%s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
-        else:
-            launch_cmd += ["-c", "%s" % paths.get_filename_file(start_program)]
+        launch_cmd += ["-c", "%s" % _format_start_program(start_program, start_args)]
 
     # Add other flags
     if fullscreen:
@@ -538,38 +591,15 @@ def get_win31_launch_command(
     # Get start args
     start_args = [] if start_args is None else start_args
 
-    # Search for disc images
-    disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
-
-    # Create launch command
-    launch_cmd = [programs.get_emulator_program("DosBoxX")]
-
-    # Add config file
-    launch_cmd += [
-        "-conf",
-        programs.get_emulator_path_config_value("DosBoxX", "config_file_win31")
-    ]
-
-    # Add c drive mount
-    if options.has_valid_prefix_dos_c_drive():
-        launch_cmd += [
-            "-c", "mount c \"%s\"" % options.get_prefix_dos_c_drive()
-        ]
-
-    # Add disc drive mounts
-    launch_cmd += get_dos_disc_mount_args(disc_images)
+    # Create launch command with its drives mounted
+    launch_cmd = _get_dosbox_mount_command(options, "config_file_win31")
 
     # Add initial launch params
     launch_cmd += ["-c", r"SET PATH=%PATH%;C:\WINDOWS;"]
     launch_cmd += ["-c", r"SET TEMP=C:\WINDOWS\TEMP"]
-    launch_cmd += ["-c", "%s:" % start_letter]
-    if paths.is_path_valid(start_offset):
-        launch_cmd += ["-c", "cd %s" % start_offset]
+    launch_cmd += _get_dos_start_dir_args(start_letter, start_offset)
     if paths.is_path_valid(start_program):
-        if isinstance(start_args, list) and len(start_args) > 0:
-            launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
-        else:
-            launch_cmd += ["-c", "WIN RUNEXIT %s" % paths.get_filename_file(start_program)]
+        launch_cmd += ["-c", "WIN RUNEXIT %s" % _format_start_program(start_program, start_args)]
         launch_cmd += ["-c", "EXIT"]
 
     # Add other flags

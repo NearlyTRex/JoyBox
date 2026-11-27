@@ -16,3 +16,33 @@ path = "Sunshine/windows/config/apps.json"
 
 [[config_files]]
 path = "Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "LizardByte"
+github_repo = "Sunshine"
+starts_with = "sunshine"
+ends_with = "windows.zip"
+search_file = "sunshine.exe"
+install_files = ["sunshine.exe", "assets", "scripts", "tools"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "LizardByte"
+github_repo = "Sunshine"
+starts_with = "sunshine"
+ends_with = ".AppImage"
+search_file = "Sunshine.AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "sunshine.exe"
+install_files = ["sunshine.exe", "assets", "scripts", "tools"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "Sunshine.AppImage"

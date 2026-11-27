@@ -92,9 +92,8 @@ def find_metadata_assets_from_steamgriddb(
 
 ############################################################
 
-# Gather candidates from every source and have the user pick one by index or paste a URL; None when skipped
-def find_metadata_asset(
-    game_platform,
+# Candidates from Google Images, YouTube, Steam and SteamGridDB, in that order
+def gather_metadata_asset_candidates(
     game_name,
     asset_type,
     verbose = False,
@@ -133,8 +132,10 @@ def find_metadata_asset(
         asset_type = asset_type,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
+    return search_results
 
-    # Show possible assets to the user
+# Log the numbered candidate list for manual selection
+def log_metadata_asset_candidates(game_platform, game_name, asset_type, search_results):
     logger.log_info("")
     logger.log_info("=" * 80)
     logger.log_info("MANUAL ASSET SELECTION REQUIRED")
@@ -148,6 +149,24 @@ def find_metadata_asset(
         logger.log_info("      URL: %s" % search_result.get_url())
     logger.log_info("=" * 80)
     logger.log_info("")
+
+# Gather candidates from every source and have the user pick one by index or paste a URL; None when skipped
+def find_metadata_asset(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Show possible assets to the user
+    search_results = gather_metadata_asset_candidates(
+        game_name = game_name,
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    log_metadata_asset_candidates(game_platform, game_name, asset_type, search_results)
 
     # Ask them which one they want to use
     value = prompts.prompt_for_value("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))

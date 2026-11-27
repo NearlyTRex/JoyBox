@@ -23,3 +23,35 @@ path = "Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"
 [[system_files]]
 path = "firmware/lynxboot.img"
 md5 = "fcd403db69f54290b51035d82f835e7b"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://mednafen.github.io"
+webpage_base_url = "https://mednafen.github.io"
+starts_with = "https://mednafen.github.io/releases/files/mednafen"
+ends_with = "UNSTABLE-win64.zip"
+search_file = "mednafen.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Mednafen.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["./configure", "&&", "make", "-j", "4"]
+internal_copies = [
+    { from = "Source/Mednafen/src/mednafen", to = "AppImage/usr/bin/mednafen" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/mednafen", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "mednafen.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

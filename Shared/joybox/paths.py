@@ -41,20 +41,15 @@ def does_path_exist(path, case_sensitive_paths = True, partial_paths = False):
         return False
     if case_sensitive_paths:
         return os.path.exists(path)
-    if partial_paths:
-        path_parent = str(pathlib.Path(path).parent)
-        path_name = str(pathlib.Path(path).name)
-        if os.path.isdir(path_parent):
-            for obj in os.listdir(path_parent):
-                if obj.startswith(path_name):
-                    return True
-    else:
-        path_parent = str(pathlib.Path(path).parent)
-        path_name = str(pathlib.Path(path).name)
-        if os.path.isdir(path_parent):
-            for obj in os.listdir(path_parent):
-                if path_name.lower() == obj.lower():
-                    return True
+    path_parent = str(pathlib.Path(path).parent)
+    path_name = str(pathlib.Path(path).name)
+    if not os.path.isdir(path_parent):
+        return False
+    for obj in os.listdir(path_parent):
+        if partial_paths and obj.startswith(path_name):
+            return True
+        if not partial_paths and path_name.lower() == obj.lower():
+            return True
     return False
 
 # Check if two paths point to the same location
@@ -154,25 +149,34 @@ def prune_child_paths(paths):
             new_paths.add(path)
     return strings.sort_strings(new_paths)
 
+# A listed location as is, or relative to absolute_root under new_relative_path when relative paths are asked for
+def _format_listed_path(location, absolute_root, new_relative_path, use_relative_paths):
+    if not use_relative_paths:
+        return location
+    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
+        new_relative_path += config.OS_PATHSEP
+    return new_relative_path + os.path.relpath(location, absolute_root)
+
+# Files in the directory tree at root, in walk order, formatted as build_file_list lists them
+def _list_tree_files(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
+    absolute_root = os.path.abspath(root)
+    files = []
+    for base, _, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+        for filename in filenames:
+            location = os.path.abspath(os.path.join(base, filename))
+            if ignore_symlinks and os.path.islink(location):
+                continue
+            files.append(_format_listed_path(location, absolute_root, new_relative_path, use_relative_paths))
+    return files
+
 # Sorted files under root, recursing, as absolute paths or relative ones under new_relative_path; empty for an invalid root
 def build_file_list(root, excludes = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     excludes = [] if excludes is None else excludes
     files = []
     if not is_path_valid(root):
         return files
-    absolute_root = os.path.abspath(root)
     if os.path.isdir(root):
-        for base, _, filenames in os.walk(root, followlinks = follow_symlink_dirs):
-            for filename in filenames:
-                location = os.path.abspath(os.path.join(base, filename))
-                if ignore_symlinks and os.path.islink(location):
-                    continue
-                if use_relative_paths:
-                    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
-                        new_relative_path += config.OS_PATHSEP
-                    files.append(new_relative_path + os.path.relpath(location, absolute_root))
-                else:
-                    files.append(location)
+        files = _list_tree_files(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs)
     elif os.path.isfile(root):
         location = os.path.abspath(root)
         if not ignore_symlinks or not os.path.islink(location):
@@ -207,12 +211,7 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
             location = os.path.abspath(os.path.join(base, dirname))
             if ignore_symlinks and os.path.islink(location):
                 continue
-            if use_relative_paths:
-                if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
-                    new_relative_path += config.OS_PATHSEP
-                directories.append(new_relative_path + os.path.relpath(location, absolute_root))
-            else:
-                directories.append(location)
+            directories.append(_format_listed_path(location, absolute_root, new_relative_path, use_relative_paths))
     return prune_paths(directories, excludes)
 
 # Where a path build_directory_list listed sits on disk, undoing its relative form
@@ -253,6 +252,34 @@ def matches_exclude_pattern(rel_path, excludes):
                 return True
     return False
 
+# Subdirectory paths directly inside a directory, skipping dot entries when ignore_hidden
+def _list_subdirectories(current_path, ignore_hidden):
+    subdirs = []
+    for entry in os.listdir(current_path):
+        if ignore_hidden and entry.startswith("."):
+            continue
+        entry_path = join_paths(current_path, entry)
+        if is_path_directory(entry_path):
+            subdirs.append(entry_path)
+    return subdirs
+
+# Leaf directory info: its path, the count of files directly in it and their total size in bytes
+def _summarize_leaf_directory(current_path, ignore_hidden):
+    file_count = 0
+    total_size = 0
+    for entry in os.listdir(current_path):
+        if ignore_hidden and entry.startswith("."):
+            continue
+        entry_path = join_paths(current_path, entry)
+        if is_path_file(entry_path):
+            file_count += 1
+            total_size += get_file_size(entry_path)
+    return {
+        "path": current_path,
+        "file_count": file_count,
+        "total_size": total_size
+    }
+
 # Directories under root with no subdirectories, as dicts of path, file_count and total_size in bytes
 def build_leaf_directory_list(
     root,
@@ -280,37 +307,14 @@ def build_leaf_directory_list(
         if rel_path and matches_exclude_pattern(rel_path, excludes):
             continue
 
-        # Check for subdirectories
-        subdirs = []
-        for entry in os.listdir(current_path):
-            if ignore_hidden and entry.startswith("."):
-                continue
-            entry_path = join_paths(current_path, entry)
-            if is_path_directory(entry_path):
-                subdirs.append(entry_path)
-
         # If has subdirectories, add them to queue
+        subdirs = _list_subdirectories(current_path, ignore_hidden)
         if subdirs:
             work_queue.extend(subdirs)
             continue
 
-        # This is a leaf directory - calculate file count and size
-        file_count = 0
-        total_size = 0
-        for entry in os.listdir(current_path):
-            if ignore_hidden and entry.startswith("."):
-                continue
-            entry_path = join_paths(current_path, entry)
-            if is_path_file(entry_path):
-                file_count += 1
-                total_size += get_file_size(entry_path)
-
-        # Build directory info
-        leaf_dirs.append({
-            "path": current_path,
-            "file_count": file_count,
-            "total_size": total_size
-        })
+        # This is a leaf directory
+        leaf_dirs.append(_summarize_leaf_directory(current_path, ignore_hidden))
     return leaf_dirs
 
 # Returns the leaf directories as (small, large), where large ones exceed a threshold
@@ -349,22 +353,22 @@ def group_files_by_directory(files):
 # Path conversion utilities
 ###########################################################
 
+# Whether a top-level component is kept: always without a valid root or filter, else only as a file or dir under it
+def _is_kept_top_level_path(path_front, path_root, only_files, only_dirs):
+    if not is_path_valid(path_root) or not (only_files or only_dirs):
+        return True
+    path_full = os.path.join(path_root, path_front)
+    if only_files and os.path.isfile(path_full):
+        return True
+    return bool(only_dirs and os.path.isdir(path_full))
+
 # Sorted first components of each path, kept only when they are files or dirs under path_root if asked
 def convert_to_top_level_paths(path_list, path_root = None, only_files = False, only_dirs = False):
     top_level_paths = set()
     for path in path_list:
         path_offset = get_filename_drive_offset(path)
         path_front = get_filename_front(path_offset)
-        should_save_path = False
-        if is_path_valid(path_root) and (only_files or only_dirs):
-            path_full = os.path.join(path_root, path_front)
-            if only_files and os.path.isfile(path_full):
-                should_save_path = True
-            elif only_dirs and os.path.isdir(path_full):
-                should_save_path = True
-        else:
-            should_save_path = True
-        if should_save_path:
+        if _is_kept_top_level_path(path_front, path_root, only_files, only_dirs):
             top_level_paths.add(path_front)
     return strings.sort_strings(top_level_paths)
 
@@ -691,6 +695,28 @@ def get_filename_info(path):
 # Path validation and filtering
 ###########################################################
 
+# Drive to validate against and the path without it: its own drive, else the system drive, else none; no drive off Windows
+def _split_validation_drive(path):
+    if os.name != "nt":
+        return "", path
+    drive, path = os.path.splitdrive(path)
+    if not os.path.isdir(drive):
+        drive = os.environ.get("SystemDrive", "C:")
+    if not os.path.isdir(drive):
+        drive = ""
+    return drive, path
+
+# Whether lstat rejects the name itself as invalid or too long, rather than just not finding it
+def _is_rejected_path_name(location):
+    try:
+        os.lstat(location)
+    except OSError as e:
+        if getattr(e, "winerror", None) == 123:
+            return True
+        if e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
+            return True
+    return False
+
 # Check if path is valid
 # https://stackoverflow.com/questions/9532499/check-whether-a-path-is-valid-in-python-without-creating-a-file-at-the-paths-ta
 # https://gist.github.com/mo-han/240b3ef008d96215e352203b88be40db
@@ -698,27 +724,15 @@ def is_path_valid(path):
     try:
         if not isinstance(path, str) or not path or len(path) == 0:
             return False
-        if os.name == "nt":
-            drive, path = os.path.splitdrive(path)
-            if not os.path.isdir(drive):
-                drive = os.environ.get("SystemDrive", "C:")
-            if not os.path.isdir(drive):
-                drive = ""
-        else:
-            drive = ""
+        drive, path = _split_validation_drive(path)
         parts = pathlib.Path(path).parts
         if not parts:
             check_list = [path]
         else:
             check_list = [os.path.join(*parts), *parts]
         for x in check_list:
-            try:
-                os.lstat(drive + x)
-            except OSError as e:
-                if getattr(e, "winerror", None) == 123:
-                    return False
-                if e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
-                    return False
+            if _is_rejected_path_name(drive + x):
+                return False
     except (TypeError, ValueError):
         return False
     return True

@@ -1,0 +1,40 @@
+# Help text for the upload_game_files command, read by joybox/arguments.py
+
+description = "Encrypt game folders in place and upload them to a remote locker."
+details = """
+For each selected game, works on its folder in the source locker
+(`Gaming/<supercategory>/<category>/<subcategory>/<game>`) or on `-i`:
+
+1. Encrypts every file in the folder with GPG (AES-256) using the destination
+   locker's passphrase. Each file becomes `<md5 of name>.enc` with its real name stored
+   inside, and the unencrypted original is deleted.
+2. Records each file's real name, XXH3 hash and size, plus the encrypted file's name,
+   MD5 and size, in the game hash metadata (`Hashes/<supercategory>/<category>/
+   <subcategory>.json` under the configured game metadata directory).
+3. Copies the encrypted folder to the same path, relative to the local locker, on the
+   destination locker.
+
+In `Standard` mode the games are the folders found in the source locker, narrowed by
+`-u`, `-c`, `-s` and `-n` (an exact folder name). In `Custom` mode `-c`, `-s` and `-n`
+are required and name exactly one game."""
+section = "Backups & Lockers"
+see_also = [
+    "backup_tool",
+    "crypt_tool",
+    "sync_tool",
+    "backup_game_files",
+]
+notes = [
+    "The local copies are left encrypted: the unencrypted originals are deleted. Decrypt them with `crypt_tool -d -t Locker` or copy them out decrypted with `backup_tool -r Decrypt`.",
+    "Files that are already `.enc` are left as they are, so an interrupted run can be repeated.",
+    "`-i` is used for every selected game, so give it only with `-m Custom` or a `-n` that matches one game.",
+    "The first game that fails stops the run.",
+]
+examples = [
+    ["Encrypt and upload one Nintendo Switch game to Hetzner", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"],
+    ["Show what would be encrypted and uploaded without changing anything", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner -p -v"],
+    ["Upload a Steam game", "upload_game_files -c Computer -s Steam -n \"Game Name\" -d Hetzner"],
+    ["Upload a game's DLC", "upload_game_files -u DLC -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"],
+    ["Upload every Nintendo Switch game in the local locker", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -d Hetzner"],
+    ["Upload one game from a folder of your choosing", "upload_game_files -m Custom -i /path/to/game/files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"],
+]

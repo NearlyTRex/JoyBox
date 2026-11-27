@@ -4,3 +4,29 @@
 [config.Snes9x]
 program = { windows = "Snes9x/windows/snes9x-x64.exe", linux = "Snes9x/linux/Snes9x.AppImage" }
 run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "snes9xgit"
+github_repo = "snes9x"
+starts_with = "snes9x"
+ends_with = "win32-x64.zip"
+search_file = "snes9x-x64.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "snes9xgit"
+github_repo = "snes9x"
+starts_with = "Snes9x"
+ends_with = "x86_64.AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "snes9x-x64.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

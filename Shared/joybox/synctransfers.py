@@ -15,8 +15,13 @@ from joybox import logger
 from joybox import paths
 from joybox import fileops
 from joybox import hashutil
+from joybox import lockerinfo
+from joybox import reports
+from joybox import runtime
 from joybox import sqlitedb
 from joybox import sync
+from joybox import synclisting
+from joybox import syncremotes
 
 # Constants
 HASH_DATABASE_FILE = ".locker_hashes.db"
@@ -466,3 +471,174 @@ def upload_hash_sidecar_files(
         uploaded = store_hash_database(
             remote_name, remote_type, remote_db_path, temp_db_path, result[1], verbose, pretend_run, exit_on_failure)
         return result[0] and uploaded
+
+
+###########################################################
+# Missing hash sidecar entries
+###########################################################
+
+# The remote files under the path, quitting when they cannot be listed
+def _list_remote_files_for_sidecar_check(remote_name, remote_type, remote_path, verbose = False, exit_on_failure = False):
+    logger.log_info("Listing remote files...")
+    remote_files = synclisting.list_files_with_hashes(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        excludes = [HASH_DATABASE_FILE],
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if remote_files is None:
+        logger.log_error("Could not list files on %s" % remote_name, quit_program = True)
+    logger.log_info("Found %d files on remote" % len(remote_files))
+    return remote_files
+
+# The files the locker's hash sidecar covers, always read from the locker root; quits when it
+# cannot be read
+def _list_sidecar_files_for_sidecar_check(remote_name, remote_type, locker_root, verbose = False, exit_on_failure = False):
+    logger.log_info("Listing hash sidecars...")
+    sidecar_files = list_files_with_hashes_from_sidecar(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = locker_root,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if sidecar_files is None:
+        logger.log_error("Could not read the hash sidecar on %s" % remote_name, quit_program = True)
+    logger.log_info("Found %d files in sidecars" % len(sidecar_files))
+    return sidecar_files
+
+# Log the remote files that have no sidecar entry, writing the full list to the report file
+# when one is given
+def _report_missing_sidecar_files(missing, report_file = None, verbose = False, pretend_run = False):
+    if not missing:
+        logger.log_info("All files have hash sidecars")
+        return
+    logger.log_warning("Files missing hash sidecars:")
+    reports.write_list_report(
+        items = sorted(missing),
+        max_display = 20,
+        report_file = report_file if report_file else None,
+        verbose = verbose,
+        pretend_run = pretend_run)
+
+# List the remote locker's files, under the subpath relative to its root if given, that have
+# no entry in its hash sidecar database; quits when the remote is not configured
+def find_missing_hash_sidecars(locker_type, subpath = "", report_file = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    remote_info = lockerinfo.LockerInfo(locker_type)
+    remote_name = remote_info.get_name()
+    remote_type = remote_info.get_type()
+    locker_root = remote_info.get_remote_path() or ""
+    remote_path = locker_root
+    subpath = subpath or ""
+    if subpath:
+        remote_path = paths.join_paths(locker_root, subpath).replace("\\", "/")
+    if not syncremotes.is_remote_configured(remote_name, remote_type):
+        logger.log_error("Remote '%s' is not configured" % remote_name, quit_program = True)
+    logger.log_info("Checking for missing hash sidecars on %s" % locker_type)
+    logger.log_info("Remote path: %s:%s" % (remote_name, remote_path))
+
+    # Compare the listing against the sidecar, prefixing listed paths with the subpath
+    remote_files = _list_remote_files_for_sidecar_check(remote_name, remote_type, remote_path, verbose = verbose, exit_on_failure = exit_on_failure)
+    sidecar_files = _list_sidecar_files_for_sidecar_check(remote_name, remote_type, locker_root, verbose = verbose, exit_on_failure = exit_on_failure)
+    missing = []
+    for rel_path in remote_files:
+        full_rel_path = paths.join_paths(subpath, rel_path).replace("\\", "/") if subpath else rel_path
+        if full_rel_path not in sidecar_files:
+            missing.append(rel_path)
+    _report_missing_sidecar_files(missing, report_file = report_file, verbose = verbose, pretend_run = pretend_run)
+
+###########################################################
+# Rebuilding hash sidecars
+###########################################################
+
+# The source path, destination remote and excludes a sidecar rebuild works with, narrowed
+# to subpath when given; quits when the source is missing or the remote is not configured
+def get_sidecar_rebuild_target(source_locker, dest_locker, subpath = None):
+    source_info = lockerinfo.LockerInfo(source_locker)
+    dest_info = lockerinfo.LockerInfo(dest_locker)
+    source_root = source_info.get_mount_path()
+    dest_name = dest_info.get_name()
+    dest_type = dest_info.get_type()
+    dest_root = dest_info.get_remote_path() or ""
+    target = {
+        "source_path": source_root,
+        "dest_name": dest_name,
+        "dest_type": dest_type,
+        "dest_root": dest_root,
+        "dest_path": dest_root,
+        "excludes": dest_info.get_excluded_dirs()}
+    if subpath:
+        target["source_path"] = paths.join_paths(source_root, subpath)
+        target["dest_path"] = paths.join_paths(dest_root, subpath).replace("\\", "/")
+    if not paths.does_path_exist(target["source_path"]):
+        logger.log_error("Source path not accessible: %s" % target["source_path"], quit_program = True)
+    if not syncremotes.is_remote_configured(dest_name, dest_type):
+        logger.log_error("Remote '%s' is not configured" % dest_name, quit_program = True)
+    return target
+
+# Preview lines for a sidecar rebuild: its source and sidecar database, parallelism and
+# the memory it can use, then its excludes and options when set
+def get_sidecar_rebuild_preview(target, parallel_dirs, parallel_files, clear = False, skip_existing = False):
+    db_path = get_hash_database_path(target["dest_root"])
+    max_memory_bytes = parallel_dirs * parallel_files * config.HASH_CHUNK_SIZE
+    max_memory_mb = max_memory_bytes / (1024 * 1024)
+    details = [
+        "Source: %s" % target["source_path"],
+        "Destination: %s:%s" % (target["dest_name"], db_path),
+        "Parallel dirs: %d, Parallel files: %d" % (parallel_dirs, parallel_files),
+        "Max memory usage: %.0f MB (%d × %d × %d MB chunk)" % (
+            max_memory_mb, parallel_dirs, parallel_files,
+            config.HASH_CHUNK_SIZE // (1024 * 1024))
+    ]
+    if target["excludes"]:
+        details.append("Excluded dirs: %s" % ", ".join(target["excludes"]))
+    if clear:
+        details.append("Clear existing sidecars: Yes")
+    if skip_existing:
+        details.append("Skip existing sidecars: Yes")
+    return details
+
+# Clear a target's sidecars at its destination root, logging it; quits with status 1 when that fails
+def _clear_target_sidecars(target, verbose, pretend_run, exit_on_failure):
+    logger.log_info("Clearing existing sidecars...")
+    if not clear_hash_sidecar_files(
+        remote_name = target["dest_name"],
+        remote_type = target["dest_type"],
+        remote_path = target["dest_root"],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        logger.log_error("Failed to clear sidecars")
+        runtime.quit_program(1)
+
+# Hash a target's source into fresh sidecars on its destination, first clearing the
+# existing ones when asked, logging the outcome; quits with status 1 when either step fails
+def rebuild_hash_sidecars(
+    target,
+    parallel_dirs,
+    parallel_files,
+    clear = False,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if clear:
+        _clear_target_sidecars(target, verbose, pretend_run, exit_on_failure)
+    success = upload_hash_sidecar_files(
+        remote_name = target["dest_name"],
+        remote_type = target["dest_type"],
+        remote_path = target["dest_path"],
+        local_path = target["source_path"],
+        local_root = target["dest_root"],
+        excludes = target["excludes"],
+        skip_existing = skip_existing,
+        parallel_dirs = parallel_dirs,
+        parallel_files = parallel_files,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if success:
+        logger.log_info("Rebuild complete")
+    else:
+        logger.log_error("Rebuild failed")
+        runtime.quit_program(1)

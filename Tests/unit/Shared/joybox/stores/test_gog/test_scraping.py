@@ -149,6 +149,14 @@ def test_no_browser_gives_no_metadata(gog_store, page, monkeypatch):
     assert page.disconnected == []
 
 
+def test_no_browser_in_a_pretend_run_gives_no_metadata_without_retrying(gog_store, page, monkeypatch):
+    connects = []
+    monkeypatch.setattr(gog_store, "web_connect", lambda **kwargs: connects.append(kwargs) and None)
+
+    assert gog_store.get_latest_metadata(URL, pretend_run = True) is None
+    assert len(connects) == 1
+
+
 def test_an_invalid_identifier_opens_no_browser(gog_store, page):
     assert gog_store.get_latest_metadata("") is None
     assert page.connects == 0

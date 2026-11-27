@@ -4,8 +4,6 @@ from joybox import logger
 from joybox import paths
 from joybox import environment
 from joybox import fileops
-from joybox import release
-from joybox import programs
 from joybox import toolbase
 
 # What rclone.conf holds. The remotes are defined by the settings and reach
@@ -18,78 +16,6 @@ CONFIG_NOTE = """# Written by JoyBox. Remotes come from the locker settings in J
 class RClone(toolbase.ToolBase):
 
     NAME = "RClone"
-
-    # Download the current Windows and Linux zips from downloads.rclone.org
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("RClone", "windows"):
-            success = release.download_general_release(
-                archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",
-                search_file = "rclone.exe",
-                install_name = "RClone",
-                install_dir = programs.get_program_install_dir("RClone", "windows"),
-                backups_dir = programs.get_program_backup_dir("RClone", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup RClone")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("RClone", "linux"):
-            success = release.download_general_release(
-                archive_url = "https://downloads.rclone.org/rclone-current-linux-amd64.zip",
-                search_file = "rclone",
-                install_name = "RClone",
-                install_dir = programs.get_program_install_dir("RClone", "linux"),
-                backups_dir = programs.get_program_backup_dir("RClone", "linux"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup RClone")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("RClone", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("RClone", "windows"),
-                install_name = "RClone",
-                install_dir = programs.get_program_install_dir("RClone", "windows"),
-                search_file = "rclone.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup RClone")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("RClone", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("RClone", "linux"),
-                install_name = "RClone",
-                install_dir = programs.get_program_install_dir("RClone", "linux"),
-                search_file = "rclone",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup RClone")
-                return False
-        return True
 
     # Overwrite both rclone.conf files with a credential-free note, since remotes reach rclone
     # through each command's environment

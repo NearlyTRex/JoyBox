@@ -81,6 +81,18 @@ def write_binary_file(src, contents, verbose = False, pretend_run = False, exit_
             runtime.quit_program()
         return False
 
+# Copy length bytes from offset in an open input file to an open output file, chunk_size at a time
+# EOFError when the input ends before length bytes
+def _copy_open_file_range(input_file, output_file, src, offset, length, chunk_size):
+    input_file.seek(offset)
+    remaining = length
+    while remaining > 0:
+        chunk = input_file.read(min(remaining, chunk_size))
+        if not chunk:
+            raise EOFError("%s ends %d bytes short" % (src, remaining))
+        output_file.write(chunk)
+        remaining -= len(chunk)
+
 # Copy length bytes, starting at offset, out of one binary file into another
 def copy_binary_range(src, dest, offset, length, chunk_size = 1024 * 1024, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
@@ -89,14 +101,7 @@ def copy_binary_range(src, dest, offset, length, chunk_size = 1024 * 1024, verbo
         if pretend_run:
             return True
         with open(src, "rb") as input_file, open(dest, "wb") as output_file:
-            input_file.seek(offset)
-            remaining = length
-            while remaining > 0:
-                chunk = input_file.read(min(remaining, chunk_size))
-                if not chunk:
-                    raise EOFError("%s ends %d bytes short" % (src, remaining))
-                output_file.write(chunk)
-                remaining -= len(chunk)
+            _copy_open_file_range(input_file, output_file, src, offset, length, chunk_size)
         return True
     except (OSError, EOFError) as e:
         if exit_on_failure:
@@ -231,6 +236,36 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
             runtime.quit_program()
         return False
 
+# Drop the null, false and empty top-level values of a json object in place
+def _remove_empty_top_level_values(json_data):
+    json_keys_to_remove = []
+    for key in json_data.keys():
+        json_value = json_data[key]
+        if json_value is None:
+            json_keys_to_remove.append(key)
+        if isinstance(json_value, str) and len(json_value) == 0:
+            json_keys_to_remove.append(key)
+        if isinstance(json_value, dict) and len(json_value.keys()) == 0:
+            json_keys_to_remove.append(key)
+        if isinstance(json_value, list) and len(json_value) == 0:
+            json_keys_to_remove.append(key)
+        if json_value is False:
+            json_keys_to_remove.append(key)
+    for key in json_keys_to_remove:
+        json_data.pop(key)
+
+# Read a json file and write it back reindented, sorted and emptied of blank top-level values as asked
+def _rewrite_json_file(src, sort_keys, remove_empty_values):
+    json_data = None
+    with open(src, "r", encoding = "utf-8") as input_file:
+        json_data = json.loads(input_file.read())
+        if remove_empty_values and isinstance(json_data, dict):
+            _remove_empty_top_level_values(json_data)
+    if json_data is not None:
+        with open(src, "w", newline='\n', encoding = "utf-8") as output_file:
+            json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
+            output_file.write(json_string)
+
 # Rewrite a .json file reindented, optionally sorted and, for an object, without top-level
 # null, false or empty values
 def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -240,29 +275,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
         if verbose:
             logger.log_info("Cleaning %s" % src)
         if not pretend_run:
-            json_data = None
-            with open(src, "r", encoding = "utf-8") as input_file:
-                json_data = json.loads(input_file.read())
-                if remove_empty_values and isinstance(json_data, dict):
-                    json_keys_to_remove = []
-                    for key in json_data.keys():
-                        json_value = json_data[key]
-                        if json_value is None:
-                            json_keys_to_remove.append(key)
-                        if isinstance(json_value, str) and len(json_value) == 0:
-                            json_keys_to_remove.append(key)
-                        if isinstance(json_value, dict) and len(json_value.keys()) == 0:
-                            json_keys_to_remove.append(key)
-                        if isinstance(json_value, list) and len(json_value) == 0:
-                            json_keys_to_remove.append(key)
-                        if json_value is False:
-                            json_keys_to_remove.append(key)
-                    for key in json_keys_to_remove:
-                        json_data.pop(key)
-            if json_data is not None:
-                with open(src, "w", newline='\n', encoding = "utf-8") as output_file:
-                    json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
-                    output_file.write(json_string)
+            _rewrite_json_file(src, sort_keys, remove_empty_values)
         return True
     except (OSError, ValueError, TypeError) as e:
         if exit_on_failure:
@@ -317,6 +330,17 @@ def read_yaml_file(src, verbose = False, exit_on_failure = False):
 # CSV file I/O utilities
 ###########################################################
 
+# Rows of an open csv file as dicts keyed by headers, quotes stripped; other-length rows are skipped
+def _read_csv_rows(input_file, headers):
+    csv_data = []
+    csv_reader = csv.reader(input_file)
+    for row in csv_reader:
+        if len(row) == len(headers):
+            row = [field.strip('"') for field in row]
+            row_dict = {headers[i]: row[i] for i in range(len(headers))}
+            csv_data.append(row_dict)
+    return csv_data
+
 # Rows of a .csv file as dicts keyed by headers; rows with a different field count are skipped
 def read_csv_file(src, headers, verbose = False, exit_on_failure = False):
     try:
@@ -326,12 +350,7 @@ def read_csv_file(src, headers, verbose = False, exit_on_failure = False):
             logger.log_info("Reading %s" % src)
         csv_data = []
         with open(src, mode="r", newline="", encoding="utf-8") as input_file:
-            csv_reader = csv.reader(input_file)
-            for row in csv_reader:
-                if len(row) == len(headers):
-                    row = [field.strip('"') for field in row]
-                    row_dict = {headers[i]: row[i] for i in range(len(headers))}
-                    csv_data.append(row_dict)
+            csv_data = _read_csv_rows(input_file, headers)
         return csv_data
     except (OSError, ValueError, csv.Error) as e:
         if exit_on_failure:

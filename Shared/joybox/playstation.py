@@ -499,3 +499,86 @@ def rename_psn_fakerif_file(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+
+######################################################
+# Rom folders
+######################################################
+
+# The psv tool actions, in the order a flag set picks the one it names
+PSV_ACTION_NAMES = [
+    ("strip", "Strip"),
+    ("unstrip", "Unstrip"),
+    ("trim", "Trim"),
+    ("untrim", "Untrim"),
+    ("verify", "Verify"),
+]
+
+# The name of the first psv tool action set; None when none is
+def get_psv_action_name(strip = False, unstrip = False, trim = False, untrim = False, verify = False):
+    selected = {"strip": strip, "unstrip": unstrip, "trim": trim, "untrim": untrim, "verify": verify}
+    for action, name in PSV_ACTION_NAMES:
+        if selected[action]:
+            return name
+    return None
+
+# The single-source psv conversions by action name: each one's function and the suffix of
+# the file it writes beside the source
+def _get_psv_conversions():
+    return {
+        "Strip": (strip_psv, "_stripped.psv"),
+        "Trim": (trim_psv, "_trimmed.psv"),
+        "Untrim": (untrim_psv, "_untrimmed.psv"),
+    }
+
+# Strip, unstrip, trim, untrim or verify one psv file by its action name, writing any
+# result beside it with a suffix naming the action
+def _process_psv_file(psv_file, action, delete_originals, flags):
+    psv_dir = paths.get_filename_directory(psv_file)
+    psv_basename = paths.get_filename_basename(psv_file)
+    conversion = _get_psv_conversions().get(action)
+    if conversion:
+        convert, suffix = conversion
+        convert(
+            src_psv_file = psv_file,
+            dest_psv_file = paths.join_paths(psv_dir, psv_basename + suffix),
+            delete_original = delete_originals,
+            **flags)
+    elif action == "Unstrip":
+        unstrip_psv(
+            src_psv_file = psv_file,
+            src_psve_file = paths.join_paths(psv_dir, psv_basename + ".psve"),
+            dest_psv_file = paths.join_paths(psv_dir, psv_basename + "_unstripped.psv"),
+            delete_original = delete_originals,
+            **flags)
+    elif action == "Verify":
+        verify_psv(psv_file = psv_file, **flags)
+
+# Run a psv tool action, named as get_psv_action_name names it, on every .psv under input_path
+def process_psv_files(
+    input_path,
+    action,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    for psv_file in paths.build_file_list_by_extensions(input_path, extensions = [".psv"]):
+        _process_psv_file(psv_file, action, delete_originals, flags)
+
+# Rename every psn .rap, .pkg, .work.bin and .fake.rif under input_path to the content id it holds
+def rename_psn_files(
+    input_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    for rap_file in paths.build_file_list_by_extensions(input_path, extensions = [".rap"]):
+        rename_psn_rap_file(rap_file = rap_file, **flags)
+    for pkg_file in paths.build_file_list_by_extensions(input_path, extensions = [".pkg"]):
+        rename_psn_package_file(pkg_file = pkg_file, **flags)
+    for bin_file in paths.build_file_list_by_extensions(input_path, extensions = [".bin"]):
+        if bin_file.endswith(".work.bin"):
+            rename_psn_workbin_file(workbin_file = bin_file, **flags)
+    for rif_file in paths.build_file_list_by_extensions(input_path, extensions = [".rif"]):
+        if rif_file.endswith(".fake.rif"):
+            rename_psn_fakerif_file(fakerif_file = rif_file, **flags)

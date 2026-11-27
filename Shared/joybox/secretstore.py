@@ -118,6 +118,23 @@ def clear_resolved_secrets():
     _resolved.clear()
     _no_account["seen"] = False
 
+# Log why a reference failed to resolve; a missing account also stops later lookups this run
+def log_resolve_failure(reference, result):
+
+    # The tool's complaint names the item, not its contents
+    detail = (result.stderr or "").strip().splitlines()
+    logger.log_error("Unable to resolve %s" % reference)
+    if NO_ACCOUNT_MARKER in (result.stderr or ""):
+        _no_account["seen"] = True
+        for line in detail:
+            if line.strip():
+                logger.log_error(line.strip())
+        logger.log_error(
+            "Sign in to the 1Password app and turn on its CLI integration, then run this "
+            "again; see Docs/reference/secrets.md")
+    elif detail:
+        logger.log_error(detail[0])
+
 # Resolve one reference through a bare subprocess, not the logging command module, so
 # the secret passes through as little as possible; with no stdin the tool says how to
 # sign in instead of prompting into captured output
@@ -139,20 +156,7 @@ def resolve_secret_reference(reference, verbose = False):
     if not result:
         return None
     if result.returncode != 0:
-
-        # The tool's complaint names the item, not its contents
-        detail = (result.stderr or "").strip().splitlines()
-        logger.log_error("Unable to resolve %s" % reference)
-        if NO_ACCOUNT_MARKER in (result.stderr or ""):
-            _no_account["seen"] = True
-            for line in detail:
-                if line.strip():
-                    logger.log_error(line.strip())
-            logger.log_error(
-                "Sign in to the 1Password app and turn on its CLI integration, then run this "
-                "again; see Docs/reference/secrets.md")
-        elif detail:
-            logger.log_error(detail[0])
+        log_resolve_failure(reference, result)
         return None
     value = result.stdout
     if not value:

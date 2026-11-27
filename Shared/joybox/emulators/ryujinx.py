@@ -16,6 +16,33 @@ config_files["Ryujinx/linux/portable/Config.json"] = ""
 # System files
 system_files = {}
 
+# The release asset suffix and the file to find in it for each platform
+RELEASE_ASSETS = {
+    "windows": ("win_x64.zip", "Ryujinx.exe"),
+    "linux": ("linux_x64.tar.gz", "Ryujinx.sh")
+}
+
+# Download the platform's build from the release-channel-master GitHub release; False, after logging, on failure
+def download_platform_release(platform, setup_params):
+    ends_with, search_file = RELEASE_ASSETS[platform]
+    success = release.download_github_release(
+        github_user = "Ryujinx",
+        github_repo = "release-channel-master",
+        starts_with = "ryujinx",
+        ends_with = ends_with,
+        search_file = search_file,
+        install_name = "Ryujinx",
+        install_dir = programs.get_program_install_dir("Ryujinx", platform),
+        backups_dir = programs.get_program_backup_dir("Ryujinx", platform),
+        locker_type = setup_params.locker_type,
+        verbose = setup_params.verbose,
+        pretend_run = setup_params.pretend_run,
+        exit_on_failure = setup_params.exit_on_failure)
+    if not success:
+        logger.log_error("Could not setup Ryujinx")
+        return False
+    return True
+
 # Ryujinx emulator
 class Ryujinx(emulatorbase.EmulatorBase):
 
@@ -49,43 +76,11 @@ class Ryujinx(emulatorbase.EmulatorBase):
         if not setup_params:
             setup_params = config.SetupParams()
 
-        # Download windows program
-        if programs.should_program_be_installed("Ryujinx", "windows"):
-            success = release.download_github_release(
-                github_user = "Ryujinx",
-                github_repo = "release-channel-master",
-                starts_with = "ryujinx",
-                ends_with = "win_x64.zip",
-                search_file = "Ryujinx.exe",
-                install_name = "Ryujinx",
-                install_dir = programs.get_program_install_dir("Ryujinx", "windows"),
-                backups_dir = programs.get_program_backup_dir("Ryujinx", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ryujinx")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Ryujinx", "linux"):
-            success = release.download_github_release(
-                github_user = "Ryujinx",
-                github_repo = "release-channel-master",
-                starts_with = "ryujinx",
-                ends_with = "linux_x64.tar.gz",
-                search_file = "Ryujinx.sh",
-                install_name = "Ryujinx",
-                install_dir = programs.get_program_install_dir("Ryujinx", "linux"),
-                backups_dir = programs.get_program_backup_dir("Ryujinx", "linux"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ryujinx")
-                return False
+        # Download windows and linux programs
+        for platform in ["windows", "linux"]:
+            if programs.should_program_be_installed("Ryujinx", platform):
+                if not download_platform_release(platform, setup_params):
+                    return False
         return True
 
     # Install the Windows and Linux builds from the releases stored in their backups dirs

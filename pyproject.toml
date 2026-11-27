@@ -115,8 +115,8 @@ where = ["Shared"]
 include = ["joybox*"]
 
 [tool.setuptools.package-data]
-# Each tool's and emulator's program.toml and config-file templates
-"joybox" = ["programdata/**/*"]
+# Each tool's and emulator's program.toml and config-file templates, and each command's help text
+"joybox" = ["programdata/**/*", "clidata/*.toml"]
 
 [tool.coverage.run]
 branch = true
@@ -198,7 +198,7 @@ wrapper_modules = [
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
 documented = 0
 doc-paraphrase = 0
-long-functions = 525
+long-functions = 0
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
 pylint-source = 0
 

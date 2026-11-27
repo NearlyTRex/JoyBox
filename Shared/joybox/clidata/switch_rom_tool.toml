@@ -1,0 +1,26 @@
+# Help text for the switch_rom_tool command, read by joybox/arguments.py
+
+description = "Trim or untrim Nintendo Switch cartridge images (.xci)."
+details = """
+Finds every `.xci` file under the input path (or takes the one file given) and runs
+XCI Trimmer on a temporary copy of it. `-t` removes the unused padding at the end of
+the image and writes `<name>_trimmed.xci`; `-u` pads a trimmed image back to its full
+cartridge size and writes `<name>_untrimmed.xci`. Both are written next to the source.
+
+With `-d` the source `.xci` is deleted after XCI Trimmer succeeds and the new file
+has been moved into place."""
+section = "Game ROMs & Images"
+see_also = [
+    "3ds_rom_tool",
+]
+notes = [
+    "Without `-t` or `-u` nothing is done. If both are given, `-t` wins.",
+    "Output files are also `.xci`, so running the tool again on the same folder processes them too.",
+    "Each image is copied to the temporary directory first, which needs room for the image and its output.",
+    "XCI Trimmer and the JoyBox Python environment must be installed as JoyBox tools.",
+]
+examples = [
+    ["Trim every XCI in a folder", "switch_rom_tool -i /path/to/switch -t"],
+    ["Trim and delete the originals, previewing first", "switch_rom_tool -i /path/to/switch -t -d -p -v"],
+    ["Pad one trimmed image back to full size", "switch_rom_tool -i \"/path/to/Game (USA).xci\" -u"],
+]

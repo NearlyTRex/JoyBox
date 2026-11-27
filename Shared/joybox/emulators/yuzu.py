@@ -4,13 +4,39 @@ from joybox import environment
 from joybox import fileops
 from joybox import filebulk
 from joybox import logger
-from joybox import release
 from joybox import programs
 from joybox.nintendo import switch
 from joybox import paths
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
+# Install every .nsp under the dir into Yuzu's NAND; False at the first failure
+def install_package_dir(package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
+        success = switch.install_switch_nsp(
+            nsp_file = nsp_file,
+            nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir"), "nand"),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Write each platform's profiles file for the configured user; False, after logging, at the first failure
+def create_profiles(setup_params):
+    for platform in ["windows", "linux"]:
+        success = switch.create_switch_profiles_dat(
+            profiles_file = programs.get_emulator_path_config_value("Yuzu", "profiles_file", platform),
+            user_id = programs.get_emulator_config_value("Yuzu", "profile_user_id"),
+            account_name = programs.get_emulator_config_value("Yuzu", "profile_account_name"),
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup Yuzu profiles")
+            return False
+    return True
 
 # Yuzu emulator
 class Yuzu(emulatorbase.EmulatorBase):
@@ -23,53 +49,8 @@ class Yuzu(emulatorbase.EmulatorBase):
         update_dirs = [] if update_dirs is None else update_dirs
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
-                for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
-                    success = switch.install_switch_nsp(
-                        nsp_file = nsp_file,
-                        nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir"), "nand"),
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-        return True
-
-    # Install the EA 4176 Windows and Linux builds from the archives stored in their backups dirs;
-    # nothing is downloaded, and a missing archive is skipped
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Yuzu", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Yuzu", "windows"),
-                install_name = "Yuzu",
-                install_dir = programs.get_program_install_dir("Yuzu", "windows"),
-                preferred_archive = "Windows-Yuzu-EA-4176",
-                search_file = "yuzu.exe",
-                skip_if_missing = True,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Yuzu")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Yuzu", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Yuzu", "linux"),
-                install_name = "Yuzu",
-                install_dir = programs.get_program_install_dir("Yuzu", "linux"),
-                preferred_archive = "Linux-Yuzu-EA-4176",
-                skip_if_missing = True,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Yuzu")
-                return False
+                if not install_package_dir(package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                    return False
         return True
 
     # Same as setup, which already works only from stored releases
@@ -97,17 +78,8 @@ class Yuzu(emulatorbase.EmulatorBase):
                 return False
 
         # Create profiles
-        for platform in ["windows", "linux"]:
-            success = switch.create_switch_profiles_dat(
-                profiles_file = programs.get_emulator_path_config_value("Yuzu", "profiles_file", platform),
-                user_id = programs.get_emulator_config_value("Yuzu", "profile_user_id"),
-                account_name = programs.get_emulator_config_value("Yuzu", "profile_account_name"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Yuzu profiles")
-                return False
+        if not create_profiles(setup_params):
+            return False
 
         # Verify system files
         if not self.verify_system_files(self.get_system_files(), setup_params):

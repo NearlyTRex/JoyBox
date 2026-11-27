@@ -1,0 +1,25 @@
+# Help text for the clean_game_metadata_files command, read by joybox/arguments.py
+
+description = "Rewrite every platform's Pegasus metadata file with its entries in sorted order."
+details = """
+For each category and subcategory, reads the metadata file
+`Pegasus/Roms/<category>/<subcategory>/metadata.pegasus.txt` in the game metadata
+repository, if it exists, and writes it back with entries sorted by name and the
+collection header and launch command regenerated.
+
+`sort_game_metadata` does the same for every metadata file it finds under `Pegasus/`,
+including ones outside the known subcategories."""
+section = "Game Collection"
+see_also = [
+    "sort_game_metadata",
+    "build_game_metadata_files",
+    "clean_game_json_files",
+    "clean_game_hash_files",
+]
+notes = [
+    "There are no selection options; every known subcategory is processed.",
+]
+examples = [
+    ["Sort every metadata file", "clean_game_metadata_files"],
+    ["Sort without the confirmation prompt", "clean_game_metadata_files --no-preview"],
+]

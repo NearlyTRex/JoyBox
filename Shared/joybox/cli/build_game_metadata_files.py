@@ -1,10 +1,8 @@
 # Imports
 from joybox import config
-from joybox import environment
 from joybox import system
 from joybox import gamecollection
 from joybox import collection
-from joybox import metadatacollector
 from joybox import arguments
 from joybox import setup
 from joybox import logger
@@ -12,32 +10,7 @@ from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details.",
-        details = (
-            "For each selected game that has a JSON file, makes sure the subcategory's metadata file\n"
-            "(`Pegasus/Roms/<category>/<subcategory>/metadata.pegasus.txt` in the metadata\n"
-            "repository) has an entry for it. A new entry records the platform, categories and JSON\n"
-            "file path, with `players` 1, `coop` No and `playable` Yes.\n"
-            "\n"
-            "If the entry is then missing any downloadable field (description, genre, coop,\n"
-            "developer, publisher, players, release), the latest metadata is fetched and merged in:\n"
-            "from the store for store platforms, and from GameFAQs otherwise. Entries that already\n"
-            "have every downloadable field are left alone.\n"
-            "\n"
-            "Only the `Roms` supercategory has metadata files; other supercategories are skipped."),
-        examples = [
-            ("Build metadata for one game", "build_game_metadata_files -c Nintendo -s \"Nintendo Switch\" -n \"Pokemon Legends Z-A (World)\""),
-            ("Build metadata for a whole platform", "build_game_metadata_files -c Sony -s \"Sony PlayStation 2\""),
-            ("Build metadata for every game", "build_game_metadata_files"),
-            ("Show what would be built", "build_game_metadata_files -c Computer -s Steam -p -v"),
-        ],
-        notes = [
-            "Only games that already have a JSON file are processed; create it first with `build_game_json_files` or `build_game_store_purchases`.",
-            "An existing entry is never recreated, only filled in.",
-        ],
-        see_also = ["build_game_json_files", "build_game_store_purchases", "find_missing_game_metadata", "download_game_metadata_assets", "sort_game_metadata", "publish_game_metadata_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "build_game_metadata_files")
     parser.add_game_supercategory_argument(description = "Supercategory of the games; only `Roms` produces metadata")
     parser.add_game_category_argument(description = "Category of the games to build; all categories when omitted")
     parser.add_game_subcategory_argument(description = "Subcategory (platform) of the games to build; every subcategory of the selected categories when omitted")
@@ -64,19 +37,11 @@ def main():
     logger.setup_logging()
 
     # Collect games to process
-    games_to_process = []
-    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_selected_game_categories(
-        parser = parser,
-        generation_mode = args.generation_mode):
-        game_names = gamecollection.find_json_game_names(
-            game_supercategory,
-            game_category,
-            game_subcategory)
-        if args.game_name:
-            game_names = [g for g in game_names if g == args.game_name]
-        for game_name in game_names:
-            metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)
-            games_to_process.append((game_supercategory, game_category, game_subcategory, game_name, metadata_file))
+    games_to_process = collection.metadata.get_metadata_games(
+        categories = gamecollection.iterate_selected_game_categories(
+            parser = parser,
+            generation_mode = args.generation_mode),
+        game_name = args.game_name)
 
     # Show preview
     if not args.no_preview:
@@ -86,27 +51,11 @@ def main():
             return
 
     # Build metadata files
-    stats = metadatacollector.CollectionStats()
-    for game_supercategory, game_category, game_subcategory, game_name, _ in games_to_process:
-        success = collection.build_game_metadata_entry(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name,
-            stats = stats,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-        if not success:
-            stats.log_summary()
-            logger.log_error(
-                message = "Build of metadata file failed!",
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
-                quit_program = True)
-    stats.log_summary()
+    collection.metadata.build_metadata_entries_for_games(
+        games = games_to_process,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

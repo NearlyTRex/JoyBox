@@ -62,16 +62,7 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
             "subdomain": settings.get_value("UserData.FitLog", "fitlog_subdomain"),
             "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http")
         }
-        self.env_values = {
-            "repository": "https://github.com/NearlyTRex/FitLog.git",
-            "catalog_branch": settings.get_value("UserData.FitLog", "fitlog_catalog_branch",
-                default_value = "main", throw_exception = False),
-            "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http"),
-            "timezone": settings.get_value("UserData.FitLog", "fitlog_timezone",
-                default_value = "Etc/UTC", throw_exception = False),
-            "pull_minutes": settings.get_value("UserData.FitLog", "fitlog_pull_minutes",
-                default_value = "10", throw_exception = False)
-        }
+        self.env_values = self._get_env_values()
 
         # Templates
         self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
@@ -91,6 +82,19 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         # The catalog volume is a clone of the repo, so it is not backed up.
         self.backup_label = "FitLog"
         self.backup_volumes = ["fitlog_state"]
+
+    # The .env template values, from UserData.FitLog with defaults for the optional ones
+    def _get_env_values(self):
+        return {
+            "repository": "https://github.com/NearlyTRex/FitLog.git",
+            "catalog_branch": settings.get_value("UserData.FitLog", "fitlog_catalog_branch",
+                default_value = "main", throw_exception = False),
+            "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http"),
+            "timezone": settings.get_value("UserData.FitLog", "fitlog_timezone",
+                default_value = "Etc/UTC", throw_exception = False),
+            "pull_minutes": settings.get_value("UserData.FitLog", "fitlog_pull_minutes",
+                default_value = "10", throw_exception = False)
+        }
 
     # Create the configured FitLog login through the app's CLI once it is healthy;
     # skipped when no login is set, and kept when one already exists

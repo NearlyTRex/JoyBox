@@ -9,24 +9,7 @@ from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Check CHD files against their internal SHA-1 checksums with chdman.",
-        details = (
-            "Finds every `.chd` file under the input path (or takes the one file given) and runs\n"
-            "`chdman verify` on it. A CHD passes when chdman reports that the overall SHA-1\n"
-            "verification succeeded. The run stops with an error at the first CHD that fails.\n"
-            "\n"
-            "Nothing is written or changed."),
-        examples = [
-            ("Verify every CHD in a folder", "chdverify -i /path/to/chds"),
-            ("Verify one CHD without the confirmation prompt", "chdverify -i \"/path/to/Game (USA).chd\" --no-preview"),
-        ],
-        notes = [
-            "`-p` does not skip the check; chdman still reads every CHD.",
-            "chdman (MameChdman) must be installed as a JoyBox tool.",
-        ],
-        see_also = ["chdconvert", "chdextract", "ps3_rom_tool", "verify_archives"],
-        section = "Game ROMs & Images")
+    parser = arguments.ArgumentParser(command = "chdverify")
     parser.add_input_path_argument(description = "A `.chd` file, or a directory searched recursively for them; must exist")
     parser.add_common_arguments()
     return parser

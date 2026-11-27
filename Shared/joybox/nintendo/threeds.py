@@ -9,6 +9,7 @@ from joybox import command
 from joybox import commandbase
 from joybox import fileops
 from joybox import filebulk
+from joybox import logger
 from joybox import paths
 from joybox import programs
 
@@ -212,6 +213,15 @@ def get_3ds_file_info(
         exit_on_failure = exit_on_failure)
     return output
 
+# The value of the first well-formed "Title id:" line of the file info; empty when there is none
+def get_3ds_title_id(file_info):
+    for line in file_info.split("\n"):
+        if line.startswith("Title id:"):
+            line_tokens = line.split(":")
+            if len(line_tokens) == 2:
+                return line_tokens[1].strip()
+    return ""
+
 # Install 3DS CIA file
 def install_3ds_cia(
     src_3ds_file,
@@ -230,13 +240,7 @@ def install_3ds_cia(
         return False
 
     # Get title id
-    app_titleid = ""
-    for line in file_info.split("\n"):
-        if line.startswith("Title id:"):
-            line_tokens = line.split(":")
-            if len(line_tokens) == 2:
-                app_titleid = line_tokens[1].strip()
-                break
+    app_titleid = get_3ds_title_id(file_info)
     if len(app_titleid) != 16:
         return False
 
@@ -260,3 +264,88 @@ def install_3ds_cia(
     return True
 
 ######################################################
+# Rom folders
+######################################################
+
+# The 3DS tool actions, in the order a flag set picks the one it names
+THREEDS_ACTION_NAMES = [
+    ("cia_to_cci", "Convert CIA to 3DS(CCI)"),
+    ("cci_to_cia", "Convert 3DS(CCI) to CIA"),
+    ("trim_cci", "Trim 3DS(CCI)"),
+    ("untrim_cci", "Untrim 3DS(CCI)"),
+    ("extract_cia", "Extract CIA"),
+    ("info", "Print info"),
+]
+
+# The name of the first 3DS tool action set; None when none is
+def get_3ds_action_name(
+    cia_to_cci = False,
+    cci_to_cia = False,
+    trim_cci = False,
+    untrim_cci = False,
+    extract_cia = False,
+    info = False):
+    selected = {
+        "cia_to_cci": cia_to_cci,
+        "cci_to_cia": cci_to_cia,
+        "trim_cci": trim_cci,
+        "untrim_cci": untrim_cci,
+        "extract_cia": extract_cia,
+        "info": info}
+    for action, name in THREEDS_ACTION_NAMES:
+        if selected[action]:
+            return name
+    return None
+
+# The files a 3DS rom converts to beside it, named without any .trim: its .cia, .3ds,
+# .trim.3ds and its extract folder
+def _get_3ds_output_paths(rom_file):
+    rom_dir = paths.get_filename_directory(rom_file)
+    rom_basename = paths.get_filename_basename(rom_file).replace(".trim", "")
+    return {
+        "cia": paths.join_paths(rom_dir, rom_basename + ".cia"),
+        "3ds": paths.join_paths(rom_dir, rom_basename + ".3ds"),
+        "trimmed_3ds": paths.join_paths(rom_dir, rom_basename + ".trim.3ds"),
+        "extract_dir": paths.join_paths(rom_dir, rom_basename)}
+
+# The first selected conversion a rom's suffix allows, as its function and output keyword
+# arguments; (None, None) when none applies
+def _get_3ds_conversion(rom_file, conversions, outputs):
+    cia_to_cci, cci_to_cia, trim_cci, untrim_cci, extract_cia = conversions
+    if cia_to_cci and rom_file.endswith(".cia"):
+        return convert_3ds_cia_to_cci, {"dest_3ds_file": outputs["trimmed_3ds"]}
+    if cci_to_cia and rom_file.endswith(".3ds"):
+        return convert_3ds_cci_to_cia, {"dest_3ds_file": outputs["cia"]}
+    if trim_cci and rom_file.endswith(".3ds") and ".trim" not in rom_file:
+        return trim_3ds_cci, {"dest_3ds_file": outputs["trimmed_3ds"]}
+    if untrim_cci and rom_file.endswith(".trim.3ds"):
+        return untrim_3ds_cci, {"dest_3ds_file": outputs["3ds"]}
+    if extract_cia and rom_file.endswith(".cia"):
+        return extract_3ds_cia, {"extract_dir": outputs["extract_dir"]}
+    return None, None
+
+# Convert one rom by the first selected conversion its suffix allows, or else log its info when asked
+def _process_3ds_rom(rom_file, conversions, info, flags):
+    conversion, outputs = _get_3ds_conversion(rom_file, conversions, _get_3ds_output_paths(rom_file))
+    if conversion:
+        conversion(src_3ds_file = rom_file, **outputs, **flags)
+    elif info:
+        logger.log_info(get_3ds_file_info(src_3ds_file = rom_file, **flags))
+
+# Convert, trim, untrim or extract every .cia and .3ds under input_path, each by the
+# first selected action its suffix allows, or log CtrTool's info for each
+def process_3ds_roms(
+    input_path,
+    cia_to_cci = False,
+    cci_to_cia = False,
+    trim_cci = False,
+    untrim_cci = False,
+    extract_cia = False,
+    info = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    conversions = (cia_to_cci, cci_to_cia, trim_cci, untrim_cci, extract_cia)
+    for rom_file in paths.build_file_list_by_extensions(input_path, extensions = [".cia", ".3ds"]):
+        _process_3ds_rom(rom_file, conversions, info, flags)

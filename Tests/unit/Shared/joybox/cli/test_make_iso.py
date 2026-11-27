@@ -17,9 +17,9 @@ from joybox.cli import make_iso
 def tool(monkeypatch, isolated_settings):
     command = CommandHarness(monkeypatch, make_iso)
     command.create = Recorder(result = True)
-    command.extract = Recorder(result = True, spec = make_iso.archive.extract_archive)
+    command.extract = Recorder(result = True, spec = make_iso.iso.archive.extract_archive)
     monkeypatch.setattr(make_iso.iso, "create_iso", command.create)
-    monkeypatch.setattr(make_iso.archive, "extract_archive", command.extract)
+    monkeypatch.setattr(make_iso.iso.archive, "extract_archive", command.extract)
     return command
 
 

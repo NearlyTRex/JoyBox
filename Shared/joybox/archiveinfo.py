@@ -157,17 +157,23 @@ def is_extractable_archive_type(archive_type):
         return True
     return False
 
+# {path, crc} for each file entry of an open zip, directories left out
+def _get_zip_checksums(zf):
+    checksums = []
+    for info in zf.infolist():
+        if info.is_dir():
+            continue
+        entry = {}
+        entry["path"] = info.filename
+        entry["crc"] = "%08x" % info.CRC
+        checksums.append(entry)
+    return checksums
+
 # Check archive checksums
 def get_archive_checksums(archive_file):
     checksums = []
     if paths.is_path_file(archive_file):
         if is_zip_archive(archive_file):
             with zipfile.ZipFile(archive_file) as zf:
-                for info in zf.infolist():
-                    if info.is_dir():
-                        continue
-                    entry = {}
-                    entry["path"] = info.filename
-                    entry["crc"] = "%08x" % info.CRC
-                    checksums.append(entry)
+                checksums = _get_zip_checksums(zf)
     return checksums

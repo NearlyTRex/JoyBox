@@ -62,7 +62,7 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     monkeypatch.setattr(FakeMetadata, "import_from_metadata_file", lambda self, filename: harness.loaded.append(filename), raising = False)
     monkeypatch.setattr(module.environment, "get_game_pegasus_metadata_root_dir", lambda: str(metadata_dir))
     monkeypatch.setattr(module.metadata, "Metadata", FakeMetadata)
-    monkeypatch.setattr(module.reports, "write_list_report", lambda **kwargs: harness.reports.append(kwargs))
+    monkeypatch.setattr(module.metadata.reports, "write_list_report", lambda **kwargs: harness.reports.append(kwargs))
     return harness
 
 

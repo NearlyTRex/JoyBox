@@ -68,7 +68,7 @@ def tool(monkeypatch):
     def read_line(prompt_text):
         return state["lines"].pop(0) if state["lines"] else None
 
-    monkeypatch.setattr(llm_chat.terminal, "read_line", read_line)
+    monkeypatch.setattr(llm_chat.llmchat.terminal, "read_line", read_line)
     real_handle = llmchat.handle_command
 
     def handle_command(line, session, say, warn, window_override = 0):

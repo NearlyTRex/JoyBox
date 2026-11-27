@@ -98,6 +98,21 @@ def find_apm_partition(image_file, entry_size, partition_type):
         index += 1
     return None
 
+# (offset, length, signature) of the HFS partition an Apple partition map lists, trying
+# 512-byte and the map's own block sizes for entries and units; None when none is readable
+def _find_apm_hfs_volume(image_file, header):
+    block_size = struct.unpack(">H", header[2:4])[0] or APM_DEFAULT_BLOCK_SIZE
+    for entry_size in sorted({APM_DEFAULT_BLOCK_SIZE, block_size}):
+        partition = find_apm_partition(image_file, entry_size, APM_HFS_PARTITION_TYPE)
+        if not partition:
+            continue
+        start_block, block_count = partition
+        for unit_size in sorted({entry_size, block_size}):
+            volume_info = get_hfs_volume_info(image_file, start_block * unit_size, block_count * unit_size)
+            if volume_info:
+                return volume_info
+    return None
+
 # Find hfs volume
 # Returns (offset, length, signature) of the HFS or HFS+ volume in a disc image, or None
 def find_hfs_volume(image_file):
@@ -108,17 +123,7 @@ def find_hfs_volume(image_file):
     # Volume behind an Apple partition map
     # CD maps often give 2048-byte blocks yet space their entries and count their partitions in 512 bytes
     if header[0:2] == APM_SIGNATURE:
-        block_size = struct.unpack(">H", header[2:4])[0] or APM_DEFAULT_BLOCK_SIZE
-        for entry_size in sorted({APM_DEFAULT_BLOCK_SIZE, block_size}):
-            partition = find_apm_partition(image_file, entry_size, APM_HFS_PARTITION_TYPE)
-            if not partition:
-                continue
-            start_block, block_count = partition
-            for unit_size in sorted({entry_size, block_size}):
-                volume_info = get_hfs_volume_info(image_file, start_block * unit_size, block_count * unit_size)
-                if volume_info:
-                    return volume_info
-        return None
+        return _find_apm_hfs_volume(image_file, header)
 
     # Bare volume, as on hybrids that lay ISO 9660 over an HFS volume without a partition map
     return get_hfs_volume_info(image_file, 0, paths.get_file_size(image_file))
@@ -204,6 +209,31 @@ def write_mac_metadata(
 # HFS
 ###########################################################
 
+# Write a machfs file's data fork to local_path, with its finder info, dates and resource
+# fork as Mac metadata
+def _extract_hfs_file(hfs_file, local_path, verbose, pretend_run, exit_on_failure):
+
+    # Extract data fork
+    success = fileops.touch_file(
+        src = local_path,
+        contents = bytes(hfs_file.data),
+        contents_mode = "wb",
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Extract finder info, dates and resource fork
+    return write_mac_metadata(
+        local_path = local_path,
+        finder_info = struct.pack(">4s4sHHH", hfs_file.type, hfs_file.creator, hfs_file.flags, hfs_file.x, hfs_file.y),
+        dates = (hfs_file.crdate, hfs_file.mddate, hfs_file.bkdate),
+        resource_fork = hfs_file.rsrc,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Write a machfs folder tree to disk: data forks as files, finder info and resource forks as ._ AppleDouble files
 def extract_hfs_folder(
     hfs_folder,
@@ -229,42 +259,30 @@ def extract_hfs_folder(
             logger.log_warning("Skipping HFS item with unusable name '%s'" % hfs_name)
             continue
         local_path = paths.join_paths(extract_dir, local_name)
-
-        # Extract subfolder
-        if isinstance(hfs_item, machfs.Folder):
-            success = extract_hfs_folder(
-                hfs_folder = hfs_item,
-                extract_dir = local_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-            continue
-
-        # Extract data fork
-        success = fileops.touch_file(
-            src = local_path,
-            contents = bytes(hfs_item.data),
-            contents_mode = "wb",
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Extract finder info, dates and resource fork
-        success = write_mac_metadata(
-            local_path = local_path,
-            finder_info = struct.pack(">4s4sHHH", hfs_item.type, hfs_item.creator, hfs_item.flags, hfs_item.x, hfs_item.y),
-            dates = (hfs_item.crdate, hfs_item.mddate, hfs_item.bkdate),
-            resource_fork = hfs_item.rsrc,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        success = _extract_hfs_item(machfs, hfs_item, local_path, verbose, pretend_run, exit_on_failure)
         if not success:
             return False
     return True
+
+# Extract one machfs item to local_path, recursing into a folder
+def _extract_hfs_item(machfs, hfs_item, local_path, verbose, pretend_run, exit_on_failure):
+
+    # Extract subfolder
+    if isinstance(hfs_item, machfs.Folder):
+        return extract_hfs_folder(
+            hfs_folder = hfs_item,
+            extract_dir = local_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Extract file
+    return _extract_hfs_file(
+        hfs_file = hfs_item,
+        local_path = local_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Read an HFS volume from the image with machfs and extract it to the folder; False when machfs is missing or the volume is unreadable
 def extract_hfs_volume(
@@ -440,15 +458,9 @@ def get_hfsplus_hard_link_targets(volume):
             return {child["name"]: child for child in volume["children"].get(entry["id"], [])}
     return {}
 
-# Extract one HFS+ catalog file, following hard links, as a file or symlink with mode and Mac metadata; compressed files are skipped
-def extract_hfsplus_file(
-    volume,
-    entry,
-    local_path,
-    hard_link_targets,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+# The catalog entry holding a file's contents, the hard link's target when it is one; None,
+# with a warning, for a hard link without a target or a compressed file
+def _get_hfsplus_file_source(entry, local_path, hard_link_targets):
 
     # Follow hard link
     source = entry
@@ -456,24 +468,27 @@ def extract_hfsplus_file(
         source = hard_link_targets.get("iNode%d" % entry["special"])
         if not source:
             logger.log_warning("Skipping hard link '%s' with no target" % local_path)
-            return True
+            return None
 
     # Skip compressed file
     if source["owner_flags"] & HFSPLUS_COMPRESSED_FLAG:
         logger.log_warning("Skipping compressed file '%s'" % local_path)
-        return True
+        return None
+    return source
 
-    # Make symlink
-    if stat.S_ISLNK(source["mode"]):
-        link_target = read_hfsplus_fork(volume, source["id"], HFSPLUS_DATA_FORK, source["data_fork"])
-        return fileops.create_symlink(
-            src = link_target.decode("utf-8", errors = "replace"),
-            dest = local_path,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+# Create local_path as a symlink to the target stored in a link's data fork
+def _create_hfsplus_symlink(volume, source, local_path, verbose, pretend_run, exit_on_failure):
+    link_target = read_hfsplus_fork(volume, source["id"], HFSPLUS_DATA_FORK, source["data_fork"])
+    return fileops.create_symlink(
+        src = link_target.decode("utf-8", errors = "replace"),
+        dest = local_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
-    # Extract data fork
+# Write a file's data fork to local_path chunk by chunk, touching an empty file for an empty
+# fork; False when a write fails
+def _write_hfsplus_data_fork(volume, source, local_path, verbose, pretend_run, exit_on_failure):
     contents_mode = "wb"
     for chunk in iterate_hfsplus_fork(volume, source["id"], HFSPLUS_DATA_FORK, source["data_fork"]):
         success = fileops.touch_file(
@@ -494,6 +509,30 @@ def extract_hfsplus_file(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
+    return True
+
+# Extract one HFS+ catalog file, following hard links, as a file or symlink with mode and Mac metadata; compressed files are skipped
+def extract_hfsplus_file(
+    volume,
+    entry,
+    local_path,
+    hard_link_targets,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Follow hard link, skipping a missing target or a compressed file
+    source = _get_hfsplus_file_source(entry, local_path, hard_link_targets)
+    if not source:
+        return True
+
+    # Make symlink
+    if stat.S_ISLNK(source["mode"]):
+        return _create_hfsplus_symlink(volume, source, local_path, verbose, pretend_run, exit_on_failure)
+
+    # Extract data fork
+    if not _write_hfsplus_data_fork(volume, source, local_path, verbose, pretend_run, exit_on_failure):
+        return False
 
     # Keep executable bit
     if source["mode"] & 0o111:
@@ -541,27 +580,30 @@ def extract_hfsplus_folder(
             logger.log_warning("Skipping HFS+ item with unusable name '%s'" % entry["name"])
             continue
         local_path = paths.join_paths(extract_dir, local_name)
-        if entry["folder"]:
-            success = extract_hfsplus_folder(
-                volume = volume,
-                folder_id = entry["id"],
-                extract_dir = local_path,
-                hard_link_targets = hard_link_targets,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            success = extract_hfsplus_file(
-                volume = volume,
-                entry = entry,
-                local_path = local_path,
-                hard_link_targets = hard_link_targets,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        success = _extract_hfsplus_entry(volume, entry, local_path, hard_link_targets, verbose, pretend_run, exit_on_failure)
         if not success:
             return False
     return True
+
+# Extract one catalog entry to local_path, recursing into a folder
+def _extract_hfsplus_entry(volume, entry, local_path, hard_link_targets, verbose, pretend_run, exit_on_failure):
+    if entry["folder"]:
+        return extract_hfsplus_folder(
+            volume = volume,
+            folder_id = entry["id"],
+            extract_dir = local_path,
+            hard_link_targets = hard_link_targets,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return extract_hfsplus_file(
+        volume = volume,
+        entry = entry,
+        local_path = local_path,
+        hard_link_targets = hard_link_targets,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Read an HFS+ volume and extract its root folder; False when the volume structures are unreadable
 def extract_hfsplus_volume(
@@ -588,6 +630,26 @@ def extract_hfsplus_volume(
 
 ###########################################################
 
+# Extract a found (offset, length, signature) volume as HFS+ or HFS by its signature
+def _extract_found_volume(image_file, volume_info, extract_dir, verbose, pretend_run, exit_on_failure):
+    volume_offset, volume_length, volume_signature = volume_info
+    if volume_signature in hfsplus_signatures:
+        return extract_hfsplus_volume(
+            image_file = image_file,
+            volume_offset = volume_offset,
+            extract_dir = extract_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return extract_hfs_volume(
+        image_file = image_file,
+        volume_offset = volume_offset,
+        volume_length = volume_length,
+        extract_dir = extract_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Extract the HFS or HFS+ volume of a disc image to a folder, optionally deleting the image; True when the folder ends up with files
 def extract_hfs(
     image_file,
@@ -607,29 +669,12 @@ def extract_hfs(
     if not volume_info:
         logger.log_error("No HFS volume was found in '%s'" % image_file)
         return False
-    volume_offset, volume_length, volume_signature = volume_info
+    volume_offset, _, volume_signature = volume_info
     if verbose:
         logger.log_info("Reading %s volume at offset %d of '%s'" % (volume_signature.decode(), volume_offset, image_file))
 
     # Extract volume
-    if volume_signature in hfsplus_signatures:
-        success = extract_hfsplus_volume(
-            image_file = image_file,
-            volume_offset = volume_offset,
-            extract_dir = extract_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    else:
-        success = extract_hfs_volume(
-            image_file = image_file,
-            volume_offset = volume_offset,
-            volume_length = volume_length,
-            extract_dir = extract_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    if not success:
+    if not _extract_found_volume(image_file, volume_info, extract_dir, verbose, pretend_run, exit_on_failure):
         return False
 
     # Clean up

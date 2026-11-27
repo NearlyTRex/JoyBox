@@ -17,6 +17,14 @@ from joybox.bootstrap import configsetup
 # Build the argument parser
 def build_parser():
     parser = argparse.ArgumentParser(description="Environment bootstrap script.")
+    _add_target_options(parser)
+    _add_component_options(parser)
+    _add_run_flag_options(parser)
+    _add_data_options(parser)
+    return parser
+
+# Action, environment type, config file and the server to reach
+def _add_target_options(parser):
     parser.add_argument(
         "-a", "--action",
         choices = ["setup", "teardown", "status", "backup", "restore"],
@@ -38,6 +46,9 @@ def build_parser():
     parser.add_argument(
         "-k", "--ssh_key_filepath",
         help = "SSH private key to authenticate with (overrides the server entry's key and password)")
+
+# Which components to act on: an explicit list, a menu, or just a listing
+def _add_component_options(parser):
     parser.add_argument(
         "--components",
         nargs = "*",
@@ -50,17 +61,22 @@ def build_parser():
         "-i", "--interactive",
         action = "store_true",
         help = "Choose which components to setup/teardown from a menu")
+
+# Switches copied into the run flags
+def _add_run_flag_options(parser):
     parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable verbose mode")
     parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
     parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
     parser.add_argument("-f", "--force", action = "store_true", help = "Force operations even if component is already installed/uninstalled")
     parser.add_argument("--autoremove", action = "store_true", help = "Run 'apt-get autoremove' during setup/teardown (off by default; removes system-wide orphaned packages)")
     parser.add_argument("--purge-data", dest = "purge_data", action = "store_true", help = "Delete container volumes during teardown (off by default; this destroys databases and app data)")
+
+# Image listing, backup restore selection and config rebuilding
+def _add_data_options(parser):
     parser.add_argument("--list-images", dest = "list_images", action = "store_true", help = "List the pinned container image for each docker component and exit")
     parser.add_argument("--backup-id", dest = "backup_id", help = "Backup timestamp to restore, or 'latest'")
     parser.add_argument("--confirm", dest = "confirm", help = "Type 'restore' to confirm a destructive restore")
     parser.add_argument("--recreate-config", dest = "recreate_config", action = "store_true", help = "Rebuild the config file from the current defaults, keeping the values it sets and backing it up first, then exit")
-    return parser
 
 # Run one bootstrap action (setup, teardown, backup, restore or status) on the chosen
 # environment's components, creating the config file first when setup finds none
@@ -69,17 +85,8 @@ def main(argv = None):
     # Parse arguments
     parser = build_parser()
     args, _ = parser.parse_known_args(argv)
-
-    # Require action unless listing components or rebuilding the config
     is_info_only = args.list_components or args.list_images
-    if not is_info_only and not args.recreate_config and not args.action:
-        parser.error("the following arguments are required: -a/--action")
-
-    # Check arguments
-    is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
-    is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
-    if is_remote_ubuntu and not is_server_index and not is_info_only:
-        logger.log_error_and_quit("No server specified for remote machine")
+    is_server_index = _check_arguments(parser, args, is_info_only)
 
     # Setup logging
     logger.setup_logging()
@@ -90,39 +97,101 @@ def main(argv = None):
 
     # Rebuild the config, asking the questions again when there is someone to ask
     if args.recreate_config:
-        if not os.path.exists(config_file):
-            logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
-        if not configsetup.recreate_config(config_file, interactive = sys.stdin.isatty()):
-            logger.log_error_and_quit(f"Unable to recreate config file '{config_file}'")
-        logger.log_info(f"Recreated '{config_file}'")
+        _recreate_config(config_file)
         return
 
     # Config not found, create it now
     if not os.path.exists(config_file) and not is_info_only:
-        if args.action == "setup":
-            logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
-            if not configsetup.create_config(config_file, interactive = sys.stdin.isatty()):
-                logger.log_error_and_quit(f"Unable to create config file '{config_file}'")
-            logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
-        else:
-            logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
+        _create_missing_config(args, config_file)
 
     # Handle list images request
     if args.list_images:
-        logger.log_info("Pinned container images:")
-        for app_name in sorted(packages.docker_images.keys()):
-            logger.log_info(f"  {app_name}:")
-            for env_name, pinned_image in sorted(packages.docker_images[app_name].items()):
-                override = settings.get_value("UserData.Images", env_name.lower(),
-                    default_value = "", throw_exception = False)
-                if override and override.strip():
-                    logger.log_info(f"    {env_name} = {override.strip()} (override; pin is {pinned_image})")
-                else:
-                    logger.log_info(f"    {env_name} = {pinned_image}")
-        logger.log_info("Edit Shared/joybox/bootstrap/packages/images.py to change a pin.")
+        _list_images()
         return
 
-    # Create run flags
+    # Act on the environment's components
+    _run_environment_action(args, is_server_index, is_info_only)
+
+# Create the environment runner, then list, pick or set its components and run the action;
+# a failed action quits with code 1
+def _run_environment_action(args, is_server_index, is_info_only):
+
+    # Create environment runner
+    environment_runner = runner.create_environment(
+        environment_type = args.type,
+        server_index = args.server_index if is_server_index else None,
+        flags = _build_run_flags(args),
+        ssh_key_filepath = args.ssh_key_filepath,
+        require_domain = not is_info_only)
+    if not environment_runner:
+        logger.log_error_and_quit("No environment runner could be created")
+
+    # Handle list components request
+    if args.list_components:
+        _list_components(args, environment_runner)
+        return
+
+    # Pick components from a menu
+    if args.interactive and not _pick_components(args, environment_runner):
+        return
+
+    # Set components to process, then gate destructive restores
+    _set_components(args, environment_runner)
+    _check_restore(args)
+
+    # A failed component must fail the run, so install.sh and CI notice
+    if not _dispatch_action(args, environment_runner):
+        logger.log_error(f"{args.action.title()} did not complete cleanly")
+        runtime.quit_program(1)
+
+# Quit on a missing action or remote server; returns whether a usable server index was given
+def _check_arguments(parser, args, is_info_only):
+
+    # Require action unless listing components or rebuilding the config
+    if not is_info_only and not args.recreate_config and not args.action:
+        parser.error("the following arguments are required: -a/--action")
+
+    # Check arguments
+    is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
+    is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
+    if is_remote_ubuntu and not is_server_index and not is_info_only:
+        logger.log_error_and_quit("No server specified for remote machine")
+    return is_server_index
+
+# Rebuild an existing config file, quitting when it is absent or cannot be rebuilt
+def _recreate_config(config_file):
+    if not os.path.exists(config_file):
+        logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
+    if not configsetup.recreate_config(config_file, interactive = sys.stdin.isatty()):
+        logger.log_error_and_quit(f"Unable to recreate config file '{config_file}'")
+    logger.log_info(f"Recreated '{config_file}'")
+
+# Create the absent config with defaults for setup; any other action quits
+def _create_missing_config(args, config_file):
+    if args.action == "setup":
+        logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
+        if not configsetup.create_config(config_file, interactive = sys.stdin.isatty()):
+            logger.log_error_and_quit(f"Unable to create config file '{config_file}'")
+        logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
+    else:
+        logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
+
+# Log each docker component's pinned images, noting any UserData.Images override
+def _list_images():
+    logger.log_info("Pinned container images:")
+    for app_name in sorted(packages.docker_images.keys()):
+        logger.log_info(f"  {app_name}:")
+        for env_name, pinned_image in sorted(packages.docker_images[app_name].items()):
+            override = settings.get_value("UserData.Images", env_name.lower(),
+                default_value = "", throw_exception = False)
+            if override and override.strip():
+                logger.log_info(f"    {env_name} = {override.strip()} (override; pin is {pinned_image})")
+            else:
+                logger.log_info(f"    {env_name} = {pinned_image}")
+    logger.log_info("Edit Shared/joybox/bootstrap/packages/images.py to change a pin.")
+
+# Run flags from the parsed switches, setting the optional ones only when given
+def _build_run_flags(args):
     flags = runoptions.RunFlags(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
@@ -137,97 +206,98 @@ def main(argv = None):
         flags.set(backup_id = args.backup_id)
     if args.confirm:
         flags.set(confirm = args.confirm)
+    return flags
 
-    # Create environment runner
-    environment_runner = runner.create_environment(
-        environment_type = args.type,
-        server_index = args.server_index if is_server_index else None,
-        flags = flags,
-        ssh_key_filepath = args.ssh_key_filepath,
-        require_domain = not is_info_only)
-    if not environment_runner:
-        logger.log_error_and_quit("No environment runner could be created")
+# Log the environment's available components in name order
+def _list_components(args, environment_runner):
+    components = environment_runner.get_available_components()
+    logger.log_info(f"Available components for {args.type}:")
+    for component in sorted(components):
+        logger.log_info(f"  - {component}")
 
-    # Handle list components request
-    if args.list_components:
-        components = environment_runner.get_available_components()
-        logger.log_info(f"Available components for {args.type}:")
-        for component in sorted(components):
-            logger.log_info(f"  - {component}")
-        return
-
-    # Pick components from a menu
-    if args.interactive:
-        if args.action not in ("setup", "teardown"):
-            logger.log_error_and_quit("--interactive only works with setup or teardown")
-        if args.components is not None:
-            logger.log_error_and_quit("--interactive and --components cannot be combined")
-        if not sys.stdin.isatty():
-            logger.log_error_and_quit("--interactive needs a terminal to prompt on")
-        chosen = picker.choose_components(environment_runner.get_available_components(), args.action)
-        if chosen is None:
-            logger.log_info("Nothing to do")
-            return
-        args.components = chosen
-
-    # Set components to process
+# Fill args.components from the menu; False when nothing was chosen
+def _pick_components(args, environment_runner):
+    if args.action not in ("setup", "teardown"):
+        logger.log_error_and_quit("--interactive only works with setup or teardown")
     if args.components is not None:
-        if len(args.components) == 0:
-            logger.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
-        environment_runner.set_components_to_process(args.components)
+        logger.log_error_and_quit("--interactive and --components cannot be combined")
+    if not sys.stdin.isatty():
+        logger.log_error_and_quit("--interactive needs a terminal to prompt on")
+    chosen = picker.choose_components(environment_runner.get_available_components(), args.action)
+    if chosen is None:
+        logger.log_info("Nothing to do")
+        return False
+    args.components = chosen
+    return True
 
-    # Gate destructive restores
-    if args.action == "restore":
-        if not args.components:
-            logger.log_error_and_quit("restore requires an explicit --components list; it will not restore everything at once")
-        if not args.backup_id:
-            logger.log_error_and_quit("restore requires --backup-id <timestamp|latest>")
-        if args.confirm != "restore" and not args.pretend_run:
-            logger.log_error_and_quit("restore overwrites live data; re-run with --confirm restore (or -p to dry-run)")
+# Limit the runner to the listed components; an empty list quits
+def _set_components(args, environment_runner):
+    if args.components is None:
+        return
+    if len(args.components) == 0:
+        logger.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
+    environment_runner.set_components_to_process(args.components)
 
-    # Dispatch action
+# Quit a restore that lacks components, a backup id, or confirmation outside a pretend run
+def _check_restore(args):
+    if args.action != "restore":
+        return
+    if not args.components:
+        logger.log_error_and_quit("restore requires an explicit --components list; it will not restore everything at once")
+    if not args.backup_id:
+        logger.log_error_and_quit("restore requires --backup-id <timestamp|latest>")
+    if args.confirm != "restore" and not args.pretend_run:
+        logger.log_error_and_quit("restore overwrites live data; re-run with --confirm restore (or -p to dry-run)")
+
+# Run the chosen action on the runner; whether it succeeded
+def _dispatch_action(args, environment_runner):
     if args.action == "setup":
-        success = environment_runner.setup()
-    elif args.action == "teardown":
-        success = environment_runner.teardown()
-    elif args.action == "backup":
-        success = environment_runner.backup()
-    elif args.action == "restore":
-        success = environment_runner.restore()
+        return environment_runner.setup()
+    if args.action == "teardown":
+        return environment_runner.teardown()
+    if args.action == "backup":
+        return environment_runner.backup()
+    if args.action == "restore":
+        return environment_runner.restore()
+
+    # Status reports, and never fails the run
+    _report_status(args, environment_runner.status())
+    return True
+
+# Log installed then missing components, with package counts where known
+def _report_status(args, results):
+    installed = [r for r in results if r["installed"]]
+    not_installed = [r for r in results if not r["installed"]]
+    logger.log_info(f"Component status for {args.type}:")
+    logger.log_info("")
+    if installed:
+        logger.log_info(f"Installed ({len(installed)}):")
+        for r in sorted(installed, key=lambda x: x["name"]):
+            _report_installed(r)
+    if not_installed:
+        logger.log_info(f"Not installed ({len(not_installed)}):")
+        for r in sorted(not_installed, key=lambda x: x["name"]):
+            _report_not_installed(r)
+
+# One installed component line, with its package count when it has packages
+def _report_installed(result):
+    pkg_status = result.get("package_status")
+    if pkg_status:
+        total = len(pkg_status["installed"]) + len(pkg_status["missing"])
+        logger.log_info(f"  [x] {result['name']} ({len(pkg_status['installed'])}/{total} packages)")
     else:
+        logger.log_info(f"  [x] {result['name']}")
 
-        # Status reports, and never fails the run
-        success = True
-        results = environment_runner.status()
-        installed = [r for r in results if r["installed"]]
-        not_installed = [r for r in results if not r["installed"]]
-        logger.log_info(f"Component status for {args.type}:")
-        logger.log_info("")
-        if installed:
-            logger.log_info(f"Installed ({len(installed)}):")
-            for r in sorted(installed, key=lambda x: x["name"]):
-                pkg_status = r.get("package_status")
-                if pkg_status:
-                    total = len(pkg_status["installed"]) + len(pkg_status["missing"])
-                    logger.log_info(f"  [x] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
-                else:
-                    logger.log_info(f"  [x] {r['name']}")
-        if not_installed:
-            logger.log_info(f"Not installed ({len(not_installed)}):")
-            for r in sorted(not_installed, key=lambda x: x["name"]):
-                pkg_status = r.get("package_status")
-                if pkg_status and pkg_status["missing"]:
-                    total = len(pkg_status["installed"]) + len(pkg_status["missing"])
-                    logger.log_info(f"  [ ] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
-                    logger.log_info("      Missing:")
-                    for pkg in pkg_status["missing"][:10]:
-                        logger.log_info(f"        - {pkg}")
-                    if len(pkg_status["missing"]) > 10:
-                        logger.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")
-                else:
-                    logger.log_info(f"  [ ] {r['name']}")
-
-    # A failed component must fail the run, so install.sh and CI notice
-    if not success:
-        logger.log_error(f"{args.action.title()} did not complete cleanly")
-        runtime.quit_program(1)
+# One missing component line, listing up to ten of its missing packages
+def _report_not_installed(result):
+    pkg_status = result.get("package_status")
+    if not (pkg_status and pkg_status["missing"]):
+        logger.log_info(f"  [ ] {result['name']}")
+        return
+    total = len(pkg_status["installed"]) + len(pkg_status["missing"])
+    logger.log_info(f"  [ ] {result['name']} ({len(pkg_status['installed'])}/{total} packages)")
+    logger.log_info("      Missing:")
+    for pkg in pkg_status["missing"][:10]:
+        logger.log_info(f"        - {pkg}")
+    if len(pkg_status["missing"]) > 10:
+        logger.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")

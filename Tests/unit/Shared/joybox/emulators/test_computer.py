@@ -2,8 +2,12 @@
 import pytest
 
 # Local imports
+from joybox import sourcebuild
+from joybox import release
+from joybox import programs
 from joybox import config
 from joybox.emulators import computer
+from emulator_helpers import Release
 
 
 ###########################################################
@@ -18,24 +22,14 @@ PROGRAMS = ["DosBoxX", "ScummVM"]
 PLATFORMS = ["windows", "linux"]
 
 
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
-
-
 @pytest.fixture
 def program_paths(monkeypatch):
     installed = {(name, platform) for name in PROGRAMS for platform in PLATFORMS}
-    monkeypatch.setattr(computer.programs, "should_program_be_installed",
+    monkeypatch.setattr(programs, "should_program_be_installed",
         lambda name, platform: (name, platform) in installed)
-    monkeypatch.setattr(computer.programs, "get_program_install_dir",
+    monkeypatch.setattr(programs, "get_program_install_dir",
         lambda name, platform: "/install/%s/%s" % (name, platform))
-    monkeypatch.setattr(computer.programs, "get_program_backup_dir",
+    monkeypatch.setattr(programs, "get_program_backup_dir",
         lambda name, platform: "/backup/%s/%s" % (name, platform))
     return installed
 
@@ -44,16 +38,9 @@ def program_paths(monkeypatch):
 def online(monkeypatch, program_paths):
     # One fake for every source so calls stay in order across platforms
     fake = Release()
-    monkeypatch.setattr(computer.release, "download_github_release", fake)
-    monkeypatch.setattr(computer.release, "download_webpage_release", fake)
-    monkeypatch.setattr(computer.sourcebuild, "build_appimage_from_source", fake)
-    return fake
-
-
-@pytest.fixture
-def stored(monkeypatch, program_paths):
-    fake = Release()
-    monkeypatch.setattr(computer.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "download_github_release", fake)
+    monkeypatch.setattr(release, "download_webpage_release", fake)
+    monkeypatch.setattr(sourcebuild, "build_appimage_from_source", fake)
     return fake
 
 

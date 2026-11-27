@@ -179,6 +179,55 @@ def start_browser(browser_class, service, options):
         running_browser_groups.add(group_id)
     return web_driver
 
+# Whether the named web driver tool is installed, warning when it is not
+def _find_webdriver_tool(tool_name):
+    webdriver_tool = None
+    if programs.is_tool_installed(tool_name):
+        webdriver_tool = programs.get_tool_program(tool_name)
+    if not webdriver_tool:
+        logger.log_warning("%s was not found; callers may fall back to another fetch method" % tool_name)
+        return False
+    return True
+
+# Chrome options for a maximized, sandboxless desktop browser, adding each given existing download dir,
+# profile and binary, and headless at 1920x1080 when asked
+def _get_chrome_options(download_dir, profile_dir, binary_location, make_headless):
+    options = _get_selenium("webdriver.chrome.options").Options()
+    options.add_argument("--start-maximized")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+    if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
+        options.add_experimental_option("prefs", {
+            "download.default_directory": download_dir,
+            "download.prompt_for_download": False
+        })
+    if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
+        options.add_argument("--user-data-dir=%s" % profile_dir)
+    if make_headless:
+        options.add_argument("--headless")
+        options.add_argument("--window-size=1920,1080")
+    if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+        options.binary_location = binary_location
+    return options
+
+# Firefox options adding each given existing download dir, profile and binary, and headless when asked
+def _get_firefox_options(download_dir, profile_dir, binary_location, make_headless):
+    options = _get_selenium("webdriver.firefox.options").Options()
+    if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
+        options.set_preference("browser.download.folderList", 2)
+        options.set_preference("browser.download.dir", download_dir)
+    if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
+        options.profile = profile_dir
+    if make_headless:
+        options.add_argument("--headless")
+    if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+        options.binary_location = binary_location
+    return options
+
 # Start a Chromium-based browser through webdriver_manager, with optional download dir, profile, binary and headless
 # None when ChromeDriver is not installed or the browser fails to start
 def create_chrome_web_driver(
@@ -191,11 +240,7 @@ def create_chrome_web_driver(
     exit_on_failure = False):
 
     # Get tool
-    webdriver_tool = None
-    if programs.is_tool_installed("ChromeDriver"):
-        webdriver_tool = programs.get_tool_program("ChromeDriver")
-    if not webdriver_tool:
-        logger.log_warning("ChromeDriver was not found; callers may fall back to another fetch method")
+    if not _find_webdriver_tool("ChromeDriver"):
         return None
 
     # Create web driver
@@ -208,26 +253,7 @@ def create_chrome_web_driver(
                 executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = _get_selenium("webdriver.chrome.options").Options()
-            options.add_argument("--start-maximized")
-            options.add_argument("--no-sandbox")
-            options.add_argument("--ignore-certificate-errors")
-            options.add_argument("--disable-gpu")
-            options.add_argument("--disable-extensions")
-            options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
-            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
-                options.add_experimental_option("prefs", {
-                    "download.default_directory": download_dir,
-                    "download.prompt_for_download": False
-                })
-            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
-                options.add_argument("--user-data-dir=%s" % profile_dir)
-            if make_headless:
-                options.add_argument("--headless")
-                options.add_argument("--window-size=1920,1080")
-            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
-                options.binary_location = binary_location
+            options = _get_chrome_options(download_dir, profile_dir, binary_location, make_headless)
             return start_browser(_get_selenium("webdriver").Chrome, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
@@ -251,11 +277,7 @@ def create_firefox_web_driver(
     exit_on_failure = False):
 
     # Get tool
-    webdriver_tool = None
-    if programs.is_tool_installed("GeckoDriver"):
-        webdriver_tool = programs.get_tool_program("GeckoDriver")
-    if not webdriver_tool:
-        logger.log_warning("GeckoDriver was not found; callers may fall back to another fetch method")
+    if not _find_webdriver_tool("GeckoDriver"):
         return None
 
     # Create web driver
@@ -268,16 +290,7 @@ def create_firefox_web_driver(
                 executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = _get_selenium("webdriver.firefox.options").Options()
-            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
-                options.set_preference("browser.download.folderList", 2)
-                options.set_preference("browser.download.dir", download_dir)
-            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
-                options.profile = profile_dir
-            if make_headless:
-                options.add_argument("--headless")
-            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
-                options.binary_location = binary_location
+            options = _get_firefox_options(download_dir, profile_dir, binary_location, make_headless)
             return start_browser(_get_selenium("webdriver").Firefox, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
@@ -289,6 +302,16 @@ def create_firefox_web_driver(
             runtime.quit_program()
     return None
 
+# The given driver type, else the one the settings name, else Firefox
+def _resolve_driver_type(driver_type):
+    if not driver_type:
+        driver_type_name = settings.get_value("UserData.Scraping", "web_driver_type", throw_exception = False)
+        if isinstance(driver_type_name, str):
+            driver_type = config.WebDriverType.from_string(driver_type_name)
+    if not driver_type:
+        driver_type = config.WebDriverType.FIREFOX
+    return driver_type
+
 # Start the browser the settings choose (Firefox, Chrome or Brave), Firefox when unset
 def create_web_driver(
     driver_type = None,
@@ -298,12 +321,7 @@ def create_web_driver(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not driver_type:
-        driver_type_name = settings.get_value("UserData.Scraping", "web_driver_type", throw_exception = False)
-        if isinstance(driver_type_name, str):
-            driver_type = config.WebDriverType.from_string(driver_type_name)
-    if not driver_type:
-        driver_type = config.WebDriverType.FIREFOX
+    driver_type = _resolve_driver_type(driver_type)
     if driver_type == config.WebDriverType.FIREFOX:
         return create_firefox_web_driver(
             download_dir = download_dir,
@@ -430,35 +448,31 @@ def is_challenge_page(driver, verbose = False):
 
 ###########################################################
 
+# Selenium By attribute for each locator key
+LOCATOR_BY_ATTRIBUTES = {
+    "id": "ID",
+    "name": "NAME",
+    "class": "CLASS_NAME",
+    "tag": "TAG_NAME",
+    "xpath": "XPATH",
+    "css_selector": "CSS_SELECTOR",
+    "link_text": "LINK_TEXT",
+    "partial_link_text": "PARTIAL_LINK_TEXT",
+}
+
 # Element locator
 class ElementLocator:
     def __init__(self, info):
         by = _get_selenium("webdriver.common.by").By
         self.by_type = None
         self.by_value = None
-        if isinstance(info, dict) and len(info) == 1:
-            for key, value in info.items():
-                if key == "id":
-                    self.by_type = by.ID
-                elif key == "name":
-                    self.by_type = by.NAME
-                elif key == "class":
-                    self.by_type = by.CLASS_NAME
-                elif key == "tag":
-                    self.by_type = by.TAG_NAME
-                elif key == "xpath":
-                    self.by_type = by.XPATH
-                elif key == "css_selector":
-                    self.by_type = by.CSS_SELECTOR
-                elif key == "link_text":
-                    self.by_type = by.LINK_TEXT
-                elif key == "partial_link_text":
-                    self.by_type = by.PARTIAL_LINK_TEXT
-                else:
-                    raise ValueError("Unsupported locator type: %s" % key)
-                self.by_value = value
-        else:
+        if not isinstance(info, dict) or len(info) != 1:
             raise ValueError("Locator dictionary should contain exactly one key-value pair.")
+        for key, value in info.items():
+            if key not in LOCATOR_BY_ATTRIBUTES:
+                raise ValueError("Unsupported locator type: %s" % key)
+            self.by_type = getattr(by, LOCATOR_BY_ATTRIBUTES[key])
+            self.by_value = value
     # The (By type, value) pair Selenium's find calls take
     def get(self):
         return (self.by_type, self.by_value)
@@ -764,6 +778,14 @@ def scroll_to_end_of_page(
             runtime.quit_program()
         return False
 
+# Load url in the driver for get_page_source; False when it is not a string or does not load
+def _load_page_url(driver, url, verbose, pretend_run, exit_on_failure):
+    if not isinstance(url, str):
+        if verbose:
+            logger.log_warning("GetPageSource: Invalid URL provided")
+        return False
+    return load_url(driver, url, verbose, pretend_run, exit_on_failure)
+
 # Current page HTML, loading url first when given; empty on a pretend run, None on failure
 def get_page_source(
     driver,
@@ -774,14 +796,8 @@ def get_page_source(
     try:
         if not is_session_valid(driver, verbose):
             return None
-        if url:
-            if not isinstance(url, str):
-                if verbose:
-                    logger.log_warning("GetPageSource: Invalid URL provided")
-                return None
-            success = load_url(driver, url, verbose, pretend_run, exit_on_failure)
-            if not success:
-                return None
+        if url and not _load_page_url(driver, url, verbose, pretend_run, exit_on_failure):
+            return None
         if verbose:
             logger.log_info("Getting page source")
         if not pretend_run:

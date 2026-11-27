@@ -149,7 +149,27 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         }
         self.domain_name = serverinfo.get_domain_name()
         self.site_url = f"https://{self.domain_name}"
-        self.env_values = {
+        self.env_values = self._get_env_values()
+        self.seed_enabled = str(settings.get_value("UserData.Wordpress", "wordpress_seed_enabled",
+            default_value = "True", throw_exception = False)).strip().lower() in ["true", "1", "yes"]
+
+        # Templates
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.app_subdirs = ["seed"]
+
+        # Behavior
+        self.required_settings = ["domain", "subdomain", "port_http", "db_user", "db_name", "db_password", "db_root_password",
+            "admin_user", "admin_pass", "admin_email"]
+
+        # Backup
+        self.backup_label = "Wordpress"
+        self.backup_database = "db"
+        self.backup_volumes = ["wp_data"]
+
+    # The .env template values: database credentials, site details and the admin login
+    def _get_env_values(self):
+        return {
             "db_user": settings.get_value("UserData.Wordpress", "wordpress_db_user"),
             "db_password": settings.get_value("UserData.Wordpress", "wordpress_db_pass"),
             "db_name": settings.get_value("UserData.Wordpress", "wordpress_db_name"),
@@ -167,22 +187,6 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
             "admin_email": settings.get_value("UserData.Wordpress", "wordpress_admin_email",
                 default_value = "", throw_exception = False)
         }
-        self.seed_enabled = str(settings.get_value("UserData.Wordpress", "wordpress_seed_enabled",
-            default_value = "True", throw_exception = False)).strip().lower() in ["true", "1", "yes"]
-
-        # Templates
-        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
-        self.env_template = ENV_TEMPLATE
-        self.app_subdirs = ["seed"]
-
-        # Behavior
-        self.required_settings = ["domain", "subdomain", "port_http", "db_user", "db_name", "db_password", "db_root_password",
-            "admin_user", "admin_pass", "admin_email"]
-
-        # Backup
-        self.backup_label = "Wordpress"
-        self.backup_database = "db"
-        self.backup_volumes = ["wp_data"]
 
     # Replace the apex-root snippet with a proxy to WordPress and install the www
     # redirect; False when either cannot be staged

@@ -4,3 +4,17 @@
 [config.A7800]
 program = { windows = "A7800/windows/a7800.exe", linux = "A7800/windows/a7800.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "7800-devtools"
+github_repo = "a7800"
+starts_with = "a7800-win"
+ends_with = ".zip"
+search_file = "a7800.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "a7800.exe"

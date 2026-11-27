@@ -7,46 +7,7 @@ from joybox import logger
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Measure the library's test coverage and report where it falls short.",
-        details = (
-            "Actions:\n"
-            "\n"
-            "- `run`: run the unit tests under coverage.py the way CI does (from the checkout,\n"
-            "  `pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit`, with\n"
-            "  pyproject's `[tool.coverage]` settings), combine each worker's data, then report. The\n"
-            "  data is kept in the cache's `Coverage` directory, not the checkout.\n"
-            "- `report`: report on the last measurement without running anything.\n"
-            "\n"
-            "The library report gives the overall figure against the floor CI enforces (read\n"
-            "from `.github/workflows/ci.yml`), a table per area (`core` for top-level modules,\n"
-            "otherwise the first package such as `cli` or `emulators`), the files missing the\n"
-            "most statements, the functions no test runs at all, and the files with nothing run.\n"
-            "\n"
-            "With `-m`, the report covers one module instead: its untested line ranges and every\n"
-            "function with untested lines, whether never or partly run. `--source` adds each of\n"
-            "those functions' source with its untested lines marked `!!`, which is also a compact\n"
-            "brief to attach to `llm_chat` when asking a model how to test them.\n"
-            "\n"
-            "Every number comes from coverage.py's own data; functions are found by parsing the\n"
-            "source, and a line counts toward the innermost function that holds it."),
-        examples = [
-            ("Measure and report on the whole library", "coverage_tool run"),
-            ("Report again on the last measurement", "coverage_tool report"),
-            ("Show the 40 files missing the most", "coverage_tool report -n 40"),
-            ("Detail one module", "coverage_tool report -m programs.py"),
-            ("Detail one module with its untested source", "coverage_tool report -m collection/jsondata.py --source"),
-            ("Save the report as Markdown", "coverage_tool report -o coverage.md"),
-            ("Ask a local model how to test a module", "coverage_tool report -m programs.py --source -o brief.md && llm_chat --code -a brief.md"),
-        ],
-        notes = [
-            "coverage.py comes with the dev extra, which the bootstrap's `python` component installs.",
-            "`run` exits with an error when a test fails, after printing the report, since the numbers then reflect a broken run.",
-            "`--integration` adds `Tests/integration`, whose tests need programs outside the process; CI does not run them, so its figure differs.",
-            "A module name matches the end of a measured file's path, such as `programs.py` or `cli/backup_tool.py`.",
-        ],
-        see_also = ["llm_chat"],
-        section = "Development")
+    parser = arguments.ArgumentParser(command = "coverage_tool")
     parser.add_string_argument(
         args = ("action",),
         default = testcoverage.ACTION_REPORT,

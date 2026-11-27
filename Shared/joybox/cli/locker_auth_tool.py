@@ -10,38 +10,7 @@ from joybox import lockerauth
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Sign a remote locker in to Google Drive with your own OAuth client and store the result in 1Password.",
-        details = (
-            "Runs `rclone authorize` with the client, checks the new token can list the locker\n"
-            "folder, then writes `client_id`, `client_secret`, `token` and `root_folder_id` to the\n"
-            "1Password field `locker_<name>_config` references. Other stored options are kept,\n"
-            "apart from a service account's. The client and token never reach a command line.\n"
-            "\n"
-            "Creating the client, once, in the Google Cloud console:\n"
-            "\n"
-            "1. Create a project and enable the Google Drive API.\n"
-            "2. On Google Auth Platform > Branding, set an app name, support email, home page and\n"
-            "   privacy policy URLs, and add their domain to the authorized domains. Leave the logo\n"
-            "   empty: a logo needs Google's verification.\n"
-            "3. On Audience, choose External and Publish app, so it is In production. A Testing\n"
-            "   app's refresh tokens expire after 7 days. The app needs no verification.\n"
-            "4. On Clients, create a Desktop app client and download its JSON for `--client_file`.\n"
-            "\n"
-            "When signing in, choose Advanced > Go to your app (or Continue) on the \"Google hasn't\n"
-            "verified this app\" page."),
-        examples = [
-            ("Sign the Gdrive locker in to a folder", "locker_auth_tool --client_file ~/Downloads/client_secret.json --folder_id https://drive.google.com/drive/folders/1AbCdEf"),
-            ("Sign in again with the stored client and folder, printing the link", "locker_auth_tool --no_browser"),
-        ],
-        notes = [
-            "`locker_<name>_config` must be a 1Password reference in JoyBox.ini, such as `op://Personal/JoyBox/UserData.Share/locker_gdrive_config`; a missing field is created.",
-            "Nothing is stored when the sign-in fails or the token cannot list the folder. Delete the client file once it is stored.",
-            "The 1Password item is written back whole, so it must not hold a passkey, which the edit would drop.",
-            "If Google answers with an error page, open the link in a private window, or wait a few minutes after publishing the app.",
-        ],
-        see_also = ["sync_tool", "master_backup"],
-        section = "Backups & Lockers")
+    parser = arguments.ArgumentParser(command = "locker_auth_tool")
     parser.add_enum_argument(args = ("-l", "--locker_type"), arg_type = config.LockerType, default = config.LockerType.GDRIVE, description = "Remote locker to sign in")
     parser.add_string_argument(args = ("--client_file"), description = "JSON file downloaded for a Desktop app OAuth client; without it the stored client is used")
     parser.add_string_argument(args = ("--folder_id"), description = "Id or URL of the Drive folder the locker is kept in; without it the stored folder is used")

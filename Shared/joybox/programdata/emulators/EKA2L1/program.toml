@@ -26,3 +26,31 @@ path = "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"
 [[system_files]]
 path = "data.zip"
 md5 = "e4c10430ddc600cdffff1fb348a6b0c3"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "EKA2L1"
+github_repo = "EKA2L1"
+starts_with = "EKA2L1-Windows-x86_64"
+ends_with = ".zip"
+search_file = "eka2l1_qt.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "EKA2L1"
+github_repo = "EKA2L1"
+starts_with = "EKA2L1-Linux-x86_64"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "eka2l1_qt.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

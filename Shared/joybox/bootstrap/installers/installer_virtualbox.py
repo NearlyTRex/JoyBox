@@ -48,6 +48,28 @@ class VirtualBox(installer.Installer):
         # Start install
         logger.log_info("Installing VirtualBox from Oracle repository")
 
+        # Add the keyring and apt repository
+        if not self._add_apt_repository():
+            return False
+
+        # Update and install
+        logger.log_info(f"Installing {self.package_name}")
+        self.connection.run_checked([self.aptget_tool, "update"], sudo=True)
+        self.connection.run_checked([self.aptget_tool, "install", "-y", self.package_name], sudo=True)
+
+        # Verify installation
+        if not self.is_installed():
+            logger.log_error("VirtualBox installation verification failed")
+            return False
+
+        # All done
+        logger.log_info("VirtualBox installed successfully")
+        return True
+
+    # Dearmor Oracle's key into the keyring and write the apt source for this
+    # Ubuntu codename; False when the source cannot be staged
+    def _add_apt_repository(self):
+
         # Download and dearmor GPG key
         logger.log_info("Adding Oracle VirtualBox GPG key")
         tmp_key = "/tmp/oracle_vbox_2016.asc"
@@ -70,19 +92,6 @@ class VirtualBox(installer.Installer):
             logger.log_error(f"Unable to write /tmp/{self.sources_list}")
             return False
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo=True)
-
-        # Update and install
-        logger.log_info(f"Installing {self.package_name}")
-        self.connection.run_checked([self.aptget_tool, "update"], sudo=True)
-        self.connection.run_checked([self.aptget_tool, "install", "-y", self.package_name], sudo=True)
-
-        # Verify installation
-        if not self.is_installed():
-            logger.log_error("VirtualBox installation verification failed")
-            return False
-
-        # All done
-        logger.log_info("VirtualBox installed successfully")
         return True
 
     # apt-get remove virtualbox-7.1 and delete its apt source and keyring

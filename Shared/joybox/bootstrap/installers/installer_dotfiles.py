@@ -175,14 +175,8 @@ class Dotfiles(installer.Installer):
         self.connection.make_directory(self.joybox_config_dir)
 
         # Install the shell config files into ~/.joybox
-        for template_name, dest_name in self.joybox_shell_files:
-            dest_path = f"{self.joybox_config_dir}/{dest_name}"
-            logger.log_info(f"Installing {dest_path}")
-            content = self.get_template(template_name)
-            if content is None:
-                return False
-            if not self.connection.write_file(dest_path, content):
-                return False
+        if not self._install_shell_files():
+            return False
 
         # A home with no .bashrc gets the distribution's default, as useradd -m would
         # have made; that default enables programmable completion
@@ -209,6 +203,18 @@ class Dotfiles(installer.Installer):
 
         # All done
         logger.log_info("Dotfiles installation complete")
+        return True
+
+    # Write each shell template into ~/.joybox; False when one is missing or unwritable
+    def _install_shell_files(self):
+        for template_name, dest_name in self.joybox_shell_files:
+            dest_path = f"{self.joybox_config_dir}/{dest_name}"
+            logger.log_info(f"Installing {dest_path}")
+            content = self.get_template(template_name)
+            if content is None:
+                return False
+            if not self.connection.write_file(dest_path, content):
+                return False
         return True
 
     # Strip the managed blocks, put back the dotfile backups and delete ~/.joybox

@@ -1,5 +1,3 @@
-# Imports
-
 # Local imports
 from joybox import toolbase
 

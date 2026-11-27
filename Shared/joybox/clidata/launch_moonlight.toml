@@ -1,0 +1,32 @@
+# Help text for the launch_moonlight command, read by joybox/arguments.py
+
+description = "Start the Moonlight game-streaming client installed by setup_tools."
+details = """
+Runs the Moonlight program from the tools directory. It streams the host's app
+straight away: the host from `--host` or `[Tools.Moonlight] moonlight_host`
+(192.168.1.12 by default), the app from `--app` or `[Tools.Moonlight] moonlight_app`
+(Pegasus by default). With `moonlight_host` cleared it opens Moonlight's host list.
+
+`--pair` pairs with the host instead: Moonlight shows a PIN, which is entered on the
+host's Sunshine web page (port 47990). A host only has to be paired once.
+
+`--list` lists the apps the host offers, the names `--app` and `moonlight_app` take,
+as the host's Sunshine reports them. The host has to be paired first.
+
+It waits for Moonlight to exit and logs an error if it exits with a non-zero code."""
+section = "Game Launching"
+see_also = [
+    "setup_tools",
+    "launch_sunshine",
+]
+notes = [
+    "Moonlight must be installed first (`setup_tools -k Moonlight`); the command exits with an error if it is not found.",
+    "The apps a host offers are set in `Shared/joybox/config/streaming.py` and written by `setup_tools -k Sunshine -c` on the host.",
+    "Set `[Tools.Moonlight] moonlight_autostart` and install the bootstrap's `autostart` component to start it at every login.",
+]
+examples = [
+    ["Stream the configured host's app", "launch_moonlight"],
+    ["Pair with a host", "launch_moonlight --host 192.168.1.20 --pair"],
+    ["List the apps the configured host offers", "launch_moonlight --list"],
+    ["Stream Steam Big Picture from a host", "launch_moonlight --host 192.168.1.20 --app \"Steam Big Picture\""],
+]

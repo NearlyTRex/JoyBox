@@ -48,6 +48,15 @@ def is_image_png(image_file):
         image_file = image_file,
         image_format = config.ImageFileType.PNG)
 
+# The JPEG or PNG format a destination's extension names; None for any other extension
+def _get_image_format_from_extension(image_dest):
+    image_ext = paths.get_filename_extension(image_dest).lower()
+    if image_ext in [".jpg", ".jpeg"]:
+        return config.ImageFileType.JPEG
+    if image_ext in [".png"]:
+        return config.ImageFileType.PNG
+    return None
+
 # Save the first frame of an image as RGB in the given format, or the one its destination extension names; True on a pretend run, False on failure
 def convert_image(
     image_src,
@@ -67,11 +76,7 @@ def convert_image(
             src_image.seek(0)
         rgb_image = src_image.convert("RGB")
         if not image_format:
-            image_ext = paths.get_filename_extension(image_dest).lower()
-            if image_ext in [".jpg", ".jpeg"]:
-                image_format = config.ImageFileType.JPEG
-            elif image_ext in [".png"]:
-                image_format = config.ImageFileType.PNG
+            image_format = _get_image_format_from_extension(image_dest)
         if not image_format:
             if exit_on_failure:
                 logger.log_error("Unable to tell which image format to convert %s to" % image_dest)

@@ -41,53 +41,57 @@ from .xemu import Xemu
 from .xenia import Xenia
 from .yuzu import Yuzu
 
+# Every emulator class, in registration order
+EMULATOR_CLASSES = (
+    A7800,
+    Ares,
+    Atari800,
+    BasiliskII,
+    BGB,
+    BigPEmu,
+    BlastEm,
+    BSnes,
+    Cemu,
+    Citra,
+    Computer,
+    CxBxReloaded,
+    Demul,
+    Dolphin,
+    DuckStation,
+    EKA2L1,
+    Flycast,
+    FSUAE,
+    KegaFusion,
+    Mame,
+    Mesen,
+    Mednafen,
+    MelonDS,
+    MGBA,
+    Nestopia,
+    PCEm,
+    PCSX2,
+    Phoenix,
+    PPSSPP,
+    RetroArch,
+    RPCS3,
+    SameBoy,
+    SheepShaver,
+    Snes9x,
+    Stella,
+    ViceC64,
+    Vita3K,
+    WinUAE,
+    Xemu,
+    Xenia,
+    Yuzu,
+)
+
 # One instance of every emulator class, keyed by its registered name
 def get_emulator_map():
     instances = {}
-    def add_instance(class_name):
+    for class_name in EMULATOR_CLASSES:
         instance = class_name()
         instances[instance.get_name()] = instance
-    add_instance(A7800)
-    add_instance(Ares)
-    add_instance(Atari800)
-    add_instance(BasiliskII)
-    add_instance(BGB)
-    add_instance(BigPEmu)
-    add_instance(BlastEm)
-    add_instance(BSnes)
-    add_instance(Cemu)
-    add_instance(Citra)
-    add_instance(Computer)
-    add_instance(CxBxReloaded)
-    add_instance(Demul)
-    add_instance(Dolphin)
-    add_instance(DuckStation)
-    add_instance(EKA2L1)
-    add_instance(Flycast)
-    add_instance(FSUAE)
-    add_instance(KegaFusion)
-    add_instance(Mame)
-    add_instance(Mesen)
-    add_instance(Mednafen)
-    add_instance(MelonDS)
-    add_instance(MGBA)
-    add_instance(Nestopia)
-    add_instance(PCEm)
-    add_instance(PCSX2)
-    add_instance(Phoenix)
-    add_instance(PPSSPP)
-    add_instance(RetroArch)
-    add_instance(RPCS3)
-    add_instance(SameBoy)
-    add_instance(SheepShaver)
-    add_instance(Snes9x)
-    add_instance(Stella)
-    add_instance(ViceC64)
-    add_instance(Vita3K)
-    add_instance(WinUAE)
-    add_instance(Xemu)
-    add_instance(Xenia)
-    add_instance(Yuzu)
     return instances
 
 # Every emulator instance, in registration order

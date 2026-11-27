@@ -4,3 +4,18 @@
 [config.Nestopia]
 program = { windows = "Nestopia/windows/nestopia.exe", linux = "Nestopia/windows/nestopia.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "0ldsk00l"
+github_repo = "nestopia"
+starts_with = "nestopia"
+ends_with = "win32.zip"
+search_file = "nestopia.exe"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "nestopia.exe"

@@ -1,5 +1,3 @@
-# Imports
-
 # Local imports
 from joybox import config
 from joybox import logger
@@ -12,6 +10,19 @@ from joybox import fileops
 from joybox import toolbase
 from joybox import platform_info
 
+# The Gradle command that fetches Ghidra's dependencies and builds it without docs or tests, for this platform
+def get_build_command():
+    if platform_info.is_windows_platform():
+        return [
+            "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle",
+            "&&",
+            "gradlew.bat", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
+        ]
+    return [
+        "./gradlew", "-I", "gradle/support/fetchDependencies.gradle",
+        "&&",
+        "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
+    ]
 
 # Ghidra tool
 class Ghidra(toolbase.ToolBase):
@@ -28,18 +39,7 @@ class Ghidra(toolbase.ToolBase):
         if programs.should_library_be_installed("Ghidra/lib"):
 
             # Get build command
-            if platform_info.is_windows_platform():
-                build_cmd = [
-                    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle",
-                    "&&",
-                    "gradlew.bat", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
-                ]
-            else:
-                build_cmd = [
-                    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle",
-                    "&&",
-                    "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
-                ]
+            build_cmd = get_build_command()
 
             # Build Ghidra from source
             success = sourcebuild.build_binary_from_source(

@@ -3,6 +3,8 @@ import os
 
 # Local imports
 from joybox import config
+from joybox import programs as program_paths
+from joybox import release
 from joybox import sourcebuild
 from joybox import filebulk
 
@@ -59,6 +61,17 @@ class Recorder:
         return [tuple(call.get(key) for key in keys) for call in self.calls]
 
 
+# A release download or restore that records its call; the calls numbered in failures fail
+class Release:
+    def __init__(self):
+        self.calls = []
+        self.failures = set()
+
+    def __call__(self, **kwargs):
+        self.calls.append(kwargs)
+        return len(self.calls) not in self.failures
+
+
 class PopupQuit(Exception):
     pass
 
@@ -79,11 +92,11 @@ class Seams:
         # Releases share one recorder so their order across functions is kept
         self.releases = Recorder()
         for name in RELEASE_FUNCTIONS:
-            monkeypatch.setattr(module.release, name, self.releases.tagged(name))
+            monkeypatch.setattr(release, name, self.releases.tagged(name))
         monkeypatch.setattr(
             sourcebuild, "build_appimage_from_source", self.releases.tagged("build_appimage_from_source"))
 
-        programs = module.programs
+        programs = program_paths
         monkeypatch.setattr(programs, "should_program_be_installed",
             lambda name, platform: platform in self.wanted)
         monkeypatch.setattr(programs, "get_program_install_dir",
@@ -256,7 +269,7 @@ class ConfigureSeams:
         monkeypatch.setattr(module.environment, "get_emulators_root_dir", lambda: "/emulators")
         monkeypatch.setattr(module.environment, "get_locker_gaming_emulator_setup_dir",
             lambda name: "/locker/%s" % name)
-        monkeypatch.setattr(module.programs, "get_emulator_path_config_value",
+        monkeypatch.setattr(program_paths, "get_emulator_path_config_value",
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
         monkeypatch.setattr(module.fileops, "touch_file", self.touch)
         monkeypatch.setattr(filebulk, "smart_copy", self.copy)

@@ -47,3 +47,47 @@ template = "GBA.ini"
 [[system_files]]
 path = "Wii.zip"
 md5 = "2029efb1ed06ef0cb3679537b803d9ab"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://dolphin-emu.org/download"
+webpage_base_url = "https://dolphin-emu.org"
+starts_with = "https://dl.dolphin-emu.org/builds"
+ends_with = "x64.7z"
+search_file = "Dolphin.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Dolphin.git"
+output_file = "Dolphin_Emulator-x86_64.AppImage"
+build_cmd = [
+    "cmake",
+    "..",
+    "-DLINUX_LOCAL_DEV=true",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "&&",
+    "make",
+    "-j",
+    "4",
+]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/Dolphin/Build/Binaries/dolphin-emu", to = "AppImage/usr/bin/dolphin-emu" },
+    { from = "Source/Dolphin/Build/Binaries/dolphin-tool", to = "AppImage/usr/bin/dolphin-tool" },
+    { from = "Source/Dolphin/Data/Sys", to = "AppImage/usr/bin/Sys" },
+    { from = "Source/Dolphin/Data/dolphin-emu.desktop", to = "AppImage/dolphin-emu.desktop" },
+    { from = "Source/Dolphin/Data/dolphin-emu.png", to = "AppImage/dolphin-emu.png" },
+]
+internal_symlinks = [{ from = "usr/bin/dolphin-emu", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Dolphin.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

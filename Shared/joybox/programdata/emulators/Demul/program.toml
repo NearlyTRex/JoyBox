@@ -4,3 +4,17 @@
 [config.Demul]
 program = { windows = "Demul/windows/demul.exe", linux = "Demul/windows/demul.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "http://demul.emulation64.com/downloads/"
+webpage_base_url = "http://demul.emulation64.com"
+starts_with = "http://demul.emulation64.com/files/demul"
+ends_with = ".7z"
+search_file = "demul.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "demul.exe"

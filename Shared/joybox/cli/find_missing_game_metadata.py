@@ -6,37 +6,11 @@ from joybox import system
 from joybox import arguments
 from joybox import setup
 from joybox import logger
-from joybox import paths
 from joybox import prompts
-from joybox import reports
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Find games whose Pegasus metadata entries are missing fields.",
-        details = (
-            "Reads every Pegasus metadata file in the game metadata repository and checks each\n"
-            "entry for the fields chosen with `-k`. A field counts as missing when it is absent or\n"
-            "empty.\n"
-            "\n"
-            "`Minimum` checks game, platform and file. `Downloadable` checks the fields that\n"
-            "`build_game_metadata_files` can fetch: description, genre, coop, developer, publisher,\n"
-            "players and release. `All` checks every metadata field.\n"
-            "\n"
-            "The log shows the entry count and, per field, how many entries lack it. Each non-empty\n"
-            "list is written in full to `Missing_<field>.txt` in the current directory, one\n"
-            "`<platform> - <game>` per line."),
-        examples = [
-            ("Check the downloadable fields", "find_missing_game_metadata"),
-            ("Check only the fields every entry needs", "find_missing_game_metadata -k Minimum"),
-            ("Check every field and show sample entries", "find_missing_game_metadata -k All -v"),
-            ("Report without writing the list files", "find_missing_game_metadata -p"),
-        ],
-        notes = [
-            "Run it from a scratch directory; the report files land in whatever directory you run it from and overwrite earlier ones.",
-        ],
-        see_also = ["build_game_metadata_files", "find_missing_game_assets", "analyze_game_json_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "find_missing_game_metadata")
     parser.add_enum_argument(
         args = ("-k", "--keys"),
         arg_type = config.MetadataKeyType,
@@ -62,12 +36,7 @@ def main():
     metadata_dir = environment.get_game_pegasus_metadata_root_dir()
 
     # Determine keys to check
-    if args.keys == config.MetadataKeyType.MINIMUM:
-        keys_to_check = config.metadata_keys_minimum
-    elif args.keys == config.MetadataKeyType.DOWNLOADABLE:
-        keys_to_check = config.metadata_keys_downloadable
-    else:
-        keys_to_check = config.metadata_keys_all
+    keys_to_check = metadata.get_metadata_keys_to_check(args.keys)
 
     # Show preview
     if not args.no_preview:
@@ -79,45 +48,12 @@ def main():
             logger.log_warning("Operation cancelled by user")
             return
 
-    # Track missing metadata by key
-    missing_by_key = {key: [] for key in keys_to_check}
-    total_entries = 0
-    entries_with_missing = set()
-
-    # Scan metadata files
-    for filename in paths.build_file_list(metadata_dir):
-        if not environment.is_game_metadata_file(filename):
-            continue
-
-        # Load metadata
-        metadata_obj = metadata.Metadata()
-        metadata_obj.import_from_metadata_file(filename)
-        for game_platform in metadata_obj.get_sorted_platforms():
-            for game_entry in metadata_obj.get_sorted_entries(game_platform):
-                total_entries += 1
-                game_name = game_entry.get_game()
-                entry_id = "%s - %s" % (game_platform, game_name)
-
-                # Check each key
-                for key in keys_to_check:
-                    if not game_entry.is_key_set(key) or game_entry.get_value(key) == "":
-                        missing_by_key[key].append(entry_id)
-                        entries_with_missing.add(entry_id)
-
-    # Report results
-    logger.log_header("Scan complete: %d total entries, %d with missing metadata" % (total_entries, len(entries_with_missing)))
-
-    # Write results per key
-    for key in keys_to_check:
-        missing_items = sorted(missing_by_key[key])
-        if len(missing_items) > 0:
-            reports.write_list_report(
-                items = missing_items,
-                title = "\nMissing '%s':" % key,
-                max_display = 10 if args.verbose else 0,
-                report_file = "Missing_%s.txt" % key,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run)
+    # Report missing metadata
+    metadata.report_missing_game_metadata(
+        metadata_dir = metadata_dir,
+        keys_to_check = keys_to_check,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run)
 
 # Run through the shared error handling
 def run():

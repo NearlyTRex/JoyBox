@@ -4,6 +4,7 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
+from joybox import lockerinfo
 from joybox.cli import sync_tool
 from sync_helpers import sync_owner
 
@@ -77,7 +78,7 @@ def tool(monkeypatch, tmp_path, isolated_settings):
     harness.result = True
     harness.called = []
     harness.kwargs = []
-    monkeypatch.setattr(sync_tool.lockerinfo, "LockerInfo", FakeLockerInfo)
+    monkeypatch.setattr(lockerinfo, "LockerInfo", FakeLockerInfo)
     for name in ACTIONS.values():
         def action(name = name, **kwargs):
             harness.called.append(name)

@@ -4,3 +4,19 @@
 [config.PSVStrip]
 program = { windows = "PSVStrip/windows/psvstrip.exe", linux = "PSVStrip/windows/psvstrip.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "Kippykip"
+github_repo = "PSVStrip"
+starts_with = "PSVStrip"
+ends_with = ".zip"
+search_file = "psvstrip.exe"
+install_files = ["psvstrip.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "psvstrip.exe"
+install_files = ["psvstrip.exe"]

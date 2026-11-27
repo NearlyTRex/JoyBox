@@ -31,6 +31,8 @@ from joybox.nintendo import switchprofile
 #   program_unknown_when_unset
 #                     a program whose path names an unset setting is unknown
 #   platforms         the config.Platform members an emulator plays, by member name
+#   setup, setup_offline
+#                     the steps that install it, run by joybox/programsetup.py
 #
 # TOML has no null, so "<none>" stands for a value that is not set. A string
 # that is one {placeholder} is the value it names, as the settings ini has it; a
@@ -88,6 +90,16 @@ def get_profile_roots():
         os.path.join(home, ".var", "app", "org.mozilla.firefox", ".mozilla", "firefox"),
     ]
 
+# Profile path a parsed profiles.ini opens by default: the first [Install...] Default, else the first Default=1 profile; "" when neither
+def get_ini_default_profile(parser):
+    for section in parser.sections():
+        if section.startswith("Install") and parser[section].get("Default"):
+            return parser[section]["Default"]
+    for section in parser.sections():
+        if section.startswith("Profile") and parser[section].get("Default") == "1":
+            return parser[section].get("Path", "")
+    return ""
+
 # Find the profile Firefox opens by default, or "" when there is none, from the
 # [Install...] section; older Firefox's Default=1 can mark one nothing opens
 def find_default_profile_dir(profile_roots = None):
@@ -100,16 +112,7 @@ def find_default_profile_dir(profile_roots = None):
             parser.read_string(text)
         except configparser.Error:
             continue
-        profile = ""
-        for section in parser.sections():
-            if section.startswith("Install") and parser[section].get("Default"):
-                profile = parser[section]["Default"]
-                break
-        if not profile:
-            for section in parser.sections():
-                if section.startswith("Profile") and parser[section].get("Default") == "1":
-                    profile = parser[section].get("Path", "")
-                    break
+        profile = get_ini_default_profile(parser)
         if not profile:
             continue
         profile_dir = profile if os.path.isabs(profile) else os.path.join(root, profile)
@@ -130,6 +133,24 @@ def get_switch_profile():
 # Filling in values
 ###########################################################
 
+# Look up one single placeholder's value: a setting, a path setting, the Firefox profile or a Switch profile part
+def look_up_placeholder(name, asked):
+    kind, _, setting = name.partition(":")
+    section, _, key = setting.rpartition(".")
+    if kind == "setting":
+        return settings.get_value(section, key)
+    if kind == "path_setting":
+        return settings.get_path_value(section, key)
+    if kind == "optional_path_setting":
+        return settings.get_path_value(section, key, default_value = "", throw_exception = False)
+    if name == "firefox_default_profile":
+        return find_default_profile_dir()
+    if name in ("switch_profile_user_id", "switch_profile_account_name"):
+        if "switch_profile" not in asked:
+            asked["switch_profile"] = get_switch_profile()
+        return asked["switch_profile"][0 if name == "switch_profile_user_id" else 1]
+    raise ValueError("Unknown placeholder {%s} in program data" % name)
+
 # Fill in one placeholder; lookups made more than once in a value are asked for once
 def fill_placeholder(name, asked):
     if "|" in name:
@@ -139,22 +160,7 @@ def fill_placeholder(name, asked):
                 return value
         return ""
     if name not in asked:
-        kind, _, setting = name.partition(":")
-        section, _, key = setting.rpartition(".")
-        if kind == "setting":
-            asked[name] = settings.get_value(section, key)
-        elif kind == "path_setting":
-            asked[name] = settings.get_path_value(section, key)
-        elif kind == "optional_path_setting":
-            asked[name] = settings.get_path_value(section, key, default_value = "", throw_exception = False)
-        elif name == "firefox_default_profile":
-            asked[name] = find_default_profile_dir()
-        elif name in ("switch_profile_user_id", "switch_profile_account_name"):
-            if "switch_profile" not in asked:
-                asked["switch_profile"] = get_switch_profile()
-            asked[name] = asked["switch_profile"][0 if name == "switch_profile_user_id" else 1]
-        else:
-            raise ValueError("Unknown placeholder {%s} in program data" % name)
+        asked[name] = look_up_placeholder(name, asked)
     return asked[name]
 
 # Fill in a value from program data: "<none>" is None, and a string with placeholders
@@ -238,6 +244,13 @@ def get_platforms(family, name):
     if not entry:
         return []
     return [config.Platform[platform] for platform in entry["data"].get("platforms", [])]
+
+# Get a program's setup steps by its name, the offline ones when asked; none when its data lists none
+def get_setup_steps(family, name, offline = False):
+    entry = load_family(family).get(name)
+    if not entry:
+        return []
+    return [dict(step) for step in entry["data"].get("setup_offline" if offline else "setup", [])]
 
 # Get a tool's config by its name
 def get_tool_config(name):

@@ -10,6 +10,24 @@ from joybox import serialization
 from joybox import fileops
 from joybox import hashutil
 
+# A game entry for one ROM of a dat game, or None when the game has no name or the ROM
+# lacks a name, size, crc or md5
+def _get_rom_entry(game_tag, rom_tag):
+    has_name = game_tag.hasAttribute("name")
+    has_file = rom_tag.hasAttribute("name")
+    has_size = rom_tag.hasAttribute("size")
+    has_crc = rom_tag.hasAttribute("crc")
+    has_md5 = rom_tag.hasAttribute("md5")
+    if not has_name or not has_file or not has_size or not has_crc or not has_md5:
+        return None
+    game_entry = {}
+    game_entry[config.DAT_KEY_GAME] = game_tag.attributes["name"].value
+    game_entry[config.DAT_KEY_FILE] = paths.get_filename_file(rom_tag.attributes["name"].value.replace("\\", "/"))
+    game_entry[config.DAT_KEY_SIZE] = rom_tag.attributes["size"].value
+    game_entry[config.DAT_KEY_CRC] = rom_tag.attributes["crc"].value
+    game_entry[config.DAT_KEY_MD5] = rom_tag.attributes["md5"].value
+    return game_entry
+
 # General datfile class
 class Dat:
 
@@ -64,6 +82,16 @@ class Dat:
             return serialization.write_text_file(dat_file, contents, exit_on_failure = exit_on_failure)
         return True
 
+    # Add an entry for each complete ROM of each game in a parsed clrmamepro dat
+    def _add_dat_games(self, dom):
+        game_tags = dom.getElementsByTagName("game")
+        for game_tag in game_tags:
+            rom_tags = game_tag.getElementsByTagName("rom")
+            for rom_tag in rom_tags:
+                game_entry = _get_rom_entry(game_tag, rom_tag)
+                if game_entry:
+                    self.add_game(game_entry)
+
     # Load each ROM of a clrmamepro XML dat, skipping ROMs missing a name, size, crc or md5;
     # False when the file can't be parsed
     def import_clrmamepro_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -72,24 +100,7 @@ class Dat:
                 logger.log_info("Importing clrmamepro dat file '%s'" % dat_file)
             if not pretend_run:
                 dom = minidom.parse(dat_file)
-                game_tags = dom.getElementsByTagName("game")
-                for game_tag in game_tags:
-                    rom_tags = game_tag.getElementsByTagName("rom")
-                    for rom_tag in rom_tags:
-                        has_name = game_tag.hasAttribute("name")
-                        has_file = rom_tag.hasAttribute("name")
-                        has_size = rom_tag.hasAttribute("size")
-                        has_crc = rom_tag.hasAttribute("crc")
-                        has_md5 = rom_tag.hasAttribute("md5")
-                        if not has_name or not has_file or not has_size or not has_crc or not has_md5:
-                            continue
-                        game_entry = {}
-                        game_entry[config.DAT_KEY_GAME] = game_tag.attributes["name"].value
-                        game_entry[config.DAT_KEY_FILE] = paths.get_filename_file(rom_tag.attributes["name"].value.replace("\\", "/"))
-                        game_entry[config.DAT_KEY_SIZE] = rom_tag.attributes["size"].value
-                        game_entry[config.DAT_KEY_CRC] = rom_tag.attributes["crc"].value
-                        game_entry[config.DAT_KEY_MD5] = rom_tag.attributes["md5"].value
-                        self.add_game(game_entry)
+                self._add_dat_games(dom)
             return True
         except (OSError, KeyError, ExpatError) as e:
             if exit_on_failure:
@@ -121,3 +132,31 @@ class Dat:
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
+
+# Load records from the dat directory (writing them to the cache file when asked), or else from the
+# cache file, then rename the files under the input directory by those records
+def rename_files_using_dat(input_dir, dat_directory, dat_cachefile, generate_cachefile = False, verbose = False, pretend_run = False, exit_on_failure = False):
+    game_dat = Dat()
+    if paths.is_path_directory(dat_directory):
+        game_dat.import_clrmamepro_dat_files(
+            dat_dir = dat_directory,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if generate_cachefile:
+            game_dat.export_cache_dat_file(
+                dat_file = dat_cachefile,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+    elif paths.is_path_file(dat_cachefile):
+        game_dat.import_cache_dat_file(
+            dat_file = dat_cachefile,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    game_dat.rename_files(
+        input_dir = input_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

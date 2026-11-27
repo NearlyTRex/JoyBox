@@ -41,7 +41,7 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     harness.result = True
     harness.addon_result = True
     harness.json = make_json(str(tmp_path / "game.json"))
-    monkeypatch.setattr(install_game_json.gameinfo, "GameInfo", FakeGameInfo)
+    monkeypatch.setattr(install_game_json.collection.installing.gameinfo, "GameInfo", FakeGameInfo)
 
     def install(**kwargs):
         harness.installed.append(kwargs)
@@ -51,8 +51,8 @@ def tool(monkeypatch, isolated_settings, tmp_path):
         harness.addons.append(kwargs)
         return harness.addon_result
 
-    monkeypatch.setattr(install_game_json.collection, "install_game", install)
-    monkeypatch.setattr(install_game_json.collection, "install_game_addons", install_addons)
+    monkeypatch.setattr(install_game_json.collection.installing, "install_game", install)
+    monkeypatch.setattr(install_game_json.collection.installing, "install_game_addons", install_addons)
     return harness
 
 

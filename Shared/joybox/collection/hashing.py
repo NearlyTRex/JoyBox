@@ -6,6 +6,8 @@ from joybox import hashing
 from joybox import lockerinfo
 from joybox import gamecollection
 from joybox import gamenaming
+from joybox import logger
+from joybox import prompts
 
 ###########################################################
 
@@ -116,6 +118,23 @@ def sort_hash_file(
         exit_on_failure = exit_on_failure)
     return success
 
+# Yield every supercategory, category and subcategory combination
+def _iterate_game_categories():
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                yield game_supercategory, game_category, game_subcategory
+
+# Yield each existing hash file across all supercategories, categories and subcategories
+def _iterate_existing_hash_files():
+    for game_supercategory, game_category, game_subcategory in _iterate_game_categories():
+        hash_file = environment.get_game_hashes_metadata_file(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory)
+        if paths.is_path_file(hash_file):
+            yield hash_file
+
 # Sort every existing hash file across all supercategories, categories and subcategories
 def sort_all_hash_files(
     verbose = False,
@@ -123,28 +142,114 @@ def sort_all_hash_files(
     exit_on_failure = False):
 
     # Sort hash files
-    for game_supercategory in config.Supercategory.members():
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-
-                # Get hash file
-                hash_file = environment.get_game_hashes_metadata_file(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory)
-                if not paths.is_path_file(hash_file):
-                    continue
-
-                # Sort hash file
-                success = hashing.sort_hash_file(
-                    src = hash_file,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    return False
+    for hash_file in _iterate_existing_hash_files():
+        success = hashing.sort_hash_file(
+            src = hash_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Should be successful
     return True
 
 ############################################################
+
+# The directory to hash a game from: the input path when given, else its folder under the
+# locker base's Gaming folder when given, else its folder in the locker
+def get_hash_game_root(game_info, input_path = None, locker_type = None, locker_base_dir = None):
+    if input_path:
+        return input_path
+    if locker_base_dir:
+        game_offset = environment.get_locker_gaming_files_offset(
+            game_info.get_supercategory(),
+            game_info.get_category(),
+            game_info.get_subcategory(),
+            game_info.get_name())
+        return paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING, game_offset)
+    return environment.get_locker_gaming_files_dir(
+        game_info.get_supercategory(),
+        game_info.get_category(),
+        game_info.get_subcategory(),
+        game_info.get_name(),
+        locker_type)
+
+# (game_info, game_root) for each game, with the directory get_hash_game_root picks for it
+def get_hash_game_roots(game_infos, input_path = None, locker_type = None, locker_base_dir = None):
+    return [(game_info, get_hash_game_root(game_info, input_path, locker_type, locker_base_dir)) for game_info in game_infos]
+
+# Hash each (game_info, game_root) pair into its subcategory hash file; quits at the first failure
+def build_hash_files_for_games(games, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    for game_info, game_root in games:
+        success = build_hash_files(
+            game_info = game_info,
+            game_root = game_root,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Build of hash files failed!",
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                game_name = game_info.get_name(),
+                quit_program = True)
+
+# Drop the missing-file entries from the hash file of each subcategory the games cover, once
+# per subcategory, against the locker base's or the locker's Gaming root; quits on a failure
+def clean_missing_hash_entries_for_games(game_infos, locker_type = None, locker_base_dir = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    locker_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING) if locker_base_dir else environment.get_locker_gaming_root_dir(locker_type)
+    subcategories_cleaned = set()
+    for game_info in game_infos:
+        subcategory_key = (game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+        if subcategory_key in subcategories_cleaned:
+            continue
+        subcategories_cleaned.add(subcategory_key)
+        success = clean_missing_hash_entries(
+            game_supercategory = game_info.get_supercategory(),
+            game_category = game_info.get_category(),
+            game_subcategory = game_info.get_subcategory(),
+            locker_root = locker_root,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Clean of missing hash entries failed!",
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                quit_program = True)
+
+# After a preview of the directories, hash each game from the one get_hash_game_root picks,
+# then, when delete_missing, drop the entries of files gone from each subcategory's hash file;
+# quits at the first failure
+def build_selected_hash_files(
+    game_infos,
+    input_path = None,
+    locker_type = None,
+    locker_base_dir = None,
+    delete_missing = False,
+    show_preview = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Collect games to process
+    games_to_process = get_hash_game_roots(game_infos, input_path, locker_type, locker_base_dir)
+
+    # Show preview
+    if show_preview:
+        details = [game_root for _, game_root in games_to_process]
+        if not prompts.prompt_for_preview("Build game hash files", details):
+            logger.log_warning("Operation cancelled by user")
+            return
+
+    # Build hash files, then clean missing hash entries
+    build_hash_files_for_games(games_to_process, locker_type, verbose, pretend_run, exit_on_failure)
+    if delete_missing:
+        selected_game_infos = [game_info for game_info, _ in games_to_process]
+        clean_missing_hash_entries_for_games(selected_game_infos, locker_type, locker_base_dir, verbose, pretend_run, exit_on_failure)

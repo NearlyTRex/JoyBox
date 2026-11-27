@@ -4,3 +4,14 @@
 [config.BGB]
 program = { windows = "BGB/windows/bgb.exe", linux = "BGB/windows/bgb.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+archive_url = "https://bgb.bircd.org/bgb.zip"
+search_file = "bgb.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "bgb.exe"

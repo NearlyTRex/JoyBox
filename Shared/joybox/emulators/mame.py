@@ -5,8 +5,6 @@ from joybox import fileops
 from joybox import filebulk
 from joybox import logger
 from joybox import paths
-from joybox import release
-from joybox import sourcebuild
 from joybox import programs
 from joybox import gui
 from joybox import emulatorcommon
@@ -24,116 +22,25 @@ system_drivers = {
     config.Platform.OTHER_TIGER_GAMECOM: ("gamecom", "-cart1")
 }
 
+# The rom path and launch file arguments: the game dir and set name for arcade games,
+# else the roms dir, the platform's system driver and its media flag with the game file
+def get_rom_args(game_platform):
+    if game_platform == config.Platform.OTHER_ARCADE:
+        return [
+            "-rompath", config.TOKEN_GAME_DIR,
+            config.TOKEN_GAME_NAME
+        ]
+    system_name, media_flag = system_drivers[game_platform]
+    return [
+        "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir"),
+        system_name,
+        media_flag, config.TOKEN_GAME_FILE
+    ]
+
 # Mame emulator
 class Mame(emulatorbase.EmulatorBase):
 
     NAME = "Mame"
-
-    # Windows build from the mamedev GitHub release's self-extracting exe; Linux AppImage built from the
-    # NearlyTRex/Mame fork with make, its support dirs copied into the AppImage home
-    def setup(self, setup_params = None):
-
-        # Use default params if not provided
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Mame", "windows"):
-            success = release.download_github_release(
-                github_user = "mamedev",
-                github_repo = "mame",
-                starts_with = "mame",
-                ends_with = "x64.exe",
-                search_file = "mame.exe",
-                install_name = "Mame",
-                install_dir = programs.get_program_install_dir("Mame", "windows"),
-                backups_dir = programs.get_program_backup_dir("Mame", "windows"),
-                release_type = config.ReleaseType.ARCHIVE,
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Mame")
-                return False
-
-        # Build linux program
-        if programs.should_program_be_installed("Mame", "linux"):
-            success = sourcebuild.build_appimage_from_source(
-                release_url = "https://github.com/NearlyTRex/Mame.git",
-                output_file = "App-x86_64.AppImage",
-                install_name = "Mame",
-                install_dir = programs.get_program_install_dir("Mame", "linux"),
-                backups_dir = programs.get_program_backup_dir("Mame", "linux"),
-                build_cmd = [
-                    "make", "-j", "8"
-                ],
-                internal_copies = [
-                    {"from": "Source/Mame/mame", "to": "AppImage/usr/bin/mame"},
-                    {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
-                ],
-                internal_symlinks = [
-                    {"from": "usr/bin/mame", "to": "AppRun"}
-                ],
-                external_copies = [
-                    {"from": "Source/Mame/uismall.bdf", "to": "Mame.AppImage.home/.mame/uismall.bdf"},
-                    {"from": "Source/Mame/artwork", "to": "Mame.AppImage.home/.mame/artwork"},
-                    {"from": "Source/Mame/bgfx", "to": "Mame.AppImage.home/.mame/bgfx"},
-                    {"from": "Source/Mame/ctrlr", "to": "Mame.AppImage.home/.mame/ctrlr"},
-                    {"from": "Source/Mame/docs", "to": "Mame.AppImage.home/.mame/docs"},
-                    {"from": "Source/Mame/hash", "to": "Mame.AppImage.home/.mame/hash"},
-                    {"from": "Source/Mame/hlsl", "to": "Mame.AppImage.home/.mame/hlsl"},
-                    {"from": "Source/Mame/ini", "to": "Mame.AppImage.home/.mame/ini"},
-                    {"from": "Source/Mame/language", "to": "Mame.AppImage.home/.mame/language"},
-                    {"from": "Source/Mame/plugins", "to": "Mame.AppImage.home/.mame/plugins"},
-                    {"from": "Source/Mame/roms", "to": "Mame.AppImage.home/.mame/roms"},
-                    {"from": "Source/Mame/samples", "to": "Mame.AppImage.home/.mame/samples"}
-                ],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Mame")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-
-        # Use default params if not provided
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Mame", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Mame", "windows"),
-                install_name = "Mame",
-                install_dir = programs.get_program_install_dir("Mame", "windows"),
-                search_file = "mame.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Mame")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Mame", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Mame", "linux"),
-                install_name = "Mame",
-                install_dir = programs.get_program_install_dir("Mame", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Mame")
-                return False
-        return True
 
     # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
@@ -172,20 +79,9 @@ class Mame(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Run MAME with its ini path; arcade games load by set name from the game dir, other platforms
-    # through their system driver and media flag; windowed unless fullscreen is asked
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_platform = game_info.get_platform()
+    # The launch command: the program with its ini path, the rom path and launch file, and
+    # -window unless fullscreen is asked; shows an error popup when the platform is not one Mame plays
+    def get_launch_cmd(self, game_platform, fullscreen):
 
         # Check if this platform is valid
         if game_platform not in self.get_platforms():
@@ -202,24 +98,29 @@ class Mame(emulatorbase.EmulatorBase):
         ]
 
         # Add rom path and launch file
-        if game_platform == config.Platform.OTHER_ARCADE:
-            launch_cmd += [
-                "-rompath", config.TOKEN_GAME_DIR,
-                config.TOKEN_GAME_NAME
-            ]
-        else:
-            system_name, media_flag = system_drivers[game_platform]
-            launch_cmd += [
-                "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir"),
-                system_name,
-                media_flag, config.TOKEN_GAME_FILE
-            ]
+        launch_cmd += get_rom_args(game_platform)
 
         # Mame runs fullscreen unless told otherwise
         if not fullscreen:
             launch_cmd += [
                 "-window"
             ]
+        return launch_cmd
+
+    # Run MAME with its ini path; arcade games load by set name from the game dir, other platforms
+    # through their system driver and media flag; windowed unless fullscreen is asked
+    def launch(
+        self,
+        game_info,
+        capture_type = None,
+        capture_file = None,
+        fullscreen = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get launch command
+        launch_cmd = self.get_launch_cmd(game_info.get_platform(), fullscreen)
 
         # Launch game
         return emulatorcommon.simple_launch(

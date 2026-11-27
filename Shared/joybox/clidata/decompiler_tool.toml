@@ -1,0 +1,40 @@
+# Help text for the decompiler_tool command, read by joybox/arguments.py
+
+description = "Open Ghidra with Python support, or run a PyGhidra script against a Ghidra project."
+details = """
+`LaunchProgram` (the default) starts the Ghidra GUI through PyGhidra (`python -m
+pyghidra -g`), so Python scripts can be used inside it. `RunScript` runs a PyGhidra
+script headless against an existing Ghidra project.
+
+Both use the JoyBox Python virtual environment and the Ghidra installed by
+`setup_tools` (its `lib` directory is passed as `GHIDRA_INSTALL_DIR`).
+
+A script can be run two ways. In preset mode, `--preset` and `--script` pick a
+project and script defined in `Shared/joybox/config/decompiler.py`, with paths
+relative to the preset's repository under `[UserData.Dirs] repositories_dir`, and the
+script's default arguments. In manual mode, give `--project_dir`, `--project_name`,
+`--program_name`, `--script_path` and `--script_name` yourself.
+
+The script is called as `python <script> <project_dir> <project_name> <program_name>
+[script_args]`. It runs with `-Djava.awt.headless=true` added to
+`JAVA_TOOL_OPTIONS`, so it never needs a display."""
+section = "Development"
+see_also = [
+    "setup_tools",
+    "claude_tool",
+    "llm_chat",
+]
+notes = [
+    "`--script_args` replaces the preset's default arguments, and is passed to the script as one argument, not split on spaces.",
+    "Ghidra must be installed with `setup_tools -k Ghidra`, or the command reports that the installation was not found.",
+    "`--list_presets` and `--list_scripts` exit without running anything; `--list_scripts` without `--preset` lists the scripts of every preset.",
+]
+examples = [
+    ["Open Ghidra with PyGhidra", "decompiler_tool"],
+    ["List the presets", "decompiler_tool --list_presets"],
+    ["List the scripts of one preset", "decompiler_tool --list_scripts --preset NocturneDecomp"],
+    ["Run a preset script with its default arguments", "decompiler_tool -a RunScript --preset NocturneDecomp --script export_all"],
+    ["Run a preset script with other arguments", "decompiler_tool -a RunScript --preset NocturneDecomp --script export_nocedit --script_args ~/annotations/nocedit"],
+    ["Run a script by hand against a project", "decompiler_tool -a RunScript -r ~/Repositories/NocturneDecomp/projects -n NocturneEdit -g nocedit.exe --script_path ~/Repositories/NocturneDecomp/scripts/Python --script_name export_annotations.py"],
+    ["Dry run without starting Python", "decompiler_tool -a RunScript --preset NocturneDecomp --script export_all -p -v"],
+]

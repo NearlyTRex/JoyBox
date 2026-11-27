@@ -1,0 +1,34 @@
+# Help text for the launch_game_json command, read by joybox/arguments.py
+
+description = "Launch a game described by its JSON file, installing it and restoring its save first."
+details = """
+The game is given as a JSON file with `-i`, or by `-c`, `-s` and `-n`, which name the
+JSON file under the `Roms` supercategory of the metadata repository; the `launch:` lines
+in the Pegasus metadata files use this second form. With `-r`, whatever is not given
+is picked at random, ending with a random game from that subcategory's metadata file.
+
+Games whose metadata does not mark them playable are refused. A store game is
+installed and started through its store, with its save imported before and exported
+after. Any other game is installed into the local cache if needed, its save is imported
+and linked into the emulator's save folder, the emulator's config file has its path
+placeholders filled in, and the emulator is run; afterwards the config is restored and
+the save exported.
+
+Errors are shown as a popup and end the run."""
+section = "Game Launching"
+see_also = [
+    "install_game_json",
+    "launch_pegasus",
+    "save_game_tool",
+]
+notes = [
+    "Capture length, interval, area and frame rate come from the `[UserData.Capture]` section of JoyBox.ini.",
+    "Random selection skips subcategories whose platform has no launcher.",
+]
+examples = [
+    ["Launch a game by name", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\""],
+    ["Launch a game from its JSON file, fullscreen", "launch_game_json -i \"/path/to/Game Name (USA).json\" -f"],
+    ["Launch a random Nintendo game", "launch_game_json -c Nintendo -r"],
+    ["Launch and record a video of the session", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\" -t Video"],
+    ["Dry run", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\" -p -v"],
+]

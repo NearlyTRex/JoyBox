@@ -1,0 +1,21 @@
+# Help text for the nds_rom_tool command, read by joybox/arguments.py
+
+description = "Decrypt or encrypt Nintendo DS ROMs in place with NDecrypt."
+details = """
+Finds every `.nds` file under the input path (or takes the one file given) and runs
+NDecrypt on it: `-d` decrypts the secure area, `-e` encrypts it again. NDecrypt
+rewrites each file in place, so no new files are created unless `-g` is given, which
+has NDecrypt write the file's size and hashes to a companion file."""
+section = "Game ROMs & Images"
+see_also = [
+    "3ds_rom_tool",
+]
+notes = [
+    "Without `-d` or `-e` nothing is done. If both are given, `-d` wins.",
+    "NDecrypt must be installed as a JoyBox tool.",
+]
+examples = [
+    ["Decrypt every DS ROM in a folder", "nds_rom_tool -i /path/to/nds -d"],
+    ["Preview the decryption without changing anything", "nds_rom_tool -i /path/to/nds -d -p -v"],
+    ["Encrypt one ROM and record its hashes", "nds_rom_tool -i \"/path/to/Game (USA).nds\" -e -g"],
+]

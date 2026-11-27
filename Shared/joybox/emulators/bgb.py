@@ -1,8 +1,4 @@
 # Local imports
-from joybox import config
-from joybox import logger
-from joybox import release
-from joybox import programs
 from joybox import emulatorbase
 
 
@@ -10,45 +6,3 @@ from joybox import emulatorbase
 class BGB(emulatorbase.EmulatorBase):
 
     NAME = "BGB"
-
-    # Download the Windows zip from bgb.bircd.org; Windows only
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("BGB", "windows"):
-            success = release.download_general_release(
-                archive_url = "https://bgb.bircd.org/bgb.zip",
-                search_file = "bgb.exe",
-                install_name = "BGB",
-                install_dir = programs.get_program_install_dir("BGB", "windows"),
-                backups_dir = programs.get_program_backup_dir("BGB", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup BGB")
-                return False
-        return True
-
-    # Install the Windows build from the release stored in its backups dir
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("BGB", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("BGB", "windows"),
-                install_name = "BGB",
-                install_dir = programs.get_program_install_dir("BGB", "windows"),
-                search_file = "bgb.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup BGB")
-                return False
-        return True

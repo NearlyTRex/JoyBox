@@ -12,3 +12,18 @@ run_sandboxed = { windows = false, linux = true }
 
 [[config_files]]
 path = "BigPEmu/windows/placeholder.txt"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download"
+webpage_base_url = "https://www.richwhitehouse.com"
+starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v"
+ends_with = "[0-9].zip"
+search_file = "BigPEmu.exe"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "BigPEmu.exe"

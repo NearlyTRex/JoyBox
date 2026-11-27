@@ -1,0 +1,29 @@
+# Help text for the login_game_stores command, read by joybox/arguments.py
+
+description = "Log in to the selected game stores so their purchases, metadata and downloads can be fetched."
+details = """
+Picks stores by category and subcategory (for example `-c Computer -s Steam`); with no
+selection it goes through every subcategory. Subcategories without a store are skipped.
+For each store that is not already logged in, it runs the store's own command-line
+login, such as SteamCMD for Steam or Legendary for Epic Games, which may prompt for
+credentials.
+
+The session it leaves behind is what `build_game_store_purchases`,
+`build_game_metadata_files` and `download_game_metadata_assets` use when they talk
+to a store."""
+section = "Game Collection"
+see_also = [
+    "build_game_store_purchases",
+    "build_game_metadata_files",
+    "download_game_metadata_assets",
+    "setup_tools",
+]
+notes = [
+    "Stores sit under the `Roms` supercategory, which is the default, so `-u` is not needed.",
+    "The store's login tool must be installed first; `setup_tools` installs them.",
+]
+examples = [
+    ["Log in to Steam", "login_game_stores -c Computer -s Steam"],
+    ["Log in to the Epic Games store", "login_game_stores -c Computer -s \"Epic Games\""],
+    ["Log in to every store", "login_game_stores"],
+]

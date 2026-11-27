@@ -2,8 +2,6 @@
 from joybox import config
 from joybox import logger
 from joybox import paths
-from joybox import release
-from joybox import programs
 from joybox import environment
 from joybox import fileops
 from joybox import toolbase
@@ -13,101 +11,6 @@ from joybox import toolbase
 class Ludusavi(toolbase.ToolBase):
 
     NAME = "Ludusavi"
-
-    # Download the Windows and Linux binaries from the mtkennerly/ludusavi GitHub release,
-    # marking the Linux one executable
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Ludusavi", "windows"):
-            success = release.download_github_release(
-                github_user = "mtkennerly",
-                github_repo = "ludusavi",
-                starts_with = "ludusavi",
-                ends_with = "win64.zip",
-                search_file = "ludusavi.exe",
-                install_name = "Ludusavi",
-                install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
-                backups_dir = programs.get_program_backup_dir("Ludusavi", "windows"),
-                install_files = ["ludusavi.exe"],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ludusavi")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Ludusavi", "linux"):
-            success = release.download_github_release(
-                github_user = "mtkennerly",
-                github_repo = "ludusavi",
-                starts_with = "ludusavi",
-                ends_with = "linux.zip",
-                search_file = "ludusavi",
-                install_name = "Ludusavi",
-                install_dir = programs.get_program_install_dir("Ludusavi", "linux"),
-                backups_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
-                install_files = ["ludusavi"],
-                chmod_files = [
-                    {
-                        "file": "ludusavi",
-                        "perms": 755
-                    }
-                ],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ludusavi")
-                return False
-        return True
-
-    # Install the Windows and Linux binaries from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Ludusavi", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Ludusavi", "windows"),
-                install_name = "Ludusavi",
-                install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
-                search_file = "ludusavi.exe",
-                install_files = ["ludusavi.exe"],
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ludusavi")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Ludusavi", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
-                install_name = "Ludusavi",
-                install_dir = programs.get_program_install_dir("Ludusavi", "linux"),
-                search_file = "ludusavi",
-                install_files = ["ludusavi"],
-                chmod_files = [
-                    {
-                        "file": "ludusavi",
-                        "perms": 755
-                    }
-                ],
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Ludusavi")
-                return False
-        return True
 
     # Write its config files under the tools root
     def configure(self, setup_params = None):

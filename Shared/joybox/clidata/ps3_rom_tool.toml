@@ -1,0 +1,26 @@
+# Help text for the ps3_rom_tool command, read by joybox/arguments.py
+
+description = "Check that PlayStation 3 disc CHDs decrypt and extract with their disc keys."
+details = """
+Finds every `.chd` file under the input path (or takes the one file given) and, with
+`-e`, checks it by doing a full round trip in a temporary directory: chdman extracts
+the disc image, PS3Dec decrypts it with the key in `<name>.dkey` next to the CHD, and
+the decrypted image is unpacked. If the unpacked disc has a `PS3_GAME/LICDIR/LIC.DAT`
+or `PS3_GAME/USRDIR/EBOOT.BIN`, its header is checked (`PS3LICDA` and `SCE`), since a
+wrong key still produces output but garbles these files.
+
+Nothing next to the CHD is written or changed."""
+section = "Game ROMs & Images"
+see_also = [
+    "chdverify",
+    "chdextract",
+    "psn_rom_tool",
+]
+notes = [
+    "Each disc is extracted, decrypted and unpacked in full, so the temporary directory needs room for about three times the disc's size.",
+    "chdman (MameChdman) and PS3Dec must be installed as JoyBox tools.",
+]
+examples = [
+    ["Verify every PS3 CHD in a folder", "ps3_rom_tool -i /path/to/ps3 -e"],
+    ["Verify one disc and stop at the first failure", "ps3_rom_tool -i \"/path/to/Game (USA).chd\" -e -x"],
+]

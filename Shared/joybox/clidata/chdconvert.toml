@@ -1,0 +1,34 @@
+# Help text for the chdconvert command, read by joybox/arguments.py
+
+description = "Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with chdman."
+details = """
+Finds every disc image of the chosen types under the input path (or takes the one
+file given) and runs `chdman createcd` on it, writing `<name>.chd` next to it. For a
+`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists. A Roxio Toast
+`.toast` image holds plain 2048-byte sectors, so chdman reads it as it does an ISO.
+
+chdman cannot read an Alcohol 120% `.mds` descriptor, so JoyBox reads it and writes
+a CUE sheet in a temporary folder for chdman. The CUE reads the `.mdf` data file in
+place when its tracks lie back to back; when the image also stores subchannel data,
+each track is first copied out without it.
+
+An image whose `<name>.chd` already exists is skipped."""
+section = "Game ROMs & Images"
+see_also = [
+    "chdextract",
+    "chdverify",
+    "chdzip",
+]
+notes = [
+    "Images are always converted with `createcd`, which makes CD CHDs.",
+    "chdman (MameChdman) must be installed as a JoyBox tool.",
+    "Only version 1 `.mds` descriptors of single-session discs convert; multi-session discs and MDF data split over several files are reported and skipped.",
+    "The subchannel data in an `.mds` image is dropped, so copy protection that reads it does not survive the conversion.",
+]
+examples = [
+    ["Convert every ISO, CUE, GDI and Toast image in a folder", "chdconvert -i /path/to/discs"],
+    ["Convert only CUE sheets and delete them afterwards, previewing first", "chdconvert -i /path/to/discs -t CUE -d -p -v"],
+    ["Convert ISO and GDI images only", "chdconvert -i /path/to/discs -t ISO GDI"],
+    ["Convert Mac Toast images only", "chdconvert -i /path/to/discs -t TOAST"],
+    ["Convert Alcohol MDS/MDF images and delete both files afterwards", "chdconvert -i /path/to/discs -t MDS -d"],
+]

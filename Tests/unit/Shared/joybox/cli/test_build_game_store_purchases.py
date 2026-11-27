@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
-from joybox import config
+from joybox import collection, config
 from joybox.cli import build_game_store_purchases
 
 
@@ -29,7 +29,7 @@ def tool(monkeypatch):
 
     monkeypatch.setattr(build_game_store_purchases.gamecollection, "iterate_selected_game_categories",
         lambda parser, generation_mode: iter(STORES))
-    monkeypatch.setattr(build_game_store_purchases.collection, "build_game_store_purchases", build)
+    monkeypatch.setattr(collection.purchase, "build_game_store_purchases", build)
     return harness
 
 

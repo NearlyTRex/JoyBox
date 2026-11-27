@@ -55,6 +55,15 @@ def convert_from_tokenized_path(
     # Return path
     return paths.normalize_file_path(path)
 
+# Copies of a path with each AppData base it contains swapped for each of that base's configured variants
+def get_appdata_path_variants(path):
+    variants = []
+    for appdata_base, appdata_variants in config.appdata_variants.items():
+        if appdata_base in path:
+            for appdata_variant in appdata_variants:
+                variants.append(path.replace(appdata_base, appdata_variant))
+    return variants
+
 # Base store
 class StoreBase:
 
@@ -579,10 +588,7 @@ class StoreBase:
 
         # Add AppData variants
         for path in sorted(new_paths):
-            for appdata_base, appdata_variants in config.appdata_variants.items():
-                if appdata_base in path:
-                    for appdata_variant in appdata_variants:
-                        new_paths.append(path.replace(appdata_base, appdata_variant))
+            new_paths += get_appdata_path_variants(path)
         return new_paths
 
     ############################################################

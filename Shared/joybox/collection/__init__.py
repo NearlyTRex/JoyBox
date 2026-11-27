@@ -3,19 +3,26 @@ import sys as _sys
 from joybox.collection.asset import (
     does_metadata_asset_exist,
     download_metadata_asset,
-    download_all_metadata_assets)
+    download_all_metadata_assets,
+    download_metadata_asset_for_games)
 from joybox.collection.backup import (
     should_backup_store_game_files,
     backup_store_game_files,
     should_backup_game_files,
     backup_game_files,
-    backup_all_game_files)
+    backup_all_game_files,
+    backup_game_infos)
 from joybox.collection.hashing import (
     build_hash_files,
     clean_missing_hash_entries,
     build_all_hash_files,
     sort_hash_file,
-    sort_all_hash_files)
+    sort_all_hash_files,
+    get_hash_game_root,
+    get_hash_game_roots,
+    build_hash_files_for_games,
+    clean_missing_hash_entries_for_games,
+    build_selected_hash_files)
 from joybox.collection.installing import (
     is_store_game_installed,
     install_store_game,
@@ -29,7 +36,10 @@ from joybox.collection.installing import (
     is_game_installed,
     install_game,
     install_game_addons,
-    uninstall_game)
+    uninstall_game,
+    get_named_game_json_file,
+    check_game_json_file,
+    install_game_from_json)
 from joybox.collection.jsondata import (
     are_game_json_file_possible,
     read_game_json_data,
@@ -38,11 +48,20 @@ from joybox.collection.jsondata import (
     build_game_json_file,
     build_all_game_json_files,
     get_game_json_ignore_entries,
-    add_game_json_ignore_entry)
+    add_game_json_ignore_entry,
+    get_json_build_games,
+    build_json_files_for_games,
+    find_problem_game_json_files,
+    analyze_game_json_files,
+    find_existing_game_json_files,
+    clean_game_json_files)
 from joybox.collection.launching import (
     launch_store_game,
     launch_local_game,
-    launch_game)
+    launch_game,
+    choose_random_game_json_file,
+    select_game_json_file,
+    launch_game_from_json)
 from joybox.collection.metadata import (
     are_game_metadata_file_possible,
     create_game_metadata_entry,
@@ -51,7 +70,9 @@ from joybox.collection.metadata import (
     build_all_game_metadata_entries,
     iterate_selected_json_games,
     publish_game_metadata_entries,
-    publish_all_game_metadata_entries)
+    publish_all_game_metadata_entries,
+    get_metadata_games,
+    build_metadata_entries_for_games)
 from joybox.collection.purchase import (
     login_game_store,
     login_all_game_stores,
@@ -61,7 +82,8 @@ from joybox.collection.purchase import (
     build_game_store_purchases,
     build_all_game_store_purchases,
     download_game_store_purchase,
-    download_all_game_store_purchases)
+    download_all_game_store_purchases,
+    build_store_purchases_for_categories)
 from joybox.collection.saves import (
     is_save_dir_packable,
     is_save_dir_unpackable,
@@ -90,10 +112,18 @@ from joybox.collection.saves import (
     import_game_save,
     import_all_game_saves,
     export_game_save,
-    export_all_game_save)
+    export_all_game_save,
+    get_save_action_games,
+    run_save_action)
 from joybox.collection.uploading import (
     upload_game_files,
-    upload_all_game_files)
+    upload_all_game_files,
+    get_upload_game_roots,
+    upload_game_roots)
+from joybox.collection.scanning import (
+    check_scan_filters,
+    scan_game_files,
+    verify_game_files)
 
 # Submodule handles
 asset = _sys.modules["joybox.collection.asset"]
@@ -105,6 +135,7 @@ launching = _sys.modules["joybox.collection.launching"]
 metadata = _sys.modules["joybox.collection.metadata"]
 purchase = _sys.modules["joybox.collection.purchase"]
 saves = _sys.modules["joybox.collection.saves"]
+scanning = _sys.modules["joybox.collection.scanning"]
 uploading = _sys.modules["joybox.collection.uploading"]
 del _sys
 
@@ -194,4 +225,33 @@ __all__ = [
     "export_all_game_save",
     "upload_game_files",
     "upload_all_game_files",
+    "download_metadata_asset_for_games",
+    "backup_game_infos",
+    "get_hash_game_root",
+    "get_hash_game_roots",
+    "build_hash_files_for_games",
+    "clean_missing_hash_entries_for_games",
+    "build_selected_hash_files",
+    "get_named_game_json_file",
+    "check_game_json_file",
+    "install_game_from_json",
+    "get_json_build_games",
+    "build_json_files_for_games",
+    "find_problem_game_json_files",
+    "analyze_game_json_files",
+    "find_existing_game_json_files",
+    "clean_game_json_files",
+    "choose_random_game_json_file",
+    "select_game_json_file",
+    "launch_game_from_json",
+    "get_metadata_games",
+    "build_metadata_entries_for_games",
+    "build_store_purchases_for_categories",
+    "get_save_action_games",
+    "run_save_action",
+    "check_scan_filters",
+    "scan_game_files",
+    "verify_game_files",
+    "get_upload_game_roots",
+    "upload_game_roots",
 ]

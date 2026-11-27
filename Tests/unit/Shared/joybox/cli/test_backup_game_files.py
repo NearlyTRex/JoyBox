@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, FakeGameInfo, assert_entry_points
-from joybox import config
+from joybox import collection, config
 from joybox.cli import backup_game_files
 
 
@@ -24,7 +24,7 @@ def tool(monkeypatch):
 
     monkeypatch.setattr(backup_game_files.gamecollection, "iterate_selected_game_infos",
         lambda parser, generation_mode, **kwargs: iter(harness.games))
-    monkeypatch.setattr(backup_game_files.collection, "backup_game_files", backup)
+    monkeypatch.setattr(collection.backup, "backup_game_files", backup)
     return harness
 
 

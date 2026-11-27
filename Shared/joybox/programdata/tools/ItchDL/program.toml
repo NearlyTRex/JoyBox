@@ -3,3 +3,27 @@
 
 [config.ItchDL]
 program = "ItchDL/lib/itch_dl/cli.py"
+
+[[setup]]
+kind = "github_repository"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "ItchDL"
+github_branch = "{program_config:github_branch}"
+clean = true
+
+[[setup]]
+kind = "github_archive"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "ItchDL"
+github_branch = "{program_config:github_branch}"
+recursive = true
+clean = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"

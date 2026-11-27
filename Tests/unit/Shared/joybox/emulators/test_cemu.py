@@ -2,8 +2,10 @@
 import pytest
 
 # Local imports
+from joybox import release
 from joybox import config
 from joybox.emulators import cemu
+from emulator_helpers import Release
 
 
 ###########################################################
@@ -15,16 +17,6 @@ from joybox.emulators import cemu
 ###########################################################
 
 PLATFORMS = ["windows", "linux"]
-
-
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
 
 
 @pytest.fixture
@@ -44,14 +36,7 @@ def program_paths(monkeypatch):
 @pytest.fixture
 def download(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(cemu.release, "download_github_release", fake)
-    return fake
-
-
-@pytest.fixture
-def stored(monkeypatch, program_paths):
-    fake = Release()
-    monkeypatch.setattr(cemu.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "download_github_release", fake)
     return fake
 
 

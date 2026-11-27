@@ -5,32 +5,11 @@ from joybox import system
 from joybox import arguments
 from joybox import setup
 from joybox import logger
-from joybox import paths
 from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Rewrite every Pegasus metadata file found under the metadata repository in sorted order.",
-        details = (
-            "Finds every `metadata.pegasus.txt` under the `Pegasus` folder of the game metadata\n"
-            "repository, imports each one and exports it back to the same path. The rewrite sorts\n"
-            "entries by name and regenerates the collection header and launch command, which keeps\n"
-            "diffs small after bulk edits.\n"
-            "\n"
-            "`clean_game_metadata_files` does the same but only for the known category and\n"
-            "subcategory paths; this tool also picks up files anywhere else under `Pegasus`."),
-        examples = [
-            ("Sort every metadata file", "sort_game_metadata"),
-            ("List the files that would be sorted", "sort_game_metadata -p"),
-            ("Sort without the confirmation prompt", "sort_game_metadata -v --no-preview"),
-        ],
-        notes = [
-            "There are no selection options; every metadata file is processed.",
-            "With `-p` the files are listed but not read or rewritten.",
-        ],
-        see_also = ["clean_game_metadata_files", "build_game_metadata_files", "publish_game_metadata_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "sort_game_metadata")
     parser.add_common_arguments()
     return parser
 
@@ -51,10 +30,7 @@ def main():
     metadata_dir = environment.get_game_pegasus_metadata_root_dir()
 
     # Find all metadata files
-    metadata_files = []
-    for filename in paths.build_file_list(metadata_dir):
-        if environment.is_game_metadata_file(filename):
-            metadata_files.append(filename)
+    metadata_files = metadata.find_game_metadata_files(metadata_dir)
 
     # Show preview
     if not args.no_preview:
@@ -67,26 +43,10 @@ def main():
             return
 
     # Sort each metadata file
-    files_sorted = 0
-    for metadata_file in sorted(metadata_files):
-        logger.log_info("Sorting: %s" % metadata_file)
-        if not args.pretend_run:
-
-            # Import metadata
-            metadata_obj = metadata.Metadata()
-            metadata_obj.import_from_metadata_file(metadata_file)
-
-            # Export back
-            metadata_obj.export_to_metadata_file(
-                metadata_file = metadata_file,
-                append_existing = False,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = False)
-        files_sorted += 1
-
-    # Report results
-    logger.log_header("Sort complete: %d files sorted" % files_sorted)
+    metadata.sort_game_metadata_files(
+        metadata_files,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run)
 
 # Run through the shared error handling
 def run():

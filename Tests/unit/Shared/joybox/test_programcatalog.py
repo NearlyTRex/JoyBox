@@ -21,7 +21,7 @@ from joybox.nintendo import switchprofile
 ###########################################################
 
 FAMILIES = [programcatalog.FAMILY_TOOLS, programcatalog.FAMILY_EMULATORS]
-KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset", "platforms"}
+KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset", "platforms", "setup", "setup_offline"}
 
 
 def all_programs():
@@ -286,3 +286,15 @@ def test_windows_looks_in_the_roaming_app_data(monkeypatch):
     monkeypatch.setenv("APPDATA", "C:\\Users\\testuser\\AppData\\Roaming")
 
     assert programcatalog.get_profile_roots() == [os.path.join("C:\\Users\\testuser\\AppData\\Roaming", "Mozilla", "Firefox")]
+
+
+def test_a_program_lists_its_setup_and_offline_setup_steps():
+    online = programcatalog.get_setup_steps("emulators", "Dolphin")
+    offline = programcatalog.get_setup_steps("emulators", "Dolphin", offline = True)
+
+    assert [step["kind"] for step in online] == ["webpage_release", "appimage_build"]
+    assert [step["kind"] for step in offline] == ["stored_release", "stored_release"]
+
+
+def test_an_unknown_program_has_no_setup_steps():
+    assert programcatalog.get_setup_steps("tools", "NotATool") == []

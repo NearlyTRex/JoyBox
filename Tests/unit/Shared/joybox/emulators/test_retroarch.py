@@ -4,7 +4,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.emulators import retroarch
-from emulator_helpers import ConfigureSeams
+from emulator_helpers import ConfigureSeams, Release
 
 
 ###########################################################
@@ -16,16 +16,6 @@ from emulator_helpers import ConfigureSeams
 ###########################################################
 
 PLATFORMS = ["windows", "linux"]
-
-
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
 
 
 @pytest.fixture

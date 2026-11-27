@@ -4,6 +4,9 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, FakeGameInfo, assert_entry_points
 from joybox import config
+from joybox import environment
+from joybox import gamecollection
+from joybox.collection import uploading
 from joybox.cli import upload_game_files
 
 
@@ -27,10 +30,10 @@ def tool(monkeypatch):
         harness.uploaded.append((game_info.get_name(), game_root, locker_type))
         return game_info.get_name() not in harness.failing
 
-    monkeypatch.setattr(upload_game_files.gamecollection, "iterate_selected_game_infos", games)
-    monkeypatch.setattr(upload_game_files.environment, "get_locker_gaming_files_dir",
+    monkeypatch.setattr(gamecollection, "iterate_selected_game_infos", games)
+    monkeypatch.setattr(environment, "get_locker_gaming_files_dir",
         lambda supercategory, category, subcategory, name, locker_type: "/locker/%s/%s" % (locker_type, name))
-    monkeypatch.setattr(upload_game_files.collection, "upload_game_files", upload)
+    monkeypatch.setattr(uploading, "upload_game_files", upload)
     return harness
 
 

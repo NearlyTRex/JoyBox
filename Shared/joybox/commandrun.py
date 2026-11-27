@@ -26,6 +26,59 @@ def wait_for_command(proc, timeout):
         proc.kill()
         proc.wait()
 
+# Where the child's stderr goes: merged into stdout (OS-level, order-preserving) for
+# include_stderr capture, piped separately when streaming it live or writing it to a
+# file, otherwise inherited from the terminal (so it still shows up by default)
+def _get_stderr_arg(options, pipe_stderr):
+    if options.include_stderr() and not pipe_stderr:
+        return subprocess.STDOUT
+    if pipe_stderr:
+        return subprocess.PIPE
+    return None
+
+# Open the process with its stdout piped as text, line buffered, and stdin piped when there is input
+def _open_streamed_process(cmd, options, stderr_arg, stdin_input):
+    return subprocess.Popen(
+        cmd,
+        shell = options.is_shell(),
+        cwd = options.get_cwd(),
+        env = options.get_env(),
+        creationflags = options.get_creationflags(),
+        stdout = subprocess.PIPE,
+        stderr = stderr_arg,
+        stdin = subprocess.PIPE if stdin_input is not None else None,
+        text = True,
+        errors = "ignore",
+        bufsize = 1)
+
+# Copy each line of a stream to the captured lines, the log and the target file as asked.
+# readline() rather than "for line in pipe", which read-ahead-buffers and defeats
+# real-time streaming; an empty line is end of stream
+def _pump_stream(stream, capture, log, target, output_lines):
+    for line in iter(stream.readline, ""):
+        if capture:
+            output_lines.append(line)
+        if log:
+            logger.log_info(line.strip())
+        if target:
+            target.write(line)
+            target.flush()
+
+# Start a thread pumping each (stream, capture, log, target) into the shared output lines
+def _start_pump_threads(pumps, output_lines):
+    threads = [threading.Thread(target = _pump_stream, args = pump + (output_lines,)) for pump in pumps]
+    for t in threads:
+        t.start()
+    return threads
+
+# Write the input to the process and close its stdin, warning when it exits before reading it all
+def _write_stdin_input(proc, stdin_input):
+    try:
+        proc.stdin.write(stdin_input)
+        proc.stdin.close()
+    except BrokenPipeError:
+        logger.log_warning("The command exited before reading all of its input")
+
 # Run a command, pumping its output streams in real time
 def run_streamed_command(
     cmd,
@@ -39,18 +92,10 @@ def run_streamed_command(
     stderr_path = options.get_stderr() if paths.is_path_valid(options.get_stderr()) else None
     stdin_input = options.get_stdin_input()
 
-    # Determine stderr disposition:
-    # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
-    # - pipe separately when streaming it live or writing it to a file,
-    # - otherwise inherit the terminal (so it still shows up by default).
+    # Determine stderr disposition
     pipe_stderr = log_stderr or stderr_path is not None
     capture_stderr = options.include_stderr() and capture_output
-    if options.include_stderr() and not pipe_stderr:
-        stderr_arg = subprocess.STDOUT
-    elif pipe_stderr:
-        stderr_arg = subprocess.PIPE
-    else:
-        stderr_arg = None
+    stderr_arg = _get_stderr_arg(options, pipe_stderr)
 
     # Get context stack
     with contextlib.ExitStack() as stack:
@@ -58,48 +103,16 @@ def run_streamed_command(
         stderr_target = stack.enter_context(open(stderr_path, "w", encoding = "utf-8")) if stderr_path else None
 
         # Open process
-        proc = stack.enter_context(subprocess.Popen(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env(),
-            creationflags = options.get_creationflags(),
-            stdout = subprocess.PIPE,
-            stderr = stderr_arg,
-            stdin = subprocess.PIPE if stdin_input is not None else None,
-            text = True,
-            errors = "ignore",
-            bufsize = 1))
-
-        # readline() rather than "for line in pipe", which read-ahead-buffers
-        # and defeats real-time streaming; an empty line is end of stream
-        output_lines = []
-        def pump(stream, capture, log, target):
-            for line in iter(stream.readline, ""):
-                if capture:
-                    output_lines.append(line)
-                if log:
-                    logger.log_info(line.strip())
-                if target:
-                    target.write(line)
-                    target.flush()
+        proc = stack.enter_context(_open_streamed_process(cmd, options, stderr_arg, stdin_input))
 
         # Run real-time I/O threads
-        threads = [threading.Thread(
-            target = pump,
-            args = (proc.stdout, capture_output, log_stdout, stdout_target))]
+        output_lines = []
+        pumps = [(proc.stdout, capture_output, log_stdout, stdout_target)]
         if pipe_stderr:
-            threads.append(threading.Thread(
-                target = pump,
-                args = (proc.stderr, capture_stderr, log_stderr, stderr_target)))
-        for t in threads:
-            t.start()
+            pumps.append((proc.stderr, capture_stderr, log_stderr, stderr_target))
+        threads = _start_pump_threads(pumps, output_lines)
         if stdin_input is not None:
-            try:
-                proc.stdin.write(stdin_input)
-                proc.stdin.close()
-            except BrokenPipeError:
-                logger.log_warning("The command exited before reading all of its input")
+            _write_stdin_input(proc, stdin_input)
         wait_for_command(proc, options.get_timeout())
         for t in threads:
             t.join()
@@ -124,6 +137,30 @@ def wait_for_blocking_processes(options):
     if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
         process.wait_for_named_processes(options.get_blocking_processes())
 
+# Run a command on this terminal's own streams, for TUI apps, then wait for what it blocks on
+def _run_passthrough_command(cmd, options):
+    returncode = subprocess.call(
+        cmd,
+        shell = options.is_shell(),
+        cwd = options.get_cwd(),
+        env = options.get_env())
+    wait_for_blocking_processes(options)
+    return ("", returncode)
+
+# Run a command with its output discarded, then wait for what it blocks on
+def _run_suppressed_command(cmd, options):
+    with subprocess.Popen(
+        cmd,
+        shell = options.is_shell(),
+        cwd = options.get_cwd(),
+        env = options.get_env(),
+        creationflags = options.get_creationflags(),
+        stdout = subprocess.DEVNULL,
+        stderr = subprocess.DEVNULL) as proc:
+        wait_for_command(proc, options.get_timeout())
+    wait_for_blocking_processes(options)
+    return ("", proc.returncode)
+
 # Run a command as it is, with no pre- or post-processing, and wait for the
 # processes it blocks on unless it is left running as a daemon
 def run_prepared_command(
@@ -144,13 +181,7 @@ def run_prepared_command(
 
     # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
     if options.is_passthrough():
-        returncode = subprocess.call(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env())
-        wait_for_blocking_processes(options)
-        return ("", returncode)
+        return _run_passthrough_command(cmd, options)
 
     # Daemon mode - detach and return without waiting or cleaning up after it
     if options.is_daemon():
@@ -160,17 +191,7 @@ def run_prepared_command(
 
     # Suppressed output - discard streams, just wait
     if options.is_output_suppressed():
-        with subprocess.Popen(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env(),
-            creationflags = options.get_creationflags(),
-            stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL) as proc:
-            wait_for_command(proc, options.get_timeout())
-        wait_for_blocking_processes(options)
-        return ("", proc.returncode)
+        return _run_suppressed_command(cmd, options)
 
     # Run with streamed output
     output, returncode = run_streamed_command(

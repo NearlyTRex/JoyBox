@@ -8,96 +8,33 @@ from joybox import environment
 from joybox import fileops
 from joybox import logger
 from joybox import paths
-from joybox import release
 from joybox import programs
 from joybox import archive
 from joybox import playstation
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
+# Unzip the locker's os0, sa0 or vs0 archive into the platform's setup dir, keeping files
+# already there; True when the locker has no such archive
+def extract_system_archive(platform, obj, setup_params):
+    if not os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval())):
+        return True
+    success = archive.extract_archive(
+        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval()),
+        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "setup_dir", platform), obj),
+        skip_existing = True,
+        verbose = setup_params.verbose,
+        pretend_run = setup_params.pretend_run,
+        exit_on_failure = setup_params.exit_on_failure)
+    if not success:
+        logger.log_error("Could not extract Vita3K system files")
+        return False
+    return True
 
 # Vita3K emulator
 class Vita3K(emulatorbase.EmulatorBase):
 
     NAME = "Vita3K"
-
-    # Download the Windows zip and Linux AppImage from the Vita3K GitHub release
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Vita3K", "windows"):
-            success = release.download_github_release(
-                github_user = "Vita3K",
-                github_repo = "Vita3K",
-                starts_with = "windows-latest",
-                ends_with = ".zip",
-                search_file = "Vita3K.exe",
-                install_name = "Vita3K",
-                install_dir = programs.get_program_install_dir("Vita3K", "windows"),
-                backups_dir = programs.get_program_backup_dir("Vita3K", "windows"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Vita3K")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Vita3K", "linux"):
-            success = release.download_github_release(
-                github_user = "Vita3K",
-                github_repo = "Vita3K",
-                starts_with = "Vita3K-x86_64",
-                ends_with = ".AppImage",
-                install_name = "Vita3K",
-                install_dir = programs.get_program_install_dir("Vita3K", "linux"),
-                backups_dir = programs.get_program_backup_dir("Vita3K", "linux"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Vita3K")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Vita3K", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Vita3K", "windows"),
-                install_name = "Vita3K",
-                install_dir = programs.get_program_install_dir("Vita3K", "windows"),
-                search_file = "Vita3K.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Vita3K")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Vita3K", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Vita3K", "linux"),
-                install_name = "Vita3K",
-                install_dir = programs.get_program_install_dir("Vita3K", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Vita3K")
-                return False
-        return True
 
     # Write its config files, verify the locker system files, then unzip the os0, sa0 and vs0 archives
     # into each platform's setup dir, keeping files already there
@@ -124,17 +61,8 @@ class Vita3K(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["os0", "sa0", "vs0"]:
-                if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval())):
-                    success = archive.extract_archive(
-                        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "setup_dir", platform), obj),
-                        skip_existing = True,
-                        verbose = setup_params.verbose,
-                        pretend_run = setup_params.pretend_run,
-                        exit_on_failure = setup_params.exit_on_failure)
-                    if not success:
-                        logger.log_error("Could not extract Vita3K system files")
-                        return False
+                if not extract_system_archive(platform, obj, setup_params):
+                    return False
         return True
 
     # Stage work.bin where the Vita3K installer reads it
@@ -156,6 +84,33 @@ class Vita3K(emulatorbase.EmulatorBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+    # The cached game's Vita app content root with its work.bin staged; None, after
+    # logging, when there is no content or staging fails
+    def stage_cached_content(self, game_info, title_id, verbose, pretend_run, exit_on_failure):
+        cache_dir = game_info.get_local_cache_dir()
+        content_root = playstation.find_psv_content_root(cache_dir, title_id)
+        if not content_root:
+            logger.log_error("No Vita app content (sce_sys/param.sfo) for %s in '%s'" % (title_id, cache_dir))
+            return None
+        if not self.stage_workbin(cache_dir, content_root, verbose, pretend_run, exit_on_failure):
+            logger.log_error("Could not stage work.bin for %s" % title_id)
+            return None
+        return content_root
+
+    # The arguments that run the game: its title id when the app is installed, else its
+    # staged cached content; None when the content cannot be staged
+    def get_game_args(self, game_info, title_id, verbose, pretend_run, exit_on_failure):
+
+        # Run installed app
+        if os.path.isdir(paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "app_dir"), title_id)):
+            return ["-r", config.TOKEN_GAME_NAME]
+
+        # Install and run from the cache
+        content_root = self.stage_cached_content(game_info, title_id, verbose, pretend_run, exit_on_failure)
+        if not content_root:
+            return None
+        return [content_root]
 
     # Run Vita3K by title id when the app is installed, else stage the cached content and run it from there;
     # False when the game has no title id as its launch name
@@ -180,21 +135,11 @@ class Vita3K(emulatorbase.EmulatorBase):
         if fullscreen:
             launch_cmd += ["-F"]
 
-        # Run installed app
-        if os.path.isdir(paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "app_dir"), title_id)):
-            launch_cmd += ["-r", config.TOKEN_GAME_NAME]
-
-        # Install and run from the cache
-        else:
-            cache_dir = game_info.get_local_cache_dir()
-            content_root = playstation.find_psv_content_root(cache_dir, title_id)
-            if not content_root:
-                logger.log_error("No Vita app content (sce_sys/param.sfo) for %s in '%s'" % (title_id, cache_dir))
-                return False
-            if not self.stage_workbin(cache_dir, content_root, verbose, pretend_run, exit_on_failure):
-                logger.log_error("Could not stage work.bin for %s" % title_id)
-                return False
-            launch_cmd += [content_root]
+        # Add the installed app or the staged cached content
+        game_args = self.get_game_args(game_info, title_id, verbose, pretend_run, exit_on_failure)
+        if game_args is None:
+            return False
+        launch_cmd += game_args
 
         # Launch game
         return emulatorcommon.simple_launch(

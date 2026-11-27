@@ -137,11 +137,29 @@ def find_steam_griddb_covers(
     verbose = False,
     exit_on_failure = False):
 
+    # Get client
+    sgdb = _get_steamgriddb_client(search_name, verbose, exit_on_failure)
+    if not sgdb:
+        return []
+
+    # Build search results
+    search_results = []
+    for game_entry in sgdb.search_game(strings.encode_url_string(search_name, use_plus = True)):
+        search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
+        if datautils.is_iterable_container(search_grids):
+            search_results += _get_matching_grid_results(search_name, game_entry, search_grids, image_dimensions, image_types)
+
+    # Return search results
+    return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
+
+# A SteamGridDB client for the configured api key, or None after logging why none could be made
+def _get_steamgriddb_client(search_name, verbose, exit_on_failure):
+
     # Get authorization info
     steamgriddb_api_key = settings.get_value("UserData.Scraping", "steamgriddb_api_key")
     if not steamgriddb_api_key:
         logger.log_error("No steamgriddb_api_key in UserData.Scraping", quit_program = exit_on_failure)
-        return []
+        return None
 
     # Import steamgrid
     steamgrid = modules.import_python_module_package(
@@ -149,58 +167,62 @@ def find_steam_griddb_covers(
         module_name = programs.get_tool_config_value("PySteamGridDB", "package_name"))
     if not steamgrid:
         logger.log_error("PySteamGridDB is not installed", quit_program = exit_on_failure)
-        return []
+        return None
 
     # Initialize client
     if verbose:
         logger.log_info("Searching SteamGridDB for '%s'" % search_name)
-    sgdb = steamgrid.SteamGridDB(steamgriddb_api_key)
+    return steamgrid.SteamGridDB(steamgriddb_api_key)
 
-    # Build search results
+# Search results for a game's grids whose name is close to search_name and that match the requested dimensions and types
+def _get_matching_grid_results(search_name, game_entry, search_grids, image_dimensions, image_types):
     search_results = []
-    for game_entry in sgdb.search_game(strings.encode_url_string(search_name, use_plus = True)):
-        search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
-        if datautils.is_iterable_container(search_grids):
-            for search_grid in search_grids:
+    for search_grid in search_grids:
 
-                # Get grid info
-                grid_id = game_entry.id
-                grid_name = game_entry.name
-                grid_release_date = game_entry.release_date
-                grid_url = search_grid.url
-                grid_width = int(search_grid.width)
-                grid_height = int(search_grid.height)
+        # Get grid info
+        grid_id = game_entry.id
+        grid_name = game_entry.name
+        grid_release_date = game_entry.release_date
+        grid_url = search_grid.url
+        grid_width = int(search_grid.width)
+        grid_height = int(search_grid.height)
 
-                # Ignore dissimilar images
-                if not strings.are_strings_highly_similar(search_name, grid_name):
-                    continue
+        # Ignore dissimilar or unrequested images
+        if not _is_requested_grid(search_name, grid_name, grid_url, grid_width, grid_height, image_dimensions, image_types):
+            continue
 
-                # Ignore images that do not match requested dimensions
-                if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
-                    requested_width, requested_height = map(int, image_dimensions)
-                    if grid_width != requested_width or grid_height != requested_height:
-                        continue
+        # Add search result
+        search_result = containers.AssetSearchResult()
+        search_result.set_id(grid_id)
+        search_result.set_title(grid_name)
+        search_result.set_description(f"{grid_name} ({grid_release_date})")
+        search_result.set_date(grid_release_date)
+        search_result.set_url(grid_url)
+        search_result.set_width(grid_width)
+        search_result.set_height(grid_height)
+        search_result.set_relevance(strings.get_string_similarity_ratio(search_name, grid_name))
+        search_results.append(search_result)
+    return search_results
 
-                # Ignore images that do not match requested types
-                if datautils.is_iterable_non_string(image_types) and len(image_types) > 0:
-                    found_type = image.get_image_format(grid_url)
-                    if found_type and found_type not in image_types:
-                        continue
+# Whether a grid's name is highly similar to search_name and it has the requested dimensions and image type
+def _is_requested_grid(search_name, grid_name, grid_url, grid_width, grid_height, image_dimensions, image_types):
 
-                # Add search result
-                search_result = containers.AssetSearchResult()
-                search_result.set_id(grid_id)
-                search_result.set_title(grid_name)
-                search_result.set_description(f"{grid_name} ({grid_release_date})")
-                search_result.set_date(grid_release_date)
-                search_result.set_url(grid_url)
-                search_result.set_width(grid_width)
-                search_result.set_height(grid_height)
-                search_result.set_relevance(strings.get_string_similarity_ratio(search_name, grid_name))
-                search_results.append(search_result)
+    # Ignore dissimilar images
+    if not strings.are_strings_highly_similar(search_name, grid_name):
+        return False
 
-    # Return search results
-    return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
+    # Ignore images that do not match requested dimensions
+    if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
+        requested_width, requested_height = map(int, image_dimensions)
+        if grid_width != requested_width or grid_height != requested_height:
+            return False
+
+    # Ignore images that do not match requested types
+    if datautils.is_iterable_non_string(image_types) and len(image_types) > 0:
+        found_type = image.get_image_format(grid_url)
+        if found_type and found_type not in image_types:
+            return False
+    return True
 
 # Answer the store page's age gate, when it shows one
 def answer_steam_age_gate(web_driver, verbose = False):

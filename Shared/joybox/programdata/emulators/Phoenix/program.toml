@@ -7,3 +7,14 @@ run_sandboxed = { windows = false, linux = true }
 [config.Phoenix.program]
 windows = "Phoenix/windows/PhoenixEmuProject.exe"
 linux = "Phoenix/windows/PhoenixEmuProject.exe"
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+archive_url = "https://archive.org/download/PHX_EMU/ph28jag-win64.zip"
+search_file = "PhoenixEmuProject.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "PhoenixEmuProject.exe"

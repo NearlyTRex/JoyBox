@@ -26,3 +26,31 @@ path = "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings
 [[system_files]]
 path = "dev_flash.zip"
 md5 = "08f2dc11bd3c7dfefae48ebbbc8caf55"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "RPCS3"
+github_repo = "rpcs3-binaries-win"
+starts_with = "rpcs3"
+ends_with = "win64_msvc.7z"
+search_file = "rpcs3.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "RPCS3"
+github_repo = "rpcs3-binaries-linux"
+starts_with = "rpcs3"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "rpcs3.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

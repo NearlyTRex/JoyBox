@@ -1,0 +1,32 @@
+# Help text for the make_iso command, read by joybox/arguments.py
+
+description = "Build an ISO image from each folder, or each zip file, in a directory."
+details = """
+With the default `-t Folder`, every folder directly inside the input directory becomes
+`<folder>.iso` in the input directory. Subfolders further down are part of their
+parent's image, not images of their own.
+
+With `-t Zip`, every `.zip` file under the input directory (searched recursively) is
+extracted to a `<name>_extracted` folder beside it and that folder becomes `<name>.iso`
+beside the zip. Without `-d` the `_extracted` folder is left in place.
+
+Images are made with xorriso in mkisofs mode: ISO level 3 with Joliet names. An image
+whose `.iso` already exists is skipped. The volume name is `-n`, or the folder or zip
+name with `-a`, or xorriso's default when neither is given.
+
+There is no confirmation prompt; the tool starts straight away."""
+section = "Game ROMs & Images"
+see_also = [
+    "isoextract",
+    "compress_folders",
+    "chdconvert",
+]
+notes = [
+    "With `-d`, `-t Folder` deletes each source folder once its image is made, and `-t Zip` deletes each zip after extracting it and the extracted folder once the image is made.",
+    "xorriso (XorrISO) and, for `-t Zip`, 7-Zip must be installed as JoyBox tools.",
+]
+examples = [
+    ["Make an ISO from every folder in a directory, named after each folder", "make_iso -i /path/to/folders -a"],
+    ["Make ISOs from zip files and delete the zips and extracted folders, previewing first", "make_iso -i /path/to/zips -t Zip -a -d -p -v"],
+    ["Make ISOs with a fixed volume name", "make_iso -i /path/to/folders -n GAMEDISC"],
+]

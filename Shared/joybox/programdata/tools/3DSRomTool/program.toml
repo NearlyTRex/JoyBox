@@ -4,3 +4,36 @@
 [config.3DSRomTool]
 program = { windows = "3DSRomTool/windows/rom_tool.exe", linux = "3DSRomTool/linux/3DSRomTool.AppImage" }
 run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "3DSRomTool"
+starts_with = "rom_tool"
+ends_with = ".zip"
+search_file = "rom_tool.exe"
+install_files = ["rom_tool.exe"]
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/3DSRomTool.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["cd", "rom_tool", "&&", "make", "-j", "4"]
+internal_copies = [
+    { from = "Source/3DSRomTool/rom_tool/rom_tool", to = "AppImage/usr/bin/rom_tool" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/rom_tool", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "rom_tool.exe"
+install_files = ["rom_tool.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

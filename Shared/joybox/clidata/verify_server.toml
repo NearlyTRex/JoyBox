@@ -1,0 +1,39 @@
+# Help text for the verify_server command, read by joybox/arguments.py
+
+description = "Check that a server's hardening actually took effect."
+details = """
+Runs a set of checks against a server entry from `[UserData.Servers]` in
+`~/JoyBox.ini`, over the same SSH connection the bootstrap uses, or against this
+machine when `--server` is omitted. Nothing has to be installed on the target.
+
+Every check tests the effect rather than the configuration:
+
+- Container port bindings: no container publishes on `0.0.0.0`, and `ss` shows no
+  unexpected wildcard listeners.
+- Firewall: ufw is active, not just installed.
+- sshd: the effective config (`sshd -T`) has password authentication off and root
+  login restricted.
+- fail2ban: the `sshd` and `nginx-http-auth` jails are running.
+- Docker daemon: `userns-remap` and `no-new-privileges` are configured, and
+  userns-remap is active.
+- Rate limiting and headers: nginx defines and uses a `limit_req` zone and has
+  `server_tokens off`. With `--domain`, 40 requests are sent to it from the server
+  and at least one must be refused.
+- Unattended upgrades: the JoyBox config is present with automatic reboot enabled.
+
+A check whose tool is not installed on the target is reported as skipped rather than
+failed. The command exits with the number of failed checks, so it works as a gate."""
+section = "Servers & Machines"
+see_also = [
+    "testvm",
+]
+notes = [
+    "The sshd, firewall, fail2ban and nginx checks run their commands with sudo on the target.",
+    "Without `--domain` the rate-limit burst is skipped; the domain is not read from `domain_name`.",
+    "Each check is a function in `Shared/joybox/hardening.py` and can be run on its own from Python.",
+]
+examples = [
+    ["Check server entry 0, including a rate-limit burst", "verify_server --server 0 --domain joybox.test"],
+    ["Check this machine", "verify_server"],
+    ["Check a server and fail a script if anything is wrong", "verify_server -s 1 -d example.com || echo \"hardening incomplete\""],
+]

@@ -6,6 +6,50 @@ from joybox import runoptions
 from joybox import logger
 from . import env
 
+# Component name and installer class, in install order
+_COMPONENT_INSTALLERS = (
+    ("config", "Config"),
+    ("aptget", "AptGet"),
+    ("keys", "Keys"),
+    ("sdl3", "Sdl3"),
+    ("dconf", "Dconf"),
+    ("dotfiles", "Dotfiles"),
+    ("githooks", "GitHooks"),
+    ("python", "Python"),
+    ("wrappers", "Wrappers"),
+    ("autostart", "Autostart"),
+    ("awscli", "AwsCli"),
+    ("flatpak", "Flatpak"),
+    ("node", "Node"),
+    ("chrome", "Chrome"),
+    ("claude", "Claude"),
+    ("deno", "Deno"),
+    ("brave", "Brave"),
+    ("gh", "Gh"),
+    ("gitkraken", "GitKraken"),
+    ("hermes", "HermesAgent"),
+    ("llamacpp", "LlamaCpp"),
+    ("llvm", "Llvm"),
+    ("ollama", "Ollama"),
+    ("ollama_tunnel", "OllamaTunnel"),
+    ("onepassword", "OnePassword"),
+    ("pidgin", "Pidgin"),
+    ("pipewire", "Pipewire"),
+    ("rust", "Rust"),
+    ("steam", "Steam"),
+    ("sysctl", "Sysctl"),
+    ("zram", "Zram"),
+    ("swapfile", "Swapfile"),
+    ("udev", "Udev"),
+    ("ufw", "Ufw"),
+    ("vale", "Vale"),
+    ("virtualbox", "VirtualBox"),
+    ("vscodium", "VSCodium"),
+    ("wine", "Wine"),
+    ("wireplumber", "Wireplumber"),
+    ("xorg", "Xorg")
+)
+
 # Local Ubuntu
 class LocalUbuntu(env.Environment):
     def __init__(
@@ -29,49 +73,14 @@ class LocalUbuntu(env.Environment):
 
         # Create components
         self.available_components = {
-            "config": installers.Config(**self.installer_options),
-            "aptget": installers.AptGet(**self.installer_options),
-            "keys": installers.Keys(**self.installer_options),
-            "sdl3": installers.Sdl3(**self.installer_options),
-            "dconf": installers.Dconf(**self.installer_options),
-            "dotfiles": installers.Dotfiles(**self.installer_options),
-            "githooks": installers.GitHooks(**self.installer_options),
-            "python": installers.Python(**self.installer_options),
-            "wrappers": installers.Wrappers(**self.installer_options),
-            "autostart": installers.Autostart(**self.installer_options),
-            "awscli": installers.AwsCli(**self.installer_options),
-            "flatpak": installers.Flatpak(**self.installer_options),
-            "node": installers.Node(**self.installer_options),
-            "chrome": installers.Chrome(**self.installer_options),
-            "claude": installers.Claude(**self.installer_options),
-            "deno": installers.Deno(**self.installer_options),
-            "brave": installers.Brave(**self.installer_options),
-            "gh": installers.Gh(**self.installer_options),
-            "gitkraken": installers.GitKraken(**self.installer_options),
-            "hermes": installers.HermesAgent(**self.installer_options),
-            "llamacpp": installers.LlamaCpp(**self.installer_options),
-            "llvm": installers.Llvm(**self.installer_options),
-            "ollama": installers.Ollama(**self.installer_options),
-            "ollama_tunnel": installers.OllamaTunnel(**self.installer_options),
-            "onepassword": installers.OnePassword(**self.installer_options),
-            "pidgin": installers.Pidgin(**self.installer_options),
-            "pipewire": installers.Pipewire(**self.installer_options),
-            "rust": installers.Rust(**self.installer_options),
-            "steam": installers.Steam(**self.installer_options),
-            "sysctl": installers.Sysctl(**self.installer_options),
-            "zram": installers.Zram(**self.installer_options),
-            "swapfile": installers.Swapfile(**self.installer_options),
-            "udev": installers.Udev(**self.installer_options),
-            "ufw": installers.Ufw(**self.installer_options),
-            "vale": installers.Vale(**self.installer_options),
-            "virtualbox": installers.VirtualBox(**self.installer_options),
-            "vscodium": installers.VSCodium(**self.installer_options),
-            "wine": installers.Wine(**self.installer_options),
-            "wireplumber": installers.Wireplumber(**self.installer_options),
-            "xorg": installers.Xorg(**self.installer_options)
-        }
+            name: getattr(installers, class_name)(**self.installer_options)
+            for name, class_name in _COMPONENT_INSTALLERS}
 
         # Get individual installers
+        self._bind_installers()
+
+    # Expose each component's installer as an installer_<name> attribute
+    def _bind_installers(self):
         self.installer_config = self.available_components["config"]
         self.installer_dconf = self.available_components["dconf"]
         self.installer_dotfiles = self.available_components["dotfiles"]

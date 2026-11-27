@@ -4,3 +4,35 @@
 [config.PySteamGridDB]
 package_dir = "PySteamGridDB/lib"
 package_name = "steamgrid"
+
+[[setup]]
+kind = "github_repository"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "PySteamGridDB"
+github_branch = "{program_config:github_branch}"
+clean = true
+
+[[setup]]
+kind = "tool_requirements"
+for = "library"
+
+[[setup]]
+kind = "github_archive"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "PySteamGridDB"
+github_branch = "{program_config:github_branch}"
+recursive = true
+clean = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"
+
+[[setup_offline]]
+kind = "tool_requirements_offline"
+for = "library"

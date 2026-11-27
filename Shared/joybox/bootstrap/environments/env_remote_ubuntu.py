@@ -40,6 +40,13 @@ class RemoteUbuntu(env.Environment):
         }
 
         # Create components
+        self._create_components()
+
+        # Get individual installers
+        self._bind_installers()
+
+    # Build every server component's installer over this environment's connection
+    def _create_components(self):
         self.available_components = {
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
@@ -58,7 +65,8 @@ class RemoteUbuntu(env.Environment):
             "oscar": installers.Oscar(**self.installer_options)
         }
 
-        # Get individual installers
+    # Expose each component's installer as an installer_<name> attribute
+    def _bind_installers(self):
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
         self.installer_aptget = self.available_components["aptget"]

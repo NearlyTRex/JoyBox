@@ -2,6 +2,7 @@
 import pytest
 
 # Local imports
+from joybox import release
 from joybox import config
 from joybox.tools import goldbergemu
 from joybox import filebulk
@@ -149,7 +150,7 @@ def library(monkeypatch):
 @pytest.mark.parametrize("result", [True, False])
 def test_setup_downloads_the_library(monkeypatch, library, result):
     download = Recorder([result])
-    monkeypatch.setattr(goldbergemu.release, "download_webpage_release", download)
+    monkeypatch.setattr(release, "download_webpage_release", download)
 
     assert goldbergemu.GoldbergEmu().setup() is result
     assert download.calls[0]["install_dir"] == "/install/lib"
@@ -159,7 +160,7 @@ def test_setup_downloads_the_library(monkeypatch, library, result):
 @pytest.mark.parametrize("result", [True, False])
 def test_setup_offline_installs_the_stored_library(monkeypatch, library, result):
     stored = Recorder([result])
-    monkeypatch.setattr(goldbergemu.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert goldbergemu.GoldbergEmu().setup_offline() is result
     assert stored.calls[0]["archive_dir"] == "/backup/lib"
@@ -169,8 +170,8 @@ def test_setup_skips_a_library_not_installed(monkeypatch, library):
     library[0] = False
     download = Recorder()
     stored = Recorder()
-    monkeypatch.setattr(goldbergemu.release, "download_webpage_release", download)
-    monkeypatch.setattr(goldbergemu.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "download_webpage_release", download)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
     tool = goldbergemu.GoldbergEmu()
 
     assert tool.setup(config.SetupParams())

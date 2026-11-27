@@ -5,21 +5,9 @@ from joybox import logger
 from joybox import paths
 from joybox import gui
 
-# Simple generic launcher
-def simple_launch(
-    game_info,
-    launch_cmd,
-    launch_options = None,
-    capture_type = None,
-    capture_file = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get game info
-    game_launch_name = game_info.get_launch_name()
-    game_launch_file = game_info.get_launch_file()
-    game_cache_dir = game_info.get_local_cache_dir()
+# The launch file to run: the single file, or the one the user picks from a choices window
+# when there are several; empty when there is none
+def _select_launch_file(game_launch_file):
 
     # Selected launch file
     selected_launch_file = ""
@@ -47,13 +35,10 @@ def simple_launch(
             message_text = "Select game to run",
             button_text = "Run game",
             run_func = handle_game_selection)
+    return selected_launch_file
 
-    # Nothing to run
-    if len(selected_launch_file) == 0 and not game_launch_name:
-        logger.log_warning("Nothing to run")
-        return False
-
-    # Replace game tokens
+# The launch command with the game name, file and directory tokens filled in
+def _replace_launch_tokens(launch_cmd, game_launch_name, selected_launch_file, game_cache_dir):
     real_launch_cmd = []
     for cmd_segment in launch_cmd:
 
@@ -70,6 +55,34 @@ def simple_launch(
 
         # Add segment
         real_launch_cmd += [cmd_segment]
+    return real_launch_cmd
+
+# Simple generic launcher
+def simple_launch(
+    game_info,
+    launch_cmd,
+    launch_options = None,
+    capture_type = None,
+    capture_file = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_launch_name = game_info.get_launch_name()
+    game_launch_file = game_info.get_launch_file()
+    game_cache_dir = game_info.get_local_cache_dir()
+
+    # Selected launch file
+    selected_launch_file = _select_launch_file(game_launch_file)
+
+    # Nothing to run
+    if len(selected_launch_file) == 0 and not game_launch_name:
+        logger.log_warning("Nothing to run")
+        return False
+
+    # Replace game tokens
+    real_launch_cmd = _replace_launch_tokens(launch_cmd, game_launch_name, selected_launch_file, game_cache_dir)
 
     # Launch game
     return capture.run_capture_command(

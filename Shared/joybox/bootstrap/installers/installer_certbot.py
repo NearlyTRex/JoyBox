@@ -171,27 +171,8 @@ class Certbot(installer.Installer):
         self.connection.run_checked([self.aptget_tool, "install", "-y", "certbot"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "python3-certbot-nginx"], sudo = True)
 
-        # Issue the certificate. Let's Encrypt cannot validate a domain that only
-        # resolves on this workstation, so the local modes substitute a cert at the
-        # same path rather than changing what the app templates point at.
-        if self.tls_mode == "letsencrypt":
-            if not self.domain_contact:
-                logger.log_error("Let's Encrypt needs a contact address (server_N_domain_contact)")
-                return False
-            logger.log_info("Registering cert")
-            self.connection.run_checked([self.cert_manager_tool, "register", self.domain_contact] + self.fully_qualified_domains, sudo = True)
-
-            # Add cert renewal
-            logger.log_info("Adding cert renewal")
-            self.connection.add_to_crontab(f"0 3 * * * {self.cert_manager_tool} renew")
-        elif self.tls_mode == "mkcert":
-            if not self.install_mkcert_cert():
-                return False
-        elif self.tls_mode == "selfsigned":
-            if not self.install_selfsigned_cert():
-                return False
-        else:
-            logger.log_error(f"Unknown tls_mode '{self.tls_mode}' (expected letsencrypt, mkcert or selfsigned)")
+        # Issue the certificate
+        if not self._issue_certificate():
             return False
 
         # Update default entry
@@ -203,6 +184,30 @@ class Certbot(installer.Installer):
         logger.log_info("Restarting nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
+
+    # Issue the cert the tls_mode asks for; False on a failure or an unknown mode
+    def _issue_certificate(self):
+
+        # Let's Encrypt cannot validate a domain that only resolves on this
+        # workstation, so the local modes substitute a cert at the same path
+        # rather than changing what the app templates point at.
+        if self.tls_mode == "letsencrypt":
+            if not self.domain_contact:
+                logger.log_error("Let's Encrypt needs a contact address (server_N_domain_contact)")
+                return False
+            logger.log_info("Registering cert")
+            self.connection.run_checked([self.cert_manager_tool, "register", self.domain_contact] + self.fully_qualified_domains, sudo = True)
+
+            # Add cert renewal
+            logger.log_info("Adding cert renewal")
+            self.connection.add_to_crontab(f"0 3 * * * {self.cert_manager_tool} renew")
+            return True
+        if self.tls_mode == "mkcert":
+            return self.install_mkcert_cert()
+        if self.tls_mode == "selfsigned":
+            return self.install_selfsigned_cert()
+        logger.log_error(f"Unknown tls_mode '{self.tls_mode}' (expected letsencrypt, mkcert or selfsigned)")
+        return False
 
     # Drop the renew cron in letsencrypt mode, then apt-get remove certbot and its nginx plugin
     def uninstall(self):

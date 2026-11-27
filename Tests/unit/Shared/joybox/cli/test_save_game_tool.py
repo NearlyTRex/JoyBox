@@ -1,6 +1,5 @@
 # Imports
 import sys
-import types
 
 # Third-party imports
 import pytest
@@ -8,7 +7,11 @@ import pytest
 # Local imports
 from cli_helpers import assert_entry_points
 from joybox import config
-from joybox import collection
+from joybox import gamecollection
+from joybox import logger
+from joybox import prompts
+from joybox import setup
+from joybox.collection import saves
 from joybox.cli import save_game_tool
 
 
@@ -86,17 +89,14 @@ def run(monkeypatch, isolated_settings):
         return True
 
     for name in ["pack_save", "unpack_save", "import_game_save", "export_game_save", "import_game_save_paths"]:
-        monkeypatch.setattr(collection, name, handler)
-    monkeypatch.setattr(save_game_tool.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(save_game_tool, "logger", types.SimpleNamespace(
-        setup_logging = lambda: None,
-        log_error = log_error,
-        log_info = state.infos.append,
-        log_warning = state.infos.append))
-    monkeypatch.setattr(save_game_tool, "gamecollection", types.SimpleNamespace(
-        iterate_selected_game_infos = lambda **kwargs: iter(state.games)))
-    monkeypatch.setattr(save_game_tool, "prompts", types.SimpleNamespace(
-        prompt_for_preview = prompt_for_preview))
+        monkeypatch.setattr(saves, name, handler)
+    monkeypatch.setattr(setup, "check_requirements", lambda: None)
+    monkeypatch.setattr(logger, "setup_logging", lambda: None)
+    monkeypatch.setattr(logger, "log_error", log_error)
+    monkeypatch.setattr(logger, "log_info", state.infos.append)
+    monkeypatch.setattr(logger, "log_warning", state.infos.append)
+    monkeypatch.setattr(gamecollection, "iterate_selected_game_infos", lambda **kwargs: iter(state.games))
+    monkeypatch.setattr(prompts, "prompt_for_preview", prompt_for_preview)
 
     def invoke(*args):
         monkeypatch.setattr(sys, "argv", ["save_game_tool", *args])
@@ -207,8 +207,7 @@ def test_a_failed_game_stops_the_run(run, tmp_path):
 
 def test_a_declined_preview_processes_nothing(run, tmp_path, monkeypatch):
     run.games = [make_game(tmp_path, "Saved", live = True)]
-    monkeypatch.setattr(save_game_tool, "prompts", types.SimpleNamespace(
-        prompt_for_preview = lambda title, details: False))
+    monkeypatch.setattr(prompts, "prompt_for_preview", lambda title, details: False)
 
     run.invoke("-a", "Pack")
 

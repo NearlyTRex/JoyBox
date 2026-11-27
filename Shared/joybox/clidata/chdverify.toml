@@ -1,0 +1,24 @@
+# Help text for the chdverify command, read by joybox/arguments.py
+
+description = "Check CHD files against their internal SHA-1 checksums with chdman."
+details = """
+Finds every `.chd` file under the input path (or takes the one file given) and runs
+`chdman verify` on it. A CHD passes when chdman reports that the overall SHA-1
+verification succeeded. The run stops with an error at the first CHD that fails.
+
+Nothing is written or changed."""
+section = "Game ROMs & Images"
+see_also = [
+    "chdconvert",
+    "chdextract",
+    "ps3_rom_tool",
+    "verify_archives",
+]
+notes = [
+    "`-p` does not skip the check; chdman still reads every CHD.",
+    "chdman (MameChdman) must be installed as a JoyBox tool.",
+]
+examples = [
+    ["Verify every CHD in a folder", "chdverify -i /path/to/chds"],
+    ["Verify one CHD without the confirmation prompt", "chdverify -i \"/path/to/Game (USA).chd\" --no-preview"],
+]

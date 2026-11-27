@@ -16,6 +16,48 @@ from joybox import programs
 from joybox import serialization
 from joybox import webpage
 
+# Run CDecrypt on the package's tmd and tik from inside the package dir; its return code
+def run_decrypt_command(
+    decrypt_tool,
+    input_file_tmd,
+    input_file_tik,
+    nus_package_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get decrypt command
+    decrypt_cmd = [
+        decrypt_tool,
+        input_file_tmd,
+        input_file_tik
+    ]
+
+    # Run decrypt command
+    return command.run_returncode_command(
+        cmd = decrypt_cmd,
+        options = commandbase.create_command_options(
+            cwd = nus_package_dir,
+            output_paths = [nus_package_dir],
+            blocking_processes = [decrypt_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Remove the package dir's files that have a Wii U NUS package extension
+def remove_wiiu_package_files(nus_package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    for obj in paths.get_directory_contents(nus_package_dir):
+        obj_path = paths.join_paths(nus_package_dir, obj)
+        if not paths.is_path_file(obj_path):
+            continue
+        obj_ext = paths.get_filename_extension(obj_path)
+        if obj_ext in config.NintendoWiiUFileType.cvalues():
+            fileops.remove_file(
+                src = obj_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
 # Decrypt Wii U NUS package
 def decrypt_wiiu_nus_package(
     nus_package_dir,
@@ -35,20 +77,12 @@ def decrypt_wiiu_nus_package(
     if not os.path.exists(input_file_tmd) or not os.path.exists(input_file_tik):
         return False
 
-    # Get decrypt command
-    decrypt_cmd = [
+    # Run decrypt command
+    code = run_decrypt_command(
         decrypt_tool,
         input_file_tmd,
-        input_file_tik
-    ]
-
-    # Run decrypt command
-    code = command.run_returncode_command(
-        cmd = decrypt_cmd,
-        options = commandbase.create_command_options(
-            cwd = nus_package_dir,
-            output_paths = [nus_package_dir],
-            blocking_processes = [decrypt_tool]),
+        input_file_tik,
+        nus_package_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -57,17 +91,7 @@ def decrypt_wiiu_nus_package(
 
     # Clean up
     if delete_original:
-        for obj in paths.get_directory_contents(nus_package_dir):
-            obj_path = paths.join_paths(nus_package_dir, obj)
-            if not paths.is_path_file(obj_path):
-                continue
-            obj_ext = paths.get_filename_extension(obj_path)
-            if obj_ext in config.NintendoWiiUFileType.cvalues():
-                fileops.remove_file(
-                    src = obj_path,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+        remove_wiiu_package_files(nus_package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Should be decrypted now
     return True
@@ -193,3 +217,32 @@ def update_wiiu_keys(
         exit_on_failure = exit_on_failure)
 
 ######################################################
+# Package folders
+######################################################
+
+# Decrypt, or else verify when asked, every NUS package under input_path, found by its title.tik
+def process_wiiu_nus_packages(
+    input_path,
+    decrypt = False,
+    verify = False,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for tik_file in paths.build_file_list_by_extensions(input_path, extensions = [".tik"]):
+        if not tik_file.endswith("title.tik"):
+            continue
+        package_dir = paths.get_filename_directory(tik_file)
+        if decrypt:
+            decrypt_wiiu_nus_package(
+                nus_package_dir = package_dir,
+                delete_original = delete_originals,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        elif verify:
+            verify_wiiu_nus_package(
+                nus_package_dir = package_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)

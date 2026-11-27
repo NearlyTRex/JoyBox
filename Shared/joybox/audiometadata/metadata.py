@@ -8,6 +8,53 @@ from joybox import logger
 from joybox import modules
 from joybox import paths
 
+# The ID3 frames whose mutagen classes the tag methods use
+ID3_FRAME_CODES = ("APIC", "TIT2", "TPE1", "TALB", "TDRC", "TCON", "TPE2", "TRCK", "TPOS", "TBPM", "TKEY", "TPE3", "COMM")
+
+# Text frame mappings for ID3 (MP3)
+ID3_TEXT_MAPPINGS = {
+    "TIT2": "title",
+    "TPE1": "artist",
+    "TALB": "album",
+    "TDRC": "year",
+    "TCON": "genre",
+    "TPE2": "album_artist",
+    "TRCK": "track_number",
+    "TPOS": "disc_number",
+    "TBPM": "bpm",
+    "TKEY": "key",
+    "TPE3": "conductor"
+}
+
+# MP4 tag mappings (iTunes-style tags)
+MP4_TAG_MAPPINGS = {
+    "\xa9nam": "title",
+    "\xa9ART": "artist",
+    "\xa9alb": "album",
+    "\xa9day": "year",
+    "\xa9gen": "genre",
+    "aART": "album_artist",
+    "trkn": "track_number",
+    "disk": "disc_number",
+    "tmpo": "bpm",
+    "\xa9wrt": "composer",
+    "\xa9cmt": "comment",
+    "\xa9too": "encoder",
+    "cprt": "copyright",
+    "desc": "description",
+    "\xa9lyr": "lyrics",
+    "purd": "purchase_date",
+    "soar": "sort_artist",
+    "soal": "sort_album",
+    "sonm": "sort_title"
+}
+
+# A mutagen module from the package dir and name configured for the tool; None when it fails to import
+def import_mutagen_module(tool_name):
+    return modules.import_python_module_package(
+        module_path = programs.get_tool_path_config_value(tool_name, "package_dir"),
+        module_name = programs.get_tool_config_value(tool_name, "package_name"))
+
 # Audio metadata class, reading and writing tags through mutagen with the format
 # methods of its mixins
 class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AdtsTagsMixin, AlbumTagsMixin):
@@ -16,18 +63,10 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AdtsTagsMixin, AlbumTagsMixin):
     def __init__(self):
 
         # Import mutagen modules
-        self.mutagen = modules.import_python_module_package(
-            module_path = programs.get_tool_path_config_value("Mutagen", "package_dir"),
-            module_name = programs.get_tool_config_value("Mutagen", "package_name"))
-        self.mutagen_mp3 = modules.import_python_module_package(
-            module_path = programs.get_tool_path_config_value("MutagenMP3", "package_dir"),
-            module_name = programs.get_tool_config_value("MutagenMP3", "package_name"))
-        self.mutagen_id3 = modules.import_python_module_package(
-            module_path = programs.get_tool_path_config_value("MutagenID3", "package_dir"),
-            module_name = programs.get_tool_config_value("MutagenID3", "package_name"))
-        self.mutagen_mp4 = modules.import_python_module_package(
-            module_path = programs.get_tool_path_config_value("MutagenMP4", "package_dir"),
-            module_name = programs.get_tool_config_value("MutagenMP4", "package_name"))
+        self.mutagen = import_mutagen_module("Mutagen")
+        self.mutagen_mp3 = import_mutagen_module("MutagenMP3")
+        self.mutagen_id3 = import_mutagen_module("MutagenID3")
+        self.mutagen_mp4 = import_mutagen_module("MutagenMP4")
         if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None or self.mutagen_mp4 is None:
             raise ImportError("Failed to import mutagen modules")
 
@@ -42,78 +81,20 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AdtsTagsMixin, AlbumTagsMixin):
         self.mutagen_aac = None
 
         # Store frame classes by code
-        self.id3_frame_classes = {
-            "APIC": self.mutagen_id3.APIC,
-            "TIT2": self.mutagen_id3.TIT2,
-            "TPE1": self.mutagen_id3.TPE1,
-            "TALB": self.mutagen_id3.TALB,
-            "TDRC": self.mutagen_id3.TDRC,
-            "TCON": self.mutagen_id3.TCON,
-            "TPE2": self.mutagen_id3.TPE2,
-            "TRCK": self.mutagen_id3.TRCK,
-            "TPOS": self.mutagen_id3.TPOS,
-            "TBPM": self.mutagen_id3.TBPM,
-            "TKEY": self.mutagen_id3.TKEY,
-            "TPE3": self.mutagen_id3.TPE3,
-            "COMM": self.mutagen_id3.COMM
-        }
+        self.id3_frame_classes = {code: getattr(self.mutagen_id3, code) for code in ID3_FRAME_CODES}
 
         # Store frame classes by key
-        self.id3_frame_classes_by_key = {
-            "title": self.id3_frame_classes["TIT2"],
-            "artist": self.id3_frame_classes["TPE1"],
-            "album": self.id3_frame_classes["TALB"],
-            "year": self.id3_frame_classes["TDRC"],
-            "genre": self.id3_frame_classes["TCON"],
-            "album_artist": self.id3_frame_classes["TPE2"],
-            "track_number": self.id3_frame_classes["TRCK"],
-            "disc_number": self.id3_frame_classes["TPOS"],
-            "bpm": self.id3_frame_classes["TBPM"],
-            "key": self.id3_frame_classes["TKEY"],
-            "conductor": self.id3_frame_classes["TPE3"]
-        }
+        self.id3_frame_classes_by_key = {key: self.id3_frame_classes[code] for code, key in ID3_TEXT_MAPPINGS.items()}
 
         # Store common frame classes
         self.comment_class = self.id3_frame_classes["COMM"]
         self.artwork_class = self.id3_frame_classes["APIC"]
 
         # Text frame mappings for ID3 (MP3)
-        self.text_mappings = {
-            "TIT2": "title",
-            "TPE1": "artist",
-            "TALB": "album",
-            "TDRC": "year",
-            "TCON": "genre",
-            "TPE2": "album_artist",
-            "TRCK": "track_number",
-            "TPOS": "disc_number",
-            "TBPM": "bpm",
-            "TKEY": "key",
-            "TPE3": "conductor"
-        }
+        self.text_mappings = dict(ID3_TEXT_MAPPINGS)
 
         # MP4 tag mappings (iTunes-style tags)
-        self.mp4_tag_mappings = {
-            "\xa9nam": "title",
-            "\xa9ART": "artist",
-            "\xa9alb": "album",
-            "\xa9day": "year",
-            "\xa9gen": "genre",
-            "aART": "album_artist",
-            "trkn": "track_number",
-            "disk": "disc_number",
-            "tmpo": "bpm",
-            "\xa9wrt": "composer",
-            "\xa9cmt": "comment",
-            "\xa9too": "encoder",
-            "cprt": "copyright",
-            "desc": "description",
-            "\xa9lyr": "lyrics",
-            "purd": "purchase_date",
-            "soar": "sort_artist",
-            "soal": "sort_album",
-            "sonm": "sort_title"
-        }
+        self.mp4_tag_mappings = dict(MP4_TAG_MAPPINGS)
 
         # Reverse mapping for setting MP4 tags
         self.mp4_key_to_tag = {v: k for k, v in self.mp4_tag_mappings.items()}

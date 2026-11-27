@@ -5,6 +5,8 @@ import json
 import pytest
 
 # Local imports
+from joybox import release
+from joybox import programs
 from joybox import config
 from joybox.tools import rclone
 
@@ -29,9 +31,9 @@ class Recorder:
 @pytest.fixture
 def installed(monkeypatch):
     platforms = {"windows", "linux"}
-    monkeypatch.setattr(rclone.programs, "should_program_be_installed", lambda name, platform: platform in platforms)
-    monkeypatch.setattr(rclone.programs, "get_program_install_dir", lambda name, platform: "/install/%s/%s" % (name, platform))
-    monkeypatch.setattr(rclone.programs, "get_program_backup_dir", lambda name, platform: "/backup/%s/%s" % (name, platform))
+    monkeypatch.setattr(programs, "should_program_be_installed", lambda name, platform: platform in platforms)
+    monkeypatch.setattr(programs, "get_program_install_dir", lambda name, platform: "/install/%s/%s" % (name, platform))
+    monkeypatch.setattr(programs, "get_program_backup_dir", lambda name, platform: "/backup/%s/%s" % (name, platform))
     return platforms
 
 
@@ -63,7 +65,7 @@ def test_config_names_both_platforms():
 
 def test_setup_downloads_each_platform(monkeypatch, installed):
     download = Recorder()
-    monkeypatch.setattr(rclone.release, "download_general_release", download)
+    monkeypatch.setattr(release, "download_general_release", download)
 
     assert rclone.RClone().setup()
 
@@ -75,7 +77,7 @@ def test_setup_downloads_each_platform(monkeypatch, installed):
 def test_setup_skips_platforms_not_installed(monkeypatch, installed):
     installed.clear()
     download = Recorder()
-    monkeypatch.setattr(rclone.release, "download_general_release", download)
+    monkeypatch.setattr(release, "download_general_release", download)
 
     assert rclone.RClone().setup(config.SetupParams())
     assert download.calls == []
@@ -84,7 +86,7 @@ def test_setup_skips_platforms_not_installed(monkeypatch, installed):
 @pytest.mark.parametrize("results", [[False], [True, False]])
 def test_setup_stops_on_a_failed_download(monkeypatch, installed, results):
     download = Recorder(results)
-    monkeypatch.setattr(rclone.release, "download_general_release", download)
+    monkeypatch.setattr(release, "download_general_release", download)
 
     assert not rclone.RClone().setup()
     assert len(download.calls) == len(results)
@@ -92,7 +94,7 @@ def test_setup_stops_on_a_failed_download(monkeypatch, installed, results):
 
 def test_setup_offline_finds_the_binary_on_each_platform(monkeypatch, installed):
     stored = Recorder()
-    monkeypatch.setattr(rclone.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert rclone.RClone().setup_offline()
 
@@ -104,7 +106,7 @@ def test_setup_offline_finds_the_binary_on_each_platform(monkeypatch, installed)
 def test_setup_offline_skips_platforms_not_installed(monkeypatch, installed):
     installed.clear()
     stored = Recorder()
-    monkeypatch.setattr(rclone.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert rclone.RClone().setup_offline(config.SetupParams())
     assert stored.calls == []
@@ -113,7 +115,7 @@ def test_setup_offline_skips_platforms_not_installed(monkeypatch, installed):
 @pytest.mark.parametrize("results", [[False], [True, False]])
 def test_setup_offline_stops_on_a_failed_install(monkeypatch, installed, results):
     stored = Recorder(results)
-    monkeypatch.setattr(rclone.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert not rclone.RClone().setup_offline()
     assert len(stored.calls) == len(results)

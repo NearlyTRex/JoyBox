@@ -34,6 +34,34 @@ def get_steam_prefix_dir(install_dir, appid):
 def get_steam_manifest_file(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
 
+# Index just past the brace closing the VDF block that starts at vdf_start; end of text when unbalanced
+def _find_vdf_block_end(info_output, vdf_start):
+    brace_count = 0
+    for i in range(vdf_start, len(info_output)):
+        if info_output[i] == '{':
+            brace_count += 1
+        if info_output[i] != '}':
+            continue
+        brace_count -= 1
+        if brace_count == 0:
+            return i + 1
+    return len(info_output)
+
+# Set name, controller support, install dir and the branch's build id and date from app_info_print data
+def _set_app_info_values(json_data, appdata, branch):
+    appcommon = appdata.get("common", {})
+    appconfig = appdata.get("config", {})
+    appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})
+    json_data.set_value(config.JSON_KEY_STORE_NAME, appcommon.get("name", "").strip())
+    json_data.set_value(config.JSON_KEY_STORE_CONTROLLER_SUPPORT, appcommon.get("controller_support", "unknown"))
+    if appconfig.get("installdir"):
+        json_data.set_value(
+            config.JSON_KEY_STORE_INSTALLDIR,
+            f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir")}'
+        )
+    json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(appdepots.get("buildid", config.DEFAULT_BUILDID)))
+    json_data.set_value(config.JSON_KEY_STORE_BUILDDATE, str(appdepots.get("timeupdated", "unknown")))
+
 # Steam store
 class Steam(storebase.StoreBase):
 
@@ -110,10 +138,10 @@ class Steam(storebase.StoreBase):
         steamid64ident = 76561197960265728
         steamidacct = int(self.userid) - steamid64ident
         if format_type == config.SteamIDFormatType.STEAMID_3L:
-            steamid = "[U:1:" + str(steamidacct) + "]"
-        elif format_type == config.SteamIDFormatType.STEAMID_3S:
-            steamid = str(steamidacct)
-        elif format_type == config.SteamIDFormatType.STEAMID_CL:
+            return "[U:1:" + str(steamidacct) + "]"
+        if format_type == config.SteamIDFormatType.STEAMID_3S:
+            return str(steamidacct)
+        if format_type == config.SteamIDFormatType.STEAMID_CL:
             steamid = "STEAM_0:"
             if steamidacct % 2 == 0:
                 steamid += "0:"
@@ -121,8 +149,8 @@ class Steam(storebase.StoreBase):
                 steamid += "1:"
             steamid += str(steamidacct // 2)
             return steamid
-        elif format_type == config.SteamIDFormatType.STEAMID_CS:
-            steamid = str(steamidacct // 2)
+        if format_type == config.SteamIDFormatType.STEAMID_CS:
+            return str(steamidacct // 2)
         return steamid
 
     # The Steam Web API key from the settings, used to list owned games
@@ -226,32 +254,61 @@ class Steam(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "steam_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_purchases):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
-
         # Load from cache if available
-        if use_cache:
-            cached_data = serialization.read_json_file(
-                src = cache_file_purchases,
-                verbose = verbose,
-                exit_on_failure = False)
-            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
-            if verbose:
-                logger.log_warning("Failed to load Steam cache, will fetch fresh data")
-            use_cache = False
+        cached_purchases = self._load_cached_purchases(cache_file_purchases, verbose = verbose)
+        if cached_purchases is not None:
+            return cached_purchases
+
+        # Get steam json
+        steam_json = self._fetch_owned_games(verbose = verbose, exit_on_failure = exit_on_failure)
+        if not steam_json:
+            return None
+
+        # Parse json
+        purchases = []
+        purchases_data = []
+        for entry in steam_json.get("response", {}).get("games", []):
+            purchase_data = self._create_owned_game_data(entry)
+            purchase = jsondata.JsonData(
+                json_data = {},
+                json_platform = self.get_platform())
+            for key, value in purchase_data.items():
+                purchase.set_value(key, value)
+            purchases.append(purchase)
+            purchases_data.append(purchase_data)
+
+        # Save to cache
+        self._save_purchases_cache(cache_dir, cache_file_purchases, purchases_data, verbose = verbose, pretend_run = pretend_run)
+        return purchases
+
+    # Cached purchases when the cache is under a day old and holds a list of dicts, else None
+    def _load_cached_purchases(self, cache_file_purchases, verbose = False):
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        if not paths.does_path_exist(cache_file_purchases):
+            return None
+        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
+        if cache_age_hours >= 24:
+            return None
+        if verbose:
+            logger.log_info("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache
+        cached_data = serialization.read_json_file(
+            src = cache_file_purchases,
+            verbose = verbose,
+            exit_on_failure = False)
+        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+            return [
+                jsondata.JsonData(json_data = purchase_data, json_platform = self.get_platform())
+                for purchase_data in cached_data
+            ]
+        if verbose:
+            logger.log_warning("Failed to load Steam cache, will fetch fresh data")
+        return None
+
+    # The Web API's owned-games json, free games and app info included; None when unreachable or empty
+    def _fetch_owned_games(self, verbose = False, exit_on_failure = False):
 
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
@@ -272,44 +329,26 @@ class Steam(storebase.StoreBase):
         if not steam_json:
             logger.log_error("Unable to find steam release information from '%s'" % steam_url)
             return None
+        return steam_json
 
-        # Parse json
-        purchases = []
-        purchases_data = []
-        for entry in steam_json.get("response", {}).get("games", []):
-
-            # Gather info
-            line_appid = str(entry.get("appid", ""))
-            line_title = str(entry.get("name", ""))
-            line_url = self.get_latest_url(line_appid)
-            line_keys = []
-            line_paths = [
+    # Purchase fields for one owned-games entry, on the public branch with its userdata save path
+    def _create_owned_game_data(self, entry):
+        line_appid = str(entry.get("appid", ""))
+        line_title = str(entry.get("name", ""))
+        line_url = self.get_latest_url(line_appid)
+        return {
+            config.JSON_KEY_STORE_APPID: line_appid,
+            config.JSON_KEY_STORE_APPURL: line_url,
+            config.JSON_KEY_STORE_NAME: line_title.strip(),
+            config.JSON_KEY_STORE_BRANCHID: config.SteamBranchType.PUBLIC.lower(),
+            config.JSON_KEY_STORE_KEYS: [],
+            config.JSON_KEY_STORE_PATHS: [
                 paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, line_appid)
             ]
+        }
 
-            # Create purchase
-            purchase = jsondata.JsonData(
-                json_data = {},
-                json_platform = self.get_platform())
-            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
-            purchase.set_value(config.JSON_KEY_STORE_APPURL, line_url)
-            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title.strip())
-            purchase.set_value(config.JSON_KEY_STORE_BRANCHID, config.SteamBranchType.PUBLIC.lower())
-            purchase.set_value(config.JSON_KEY_STORE_KEYS, line_keys)
-            purchase.set_value(config.JSON_KEY_STORE_PATHS, line_paths)
-            purchases.append(purchase)
-
-            # Store data for caching
-            purchases_data.append({
-                config.JSON_KEY_STORE_APPID: line_appid,
-                config.JSON_KEY_STORE_APPURL: line_url,
-                config.JSON_KEY_STORE_NAME: line_title.strip(),
-                config.JSON_KEY_STORE_BRANCHID: config.SteamBranchType.PUBLIC.lower(),
-                config.JSON_KEY_STORE_KEYS: line_keys,
-                config.JSON_KEY_STORE_PATHS: line_paths
-            })
-
-        # Save to cache
+    # Write the purchase fields to the cache file, logging the outcome when verbose
+    def _save_purchases_cache(self, cache_dir, cache_file_purchases, purchases_data, verbose = False, pretend_run = False):
         fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
         success = serialization.write_json_file(
             src = cache_file_purchases,
@@ -321,7 +360,6 @@ class Steam(storebase.StoreBase):
             logger.log_info("Saved Steam purchases data to cache")
         elif not success and verbose:
             logger.log_warning("Failed to save Steam cache")
-        return purchases
 
     ############################################################
     # Json
@@ -375,6 +413,44 @@ class Steam(storebase.StoreBase):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
+        # Get app info
+        info_output = self._run_app_info_print(identifier, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        if info_output is None:
+            return None
+
+        # Get steam json
+        steam_json = self._parse_app_info(identifier, info_output)
+        if steam_json is None:
+            return None
+
+        # Build jsondata
+        json_data = self._create_app_jsondata(identifier, branch, steam_json)
+        return self.augment_jsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Store json for the appid on the branch (public by default) from its parsed app info, before augmenting
+    def _create_app_jsondata(self, identifier, branch, steam_json):
+        if not isinstance(branch, str) or not branch:
+            branch = config.SteamBranchType.PUBLIC.lower()
+        json_data = self.create_default_jsondata()
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_APPURL, self.get_latest_url(identifier))
+        json_data.set_value(config.JSON_KEY_STORE_BRANCHID, branch)
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, [
+            paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, identifier)
+        ])
+        appdata = steam_json.get(identifier)
+        if isinstance(appdata, dict):
+            _set_app_info_values(json_data, appdata, branch)
+        return json_data
+
+    # SteamCMD's anonymous app_info_print output for the appid; None without SteamCMD or output
+    def _run_app_info_print(self, identifier, verbose = False, pretend_run = False, exit_on_failure = False):
+
         # Get tool
         steamcmd_tool = programs.find_tool_program("SteamCMD")
         if not steamcmd_tool:
@@ -399,9 +475,10 @@ class Steam(storebase.StoreBase):
         if len(info_output) == 0:
             logger.log_error("Unable to find steam information for '%s'" % identifier)
             return None
+        return info_output
 
-        # Get steam json
-        steam_json = {}
+    # The app's VDF block cut from the app_info_print output and parsed; None, logged, when it cannot be
+    def _parse_app_info(self, identifier, info_output):
         vdf = _get_vdf()
         try:
             vdf_start = info_output.find(f'"{identifier}"')
@@ -409,54 +486,14 @@ class Steam(storebase.StoreBase):
                 raise ValueError("App VDF not found in output")
             vdf_end = info_output.find("Unloading Steam API", vdf_start)
             if vdf_end == -1:
-                brace_count = 0
-                vdf_end = len(info_output)
-                for i in range(vdf_start, len(info_output)):
-                    if info_output[i] == '{':
-                        brace_count += 1
-                    elif info_output[i] == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            vdf_end = i + 1
-                            break
+                vdf_end = _find_vdf_block_end(info_output, vdf_start)
             vdf_text = info_output[vdf_start:vdf_end].strip()
-            steam_json = vdf.loads(vdf_text)
+            return vdf.loads(vdf_text)
         except (SyntaxError, ValueError) as e:
             logger.log_error(e)
             logger.log_error("Unable to parse steam information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
-
-        # Build jsondata
-        if not isinstance(branch, str) or not branch:
-            branch = config.SteamBranchType.PUBLIC.lower()
-        json_data = self.create_default_jsondata()
-        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
-        json_data.set_value(config.JSON_KEY_STORE_APPURL, self.get_latest_url(identifier))
-        json_data.set_value(config.JSON_KEY_STORE_BRANCHID, branch)
-        json_data.set_value(config.JSON_KEY_STORE_PATHS, [
-            paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, identifier)
-        ])
-        appdata = steam_json.get(identifier)
-        if isinstance(appdata, dict):
-            appcommon = appdata.get("common", {})
-            appconfig = appdata.get("config", {})
-            appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})
-            json_data.set_value(config.JSON_KEY_STORE_NAME, appcommon.get("name", "").strip())
-            json_data.set_value(config.JSON_KEY_STORE_CONTROLLER_SUPPORT, appcommon.get("controller_support", "unknown"))
-            if appconfig.get("installdir"):
-                json_data.set_value(
-                    config.JSON_KEY_STORE_INSTALLDIR,
-                    f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir")}'
-                )
-            json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(appdepots.get("buildid", config.DEFAULT_BUILDID)))
-            json_data.set_value(config.JSON_KEY_STORE_BUILDDATE, str(appdepots.get("timeupdated", "unknown")))
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Metadata
@@ -475,6 +512,12 @@ class Steam(storebase.StoreBase):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
+        # Scrape the store page with retries
+        return self._scrape_metadata_with_retries(identifier, verbose = verbose, pretend_run = pretend_run)
+
+    # Retry the page scrape in a fresh headless driver, disconnecting it between attempts and at the end
+    def _scrape_metadata_with_retries(self, identifier, verbose = False, pretend_run = False):
+
         # Store web driver for cleanup
         web_driver = None
 
@@ -492,57 +535,10 @@ class Steam(storebase.StoreBase):
         # Fetch function
         def attempt_metadata_fetch():
             nonlocal web_driver
-
-            # Connect to web
-            web_driver = self.web_connect(
-                headless = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
+            web_driver = self._connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
             if not web_driver:
-                if pretend_run:
-                    return None
-                raise webpage.ScrapeFailed("Failed to connect to web driver")
-
-            # Load url
-            success = webpage.load_url(web_driver, identifier)
-            if not success:
-                raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
-
-            # Create metadata entry
-            metadata_entry = metadataentry.MetadataEntry()
-
-            # Answer the age gate
-            steamlookups.answer_steam_age_gate(web_driver, verbose = verbose)
-
-            # Look for game description
-            element_game_description = webpage.wait_for_element(
-                driver = web_driver,
-                locator = webpage.ElementLocator({"id": "aboutThisGame"}),
-                verbose = verbose,
-                exit_on_failure = False)
-            if element_game_description:
-                raw_game_description = webpage.get_element_children_text(element_game_description)
-                if raw_game_description:
-                    description_text = raw_game_description
-                    description_text = strings.trim_substring_from_start(description_text, "About This Game")
-                    description_text = strings.trim_substring_from_start(description_text, "About This Software")
-                    description_text = strings.trim_substring_from_start(description_text, "About This Demo")
-                    metadata_entry.set_description(description_text)
-
-            # Look for game details
-            element_game_details = webpage.get_element(
-                parent = web_driver,
-                locator = webpage.ElementLocator({"id": "genresAndManufacturer"}),
-                verbose = verbose,
-                exit_on_failure = False)
-            if element_game_details:
-
-                # Read the details text
-                raw_game_details = webpage.get_element_text(element_game_details)
-                if raw_game_details:
-                    steamlookups.read_steam_page_details(raw_game_details, metadata_entry)
-            return metadata_entry
+                return None
+            return self._scrape_metadata_page(web_driver, identifier, verbose = verbose)
 
         # Use retry function with cleanup
         try:
@@ -555,6 +551,66 @@ class Steam(storebase.StoreBase):
 
             # Final cleanup
             cleanup_driver()
+
+    # A headless web driver; None in a pretend run that got none, else ScrapeFailed without one
+    def _connect_scrape_driver(self, verbose = False, pretend_run = False):
+        web_driver = self.web_connect(
+            headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not web_driver:
+            if pretend_run:
+                return None
+            raise webpage.ScrapeFailed("Failed to connect to web driver")
+        return web_driver
+
+    # Load the store page past its age gate and read the description and details into a metadata entry
+    def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
+
+        # Load url
+        success = webpage.load_url(web_driver, identifier)
+        if not success:
+            raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
+
+        # Create metadata entry
+        metadata_entry = metadataentry.MetadataEntry()
+
+        # Answer the age gate
+        steamlookups.answer_steam_age_gate(web_driver, verbose = verbose)
+
+        # Look for game description
+        self._read_page_description(web_driver, metadata_entry, verbose = verbose)
+
+        # Look for game details
+        element_game_details = webpage.get_element(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"id": "genresAndManufacturer"}),
+            verbose = verbose,
+            exit_on_failure = False)
+        if element_game_details:
+
+            # Read the details text
+            raw_game_details = webpage.get_element_text(element_game_details)
+            if raw_game_details:
+                steamlookups.read_steam_page_details(raw_game_details, metadata_entry)
+        return metadata_entry
+
+    # Set the entry's description from the page's About This Game section, minus its heading
+    def _read_page_description(self, web_driver, metadata_entry, verbose = False):
+        element_game_description = webpage.wait_for_element(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"id": "aboutThisGame"}),
+            verbose = verbose,
+            exit_on_failure = False)
+        if element_game_description:
+            raw_game_description = webpage.get_element_children_text(element_game_description)
+            if raw_game_description:
+                description_text = raw_game_description
+                description_text = strings.trim_substring_from_start(description_text, "About This Game")
+                description_text = strings.trim_substring_from_start(description_text, "About This Software")
+                description_text = strings.trim_substring_from_start(description_text, "About This Demo")
+                metadata_entry.set_description(description_text)
 
     ############################################################
     # Assets
@@ -720,11 +776,8 @@ class Steam(storebase.StoreBase):
             return False
 
         # Get tool
-        steamdepot_tool = None
-        if programs.is_tool_installed("SteamDepotDownloader"):
-            steamdepot_tool = programs.get_tool_program("SteamDepotDownloader")
+        steamdepot_tool = self._find_depot_downloader()
         if not steamdepot_tool:
-            logger.log_error("SteamDepotDownloader was not found", quit_program = True)
             return False
 
         # Download into a temporary directory and archive it
@@ -732,53 +785,81 @@ class Steam(storebase.StoreBase):
             if not tmp_dir_result:
                 return False
 
-            # Get download command
-            download_cmd = [
-                steamdepot_tool,
-                "-app", identifier,
-                "-os", self.get_preferred_platform(),
-                "-osarch", self.get_preferred_architecture(),
-                "-dir", tmp_dir_result
-            ]
-            if isinstance(branch, str) and len(branch) and branch != "public":
-                download_cmd += [
-                    "-beta", branch
-                ]
-            if isinstance(self.get_account_name(), str) and len(self.get_account_name()):
-                download_cmd += [
-                    "-username", self.get_account_name(),
-                    "-remember-password"
-                ]
-
-            # Run download command
-            code = command.run_returncode_command(
-                cmd = download_cmd,
-                options = commandbase.create_command_options(
-                    blocking_processes = [steamdepot_tool]),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
-                return False
-
-            # Archive downloaded files
-            success = backup.archive_folder(
-                input_path = tmp_dir_result,
-                output_path = output_dir,
-                output_name = output_name,
-                exclude_paths = [".DepotDownloader"],
-                clean_output = clean_output,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
+            # Download and archive files
+            if not self._fetch_and_archive_depot(
+                steamdepot_tool, identifier, branch, tmp_dir_result, output_dir, output_name,
+                clean_output = clean_output, show_progress = show_progress, skip_existing = skip_existing, skip_identical = skip_identical,
+                verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
                 return False
 
         # Check results
         return paths.does_directory_contain_files(output_dir)
+
+    # Fetch the app into download_dir, then archive it into output_dir without DepotDownloader's state folder
+    def _fetch_and_archive_depot(
+        self, steamdepot_tool, identifier, branch, download_dir, output_dir, output_name,
+        clean_output = False, show_progress = False, skip_existing = False, skip_identical = False,
+        verbose = False, pretend_run = False, exit_on_failure = False):
+
+        # Run download command
+        if not self._run_depot_download(
+            steamdepot_tool, identifier, branch, download_dir,
+            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+            return False
+
+        # Archive downloaded files
+        return backup.archive_folder(
+            input_path = download_dir,
+            output_path = output_dir,
+            output_name = output_name,
+            exclude_paths = [".DepotDownloader"],
+            clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # The DepotDownloader program; quits the run when it is not installed
+    def _find_depot_downloader(self):
+        steamdepot_tool = None
+        if programs.is_tool_installed("SteamDepotDownloader"):
+            steamdepot_tool = programs.get_tool_program("SteamDepotDownloader")
+        if not steamdepot_tool:
+            logger.log_error("SteamDepotDownloader was not found", quit_program = True)
+        return steamdepot_tool
+
+    # Fetch the app for the preferred OS and arch into download_dir, a non-public branch as a beta; True on exit code 0
+    def _run_depot_download(self, steamdepot_tool, identifier, branch, download_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+
+        # Get download command
+        download_cmd = [
+            steamdepot_tool,
+            "-app", identifier,
+            "-os", self.get_preferred_platform(),
+            "-osarch", self.get_preferred_architecture(),
+            "-dir", download_dir
+        ]
+        if isinstance(branch, str) and len(branch) and branch != "public":
+            download_cmd += [
+                "-beta", branch
+            ]
+        if isinstance(self.get_account_name(), str) and len(self.get_account_name()):
+            download_cmd += [
+                "-username", self.get_account_name(),
+                "-remember-password"
+            ]
+
+        # Run download command
+        code = command.run_returncode_command(
+            cmd = download_cmd,
+            options = commandbase.create_command_options(
+                blocking_processes = [steamdepot_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
 
     ############################################################
     # Paths

@@ -143,32 +143,40 @@ def transfer_from_sandbox(
 
     # Transfer from sandbox
     if keep_in_sandbox:
-        if paths.is_path_directory(real_path):
-            filebulk.copy_contents(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            fileops.copy_file_or_directory(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        _copy_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure)
     else:
-        if paths.is_path_directory(real_path):
-            filebulk.move_contents(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            fileops.move_file_or_directory(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        _move_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure)
+
+# Copy real_path to path, copying a directory's contents rather than the directory itself
+def _copy_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure):
+    if paths.is_path_directory(real_path):
+        filebulk.copy_contents(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        fileops.copy_file_or_directory(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Move real_path to path, moving a directory's contents rather than the directory itself
+def _move_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure):
+    if paths.is_path_directory(real_path):
+        filebulk.move_contents(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        fileops.move_file_or_directory(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

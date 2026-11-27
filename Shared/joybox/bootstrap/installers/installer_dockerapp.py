@@ -79,6 +79,25 @@ server {{
 }}
 """
 
+# Shell function restore scripts stream each archive through, decrypting .age siblings
+_ARCHIVE_STREAM_FUNCTION = """archive_stream() {
+    # $1 is the plain archive name; prefer its encrypted sibling when present so
+    # backups taken before encryption was enabled still restore unchanged.
+    if [ -f "$SRC/$1.age" ]; then
+        if [ -z "${AGE_IDENTITY:-}" ]; then
+            echo "Error: $1.age is encrypted but backup_age_identity is not set" >&2
+            exit 1
+        fi
+        age -d -i "$AGE_IDENTITY" "$SRC/$1.age" | gzip -dc
+    elif [ -f "$SRC/$1" ]; then
+        gzip -dc "$SRC/$1"
+    else
+        echo "Error: neither $1 nor $1.age found in $SRC" >&2
+        exit 1
+    fi
+}
+"""
+
 # Shared skeleton for the Docker Compose apps: a subclass sets its name, its
 # compose/env/nginx templates and their values; this handles directories,
 # staging, nginx wiring and the compose lifecycle
@@ -315,6 +334,13 @@ fi
         enc = ('| age -r %s ' % recipient) if recipient else ""
         ext = ".age" if recipient else ""
 
+        script = self._build_backup_start_script(recipient, suffix)
+        script += self._build_backup_archive_script(enc, ext)
+        script += self._build_backup_publish_script()
+        return script
+
+    # Preamble, age check, then the .partial dest dir and its manifest header
+    def _build_backup_start_script(self, recipient, suffix):
         script = self.get_backup_preamble()
         if recipient:
             script += ('command -v age >/dev/null 2>&1 || '
@@ -327,6 +353,11 @@ fi
         script += 'echo "# Project: %s" >> "$DEST/backup_manifest.txt"\n' % self.app_name
         script += 'echo "# Created: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$DEST/backup_manifest.txt"\n'
         script += 'echo "# Host: $(hostname)" >> "$DEST/backup_manifest.txt"\n'
+        return script
+
+    # Dump the database and tar each volume and directory into $DEST, piped through enc
+    def _build_backup_archive_script(self, enc, ext):
+        script = ""
 
         # Backup databases
         if self.backup_database:
@@ -348,10 +379,14 @@ fi
             script += ('docker run --rm -v %s:/src:ro %s tar -C /src %s -cf - . '
                        '| gzip -9 %s> "$DEST/%s.tar.gz%s"\n') % (host_path, self.get_helper_image(), excludes, enc, directory, ext)
             script += 'echo "%s.tar.gz%s\tdirectory\t%s" >> "$DEST/backup_manifest.txt"\n' % (directory, ext, host_path)
+        return script
+
+    # Checksum and publish $DEST, repoint latest, then prune past the keep count
+    def _build_backup_publish_script(self):
 
         # Checksums, then publish atomically so a partial write is never
         # mistaken for a finished backup.
-        script += ('cd "$DEST" && find . -maxdepth 1 -type f \\( -name "*.gz" -o -name "*.age" \\) '
+        script = ('cd "$DEST" && find . -maxdepth 1 -type f \\( -name "*.gz" -o -name "*.age" \\) '
                    '-printf "%P\\n" | sort | xargs -r sha256sum > SHA256SUMS\n')
         script += 'mv "$DEST" "$BACKUP_BASE/$STAMP"\n'
         script += 'ln -sfn "$BACKUP_BASE/$STAMP" "$BACKUP_BASE/latest" || echo "Warning: could not update latest symlink"\n'
@@ -388,23 +423,7 @@ fi
         script = self.get_backup_preamble()
         if identity_path:
             script += 'AGE_IDENTITY=%s\n' % identity_path
-        script += """archive_stream() {
-    # $1 is the plain archive name; prefer its encrypted sibling when present so
-    # backups taken before encryption was enabled still restore unchanged.
-    if [ -f "$SRC/$1.age" ]; then
-        if [ -z "${AGE_IDENTITY:-}" ]; then
-            echo "Error: $1.age is encrypted but backup_age_identity is not set" >&2
-            exit 1
-        fi
-        age -d -i "$AGE_IDENTITY" "$SRC/$1.age" | gzip -dc
-    elif [ -f "$SRC/$1" ]; then
-        gzip -dc "$SRC/$1"
-    else
-        echo "Error: neither $1 nor $1.age found in $SRC" >&2
-        exit 1
-    fi
-}
-"""
+        script += _ARCHIVE_STREAM_FUNCTION
         script += 'SRC="$BACKUP_BASE/%s"\n' % backup_id
         script += 'if [ ! -d "$SRC" ]; then echo "Error: no backup at $SRC"; exit 1; fi\n'
         script += 'echo "Restoring from $SRC"\n'
@@ -450,21 +469,9 @@ fi
             return False
 
         # Stage the decryption key on tmpfs, never on disk
-        identity_local = self.get_backup_age_identity()
-        identity_remote = ""
-        if identity_local:
-            if not os.path.exists(identity_local):
-                logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
-                return False
-            identity_contents = serialization.read_text_file(identity_local)
-            if identity_contents is None:
-                logger.log_error(f"Unable to read the age identity {identity_local}")
-                return False
-            identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
-            if not self.connection.write_file(identity_remote, identity_contents):
-                logger.log_error("Could not stage the age identity on the server")
-                return False
-            self.connection.change_permission(identity_remote, "600")
+        identity_remote = self._stage_age_identity()
+        if identity_remote is None:
+            return False
 
         # Run restore
         logger.log_warning(f"Restoring {self.app_name} from {self.get_backup_dir()}/{backup_id}")
@@ -478,6 +485,26 @@ fi
             logger.log_error(f"Restore of {self.app_name} failed (exit {code})")
             return False
         return True
+
+    # Copy the age identity to a 600 file in /dev/shm on the server; its path,
+    # empty when no identity is set, None when it cannot be staged
+    def _stage_age_identity(self):
+        identity_local = self.get_backup_age_identity()
+        if not identity_local:
+            return ""
+        if not os.path.exists(identity_local):
+            logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
+            return None
+        identity_contents = serialization.read_text_file(identity_local)
+        if identity_contents is None:
+            logger.log_error(f"Unable to read the age identity {identity_local}")
+            return None
+        identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
+        if not self.connection.write_file(identity_remote, identity_contents):
+            logger.log_error("Could not stage the age identity on the server")
+            return None
+        self.connection.change_permission(identity_remote, "600")
+        return identity_remote
 
     # Render the nginx template and have the nginx manager install and enable it
     def install_nginx_config(self):
@@ -513,6 +540,29 @@ fi
         for subdir in self.app_subdirs:
             self.connection.make_directory(f"{app_dir}/{subdir}")
 
+        # Write docker compose and env
+        if not self._write_compose_files(app_dir):
+            return False
+
+        # Create Nginx entry, open its ports and restart it
+        if not self._configure_nginx():
+            return False
+
+        # Start docker
+        logger.log_info("Starting docker")
+        self.connection.set_current_working_directory(app_dir)
+        self.connection.run_checked(self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "up", "-d", "--build"])
+        self.connection.set_current_working_directory(None)
+
+        # Post install
+        if not self.post_install():
+            return False
+        return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
+
+    # Stage the compose file and the 600 .env in /tmp and move them into app_dir;
+    # False when either cannot be written
+    def _write_compose_files(self, app_dir):
+
         # Write docker compose
         logger.log_info("Writing docker compose")
         compose_tmp_path = f"/tmp/{self.app_name}.docker-compose.yml"
@@ -534,6 +584,10 @@ fi
         self.connection.change_permission(env_tmp_path, "600")
         self.connection.move_file_or_directory(env_tmp_path, f"{app_dir}/.env")
         self.connection.change_permission(f"{app_dir}/.env", "600")
+        return True
+
+    # Install the app's nginx config, open its firewall ports and restart nginx
+    def _configure_nginx(self):
 
         # Create Nginx entry
         logger.log_info("Creating Nginx entry")
@@ -549,17 +603,7 @@ fi
         # Restart Nginx
         logger.log_info("Restarting Nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-
-        # Start docker
-        logger.log_info("Starting docker")
-        self.connection.set_current_working_directory(app_dir)
-        self.connection.run_checked(self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "up", "-d", "--build"])
-        self.connection.set_current_working_directory(None)
-
-        # Post install
-        if not self.post_install():
-            return False
-        return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
+        return True
 
     # Setup an app runs once its containers are up; the base has none and returns True
     def post_install(self):

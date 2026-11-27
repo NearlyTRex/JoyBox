@@ -51,6 +51,15 @@ def create_wine_prefix(
     cmds_to_run.append([wine_boot_tool])
     if len(new_options.get_tricks()) > 0:
         cmds_to_run.append([wine_tricks_tool] + new_options.get_tricks())
+    return _run_wine_prefix_commands(
+        cmds_to_run = cmds_to_run,
+        new_options = new_options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Run each command inside the prefix, each blocking on its own starter; False at the first non-zero exit
+def _run_wine_prefix_commands(cmds_to_run, new_options, verbose, pretend_run, exit_on_failure):
     for cmd in cmds_to_run:
         new_options.set_blocking_processes([commandbase.get_starter_command(cmd)])
         new_cmd, new_options = sandbox.setup_prefix_environment(
@@ -79,17 +88,16 @@ def create_sandboxie_prefix(
     exit_on_failure = False):
 
     # Make directories
-    for prefix_subdir in [
-        options.get_prefix_dir(),
-        prefixlayout.get_sandboxie_real_drive_path(options, "C"),
-        prefixlayout.get_sandboxie_user_profile_path(options)]:
-        success = fileops.make_directory(
-            src = prefix_subdir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+    success = _make_directories(
+        dirs = [
+            options.get_prefix_dir(),
+            prefixlayout.get_sandboxie_real_drive_path(options, "C"),
+            prefixlayout.get_sandboxie_user_profile_path(options)],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Get sandboxie ini tool
     sandboxie_ini_tool = programs.get_tool_program("SandboxieIni")
@@ -101,6 +109,27 @@ def create_sandboxie_prefix(
     new_options.set_is_shell(True)
 
     # Initialize prefix
+    return _write_sandboxie_box_params(
+        sandboxie_ini_tool = sandboxie_ini_tool,
+        new_options = new_options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Make each directory in order; False at the first that fails
+def _make_directories(dirs, verbose, pretend_run, exit_on_failure):
+    for prefix_subdir in dirs:
+        success = fileops.make_directory(
+            src = prefix_subdir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Set each box setting for the prefix's box with SandboxieIni; False at the first non-zero exit
+def _write_sandboxie_box_params(sandboxie_ini_tool, new_options, verbose, pretend_run, exit_on_failure):
     box_params = [
         ("Enabled", "y"),
         ("FileRootPath", new_options.get_prefix_dir()),
@@ -148,6 +177,16 @@ def clean_existing_prefix(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Remove the prefix directory when clean_existing is set; True when skipped
+def _clean_prefix_if_requested(options, clean_existing, verbose, pretend_run, exit_on_failure):
+    if not clean_existing:
+        return True
+    return clean_existing_prefix(
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Create a standalone Wine or Sandboxie prefix, replacing Wine's symlinked profile folders with real ones
 # False when the options name no prefix type
 def create_basic_prefix(
@@ -162,30 +201,14 @@ def create_basic_prefix(
         return False
 
     # Clean prefix
-    if clean_existing:
-        success = clean_existing_prefix(
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+    success = _clean_prefix_if_requested(options, clean_existing, verbose, pretend_run, exit_on_failure)
+    if not success:
+        return False
 
     # Setup wine prefix
     if options.is_wine_prefix():
-
-        # Create wine prefix
-        success = create_wine_prefix(
+        return _create_basic_wine_prefix(
             options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Replace symlinked directories
-        return fileops.replace_symlinked_directories(
-            src = prefixlayout.get_wine_user_profile_path(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -203,6 +226,25 @@ def create_basic_prefix(
     # Not a prefix
     return False
 
+# Create a Wine prefix and swap its symlinked user profile folders for real directories
+def _create_basic_wine_prefix(options, verbose, pretend_run, exit_on_failure):
+
+    # Create wine prefix
+    success = create_wine_prefix(
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Replace symlinked directories
+    return fileops.replace_symlinked_directories(
+        src = prefixlayout.get_wine_user_profile_path(options),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Create a prefix whose user profile links to the shared general prefix, then link other_links into its C drive
 # Links whose source is missing are skipped
 def create_linked_prefix(
@@ -213,6 +255,39 @@ def create_linked_prefix(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Check prefixes
+    if not _has_linkable_prefix(options):
+        return False
+
+    # Clean prefix
+    success = _clean_prefix_if_requested(options, clean_existing, verbose, pretend_run, False)
+    if not success:
+        return False
+
+    # Create general prefix subfolders
+    success = _make_general_prefix_folders(options, verbose, pretend_run, exit_on_failure)
+    if not success:
+        return False
+
+    # Get prefix c drive
+    prefix_c_drive = prefixlayout.get_real_c_drive_path(options)
+
+    # Setup wine or sandboxie prefix
+    success = _create_linked_prefix_of_type(options, verbose, pretend_run, exit_on_failure)
+    if not success:
+        return False
+
+    # Link other paths
+    return _link_other_paths(
+        other_links = other_links,
+        prefix_c_drive = prefix_c_drive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Whether the options name a valid prefix of a known type and a valid general prefix to link to
+def _has_linkable_prefix(options):
+
     # Check prefix
     if not options.has_valid_prefix_dir():
         return False
@@ -220,20 +295,10 @@ def create_linked_prefix(
         return False
 
     # Check general prefix
-    if not options.has_valid_general_prefix_dir():
-        return False
+    return options.has_valid_general_prefix_dir()
 
-    # Clean prefix
-    if clean_existing:
-        success = clean_existing_prefix(
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not success:
-            return False
-
-    # Create general prefix subfolders
+# Make each of the computer user folders inside the general prefix; False at the first that fails
+def _make_general_prefix_folders(options, verbose, pretend_run, exit_on_failure):
     for folder in config.computer_user_folders:
         success = fileops.make_directory(
             src = paths.join_paths(options.get_general_prefix_dir(), folder),
@@ -242,45 +307,48 @@ def create_linked_prefix(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
+    return True
 
-    # Get prefix c drive
-    prefix_c_drive = prefixlayout.get_real_c_drive_path(options)
+# Create a Wine prefix linked to the general prefix, or a Sandboxie prefix for any other type
+def _create_linked_prefix_of_type(options, verbose, pretend_run, exit_on_failure):
 
     # Setup wine prefix
     if options.is_wine_prefix():
-
-        # Create wine prefix
-        success = create_wine_prefix(
+        return _create_linked_wine_prefix(
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Link prefix
-        success = fileops.create_symlink(
-            src = options.get_general_prefix_dir(),
-            dest = prefixlayout.get_wine_user_profile_path(options),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
 
     # Setup sandboxie prefix
-    else:
+    return create_sandboxie_prefix(
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
-        # Create sandboxie prefix
-        success = create_sandboxie_prefix(
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+# Create a Wine prefix whose user profile is a link to the general prefix
+def _create_linked_wine_prefix(options, verbose, pretend_run, exit_on_failure):
 
-    # Link other paths
+    # Create wine prefix
+    success = create_wine_prefix(
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Link prefix
+    return fileops.create_symlink(
+        src = options.get_general_prefix_dir(),
+        dest = prefixlayout.get_wine_user_profile_path(options),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Link each existing "from" path to its "to" path under the C drive; False at the first link that fails
+def _link_other_paths(other_links, prefix_c_drive, verbose, pretend_run, exit_on_failure):
     for other_link in other_links:
         path_from = other_link["from"]
         path_to = paths.join_paths(prefix_c_drive, other_link["to"])
@@ -326,25 +394,37 @@ def create_prefix(
         general_prefix_dir = general_prefix_dir)
 
     # Create prefix
+    success = _create_linked_or_basic_prefix(
+        options = options,
+        linked_prefix = linked_prefix,
+        other_links = other_links,
+        clean_existing = clean_existing,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return _record_prefix_locations(options)
+
+# Create the prefix linked to the general prefix when linked_prefix is set, otherwise standalone
+def _create_linked_or_basic_prefix(options, linked_prefix, other_links, clean_existing, verbose, pretend_run, exit_on_failure):
     if linked_prefix:
-        success = create_linked_prefix(
+        return create_linked_prefix(
             options = options,
             other_links = other_links,
             clean_existing = clean_existing,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    else:
-        success = create_basic_prefix(
-            options = options,
-            clean_existing = clean_existing,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+    return create_basic_prefix(
+        options = options,
+        clean_existing = clean_existing,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Store the created prefix's user profile and C drive on the options; False when either is missing
+def _record_prefix_locations(options):
 
     # Set prefix user profile dir
     options.set_prefix_user_profile_dir(prefixlayout.get_user_profile_path(options))

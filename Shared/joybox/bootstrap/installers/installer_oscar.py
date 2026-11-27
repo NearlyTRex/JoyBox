@@ -172,23 +172,8 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
             default_value = "aim", throw_exception = False)
         self.port_public = settings.get_value("UserData.Oscar", "oscar_port_public",
             default_value = "5190", throw_exception = False)
-        self.nginx_config_values = {
-            "domain": self.domain_name,
-            "subdomain": self.subdomain,
-            "port_public": self.port_public,
-            "port_bos": settings.get_value("UserData.Oscar", "oscar_port_bos",
-                default_value = "15190", throw_exception = False),
-            "port_api": settings.get_value("UserData.Oscar", "oscar_port_api",
-                default_value = "18080", throw_exception = False)
-        }
-        self.env_values = {
-            "public_host": f"{self.subdomain}.{self.domain_name}",
-            "port_public": self.port_public,
-            "port_bos": self.nginx_config_values["port_bos"],
-            "port_api": self.nginx_config_values["port_api"],
-            "log_level": settings.get_value("UserData.Oscar", "oscar_log_level",
-                default_value = "info", throw_exception = False)
-        }
+        self.nginx_config_values = self._get_nginx_config_values()
+        self.env_values = self._get_env_values()
 
         # Templates
         self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
@@ -209,6 +194,29 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         # A single SQLite file holding accounts, buddy lists and offline messages.
         self.backup_label = "Oscar"
         self.backup_volumes = ["oscar_data"]
+
+    # The nginx stream template values: the public port plus the BOS and API ports
+    def _get_nginx_config_values(self):
+        return {
+            "domain": self.domain_name,
+            "subdomain": self.subdomain,
+            "port_public": self.port_public,
+            "port_bos": settings.get_value("UserData.Oscar", "oscar_port_bos",
+                default_value = "15190", throw_exception = False),
+            "port_api": settings.get_value("UserData.Oscar", "oscar_port_api",
+                default_value = "18080", throw_exception = False)
+        }
+
+    # The .env template values, reusing the ports the nginx values settled on
+    def _get_env_values(self):
+        return {
+            "public_host": f"{self.subdomain}.{self.domain_name}",
+            "port_public": self.port_public,
+            "port_bos": self.nginx_config_values["port_bos"],
+            "port_api": self.nginx_config_values["port_api"],
+            "log_level": settings.get_value("UserData.Oscar", "oscar_log_level",
+                default_value = "info", throw_exception = False)
+        }
 
     # Write the Dockerfile into the app dir, then run the docker app install
     def install(self):

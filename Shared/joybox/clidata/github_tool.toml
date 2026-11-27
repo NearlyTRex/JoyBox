@@ -1,0 +1,38 @@
+# Help text for the github_tool command, read by joybox/arguments.py
+
+description = "Archive your GitHub repositories into the locker, or sync your forks with upstream."
+details = """
+Lists the repositories owned by the GitHub user, public and private, optionally
+narrowed with `--include_repos` or `--exclude_repos`, and then runs one action on
+each.
+
+`Archive` clones each repository with Git into a temporary directory, zips it, tests
+the zip, and backs it up to the locker as
+`<archive_base_dir>/<user>/<repo>/<repo>_<timestamp>.zip`. Each run adds a new
+timestamped zip. With `--clean` the `.git` folder is left out, so the zip holds only
+the working tree.
+
+`Update` asks GitHub to merge the upstream changes into the default branch of each of
+your forks (the merge-upstream API). Repositories that are not forks are skipped.
+
+The username and access token come from `[UserData.GitHub] github_username` and
+`github_access_token` in `~/JoyBox.ini` unless given on the command line."""
+section = "Backups & Lockers"
+see_also = [
+    "setup_tools",
+    "backup_tool",
+    "master_backup",
+]
+notes = [
+    "The token needs access to private repositories for them to be listed, and write access for `Update`.",
+    "Repository names in `--include_repos` and `--exclude_repos` must match exactly, including case.",
+    "A repository that fails to archive or update is reported and the rest still run.",
+    "For `Archive`, `--archive_base_dir` must already exist and Git must be installed with `setup_tools`.",
+]
+examples = [
+    ["Archive every repository to all lockers", "github_tool"],
+    ["Archive two repositories with their submodules", "github_tool -i \"JoyBox,Dotfiles\" -r"],
+    ["Archive everything but one repository, without the git history, to the local locker", "github_tool -e LargeRepo -c -l Local"],
+    ["Sync all forks with their upstream", "github_tool -a Update"],
+    ["Preview an archive run", "github_tool -p -v"],
+]

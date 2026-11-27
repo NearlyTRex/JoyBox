@@ -1,0 +1,20 @@
+# Help text for the analyze_game_json_files command, read by joybox/arguments.py
+
+description = "List games whose JSON file has no files, or whose metadata marks them unplayable."
+details = """
+Goes through every game JSON file in the metadata repository, across all supercategories,
+categories and subcategories, and logs two lists: games whose JSON file lists no
+files, and games whose metadata entry does not have `playable` set to Yes.
+
+Nothing is changed; the lists are only written to the log."""
+section = "Game Collection"
+see_also = [
+    "build_game_json_files",
+    "clean_game_json_files",
+    "find_missing_game_metadata",
+]
+examples = [
+    ["Show both lists", "analyze_game_json_files"],
+    ["Show only games with no files", "analyze_game_json_files -m MissingGameFiles"],
+    ["Show only unplayable games", "analyze_game_json_files -m UnplayableGames"],
+]

@@ -10,6 +10,17 @@ from joybox import programs
 from joybox import logger
 from joybox import paths
 
+# Run an extract-xiso command, blocking until the tool exits; whether it exited cleanly
+def _run_extract_xiso(extract_tool, cmd, verbose, pretend_run, exit_on_failure):
+    code = command.run_returncode_command(
+        cmd = cmd,
+        options = commandbase.create_command_options(
+            blocking_processes = [extract_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
 # Unpack an Xbox ISO's files into extract_dir with extract-xiso, optionally deleting the ISO
 def extract_xbox_iso(
     iso_file,
@@ -33,14 +44,7 @@ def extract_xbox_iso(
     ]
 
     # Run extract command
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = commandbase.create_command_options(
-            blocking_processes = [extract_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_extract_xiso(extract_tool, extract_cmd, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
         return False
 
@@ -79,14 +83,7 @@ def rewrite_xbox_iso(
     rewrite_cmd += [iso_file]
 
     # Run rewrite command
-    code = command.run_returncode_command(
-        cmd = rewrite_cmd,
-        options = commandbase.create_command_options(
-            blocking_processes = [extract_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_extract_xiso(extract_tool, rewrite_cmd, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to rewrite xbox iso '%s'" % iso_file)
         return False
 

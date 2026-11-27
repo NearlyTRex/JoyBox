@@ -548,3 +548,61 @@ def export_all_game_save(
     return True
 
 ############################################################
+
+# The handler for each save action and the error it logs when a game fails
+def _get_save_action_handlers():
+    return {
+        config.SaveActionType.PACK: (pack_save, "Packing of save failed!"),
+        config.SaveActionType.UNPACK: (unpack_save, "Unpacking of save failed!"),
+        config.SaveActionType.IMPORT: (import_game_save, "Import of save failed!"),
+        config.SaveActionType.EXPORT: (export_game_save, "Export of save failed!"),
+        config.SaveActionType.IMPORT_SAVE_PATHS: (import_game_save_paths, "Import of save paths failed!"),
+    }
+
+# The selected games a save action has something to do for: Pack and Unpack skip games
+# with nothing to pack or unpack, logging each in verbose mode
+def get_save_action_games(parser, action, verbose = False, exit_on_failure = False):
+    readiness_checks = {
+        config.SaveActionType.PACK: can_save_be_packed,
+        config.SaveActionType.UNPACK: can_save_be_unpacked,
+    }
+    is_ready = readiness_checks.get(action)
+    games_to_process = []
+    for game_info in gamecollection.iterate_selected_game_infos(
+        parser = parser,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure):
+        if is_ready and not is_ready(game_info):
+            if verbose:
+                logger.log_info("Nothing to %s for %s" % (str(action).lower(), game_info.get_name()))
+            continue
+        games_to_process.append(game_info)
+    return games_to_process
+
+# Run a save action on each game, Pack and Export going to locker_type; quits on the first game that fails
+def run_save_action(
+    games,
+    action,
+    locker_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    handler, error_message = _get_save_action_handlers()[action]
+    for game_info in games:
+        handler_kwargs = {
+            "game_info": game_info,
+            "verbose": verbose,
+            "pretend_run": pretend_run,
+            "exit_on_failure": exit_on_failure
+        }
+        if action in (config.SaveActionType.PACK, config.SaveActionType.EXPORT):
+            handler_kwargs["locker_type"] = locker_type
+        success = handler(**handler_kwargs)
+        if not success:
+            logger.log_error(
+                message = error_message,
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                game_name = game_info.get_name(),
+                quit_program = True)

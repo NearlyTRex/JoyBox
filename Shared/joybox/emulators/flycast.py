@@ -4,8 +4,6 @@ from joybox import environment
 from joybox import fileops
 from joybox import logger
 from joybox import paths
-from joybox import release
-from joybox import sourcebuild
 from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
@@ -15,100 +13,6 @@ from joybox import emulatorbase
 class Flycast(emulatorbase.EmulatorBase):
 
     NAME = "Flycast"
-
-    # Windows build from the flyinghead/flycast GitHub release; Linux AppImage built from the
-    # NearlyTRex/Flycast fork with CMake
-    def setup(self, setup_params = None):
-
-        # Use default params if not provided
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Flycast", "windows"):
-            success = release.download_github_release(
-                github_user = "flyinghead",
-                github_repo = "flycast",
-                starts_with = "flycast-win64",
-                ends_with = ".zip",
-                search_file = "flycast.exe",
-                install_name = "Flycast",
-                install_dir = programs.get_program_install_dir("Flycast", "windows"),
-                backups_dir = programs.get_program_backup_dir("Flycast", "windows"),
-                get_latest = True,
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Flycast")
-                return False
-
-        # Build linux program
-        if programs.should_program_be_installed("Flycast", "linux"):
-            success = sourcebuild.build_appimage_from_source(
-                release_url = "https://github.com/NearlyTRex/Flycast.git",
-                output_file = "App-x86_64.AppImage",
-                install_name = "Flycast",
-                install_dir = programs.get_program_install_dir("Flycast", "linux"),
-                backups_dir = programs.get_program_backup_dir("Flycast", "linux"),
-                build_cmd = [
-                    "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
-                    "&&",
-                    "make", "-j", "4"
-                ],
-                build_dir = "Build",
-                internal_copies = [
-                    {"from": "Source/Flycast/Build/flycast", "to": "AppImage/usr/bin/flycast"},
-                    {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
-                ],
-                internal_symlinks = [
-                    {"from": "usr/bin/flycast", "to": "AppRun"}
-                ],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Flycast")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-
-        # Use default params if not provided
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Flycast", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Flycast", "windows"),
-                install_name = "Flycast",
-                install_dir = programs.get_program_install_dir("Flycast", "windows"),
-                search_file = "flycast.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Flycast")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Flycast", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Flycast", "linux"),
-                install_name = "Flycast",
-                install_dir = programs.get_program_install_dir("Flycast", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Flycast")
-                return False
-        return True
 
     # Write its config files under the emulators root
     def configure(self, setup_params = None):

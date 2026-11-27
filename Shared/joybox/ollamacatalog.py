@@ -95,6 +95,44 @@ def parse_context_tokens(context_str):
         return int(value * 1024 * 1024)
     return int(value)
 
+# Purpose the first recognised capability tag implies; chat when none is recognised
+def get_capability_purpose(caps):
+    for cap in caps:
+        cap = cap.strip().lower()
+        if cap in CAPABILITY_TO_PURPOSE:
+            return CAPABILITY_TO_PURPOSE[cap]
+    return PURPOSE_CHAT
+
+# Catalog entries for a searched model, one per size variant, or one cloud-only entry when it has none
+def build_search_model_entries(base_name, sizes, purpose, description, pulls):
+    if not sizes:
+        # No downloadable size variants = cloud-only model. Flag it so the fit
+        # logic renders it as cloud instead of "too large for hardware".
+        return [{
+            "name": base_name,
+            "display": base_name,
+            "purpose": purpose,
+            "params": "?",
+            "vram_mb": 0,
+            "cloud_only": True,
+            "description": description,
+            "pulls": pulls,
+        }]
+    models = []
+    for size in sizes:
+        size = size.strip().lower()
+        vram = estimate_vram_mb(size)
+        models.append({
+            "name": "%s:%s" % (base_name, size),
+            "display": "%s %s" % (base_name, size.upper()),
+            "purpose": purpose,
+            "params": size.upper(),
+            "vram_mb": vram,
+            "description": description,
+            "pulls": pulls,
+        })
+    return models
+
 # Parse model entries from Ollama search HTML, each given filter_purpose when the
 # search was filtered by it, since filters like "cloud" are not capability tags,
 # and otherwise the purpose its capability tags imply
@@ -117,43 +155,10 @@ def parse_search_html(html, filter_purpose = None):
         pulls = pulls_match.group(1).strip() if pulls_match else ""
 
         # Determine purpose: honor a server-side ?c= filter, else infer from caps
-        if filter_purpose:
-            purpose = filter_purpose
-        else:
-            purpose = PURPOSE_CHAT
-            for cap in caps:
-                cap = cap.strip().lower()
-                if cap in CAPABILITY_TO_PURPOSE:
-                    purpose = CAPABILITY_TO_PURPOSE[cap]
-                    break
+        purpose = filter_purpose or get_capability_purpose(caps)
 
         # Create an entry for each available size
-        if sizes:
-            for size in sizes:
-                size = size.strip().lower()
-                vram = estimate_vram_mb(size)
-                models.append({
-                    "name": "%s:%s" % (base_name, size),
-                    "display": "%s %s" % (base_name, size.upper()),
-                    "purpose": purpose,
-                    "params": size.upper(),
-                    "vram_mb": vram,
-                    "description": description,
-                    "pulls": pulls,
-                })
-        else:
-            # No downloadable size variants = cloud-only model. Flag it so the fit
-            # logic renders it as cloud instead of "too large for hardware".
-            models.append({
-                "name": base_name,
-                "display": base_name,
-                "purpose": purpose,
-                "params": "?",
-                "vram_mb": 0,
-                "cloud_only": True,
-                "description": description,
-                "pulls": pulls,
-            })
+        models += build_search_model_entries(base_name, sizes, purpose, description, pulls)
     return models
 
 # Fetch models from Ollama search for a given purpose
@@ -301,6 +306,18 @@ FIT_CLOUD = "cloud"       # Cloud-hosted (no local download; hardware fit N/A)
 # Display/sort order (best fit first)
 FIT_ORDER = [FIT_GPU, FIT_OFFLOAD, FIT_CLOUD, FIT_NONE]
 
+# Fit category of a catalog model for the given VRAM and RAM in MB
+def classify_model_fit(model, vram_mb, ram_mb):
+    if model.get("cloud_only"):
+        return FIT_CLOUD
+    if model["vram_mb"] <= 0:
+        return FIT_NONE
+    if vram_mb > 0 and model["vram_mb"] <= vram_mb:
+        return FIT_GPU
+    if ram_mb > 0 and model["vram_mb"] <= ram_mb:
+        return FIT_OFFLOAD
+    return FIT_NONE
+
 # Get models classified by how they fit the VRAM and RAM, leaving out FIT_NONE and
 # FIT_CLOUD ones unless include_unfit or include_cloud, which PURPOSE_CLOUD implies
 def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None, include_unfit = False, include_cloud = False):
@@ -318,16 +335,7 @@ def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None, includ
         if purpose and model["purpose"] != purpose:
             continue
         model_entry = model.copy()
-        if model.get("cloud_only"):
-            model_entry["fit"] = FIT_CLOUD
-        elif model["vram_mb"] <= 0:
-            model_entry["fit"] = FIT_NONE
-        elif vram_mb > 0 and model["vram_mb"] <= vram_mb:
-            model_entry["fit"] = FIT_GPU
-        elif ram_mb > 0 and model["vram_mb"] <= ram_mb:
-            model_entry["fit"] = FIT_OFFLOAD
-        else:
-            model_entry["fit"] = FIT_NONE
+        model_entry["fit"] = classify_model_fit(model, vram_mb, ram_mb)
         model_entry["fits_vram"] = model_entry["fit"] == FIT_GPU
         if not include_unfit and model_entry["fit"] == FIT_NONE:
             continue

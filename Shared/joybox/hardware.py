@@ -78,6 +78,20 @@ def get_drm_gpu_info():
         })
     return gpus
 
+# (total, used) indexes of rocm-smi's memory columns in a lowercased CSV header; None for
+# a column that is absent
+def _find_rocm_memory_columns(header):
+    total_idx = None
+    used_idx = None
+    for i, col in enumerate(header):
+        if "memory" not in col:
+            continue
+        if "used" in col:
+            used_idx = i
+        elif "total" in col:
+            total_idx = i
+    return total_idx, used_idx
+
 # Get AMD VRAM from rocm-smi's CSV, by column header, when DRM sysfs has none;
 # [] when rocm-smi is missing or its output does not parse
 def get_amd_rocm_gpu_info():
@@ -89,15 +103,7 @@ def get_amd_rocm_gpu_info():
     if len(lines) < 2:
         return []
     header = [col.strip().lower() for col in lines[0].split(",")]
-    total_idx = None
-    used_idx = None
-    for i, col in enumerate(header):
-        if "memory" not in col:
-            continue
-        if "used" in col:
-            used_idx = i
-        elif "total" in col:
-            total_idx = i
+    total_idx, used_idx = _find_rocm_memory_columns(header)
     if total_idx is None:
         return []
     gpus = []

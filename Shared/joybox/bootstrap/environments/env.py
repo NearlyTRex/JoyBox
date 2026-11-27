@@ -68,28 +68,20 @@ class Environment:
         skipped_count = 0
         failed = []
         for component_name, installer in component_items:
-            if self.should_process_component(component_name):
-                should_skip = False
-                if not force:
-                    is_installed = installer.is_installed()
-                    if action_method_name.lower() == "install" and is_installed:
-                        logger.log_info(f"Skipping {component_name} - already installed")
-                        should_skip = True
-                        skipped_count += 1
-                    elif action_method_name.lower() == "uninstall" and not is_installed:
-                        logger.log_info(f"Skipping {component_name} - not installed")
-                        should_skip = True
-                        skipped_count += 1
-                if not should_skip:
-                    logger.log_info(f"Starting {action_method_name.title()} of {component_name}")
-                    method = getattr(installer, action_method_name)
-                    if not method():
-                        if not continue_on_failure:
-                            return False
-                        logger.log_error(f"{action_method_name.title()} of {component_name} failed, continuing")
-                        failed.append(component_name)
-                    else:
-                        processed_count += 1
+            if not self.should_process_component(component_name):
+                continue
+            if not force and self._is_action_already_done(component_name, installer, action_method_name):
+                skipped_count += 1
+                continue
+            logger.log_info(f"Starting {action_method_name.title()} of {component_name}")
+            method = getattr(installer, action_method_name)
+            if method():
+                processed_count += 1
+                continue
+            if not continue_on_failure:
+                return False
+            logger.log_error(f"{action_method_name.title()} of {component_name} failed, continuing")
+            failed.append(component_name)
         if processed_count == 0 and skipped_count == 0 and self.components_to_process is not None:
             logger.log_warning("No components were processed. Check component names.")
         elif skipped_count > 0:
@@ -98,6 +90,17 @@ class Environment:
             logger.log_error(f"{len(failed)} component(s) failed: {', '.join(failed)}")
             return False
         return True
+
+    # Whether an install finds the component present or an uninstall finds it absent, logging the skip
+    def _is_action_already_done(self, component_name, installer, action_method_name):
+        is_installed = installer.is_installed()
+        if action_method_name.lower() == "install" and is_installed:
+            logger.log_info(f"Skipping {component_name} - already installed")
+            return True
+        if action_method_name.lower() == "uninstall" and not is_installed:
+            logger.log_info(f"Skipping {component_name} - not installed")
+            return True
+        return False
 
     # Each selected component's name, installed state and package status, as dicts
     def status(self):

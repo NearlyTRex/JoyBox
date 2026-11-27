@@ -85,41 +85,43 @@ class Amazon(storebase.StoreBase):
         if not script_cmd:
             return False
 
-        # Get login command
-        login_cmd = script_cmd + [
-                        "--quiet",
-            "auth",
-            "--login"
-        ]
-
-        # Run login command
-        code = command.run_interactive_command(
-            cmd = login_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
-
-        # Get refresh command
-        refresh_cmd = script_cmd + [
-                        "--quiet",
-            "auth",
-            "--refresh"
-        ]
-
-        # Run refresh command
-        code = command.run_interactive_command(
-            cmd = refresh_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
+        # Log in, then refresh the token
+        for auth_flag in ("--login", "--refresh"):
+            code = self._run_interactive_auth(
+                script_cmd = script_cmd,
+                auth_flag = auth_flag,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                return False
 
         # Should be successful
         self.set_logged_in(True)
         return True
+
+    # Run one interactive Nile auth step (--login or --refresh); returns its exit code
+    def _run_interactive_auth(
+        self,
+        script_cmd,
+        auth_flag,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get auth command
+        auth_cmd = script_cmd + [
+                        "--quiet",
+            "auth",
+            auth_flag
+        ]
+
+        # Run auth command
+        return command.run_interactive_command(
+            cmd = auth_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     ############################################################
     # Purchases
@@ -136,69 +138,52 @@ class Amazon(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "amazon_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_purchases):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached Amazon purchases data (%.1f hours old)" % cache_age_hours)
+        # Load from cache if recent
+        cached_purchases = self._read_purchases_cache(
+            cache_file_purchases = cache_file_purchases,
+            verbose = verbose)
+        if cached_purchases is not None:
+            return cached_purchases
 
-        # Load from cache if available
-        if use_cache:
-            cached_data = serialization.read_json_file(
-                src = cache_file_purchases,
-                verbose = verbose,
-                exit_on_failure = False)
-            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
-            if verbose:
-                logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
-            use_cache = False
+        # Get library list
+        list_output = self._fetch_library_list(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not list_output:
+            return None
+
+        # Parse output and save to cache
+        purchases, purchases_data = self._parse_library_list(list_output)
+        self._write_purchases_cache(
+            cache_dir = cache_dir,
+            cache_file_purchases = cache_file_purchases,
+            purchases_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run)
+        return purchases
+
+    # Nile's library list output after a token refresh and library sync; None on any failure
+    def _fetch_library_list(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Get script command
         script_cmd = programs.get_python_script_command("Nile")
         if not script_cmd:
             return None
 
-        # Get refresh command
-        refresh_cmd = script_cmd + [
-                        "--quiet",
-            "auth",
-            "--refresh"
-        ]
-
-        # Run refresh command
-        code = command.run_returncode_command(
-            cmd = refresh_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return None
-
-        # Get sync command
-        sync_cmd = script_cmd + [
-                        "--quiet",
-            "library",
-            "sync"
-        ]
-
-        # Run sync command
-        code = command.run_returncode_command(
-            cmd = sync_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return None
+        # Refresh the token and sync the library
+        for nile_args in (["auth", "--refresh"], ["library", "sync"]):
+            code = command.run_returncode_command(
+                cmd = script_cmd + ["--quiet"] + nile_args,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                return None
 
         # Get list command
         list_cmd = script_cmd + [
@@ -215,8 +200,39 @@ class Amazon(storebase.StoreBase):
         if len(list_output) == 0:
             logger.log_error("Unable to find amazon purchases")
             return None
+        return list_output
 
-        # Parse output
+    # Cached purchases when the cache is under a day old and well formed; None otherwise
+    def _read_purchases_cache(self, cache_file_purchases, verbose = False):
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        if not paths.does_path_exist(cache_file_purchases):
+            return None
+        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
+        if cache_age_hours >= 24:
+            return None
+        if verbose:
+            logger.log_info("Using cached Amazon purchases data (%.1f hours old)" % cache_age_hours)
+
+        # Load from cache
+        cached_data = serialization.read_json_file(
+            src = cache_file_purchases,
+            verbose = verbose,
+            exit_on_failure = False)
+        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+            cached_purchases = []
+            for purchase_data in cached_data:
+                purchase = jsondata.JsonData(
+                    json_data = purchase_data,
+                    json_platform = self.get_platform())
+                cached_purchases.append(purchase)
+            return cached_purchases
+        if verbose:
+            logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
+        return None
+
+    # Purchases and their cacheable appid/name dicts from Nile's library list output
+    def _parse_library_list(self, list_output):
         purchases = []
         purchases_data = []
         for line in list_output.split("\n"):
@@ -242,8 +258,16 @@ class Amazon(storebase.StoreBase):
                 config.JSON_KEY_STORE_APPID: line_appid,
                 config.JSON_KEY_STORE_NAME: line_title
             })
+        return purchases, purchases_data
 
-        # Save to cache
+    # Write the purchases cache, logging the outcome when verbose
+    def _write_purchases_cache(
+        self,
+        cache_dir,
+        cache_file_purchases,
+        purchases_data,
+        verbose = False,
+        pretend_run = False):
         fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
         success = serialization.write_json_file(
             src = cache_file_purchases,
@@ -255,7 +279,6 @@ class Amazon(storebase.StoreBase):
             logger.log_info("Saved Amazon purchases data to cache")
         elif not success and verbose:
             logger.log_warning("Failed to save Amazon cache")
-        return purchases
 
     ############################################################
     # Json
@@ -280,6 +303,55 @@ class Amazon(storebase.StoreBase):
         if not script_cmd:
             return None
 
+        # Get amazon json
+        amazon_json = self._fetch_details_json(
+            script_cmd = script_cmd,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if amazon_json is None:
+            return None
+
+        # Build jsondata
+        json_data = self._build_details_jsondata(identifier, amazon_json)
+        return self.augment_jsondata(
+            json_data = json_data,
+            identifier = identifier,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Default store json filled with the appid, version (default build id when blank) and title from Nile's details
+    def _build_details_jsondata(self, identifier, amazon_json):
+
+        # Get details
+        amazon_version = amazon_json.get("version")
+        if not isinstance(amazon_version, str) or not amazon_version.strip():
+            amazon_version = config.DEFAULT_BUILDID
+        amazon_product = amazon_json.get("product")
+        if not isinstance(amazon_product, dict):
+            amazon_product = {}
+        amazon_title = amazon_product.get("title")
+        if not isinstance(amazon_title, str):
+            amazon_title = ""
+
+        # Build jsondata
+        json_data = self.create_default_jsondata()
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, amazon_version.strip())
+        json_data.set_value(config.JSON_KEY_STORE_NAME, amazon_title.strip())
+        return json_data
+
+    # Nile's details output for the game as a dict; None (after logging) when empty or unparsable
+    def _fetch_details_json(
+        self,
+        script_cmd,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
         # Get info command
         info_cmd = script_cmd + [
                         "--quiet",
@@ -303,29 +375,7 @@ class Amazon(storebase.StoreBase):
             logger.log_error("Unable to parse amazon information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
-
-        # Get details
-        amazon_version = amazon_json.get("version")
-        if not isinstance(amazon_version, str) or not amazon_version.strip():
-            amazon_version = config.DEFAULT_BUILDID
-        amazon_product = amazon_json.get("product")
-        if not isinstance(amazon_product, dict):
-            amazon_product = {}
-        amazon_title = amazon_product.get("title")
-        if not isinstance(amazon_title, str):
-            amazon_title = ""
-
-        # Build jsondata
-        json_data = self.create_default_jsondata()
-        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
-        json_data.set_value(config.JSON_KEY_STORE_BUILDID, amazon_version.strip())
-        json_data.set_value(config.JSON_KEY_STORE_NAME, amazon_title.strip())
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return amazon_json
 
     ############################################################
     # Download
@@ -356,25 +406,42 @@ class Amazon(storebase.StoreBase):
         if not script_cmd:
             return False
 
+        # Download and archive
+        return self._download_and_archive(
+            script_cmd = script_cmd,
+            identifier = identifier,
+            output_dir = output_dir,
+            output_name = output_name,
+            clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Nile-verify the game into a temp dir and archive it into output_dir; True when output_dir ends up with files
+    def _download_and_archive(
+        self,
+        script_cmd,
+        identifier,
+        output_dir,
+        output_name,
+        clean_output,
+        show_progress,
+        skip_existing,
+        skip_identical,
+        verbose,
+        pretend_run,
+        exit_on_failure):
+
         # Download into a temporary directory and archive it
         with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
             if not tmp_dir_result:
                 return False
 
-            # Get download command
-            download_cmd = script_cmd + [
-                                "verify",
-                "--path", tmp_dir_result,
-                identifier
-            ]
-
             # Run download command
-            code = command.run_returncode_command(
-                cmd = download_cmd,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
+            if not self._run_download_command(script_cmd, identifier, tmp_dir_result, verbose, pretend_run, exit_on_failure):
                 return False
 
             # Archive downloaded files
@@ -394,5 +461,30 @@ class Amazon(storebase.StoreBase):
 
         # Check results
         return paths.does_directory_contain_files(output_dir)
+
+    # Fetch the game into download_dir with Nile's verify; True when Nile exits cleanly
+    def _run_download_command(
+        self,
+        script_cmd,
+        identifier,
+        download_dir,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get download command
+        download_cmd = script_cmd + [
+                            "verify",
+            "--path", download_dir,
+            identifier
+        ]
+
+        # Run download command
+        code = command.run_returncode_command(
+            cmd = download_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
 
     ############################################################

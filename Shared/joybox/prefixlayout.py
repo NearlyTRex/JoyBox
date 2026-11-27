@@ -88,6 +88,34 @@ def get_public_profile_path(options):
         public_profile_dir = get_sandboxie_public_profile_path(options)
     return public_profile_dir
 
+# Disc token whose disc name appears in the disc file, else the main disc root token
+def get_disc_token(disc_file):
+    for disc_token, disc_name in config.token_disc_names.items():
+        if disc_name in disc_file:
+            return disc_token
+    return config.TOKEN_DISC_MAIN_ROOT
+
+# Map each disc's token to its drive letter in order, its path under disc_base_dir, or its bare name
+def add_disc_tokens(token_map, disc_files, disc_base_dir, use_drive_letters):
+    for disc_letter_index, disc_file in enumerate(disc_files):
+
+        # Get drive letter
+        disc_letter_drive = config.drives_regular[disc_letter_index]
+
+        # Get file basename
+        disc_file_basename = paths.get_filename_basename(disc_file)
+
+        # Find which token to use
+        disc_token_to_use = get_disc_token(disc_file)
+
+        # Add entry
+        if use_drive_letters:
+            token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
+        elif disc_base_dir:
+            token_map[disc_token_to_use] = paths.join_paths(disc_base_dir, disc_file_basename)
+        else:
+            token_map[disc_token_to_use] = disc_file_basename
+
 # Map path tokens to install, setup, hdd and per-disc roots; discs get drive letters in order when use_drive_letters is set
 def build_token_map(
     store_install_dir = None,
@@ -114,30 +142,7 @@ def build_token_map(
         token_map[config.TOKEN_SCUMM_MAIN_ROOT] = paths.join_paths(hdd_base_dir, config.COMPUTER_FOLDER_SCUMM)
 
     # Add discs
-    disc_letter_index = 0
-    for disc_file in disc_files:
-
-        # Get drive letter
-        disc_letter_drive = config.drives_regular[disc_letter_index]
-        disc_letter_index += 1
-
-        # Get file basename
-        disc_file_basename = paths.get_filename_basename(disc_file)
-
-        # Find which token to use
-        disc_token_to_use = config.TOKEN_DISC_MAIN_ROOT
-        for disc_token, disc_name in config.token_disc_names.items():
-            if disc_name in disc_file:
-                disc_token_to_use = disc_token
-                break
-
-        # Add entry
-        if use_drive_letters:
-            token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
-        elif disc_base_dir:
-            token_map[disc_token_to_use] = paths.join_paths(disc_base_dir, disc_file_basename)
-        else:
-            token_map[disc_token_to_use] = disc_file_basename
+    add_disc_tokens(token_map, disc_files, disc_base_dir, use_drive_letters)
 
     # Return token map
     return token_map
@@ -152,115 +157,93 @@ def resolve_path(
             path = path.replace(token, replacement)
     return path
 
-# Split a virtual (drive letter) or real (host) path into prefix, letter, base and offset with both forms; None when invalid
-def get_prefix_path_info(
-    path,
-    options,
-    is_virtual_path = False,
-    is_real_path = False):
+# Drive letter, base and remaining parts of a path inside a Wine prefix's drive_c or dosdevices folder
+def split_wine_prefix_parts(prefix_dir, path_parts):
+    if path_parts[0] == "drive_c":
+        return "c", paths.join_paths(prefix_dir, "drive_c"), path_parts[1:]
+    if path_parts[0] == "dosdevices" and len(path_parts) > 1 and path_parts[1]:
+        return path_parts[1][0].lower(), paths.join_paths(prefix_dir, "dosdevices", path_parts[1]), path_parts[2:]
+    return "", "", path_parts[1:]
 
-    # Check path
-    if not paths.is_path_valid(path):
-        return None
+# Drive letter, extra, base and remaining parts of a path inside a Sandboxie box's drive or current user folder
+def split_sandboxie_prefix_parts(options, path_parts):
+    if path_parts[0] == "drive" and len(path_parts) > 1 and path_parts[1]:
+        return path_parts[1].lower(), "", get_sandboxie_real_drive_path(options, path_parts[1]), path_parts[2:]
+    if path_parts[:2] == ["user", "current"]:
+        path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
+        return "c", path_drive_extra, get_sandboxie_user_profile_path(options), path_parts[2:]
+    return "", "", "", path_parts[1:]
 
-    # Check path kind
-    if is_virtual_path == is_real_path:
-        return None
+# Drive letter, offset, extra and base of a host path inside the prefix folder; empty letter when it is on no drive
+def split_prefix_inner_path(new_path, options):
+    prefix_dir = options.get_prefix_dir()
+    path_parts = new_path[len(prefix_dir + config.OS_PATHSEP):].split(config.OS_PATHSEP)
+    if options.is_wine_prefix():
+        path_drive_letter, path_drive_base, path_rest = split_wine_prefix_parts(prefix_dir, path_parts)
+        path_drive_extra = ""
+    else:
+        path_drive_letter, path_drive_extra, path_drive_base, path_rest = split_sandboxie_prefix_parts(options, path_parts)
+    return path_drive_letter, config.OS_PATHSEP.join(path_rest), path_drive_extra, path_drive_base
 
-    # Check prefix
-    if not options.has_valid_prefix_dir():
-        return None
+# Drive letter, offset, extra and base of a Wine drive path; a host path lands on z
+def split_wine_drive_path(new_path, options, is_virtual_path):
+    if is_virtual_path:
+        path_drive_letter = paths.get_directory_drive(new_path)
+    else:
+        path_drive_letter = "z"
+    path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+    return path_drive_letter, path_drive_offset, "", get_wine_real_drive_path(options, path_drive_letter)
 
-    # These are some potential types of paths
-    # - /home/user/.wine/drive_c/foo/bar
-    # - /home/user/.wine/dosdevices/c:/foo/bar
-    # - C:/Sandboxie/Sandbox/Default/drive/C/foo/bar
-    # - C:/Sandboxie/Sandbox/Default/user/current/foo/bar
-    # - C:/foo/bar
+# Drive letter, offset, extra and base of a Sandboxie drive path, under the user profile when it is in the user's folder
+def split_sandboxie_drive_path(new_path, options):
+    path_drive_letter = paths.get_directory_drive(new_path)
+    path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+    path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
+    if path_drive_offset == path_drive_extra or path_drive_offset.startswith(path_drive_extra + config.OS_PATHSEP):
+        path_drive_base = get_sandboxie_user_profile_path(options)
+        path_drive_offset = path_drive_offset[len(path_drive_extra + config.OS_PATHSEP):]
+        return path_drive_letter, path_drive_offset, path_drive_extra, path_drive_base
+    return path_drive_letter, path_drive_offset, "", get_sandboxie_real_drive_path(options, path_drive_letter)
 
-    # Copy params
-    new_path = copy.deepcopy(path)
-    new_options = options.copy()
+# Drive letter, offset, extra and base of a path with no prefix; under Wine the host drive is z
+def split_host_drive_path(new_path):
+    path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+    path_drive_base = paths.get_directory_drive(new_path)
+    if platform_info.is_wine_platform():
+        path_drive_letter = "z"
+    else:
+        path_drive_letter = paths.get_directory_drive(new_path)
+    return path_drive_letter, path_drive_offset, "", path_drive_base
 
-    # Normalize paths
-    new_path = paths.normalize_file_path(new_path, separator = config.OS_PATHSEP)
-    new_options.set_prefix_dir(paths.normalize_file_path(new_options.get_prefix_dir(), separator = config.OS_PATHSEP))
+# Drive parts of a normalized path with the virtual and real flags it settles on: host paths under a Wine root or with no prefix are real
+def split_prefix_drive_path(new_path, options, is_virtual_path, is_real_path):
 
     # Fix path inconsistencies
-    if new_options.is_wine_prefix():
+    if options.is_wine_prefix():
         if is_virtual_path and new_path.startswith(config.DRIVE_ROOT_POSIX):
             is_virtual_path = False
             is_real_path = True
 
-    # Initialize letter, offset, and base
-    path_drive_letter = ""
-    path_drive_offset = ""
-    path_drive_extra = ""
-    path_drive_base = ""
-
     # Real path inside the prefix
-    prefix_dir = new_options.get_prefix_dir()
+    prefix_dir = options.get_prefix_dir()
     is_inside_prefix = (new_path == prefix_dir or new_path.startswith(prefix_dir + config.OS_PATHSEP))
-    if is_real_path and is_inside_prefix and new_options.is_prefix():
-        path_parts = new_path[len(prefix_dir + config.OS_PATHSEP):].split(config.OS_PATHSEP)
-        path_rest = path_parts[1:]
-        if new_options.is_wine_prefix():
-            if path_parts[0] == "drive_c":
-                path_drive_letter = "c"
-                path_drive_base = paths.join_paths(prefix_dir, "drive_c")
-            elif path_parts[0] == "dosdevices" and len(path_parts) > 1 and path_parts[1]:
-                path_drive_letter = path_parts[1][0].lower()
-                path_drive_base = paths.join_paths(prefix_dir, "dosdevices", path_parts[1])
-                path_rest = path_parts[2:]
-        else:
-            if path_parts[0] == "drive" and len(path_parts) > 1 and path_parts[1]:
-                path_drive_letter = path_parts[1].lower()
-                path_drive_base = get_sandboxie_real_drive_path(new_options, path_parts[1])
-                path_rest = path_parts[2:]
-            elif path_parts[:2] == ["user", "current"]:
-                path_drive_letter = "c"
-                path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
-                path_drive_base = get_sandboxie_user_profile_path(new_options)
-                path_rest = path_parts[2:]
-        path_drive_offset = config.OS_PATHSEP.join(path_rest)
+    if is_real_path and is_inside_prefix and options.is_prefix():
+        return split_prefix_inner_path(new_path, options), is_virtual_path, is_real_path
 
     # Wine
-    elif new_options.is_wine_prefix():
-        if is_virtual_path:
-            path_drive_letter = paths.get_directory_drive(new_path)
-        else:
-            path_drive_letter = "z"
-        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-        path_drive_base = get_wine_real_drive_path(new_options, path_drive_letter)
+    if options.is_wine_prefix():
+        return split_wine_drive_path(new_path, options, is_virtual_path), is_virtual_path, is_real_path
 
     # Sandboxie
-    elif new_options.is_sandboxie_prefix():
-        path_drive_letter = paths.get_directory_drive(new_path)
-        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-        path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
-        if path_drive_offset == path_drive_extra or path_drive_offset.startswith(path_drive_extra + config.OS_PATHSEP):
-            path_drive_base = get_sandboxie_user_profile_path(new_options)
-            path_drive_offset = path_drive_offset[len(path_drive_extra + config.OS_PATHSEP):]
-        else:
-            path_drive_extra = ""
-            path_drive_base = get_sandboxie_real_drive_path(new_options, path_drive_letter)
+    if options.is_sandboxie_prefix():
+        return split_sandboxie_drive_path(new_path, options), is_virtual_path, is_real_path
 
     # Neither
-    else:
-        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-        path_drive_base = paths.get_directory_drive(new_path)
-        if platform_info.is_wine_platform():
-            path_drive_letter = "z"
-        else:
-            path_drive_letter = paths.get_directory_drive(new_path)
-        is_virtual_path = False
-        is_real_path = True
+    return split_host_drive_path(new_path), False, True
 
-    # Path has to land on a drive
-    if not path_drive_letter:
-        return None
-
-    # Construct full virtual and real paths
+# Full virtual and real forms of a path from its drive parts, asserting the original matches its own form
+def build_full_prefix_paths(new_path, is_virtual_path, drive_parts):
+    path_drive_letter, path_drive_offset, path_drive_extra, path_drive_base = drive_parts
     path_full_virtual = ""
     path_full_real = ""
     if is_virtual_path:
@@ -281,15 +264,27 @@ def get_prefix_path_info(
         validation.assert_condition(
             condition = (new_path == path_full_real),
             description = "Original real path must match constructed real path")
+    return path_full_virtual, path_full_real
 
-    # Return path info
+# Whether the path is valid, exactly one of virtual or real, and the options have a valid prefix folder
+def can_get_prefix_path_info(path, options, is_virtual_path, is_real_path):
+    if not paths.is_path_valid(path):
+        return False
+    if is_virtual_path == is_real_path:
+        return False
+    return bool(options.has_valid_prefix_dir())
+
+# Path info dict for a normalized path from its drive parts, with both full forms checked against the original
+def build_prefix_path_info(new_path, options, is_virtual_path, is_real_path, drive_parts):
+    path_full_virtual, path_full_real = build_full_prefix_paths(new_path, is_virtual_path, drive_parts)
+    path_drive_letter, path_drive_offset, path_drive_extra, path_drive_base = drive_parts
     info = {}
     info["path"] = paths.normalize_file_path(new_path)
-    info["prefix"] = paths.normalize_file_path(new_options.get_prefix_dir())
+    info["prefix"] = paths.normalize_file_path(options.get_prefix_dir())
     info["is_virtual"] = is_virtual_path
     info["is_real"] = is_real_path
-    info["is_wine"] = new_options.is_wine_prefix()
-    info["is_sandboxie"] = new_options.is_sandboxie_prefix()
+    info["is_wine"] = options.is_wine_prefix()
+    info["is_sandboxie"] = options.is_sandboxie_prefix()
     info["letter"] = path_drive_letter
     info["base"] = paths.normalize_file_path(path_drive_base)
     info["offset"] = paths.normalize_file_path(path_drive_offset)
@@ -300,3 +295,39 @@ def get_prefix_path_info(
     info["real"] = paths.normalize_file_path(path_full_real)
     info["virtual"] = paths.normalize_file_path(path_full_virtual, force_windows = True)
     return info
+
+# Split a virtual (drive letter) or real (host) path into prefix, letter, base and offset with both forms; None when invalid
+def get_prefix_path_info(
+    path,
+    options,
+    is_virtual_path = False,
+    is_real_path = False):
+
+    # Check path, path kind and prefix
+    if not can_get_prefix_path_info(path, options, is_virtual_path, is_real_path):
+        return None
+
+    # These are some potential types of paths
+    # - /home/user/.wine/drive_c/foo/bar
+    # - /home/user/.wine/dosdevices/c:/foo/bar
+    # - C:/Sandboxie/Sandbox/Default/drive/C/foo/bar
+    # - C:/Sandboxie/Sandbox/Default/user/current/foo/bar
+    # - C:/foo/bar
+
+    # Copy params
+    new_path = copy.deepcopy(path)
+    new_options = options.copy()
+
+    # Normalize paths
+    new_path = paths.normalize_file_path(new_path, separator = config.OS_PATHSEP)
+    new_options.set_prefix_dir(paths.normalize_file_path(new_options.get_prefix_dir(), separator = config.OS_PATHSEP))
+
+    # Split into drive letter, offset, extra and base
+    drive_parts, is_virtual_path, is_real_path = split_prefix_drive_path(new_path, new_options, is_virtual_path, is_real_path)
+
+    # Path has to land on a drive
+    if not drive_parts[0]:
+        return None
+
+    # Return path info
+    return build_prefix_path_info(new_path, new_options, is_virtual_path, is_real_path, drive_parts)

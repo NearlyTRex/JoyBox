@@ -8,26 +8,7 @@ from joybox import system
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Generate the command reference in Docs from every command's help text.",
-        details = (
-            "Builds the parser of each command in `[project.scripts]` and renders a page from it:\n"
-            "the description, every option with its default and allowed values, and the details,\n"
-            "examples, notes and see-also the command declares. The pages are never edited by\n"
-            "hand, so the help text is the only thing to maintain.\n"
-            "\n"
-            "Parsers are built against a throwaway home directory holding only the default\n"
-            "JoyBox.ini, so nothing from your own configuration ends up in a default shown on a page."),
-        examples = [
-            ("Regenerate every page", "build_man_pages"),
-            ("Fail if a page is out of date or a command's help text is incomplete", "build_man_pages --check"),
-        ],
-        notes = [
-            "A page for a command that no longer exists is removed.",
-            "`--check` exits non-zero and writes nothing, which makes it usable in a hook or CI.",
-        ],
-        see_also = ["setup_tools"],
-        section = "Development")
+    parser = arguments.ArgumentParser(command = "build_man_pages")
     parser.add_string_argument(
         args = ("-o", "--output_path"),
         description = "Directory to write the pages into, instead of Docs/reference/man in this checkout")

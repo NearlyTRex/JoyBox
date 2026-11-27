@@ -1,0 +1,38 @@
+# Help text for the setup_game_emulators command, read by joybox/arguments.py
+
+description = "Install, update, or rebuild the game emulators JoyBox manages."
+details = """
+Installs the emulators used to run the game collection, such as RetroArch, Dolphin,
+PCSX2, Citra, mGBA, melonDS, DuckStation, Cemu and Mame. Each emulator is defined in
+`Shared/joybox/emulators/` and knows how to download, install and optionally
+configure itself. Emulators install under `[UserData.Dirs] emulators_dir` in
+`~/JoyBox.ini`.
+
+For each selected emulator it removes the install directory first when `--force` is
+given, then installs it: downloaded by default, or from the copy backed up in the
+locker with `--offline`. With `--configure` it then runs the emulator's configuration
+step. `--clean` removes the whole emulators directory once, before anything is
+installed.
+
+An emulator whose program is already in place is skipped, so re-running only fills in
+what is missing. The interface is the same as `setup_tools`; only the package set and
+install directory differ."""
+section = "Setup & Installation"
+see_also = [
+    "setup_tools",
+    "setup_game_assets",
+]
+notes = [
+    "Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an unknown name stops the run before anything is installed.",
+    "`--force` applies only to the selected emulators; `--clean` wipes the whole emulators directory.",
+    "Installation stops at the first emulator that fails.",
+    "`~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing anything.",
+]
+examples = [
+    ["Install every emulator that is missing", "setup_game_emulators"],
+    ["Install specific emulators", "setup_game_emulators -k \"Dolphin,PCSX2,Citra\""],
+    ["Rebuild a single emulator", "setup_game_emulators -f -k RetroArch"],
+    ["Wipe the emulators directory and reinstall everything", "setup_game_emulators --clean"],
+    ["Install from the locker backups, then configure", "setup_game_emulators --offline --configure"],
+    ["Preview without changing anything", "setup_game_emulators -p -v"],
+]

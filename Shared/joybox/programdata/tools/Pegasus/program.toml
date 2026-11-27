@@ -26,3 +26,13 @@ path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.t
 [[config_files]]
 path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"
 template = "settings.txt"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "pegasus-fe.exe"
+install_files = ["pegasus-fe.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

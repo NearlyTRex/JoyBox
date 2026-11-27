@@ -12,6 +12,7 @@ from joybox import programs
 from joybox import text
 from joybox import validation
 from joybox import logger
+from joybox import settings
 from joybox import paths
 from joybox import hashutil
 
@@ -168,6 +169,76 @@ def get_real_file_paths(
                 real_paths.append(real_path)
     return real_paths
 
+# Copy a file that needs no gpg run, keeping an existing destination
+def _copy_unchanged(src, output_file, verbose, pretend_run, exit_on_failure):
+    return filebulk.smart_copy(
+        src = src,
+        dest = output_file,
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Run a gpg command reading the passphrase from stdin; True when it exits 0
+def _run_gpg_command(gpg_cmd, passphrase, verbose, pretend_run, exit_on_failure):
+    code = command.run_returncode_command(
+        cmd = gpg_cmd,
+        options = commandbase.create_command_options(
+            blocking_processes = [gpg_cmd[0]],
+            stdin_input = passphrase),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# After a gpg run: in a pretend run log what would happen and succeed, otherwise delete the
+# original when asked once the output exists; whether the output exists
+def _finish_gpg_output(src, output_file, action, delete_original, verbose, pretend_run, exit_on_failure):
+
+    # In pretend mode, assume success
+    if pretend_run:
+        logger.log_info("Would %s '%s' -> '%s'" % (action, src, output_file))
+        return True
+
+    # Delete original
+    if delete_original and os.path.exists(output_file):
+        fileops.remove_file(
+            src = src,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(output_file)
+
+# The gpg command encrypting src with AES256 to the output, keeping its file name inside
+def _build_encrypt_command(gpg_tool, src, output_file):
+    return [
+        gpg_tool,
+        "--symmetric",
+        "--cipher-algo", "AES256",
+        "--passphrase-fd", "0",
+        "--compress-algo", "none",
+        "--set-filename", paths.get_filename_file(src),
+        "--quiet",
+        "--batch",
+        "--output", output_file,
+        src
+    ]
+
+# The gpg command decrypting src to the output
+def _build_decrypt_command(gpg_tool, src, output_file):
+    return [
+        gpg_tool,
+        "--output", output_file,
+        "--passphrase-fd", "0",
+        "--compress-algo", "none",
+        "--quiet",
+        "--batch",
+        "--decrypt",
+        src
+    ]
+
 # Encrypt with gpg AES256 under the passphrase, to the hashed .enc path unless given one;
 # copies already-encrypted files, keeps an existing output, and can delete the original
 def encrypt_file(
@@ -196,62 +267,18 @@ def encrypt_file(
 
     # Plain copy if already encrypted
     if is_file_encrypted(src):
-        success = filebulk.smart_copy(
-            src = src,
-            dest = output_file,
-            skip_existing = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
+        return _copy_unchanged(src, output_file, verbose, pretend_run, exit_on_failure)
 
     # Get tool
     gpg_tool = programs.find_tool_program("Gpg")
     if not gpg_tool:
         return False
 
-    # Get encrypt command
-    encrypt_cmd = [
-        gpg_tool,
-        "--symmetric",
-        "--cipher-algo", "AES256",
-        "--passphrase-fd", "0",
-        "--compress-algo", "none",
-        "--set-filename", paths.get_filename_file(src),
-        "--quiet",
-        "--batch",
-        "--output", output_file,
-        src
-    ]
-
     # Run encrypt command
-    code = command.run_returncode_command(
-        cmd = encrypt_cmd,
-        options = commandbase.create_command_options(
-            blocking_processes = [gpg_tool],
-            stdin_input = passphrase),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_gpg_command(_build_encrypt_command(gpg_tool, src, output_file), passphrase, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to encrypt file '%s'" % src)
         return False
-
-    # In pretend mode, assume success
-    if pretend_run:
-        logger.log_info("Would encrypt '%s' -> '%s'" % (src, output_file))
-        return True
-
-    # Delete original
-    if delete_original and os.path.exists(output_file):
-        fileops.remove_file(
-            src = src,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(output_file)
+    return _finish_gpg_output(src, output_file, "encrypt", delete_original, verbose, pretend_run, exit_on_failure)
 
 # Decrypt with gpg to the embedded name unless given an output; copies unencrypted files,
 # keeps an existing output, and can delete the original
@@ -273,11 +300,7 @@ def decrypt_file(
 
     # Check output file
     if not output_file:
-        output_file = get_real_file_path(
-            src = src,
-            passphrase = passphrase,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+        output_file = get_real_file_path(src, passphrase, verbose = verbose, exit_on_failure = exit_on_failure)
     if not paths.is_path_valid(output_file):
         return False
     if paths.does_path_exist(output_file):
@@ -285,60 +308,18 @@ def decrypt_file(
 
     # Plain copy if already decrypted
     if not is_file_encrypted(src):
-        success = filebulk.smart_copy(
-            src = src,
-            dest = output_file,
-            skip_existing = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return success
+        return _copy_unchanged(src, output_file, verbose, pretend_run, exit_on_failure)
 
     # Get tool
     gpg_tool = programs.find_tool_program("Gpg")
     if not gpg_tool:
         return False
 
-    # Get decrypt command
-    decrypt_cmd = [
-        gpg_tool,
-        "--output", output_file,
-        "--passphrase-fd", "0",
-        "--compress-algo", "none",
-        "--quiet",
-        "--batch",
-        "--decrypt",
-        src
-    ]
-
     # Run decrypt command
-    code = command.run_returncode_command(
-        cmd = decrypt_cmd,
-        options = commandbase.create_command_options(
-            blocking_processes = [gpg_tool],
-            stdin_input = passphrase),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_gpg_command(_build_decrypt_command(gpg_tool, src, output_file), passphrase, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to decrypt file '%s'" % src)
         return False
-
-    # In pretend mode, assume success
-    if pretend_run:
-        logger.log_info("Would decrypt '%s' -> '%s'" % (src, output_file))
-        return True
-
-    # Delete original
-    if delete_original and os.path.exists(output_file):
-        fileops.remove_file(
-            src = src,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(output_file)
+    return _finish_gpg_output(src, output_file, "decrypt", delete_original, verbose, pretend_run, exit_on_failure)
 
 # Encrypt every file under the source to its hashed .enc path; returns the outputs that succeeded
 def encrypt_files(
@@ -432,3 +413,40 @@ def stage_encrypted_batch(batch, src_root, staging, passphrase, verbose = False,
             logger.log_error("Failed to encrypt: %s" % dest_rel)
             failed.append(dest_rel)
     return staged, failed
+
+# The passphrase the type names from the protection settings; quits when it is not set
+def get_configured_passphrase(passphrase_type):
+    passphrase = None
+    if passphrase_type == config.PassphraseType.GENERAL:
+        passphrase = settings.get_value("UserData.Protection", "general_passphrase")
+    elif passphrase_type == config.PassphraseType.LOCKER:
+        passphrase = settings.get_value("UserData.Protection", "locker_passphrase")
+    if not passphrase:
+        logger.log_error("No passphrase set", quit_program = True)
+    return passphrase
+
+# Encrypt, or else decrypt, every file under the source in place with gpg's default naming;
+# does nothing when neither is asked for
+def crypt_files_in_place(
+    src,
+    passphrase,
+    encrypt = False,
+    decrypt = False,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if encrypt:
+        crypt_function = encrypt_file
+    elif decrypt:
+        crypt_function = decrypt_file
+    else:
+        return
+    for file in paths.build_file_list(src):
+        crypt_function(
+            src = file,
+            passphrase = passphrase,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

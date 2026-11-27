@@ -39,6 +39,31 @@ def write_playlist(
         return serialization.write_text_file(output_file, contents, exit_on_failure = exit_on_failure)
     return True
 
+# Matching files anywhere under source_dir, as paths or bare file names when only_keep_ends
+def list_tree_playlist_entries(source_dir, extensions, only_keep_ends):
+    playlist_contents = []
+    for file in paths.build_file_list_by_extensions(source_dir, extensions = extensions):
+        if only_keep_ends:
+            playlist_contents.append(paths.get_filename_file(file))
+        else:
+            playlist_contents.append(file)
+    return playlist_contents
+
+# Matching files directly in source_dir, as paths or bare names when only_keep_ends
+def list_directory_playlist_entries(source_dir, extensions, only_keep_ends):
+    playlist_contents = []
+    for obj in paths.get_directory_contents(source_dir):
+        obj_path = paths.join_paths(source_dir, obj)
+        if not paths.is_path_file(obj_path):
+            continue
+        if not paths.does_filename_match_extensions(obj_path, extensions):
+            continue
+        if only_keep_ends:
+            playlist_contents.append(obj)
+        else:
+            playlist_contents.append(obj_path)
+    return playlist_contents
+
 # Generate playlist file
 def generate_playlist(
     source_dir,
@@ -56,22 +81,10 @@ def generate_playlist(
     extensions = [] if extensions is None else extensions
 
     # Generate playlist contents
-    playlist_contents = []
     if recursive:
-        for file in paths.build_file_list_by_extensions(source_dir, extensions = extensions):
-            if only_keep_ends:
-                playlist_contents.append(paths.get_filename_file(file))
-            else:
-                playlist_contents.append(file)
+        playlist_contents = list_tree_playlist_entries(source_dir, extensions, only_keep_ends)
     else:
-        for obj in paths.get_directory_contents(source_dir):
-            obj_path = paths.join_paths(source_dir, obj)
-            if paths.is_path_file(obj_path):
-                if paths.does_filename_match_extensions(obj_path, extensions):
-                    if only_keep_ends:
-                        playlist_contents.append(obj)
-                    else:
-                        playlist_contents.append(obj_path)
+        playlist_contents = list_directory_playlist_entries(source_dir, extensions, only_keep_ends)
 
     # Check length
     if not allow_empty_lists and len(playlist_contents) == 0:

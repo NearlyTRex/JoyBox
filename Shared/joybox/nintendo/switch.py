@@ -14,6 +14,34 @@ from joybox import paths
 from joybox import programs
 from joybox.nintendo import switchprofile
 
+# Copy the bytes into the profiles file contents, one byte per entry, from the index on
+def write_profile_bytes(file_contents, file_index, data):
+    for offset, value in enumerate(data):
+        file_contents[file_index + offset] = bytes([value])
+
+# The 1616 bytes of a profiles.dat holding one user: the byte-reversed user id at 0x10
+# and 0x20 and the account name at 0x38
+def build_switch_profiles_contents(user_id, account_name):
+
+    # Get user id bytes
+    user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
+
+    # Get account name bytes
+    account_name_bytes = bytearray(account_name, encoding = "utf-8")
+
+    # Initialize file contents
+    file_contents = [b'\x00'] * 1616
+
+    # Write user_id_1
+    write_profile_bytes(file_contents, 0x10, user_id_bytes)
+
+    # Write user_id_2
+    write_profile_bytes(file_contents, 0x20, user_id_bytes)
+
+    # Write account_name
+    write_profile_bytes(file_contents, 0x38, account_name_bytes)
+    return b"".join(file_contents)
+
 # Write a 1616-byte profiles.dat holding one user: the byte-reversed user id twice and the account name; False when the info is invalid
 def create_switch_profiles_dat(
     profiles_file,
@@ -27,34 +55,13 @@ def create_switch_profiles_dat(
     if not switchprofile.is_valid_switch_profile_info(user_id, account_name):
         return False
 
-    # Get user id bytes
-    user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
-
-    # Get account name bytes
-    account_name_bytes = bytearray(account_name, encoding = "utf-8")
-
-    # Initialize file contents
-    file_contents = [b'\x00'] * 1616
-
-    # Write user_id_1
-    file_index = 0x10
-    for offset, value in enumerate(user_id_bytes):
-        file_contents[file_index + offset] = bytes([value])
-
-    # Write user_id_2
-    file_index = 0x20
-    for offset, value in enumerate(user_id_bytes):
-        file_contents[file_index + offset] = bytes([value])
-
-    # Write account_name
-    file_index = 0x38
-    for offset, value in enumerate(account_name_bytes):
-        file_contents[file_index + offset] = bytes([value])
+    # Build file contents
+    file_contents = build_switch_profiles_contents(user_id, account_name)
 
     # Write file
     success = fileops.touch_file(
         src = profiles_file,
-        contents = b"".join(file_contents),
+        contents = file_contents,
         contents_mode = "wb",
         verbose = verbose,
         pretend_run = pretend_run,
@@ -208,3 +215,37 @@ def install_switch_nsp(
             if not install_switch_nca(nca_file, nand_dir, verbose, pretend_run, exit_on_failure):
                 return False
     return True
+
+######################################################
+# Xci folders
+######################################################
+
+# Trim, or else untrim when asked, every .xci under input_path into a _trimmed or
+# _untrimmed copy beside it
+def process_switch_xcis(
+    input_path,
+    trim = False,
+    untrim = False,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for xci_file in paths.build_file_list_by_extensions(input_path, extensions = [".xci"]):
+        xci_dir = paths.get_filename_directory(xci_file)
+        xci_basename = paths.get_filename_basename(xci_file)
+        if trim:
+            trim_switch_xci(
+                src_xci_file = xci_file,
+                dest_xci_file = paths.join_paths(xci_dir, xci_basename + "_trimmed.xci"),
+                delete_original = delete_originals,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        elif untrim:
+            untrim_switch_xci(
+                src_xci_file = xci_file,
+                dest_xci_file = paths.join_paths(xci_dir, xci_basename + "_untrimmed.xci"),
+                delete_original = delete_originals,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)

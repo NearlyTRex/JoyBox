@@ -4,3 +4,17 @@
 [config.Steamless]
 program = { windows = "Steamless/windows/Steamless.CLI.exe", linux = "Steamless/windows/Steamless.CLI.exe" }
 run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "atom0s"
+github_repo = "Steamless"
+starts_with = "Steamless"
+ends_with = ".zip"
+search_file = "Steamless.CLI.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Steamless.CLI.exe"

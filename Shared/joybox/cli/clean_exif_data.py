@@ -7,24 +7,7 @@ from joybox import logger
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Strip all EXIF and other embedded metadata from image files.",
-        details = (
-            "Runs ExifTool with `-All=` over the input, removing every writable metadata tag\n"
-            "(camera, GPS location, timestamps, thumbnails and so on). A directory is processed\n"
-            "recursively. Files are rewritten in place with `-overwrite_original`, so no backup\n"
-            "copies are left behind."),
-        examples = [
-            ("Strip metadata from one photo", "clean_exif_data -i ~/Pictures/photo.jpg"),
-            ("Strip metadata from every file in a directory tree", "clean_exif_data -i ~/Pictures/ToShare"),
-            ("Dry run, leaving every file untouched", "clean_exif_data -i ~/Pictures/ToShare -p -v"),
-        ],
-        notes = [
-            "The change cannot be undone; copy anything whose metadata you want to keep first.",
-            "ExifTool must be installed with `setup_tools -k ExifTool`.",
-        ],
-        see_also = ["setup_tools"],
-        section = "Files & Archives")
+    parser = arguments.ArgumentParser(command = "clean_exif_data")
     parser.add_input_path_argument(description = "Image file, or directory to process recursively; it must exist")
     parser.add_common_arguments()
     return parser

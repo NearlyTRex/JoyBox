@@ -164,6 +164,50 @@ def get_remote_xml(
 # Downloading
 ###########################################################
 
+# Curl command that follows redirects into output_dir under the remote name, or to output_file
+def build_curl_download_cmd(download_tool, url, output_dir, output_file, retries, connect_timeout):
+    download_cmd = [
+        download_tool,
+        "-L",
+        "--retry", str(retries),
+        "--connect-timeout", str(connect_timeout)
+    ]
+    if output_dir:
+        download_cmd += [
+            "--output-dir", output_dir,
+            "-O"
+        ]
+    elif output_file:
+        download_cmd += [
+            "--output", output_file
+        ]
+    download_cmd += [url]
+    return download_cmd
+
+# Whether the download landed: a file in output_dir ending with the url's file name, or output_file itself
+def is_url_downloaded(url, output_dir, output_file):
+    if output_dir:
+        for obj in paths.get_directory_contents(output_dir):
+            obj_path = paths.join_paths(output_dir, obj)
+            if paths.is_path_file(obj_path) and obj.endswith(paths.get_filename_file(url)):
+                return True
+    elif output_file:
+        return paths.is_path_file(output_file)
+    return False
+
+# Run a download command, logging the failure message when it exits nonzero; True on success
+def run_download_command(download_cmd, options, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
+    code = command.run_returncode_command(
+        cmd = download_cmd,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error(failure_message)
+        return False
+    return True
+
 # Download url to local dir
 def download_url(
     url,
@@ -181,22 +225,7 @@ def download_url(
         return False
 
     # Get download command
-    download_cmd = [
-        download_tool,
-        "-L",
-        "--retry", str(retries),
-        "--connect-timeout", str(connect_timeout)
-    ]
-    if output_dir:
-        download_cmd += [
-            "--output-dir", output_dir,
-            "-O"
-        ]
-    elif output_file:
-        download_cmd += [
-            "--output", output_file
-        ]
-    download_cmd += [url]
+    download_cmd = build_curl_download_cmd(download_tool, url, output_dir, output_file, retries, connect_timeout)
 
     # Create output directory
     if output_dir:
@@ -207,15 +236,9 @@ def download_url(
             exit_on_failure = exit_on_failure)
 
     # Run download command
-    code = command.run_returncode_command(
-        cmd = download_cmd,
-        options = commandbase.create_command_options(
-            blocking_processes = [download_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Download of %s failed" % url)
+    options = commandbase.create_command_options(
+        blocking_processes = [download_tool])
+    if not run_download_command(download_cmd, options, "Download of %s failed" % url, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
 
     # A pretend run downloads nothing, so there is nothing to check
@@ -223,14 +246,37 @@ def download_url(
         return True
 
     # Check result
-    if output_dir:
-        for obj in paths.get_directory_contents(output_dir):
-            obj_path = paths.join_paths(output_dir, obj)
-            if paths.is_path_file(obj_path) and obj.endswith(paths.get_filename_file(url)):
-                return True
-    elif output_file:
-        return paths.is_path_file(output_file)
-    return False
+    return is_url_downloaded(url, output_dir, output_file)
+
+# Open up and empty an existing clone directory so it can be cloned into afresh
+def clear_git_output_dir(output_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    fileops.chmod_file_or_directory(
+        src = output_dir,
+        perms = 777,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    fileops.remove_directory_contents(
+        src = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Git clone command for url into output_dir, with the branch and submodule options
+def build_git_clone_cmd(download_tool, url, output_dir, branch, recursive):
+    download_cmd = [
+        download_tool,
+        "clone"
+    ]
+    if branch:
+        download_cmd += ["--branch", branch]
+    if recursive:
+        download_cmd += ["--recursive"]
+    download_cmd += [
+        url,
+        output_dir
+    ]
+    return download_cmd
 
 # Clone a repo into output_dir with Git, optionally wiping it first; True without cloning when it already has files
 def download_git_url(
@@ -245,17 +291,7 @@ def download_git_url(
 
     # Clear output dir
     if clean and paths.is_path_directory(output_dir):
-        fileops.chmod_file_or_directory(
-            src = output_dir,
-            perms = 777,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        fileops.remove_directory_contents(
-            src = output_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        clear_git_output_dir(output_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Check output dir
     if paths.is_path_directory(output_dir) and paths.does_directory_contain_files(output_dir):
@@ -267,30 +303,13 @@ def download_git_url(
         return False
 
     # Get download command
-    download_cmd = [
-        download_tool,
-        "clone"
-    ]
-    if branch:
-        download_cmd += ["--branch", branch]
-    if recursive:
-        download_cmd += ["--recursive"]
-    download_cmd += [
-        url,
-        output_dir
-    ]
+    download_cmd = build_git_clone_cmd(download_tool, url, output_dir, branch, recursive)
 
     # Run download command
-    code = command.run_returncode_command(
-        cmd = download_cmd,
-        options = commandbase.create_command_options(
-            cwd = os.path.expanduser("~"),
-            blocking_processes = [download_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Git download of %s failed" % url)
+    options = commandbase.create_command_options(
+        cwd = os.path.expanduser("~"),
+        blocking_processes = [download_tool])
+    if not run_download_command(download_cmd, options, "Git download of %s failed" % url, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
 
     # A pretend run clones nothing, so there is nothing to check
@@ -359,6 +378,99 @@ def write_cifs_credentials(username, password):
         handle.write("username=%s\npassword=%s\n" % (username, password))
     return credentials_file
 
+# Map the share to mount_dir's drive letter; True when the directory already exists
+def mount_windows_network_share(
+    mount_dir,
+    base_location,
+    network_share,
+    username,
+    password,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check if already mounted
+    if paths.is_path_directory(mount_dir):
+        return True
+
+    # Map drive
+    drive = "%s:" % paths.get_directory_drive(mount_dir)
+    remote = "\\\\%s\\%s" % (base_location, network_share)
+    if verbose:
+        logger.log_info("Mapping %s to %s" % (drive, remote))
+    if pretend_run:
+        return True
+    code = map_windows_drive(drive, remote, username, password)
+    if code != 0:
+        logger.log_error("Unable to map %s to %s (error %d)" % (drive, remote, code), quit_program = exit_on_failure)
+        return False
+    return True
+
+# Sudo-mount the share at mount_dir over CIFS as the current user, reading the credentials file; True on success
+def mount_cifs_share(
+    mount_dir,
+    base_location,
+    network_share,
+    credentials_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get mount command
+    mount_cmd = [
+        "sudo",
+        "mount",
+        "-t", "cifs",
+        "-o", "credentials=%s,uid=%s,gid=%s" % (credentials_file, os.geteuid(), os.getegid()),
+        "//%s/%s" % (base_location, network_share),
+        "%s" % mount_dir
+    ]
+
+    # Run mount command
+    code = command.run_returncode_command(
+        cmd = mount_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Create mount_dir and sudo-mount the share there over CIFS with a temporary credentials file; True when already mounted
+def mount_linux_network_share(
+    mount_dir,
+    base_location,
+    network_share,
+    username,
+    password,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Make mount directory
+    code = command.run_returncode_command(
+        cmd = ["sudo", "mkdir", "-p", mount_dir],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        return False
+
+    # Check if already mounted
+    if is_network_share_mounted(mount_dir, base_location, network_share):
+        return True
+
+    # Keep the password off the command line; a pretend run writes nothing
+    if pretend_run:
+        credentials_file = paths.join_paths(get_cifs_credentials_dir(), "joybox-cifs-pretend.cred")
+    else:
+        credentials_file = write_cifs_credentials(username, password)
+    try:
+        return mount_cifs_share(
+            mount_dir, base_location, network_share, credentials_file,
+            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    finally:
+        if not pretend_run:
+            fileops.remove_file(credentials_file)
+
 # Mount an SMB share at mount_dir, as a mapped drive on Windows or a sudo CIFS mount on Linux; True when already mounted
 def mount_network_share(
     mount_dir,
@@ -377,75 +489,15 @@ def mount_network_share(
 
     # Windows
     if platform_info.is_windows_platform():
-
-        # Check if already mounted
-        if paths.is_path_directory(mount_dir):
-            return True
-
-        # Map drive
-        drive = "%s:" % paths.get_directory_drive(mount_dir)
-        remote = "\\\\%s\\%s" % (base_location, network_share)
-        if verbose:
-            logger.log_info("Mapping %s to %s" % (drive, remote))
-        if pretend_run:
-            return True
-        code = map_windows_drive(drive, remote, username, password)
-        if code != 0:
-            logger.log_error("Unable to map %s to %s (error %d)" % (drive, remote, code), quit_program = exit_on_failure)
-            return False
-        return True
+        return mount_windows_network_share(
+            mount_dir, base_location, network_share, username, password,
+            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Linux
     if platform_info.is_linux_platform():
-
-        # Get mkdir command
-        mkdir_cmd = [
-            "sudo",
-            "mkdir",
-            "-p",
-            mount_dir
-        ]
-
-        # Run mkdir command
-        code = command.run_returncode_command(
-            cmd = mkdir_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
-
-        # Check if already mounted
-        if is_network_share_mounted(mount_dir, base_location, network_share):
-            return True
-
-        # Keep the password off the command line; a pretend run writes nothing
-        if pretend_run:
-            credentials_file = paths.join_paths(get_cifs_credentials_dir(), "joybox-cifs-pretend.cred")
-        else:
-            credentials_file = write_cifs_credentials(username, password)
-        try:
-
-            # Get mount command
-            mount_cmd = [
-                "sudo",
-                "mount",
-                "-t", "cifs",
-                "-o", "credentials=%s,uid=%s,gid=%s" % (credentials_file, os.geteuid(), os.getegid()),
-                "//%s/%s" % (base_location, network_share),
-                "%s" % mount_dir
-            ]
-
-            # Run mount command
-            code = command.run_returncode_command(
-                cmd = mount_cmd,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return code == 0
-        finally:
-            if not pretend_run:
-                fileops.remove_file(credentials_file)
+        return mount_linux_network_share(
+            mount_dir, base_location, network_share, username, password,
+            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Network share was not mounted
     return False
@@ -535,6 +587,16 @@ def download_github_repository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Log whether a merge-upstream response reports an update or an already current branch
+def log_github_update_response(github_user, github_repo, update_response):
+    if "message" not in update_response:
+        return
+    update_message = update_response["message"]
+    if "success" in update_message.lower():
+        logger.log_info("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
+    if "branch is not behind" in update_message.lower():
+        logger.log_info("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
+
 # Sync a fork branch with its upstream through the GitHub merge-upstream API; False when the call fails
 def update_github_repository(
     github_user,
@@ -571,12 +633,7 @@ def update_github_repository(
         return False
 
     # Print response
-    if "message" in update_response:
-        update_message = update_response["message"]
-        if "success" in update_message.lower():
-            logger.log_info("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
-        if "branch is not behind" in update_message.lower():
-            logger.log_info("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
+    log_github_update_response(github_user, github_repo, update_response)
 
     # Should be successful
     return True
@@ -613,6 +670,107 @@ def archive_github_repository(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Make the download and archive staging directories
+def make_github_archive_dirs(tmp_dir_download, tmp_dir_archive, verbose = False, pretend_run = False, exit_on_failure = False):
+    fileops.make_directory(
+        src = tmp_dir_download,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    fileops.make_directory(
+        src = tmp_dir_archive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Back the archive up to out_file_archive's locker path, skipping an existing or identical copy; False with an error on failure
+def backup_github_repository_archive(
+    tmp_file_archive,
+    out_file_archive,
+    locker_type,
+    github_user,
+    github_repo,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    dest_rel_path = locker.convert_to_relative_path(out_file_archive)
+    success = locker.backup(
+        src = tmp_file_archive,
+        dest_rel_path = dest_rel_path,
+        locker_type = locker_type,
+        show_progress = True,
+        skip_existing = True,
+        skip_identical = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
+        return False
+    return True
+
+# Clone the repo into the download dir, dropping its .git folder on a clean clone; False with an error when the clone fails
+def download_github_repository_snapshot(
+    tmp_dir_download,
+    github_user,
+    github_repo,
+    github_token = None,
+    github_branch = None,
+    recursive = True,
+    clean = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    success = download_github_repository(
+        github_user = github_user,
+        github_repo = github_repo,
+        github_token = github_token,
+        github_branch = github_branch,
+        output_dir = tmp_dir_download,
+        recursive = recursive,
+        clean = clean,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
+        return False
+    if not clean:
+        return True
+    return fileops.remove_directory(
+        src = paths.join_paths(tmp_dir_download, ".git"),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Zip a downloaded repository and test the zip, logging which step failed; a pretend run writes no archive to look for
+def zip_github_repository_download(
+    tmp_file_archive,
+    tmp_dir_download,
+    github_user,
+    github_repo,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    archive.create_archive_from_folder(
+        archive_file = tmp_file_archive,
+        source_dir = tmp_dir_download,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not pretend_run and not os.path.exists(tmp_file_archive):
+        logger.log_error("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
+        return False
+    success = archive.test_archive(
+        archive_file = tmp_file_archive,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
+        return False
+    return True
+
 # Archive github repository via a temporary directory
 def archive_github_repository_via(
     tmp_dir,
@@ -633,79 +791,24 @@ def archive_github_repository_via(
     tmp_dir_archive = paths.join_paths(tmp_dir, "archive")
     tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
     out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
-    fileops.make_directory(
-        src = tmp_dir_download,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = tmp_dir_archive,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    make_github_archive_dirs(tmp_dir_download, tmp_dir_archive, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Download repository
-    success = download_github_repository(
-        github_user = github_user,
-        github_repo = github_repo,
-        github_token = github_token,
-        github_branch = github_branch,
-        output_dir = tmp_dir_download,
-        recursive = recursive,
-        clean = clean,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    success = download_github_repository_snapshot(
+        tmp_dir_download, github_user, github_repo,
+        github_token = github_token, github_branch = github_branch, recursive = recursive, clean = clean,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     if not success:
-        logger.log_error("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
-    # Remove git folder
-    if clean:
-        success = fileops.remove_directory(
-            src = paths.join_paths(tmp_dir_download, ".git"),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-    # Archive repository; a pretend run writes no archive to look for
-    archive.create_archive_from_folder(
-        archive_file = tmp_file_archive,
-        source_dir = tmp_dir_download,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not pretend_run and not os.path.exists(tmp_file_archive):
-        logger.log_error("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
-        return False
-
-    # Test archive
-    success = archive.test_archive(
-        archive_file = tmp_file_archive,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Archive repository
+    success = zip_github_repository_download(
+        tmp_file_archive, tmp_dir_download, github_user, github_repo,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     if not success:
-        logger.log_error("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Backup archive
-    dest_rel_path = locker.convert_to_relative_path(out_file_archive)
-    success = locker.backup(
-        src = tmp_file_archive,
-        dest_rel_path = dest_rel_path,
-        locker_type = locker_type,
-        show_progress = True,
-        skip_existing = True,
-        skip_identical = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
-        return False
-
-    # Should be successful
-    return True
+    return backup_github_repository_archive(
+        tmp_file_archive, out_file_archive, locker_type, github_user, github_repo,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)

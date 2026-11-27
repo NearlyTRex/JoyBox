@@ -69,8 +69,15 @@ def test_the_base_emulator_has_no_save_type():
     assert Bare().get_save_type() is None
 
 
-def test_every_emulator_must_say_how_it_sets_up():
-    assert emulatorbase.EmulatorBase.__abstractmethods__ == {"setup", "setup_offline"}
+def test_the_base_emulator_sets_up_by_its_program_data(monkeypatch):
+    calls = []
+    monkeypatch.setattr(emulatorbase.programsetup, "run_setup_steps",
+        lambda family, name, offline = False, setup_params = None: calls.append((family, name, offline)) or True)
+
+    base = emulatorbase.EmulatorBase()
+
+    assert (base.setup(), base.setup_offline()) == (True, True)
+    assert calls == [("emulators", "", False), ("emulators", "", True)]
 
 
 def test_the_base_emulator_configure_step_succeeds_as_a_no_op():

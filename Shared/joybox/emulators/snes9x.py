@@ -1,8 +1,4 @@
 # Local imports
-from joybox import config
-from joybox import logger
-from joybox import release
-from joybox import programs
 from joybox import emulatorbase
 
 
@@ -10,79 +6,3 @@ from joybox import emulatorbase
 class Snes9x(emulatorbase.EmulatorBase):
 
     NAME = "Snes9x"
-
-    # Download the Windows zip and Linux AppImage from the snes9xgit/snes9x GitHub release
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Snes9x", "windows"):
-            success = release.download_github_release(
-                github_user = "snes9xgit",
-                github_repo = "snes9x",
-                starts_with = "snes9x",
-                ends_with = "win32-x64.zip",
-                search_file = "snes9x-x64.exe",
-                install_name = "Snes9x",
-                install_dir = programs.get_program_install_dir("Snes9x", "windows"),
-                backups_dir = programs.get_program_backup_dir("Snes9x", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Snes9x")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Snes9x", "linux"):
-            success = release.download_github_release(
-                github_user = "snes9xgit",
-                github_repo = "snes9x",
-                starts_with = "Snes9x",
-                ends_with = "x86_64.AppImage",
-                install_name = "Snes9x",
-                install_dir = programs.get_program_install_dir("Snes9x", "linux"),
-                backups_dir = programs.get_program_backup_dir("Snes9x", "linux"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Snes9x")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Snes9x", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Snes9x", "windows"),
-                install_name = "Snes9x",
-                install_dir = programs.get_program_install_dir("Snes9x", "windows"),
-                search_file = "snes9x-x64.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Snes9x")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Snes9x", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Snes9x", "linux"),
-                install_name = "Snes9x",
-                install_dir = programs.get_program_install_dir("Snes9x", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Snes9x")
-                return False
-        return True

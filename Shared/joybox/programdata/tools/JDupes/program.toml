@@ -4,3 +4,31 @@
 [config.JDupes]
 program = { windows = "JDupes/windows/jdupes.exe", linux = "JDupes/linux/jdupes" }
 run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "JDupes"
+starts_with = "jdupes"
+ends_with = "win64.zip"
+search_file = "jdupes.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "NearlyTRex"
+github_repo = "JDupes"
+starts_with = "jdupes"
+ends_with = "linux-x86_64.pkg.tar.xz"
+search_file = "jdupes"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "jdupes.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "jdupes"

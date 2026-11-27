@@ -4,9 +4,6 @@ from joybox import logger
 from joybox import paths
 from joybox import environment
 from joybox import fileops
-from joybox import release
-from joybox import sourcebuild
-from joybox import programs
 from joybox import toolbase
 from joybox import platform_info
 
@@ -15,61 +12,6 @@ from joybox import platform_info
 class LGOGDownloader(toolbase.ToolBase):
 
     NAME = "LGOGDownloader"
-
-    # Build a Linux AppImage from the NearlyTRex/LGOGDownloader fork with CMake; Linux only
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Build linux program
-        if programs.should_program_be_installed("LGOGDownloader", "linux"):
-            success = sourcebuild.build_appimage_from_source(
-                release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
-                output_file = "App-x86_64.AppImage",
-                install_name = "LGOGDownloader",
-                install_dir = programs.get_program_install_dir("LGOGDownloader", "linux"),
-                backups_dir = programs.get_program_backup_dir("LGOGDownloader", "linux"),
-                build_cmd = [
-                    "cmake", "..",
-                    "&&",
-                    "make", "-j", "4"
-                ],
-                build_dir = "Build",
-                internal_copies = [
-                    {"from": "Source/LGOGDownloader/Build/lgogdownloader", "to": "AppImage/usr/bin/lgogdownloader"},
-                    {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
-                ],
-                internal_symlinks = [
-                    {"from": "usr/bin/lgogdownloader", "to": "AppRun"}
-                ],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup LGOGDownloader")
-                return False
-        return True
-
-    # Install the Linux AppImage from the build stored in its backups dir
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup linux program
-        if programs.should_program_be_installed("LGOGDownloader", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("LGOGDownloader", "linux"),
-                install_name = "LGOGDownloader",
-                install_dir = programs.get_program_install_dir("LGOGDownloader", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup LGOGDownloader")
-                return False
-        return True
 
     # On Linux, write its config files under the tools root
     def configure(self, setup_params = None):

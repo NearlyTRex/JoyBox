@@ -4,8 +4,6 @@ from joybox import environment
 from joybox import fileops
 from joybox import logger
 from joybox import paths
-from joybox import release
-from joybox import sourcebuild
 from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
@@ -15,96 +13,6 @@ from joybox import emulatorbase
 class PPSSPP(emulatorbase.EmulatorBase):
 
     NAME = "PPSSPP"
-
-    # Windows build from the ppsspp.org download page; Linux SDL AppImage built from the
-    # NearlyTRex/PPSSPP fork with CMake
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("PPSSPP", "windows"):
-            success = release.download_webpage_release(
-                webpage_url = "https://www.ppsspp.org/download",
-                webpage_base_url = "https://www.ppsspp.org",
-                starts_with = "https://www.ppsspp.org/files/",
-                ends_with = "ppsspp_win.zip",
-                search_file = "PPSSPPWindows64.exe",
-                install_name = "PPSSPP",
-                install_dir = programs.get_program_install_dir("PPSSPP", "windows"),
-                backups_dir = programs.get_program_backup_dir("PPSSPP", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup PPSSPP")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("PPSSPP", "linux"):
-            success = sourcebuild.build_appimage_from_source(
-                release_url = "https://github.com/NearlyTRex/PPSSPP.git",
-                output_file = "PPSSPPSDL-x86_64.AppImage",
-                install_name = "PPSSPP",
-                install_dir = programs.get_program_install_dir("PPSSPP", "linux"),
-                backups_dir = programs.get_program_backup_dir("PPSSPP", "linux"),
-                build_cmd = [
-                    "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
-                    "&&",
-                    "make", "-j", "4"
-                ],
-                build_dir = "Build",
-                internal_copies = [
-                    {"from": "Source/PPSSPP/Build/PPSSPPSDL", "to": "AppImage/usr/bin/PPSSPPSDL"},
-                    {"from": "Source/PPSSPP/Build/assets", "to": "AppImage/usr/bin/assets"},
-                    {"from": "Source/PPSSPP/Build/ppsspp.desktop", "to": "AppImage/ppsspp.desktop"},
-                    {"from": "Source/PPSSPP/icons/icon-512.svg", "to": "AppImage/ppsspp.svg"}
-                ],
-                internal_symlinks = [
-                    {"from": "usr/bin/PPSSPPSDL", "to": "AppRun"}
-                ],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup PPSSPP")
-                return False
-        return True
-
-    # Install the Windows and Linux builds from the releases stored in their backups dirs
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("PPSSPP", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("PPSSPP", "windows"),
-                install_name = "PPSSPP",
-                install_dir = programs.get_program_install_dir("PPSSPP", "windows"),
-                search_file = "PPSSPPWindows64.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup PPSSPP")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("PPSSPP", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("PPSSPP", "linux"),
-                install_name = "PPSSPP",
-                install_dir = programs.get_program_install_dir("PPSSPP", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup PPSSPP")
-                return False
-        return True
 
     # Write its config files under the emulators root
     def configure(self, setup_params = None):

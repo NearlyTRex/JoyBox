@@ -1,0 +1,31 @@
+# Help text for the locker_hash_tool command, read by joybox/arguments.py
+
+description = "Record the XXH3 hash, size and modification time of every file in a locker directory."
+details = """
+Scans the locker directory, applies the hidden-file, include and exclude filters, and
+writes one CSV per group of files under `Locker/Hashes` in the configured file
+metadata directory (`file_metadata_dir` in `[UserData.Dirs]`). Files are grouped by
+the first `--depth` folders of their path relative to the locker: with the default
+depth of 2, `Documents/Taxes/2024/return.pdf` is recorded in `Documents/Taxes.csv`.
+Each row holds the file's directory, name, XXH3 hash, size and modification time.
+
+Existing CSVs are updated in place: a file whose size and modification time match its
+row is not hashed again. Afterwards, rows for files that no longer exist are removed
+from every CSV the run touched."""
+section = "Backups & Lockers"
+see_also = [
+    "rebuild_hash_sidecars",
+    "master_backup",
+]
+notes = [
+    "Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`, so `Documents/*` covers every file below `Documents`.",
+    "The include filter is applied before the exclude filter, so an exclude always wins.",
+    "A file in fewer than `--depth` folders is recorded under the folders it has, so `Photos/b.jpg` goes to `Photos.csv`; files at the locker root go to `root.csv`.",
+]
+examples = [
+    ["Hash the default locker with the default filters", "locker_hash_tool"],
+    ["Show which files would be hashed without writing anything", "locker_hash_tool -p -v"],
+    ["Hash only documents and photos", "locker_hash_tool -i \"Documents/**,Photos/**\""],
+    ["Hash everything, including hidden files and the default exclusions", "locker_hash_tool -e \"\" --include_hidden"],
+    ["Hash a locker on an external drive, one CSV per top-level folder", "locker_hash_tool -l /media/user/External -d 1"],
+]

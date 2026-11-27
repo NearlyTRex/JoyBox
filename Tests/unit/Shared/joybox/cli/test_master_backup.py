@@ -4,6 +4,7 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
+from joybox import lockerinfo
 from joybox.cli import master_backup
 
 
@@ -49,7 +50,7 @@ def previewed(tool, monkeypatch):
         def get_locker_name(self):
             return "Local"
 
-    monkeypatch.setattr(master_backup.lockerinfo, "LockerInfo", FakeLockerInfo)
+    monkeypatch.setattr(lockerinfo, "LockerInfo", FakeLockerInfo)
     return tool
 
 
