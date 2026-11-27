@@ -444,6 +444,12 @@ def test_a_library_is_installed_when_its_directory_is_empty(fake_registry):
     assert programs.should_library_be_installed("Absent") is True
 
 
+def test_a_library_platform_is_installed_when_its_sub_folder_is_empty(fake_registry):
+    # A config file beside the platform folder doesn't count as the library being there.
+    assert programs.should_library_be_installed("Packer", "linux") is False
+    assert programs.should_library_be_installed("Packer", "lib") is True
+
+
 def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registry):
     asked = []
     monkeypatch.setattr(programs.paths, "is_runnable_command", lambda path: asked.append(path) or True)

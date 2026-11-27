@@ -42,13 +42,6 @@ def get_requirement_names(lines):
             names.add(get_requirement_name(line))
     return names
 
-# Extract package identifier from string or dict
-# This is the distribution name, used to query install state with pip show
-def get_python_package_id(pkg):
-    if isinstance(pkg, str):
-        return pkg
-    return pkg.get("id", "")
-
 # Extract what pip install receives for a package: its "spec" when it has one,
 # such as a git URL or local checkout, else its id; pip show still uses the id
 def get_package_spec(pkg):
@@ -72,17 +65,6 @@ def get_package_commands(pkg):
     if isinstance(pkg, dict):
         return list(pkg.get("commands", []))
     return []
-
-# Get display info for a package
-def get_python_package_info(pkg):
-    if isinstance(pkg, str):
-        return {"id": pkg, "name": pkg, "description": "", "category": ""}
-    return {
-        "id": pkg.get("id", ""),
-        "name": pkg.get("name", pkg.get("id", "")),
-        "description": pkg.get("description", ""),
-        "category": pkg.get("category", "")
-    }
 
 # Installs joybox editable into the main venv, then the environment's pip list,
 # isolated packages each in their own venv with commands linked into ~/.local/bin
@@ -114,7 +96,7 @@ class Python(installer.Installer):
 
     # The isolated package's own venv under the tools dir, named by its id
     def get_isolated_venv_dir(self, pkg):
-        return os.path.join(self.get_tools_dir(), get_python_package_id(pkg))
+        return os.path.join(self.get_tools_dir(), installer.get_package_id(pkg))
 
     # The isolated venv's bin dir, Scripts on Windows
     def get_isolated_scripts_dir(self, pkg):
@@ -200,7 +182,7 @@ class Python(installer.Installer):
         if not self.is_joybox_current():
             return False
         for pkg in self.get_packages():
-            pkg_id = get_python_package_id(pkg)
+            pkg_id = installer.get_package_id(pkg)
             if not self.is_package_installed(pkg_id, self.get_pip_tool(pkg)):
                 return False
         return True
@@ -210,8 +192,8 @@ class Python(installer.Installer):
         installed = []
         missing = []
         for pkg in self.get_packages():
-            pkg_id = get_python_package_id(pkg)
-            pkg_info = get_python_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if self.is_package_installed(pkg_id, self.get_pip_tool(pkg)):
                 installed.append(display_name)
@@ -243,8 +225,8 @@ class Python(installer.Installer):
 
         # Install packages
         for pkg in self.get_packages():
-            pkg_id = get_python_package_id(pkg)
-            pkg_info = get_python_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if is_isolated_package(pkg):
                 installed = self.install_isolated_package(pkg)
@@ -259,8 +241,8 @@ class Python(installer.Installer):
     def uninstall(self):
         logger.log_info("Uninstalling Python packages")
         for pkg in self.get_packages():
-            pkg_id = get_python_package_id(pkg)
-            pkg_info = get_python_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if is_isolated_package(pkg):
                 uninstalled = self.uninstall_isolated_package(pkg)

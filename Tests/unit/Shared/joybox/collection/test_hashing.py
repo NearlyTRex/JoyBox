@@ -131,6 +131,10 @@ def test_sorting_a_game_without_a_hash_file_fails(hash_files):
     assert hashing.sort_hash_file(SubcategoryGameInfo("Nintendo SNES")) is False
 
 
+def test_only_existing_hash_files_are_iterated(hash_files):
+    assert list(hashing.iterate_existing_hash_files()) == [hash_files["present"]] * len(hashing.config.Supercategory.members())
+
+
 def test_sorting_everything_visits_only_existing_hash_files(hash_files):
     assert hashing.sort_all_hash_files() is True
     assert [kwargs["src"] for name, kwargs in hash_files["calls"]] == [hash_files["present"]] * len(hashing.config.Supercategory.members())

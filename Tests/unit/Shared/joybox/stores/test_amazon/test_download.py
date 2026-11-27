@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox.stores import amazon
+from joybox import storebase
 from amazon_helpers import APPID, NILE, PYTHON
 
 
@@ -16,7 +16,7 @@ def temp(amazon_store, tools, recording_command, monkeypatch, tmp_path):
     def create_temporary_directory(**kwargs):
         state["temp"].mkdir()
         return (True, str(state["temp"]))
-    monkeypatch.setattr(amazon.fileops, "create_temporary_directory", create_temporary_directory)
+    monkeypatch.setattr(storebase.fileops, "create_temporary_directory", create_temporary_directory)
 
     def archive_folder(input_path, output_path, **kwargs):
         state["archived"].append((input_path, output_path, kwargs))
@@ -25,7 +25,7 @@ def temp(amazon_store, tools, recording_command, monkeypatch, tmp_path):
             with open(os.path.join(output_path, "game.7z"), "w", encoding = "utf-8"):
                 pass
         return state["archive_ok"]
-    monkeypatch.setattr(amazon.backup, "archive_folder", archive_folder)
+    monkeypatch.setattr(storebase.backup, "archive_folder", archive_folder)
     return state
 
 
@@ -46,7 +46,7 @@ def test_a_download_is_archived_and_its_temp_removed(amazon_store, temp, recordi
 
 
 def test_a_download_that_archives_nothing_fails(amazon_store, temp, monkeypatch, tmp_path):
-    monkeypatch.setattr(amazon.backup, "archive_folder", lambda **kwargs: True)
+    monkeypatch.setattr(storebase.backup, "archive_folder", lambda **kwargs: True)
 
     assert amazon_store.download(APPID, str(tmp_path / "out")) is False
     assert not temp["temp"].exists()
@@ -68,7 +68,7 @@ def test_a_failed_archive_removes_its_temp(amazon_store, temp, tmp_path):
 
 
 def test_a_download_needs_a_temp_directory(amazon_store, temp, recording_command, monkeypatch, tmp_path):
-    monkeypatch.setattr(amazon.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
+    monkeypatch.setattr(storebase.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
 
     assert amazon_store.download(APPID, str(tmp_path / "out")) is False
     assert recording_command.calls == []

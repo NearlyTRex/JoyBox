@@ -294,3 +294,53 @@ def test_a_listed_path_that_is_not_a_file_is_not_mapped(tree, monkeypatch):
                         lambda src, use_relative_paths: ["Nested"])
 
     assert hashing.build_hash_map(tree) == {}
+
+
+###########################################################
+# Hash functions, hash file formats and locker filters
+###########################################################
+
+def test_a_supported_hash_type_gets_its_own_function():
+    assert hashing.get_hash_func(config.HashType.CRC32) is hashutil.calculate_file_crc32
+
+
+def test_an_unsupported_hash_type_falls_back_to_md5():
+    assert hashing.get_hash_func(None) is hashutil.calculate_file_md5
+
+
+def test_hash_files_are_json_by_default():
+    assert hashing.get_hash_file_funcs() == (hashing.read_hash_file_json, hashing.write_hash_file_json)
+
+
+def test_a_csv_hash_format_gets_the_csv_functions():
+    assert hashing.get_hash_file_funcs(config.HashFormatType.CSV) == (hashing.read_hash_file_csv, hashing.write_hash_file_csv)
+
+
+def test_entries_for_missing_files_are_removed(tmp_path):
+    write_file(tmp_path, "kept.bin")
+    contents = {
+        "kept.bin": {"dir": "", "filename": "kept.bin"},
+        "gone.bin": {"dir": "", "filename": "gone.bin"},
+    }
+
+    assert hashing.remove_missing_hash_entries(contents, str(tmp_path)) is True
+    assert list(contents) == ["kept.bin"]
+
+
+def test_nothing_is_removed_when_every_file_exists(tmp_path):
+    write_file(tmp_path, "kept.bin")
+    contents = {"kept.bin": {"dir": "", "filename": "kept.bin"}}
+
+    assert hashing.remove_missing_hash_entries(contents, str(tmp_path)) is False
+
+
+def test_locker_files_drop_hidden_ones_by_default():
+    files = ["a.txt", os.path.join(".git", "config"), os.path.join("sub", "b.bin")]
+
+    assert hashing.filter_locker_files(files) == ["a.txt", os.path.join("sub", "b.bin")]
+
+
+def test_locker_files_are_filtered_by_include_then_exclude_patterns():
+    files = ["a.txt", "b.txt", "c.bin", ".hidden.txt"]
+
+    assert hashing.filter_locker_files(files, ["*.txt"], ["b*"], include_hidden = True) == ["a.txt", ".hidden.txt"]

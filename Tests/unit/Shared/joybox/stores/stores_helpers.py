@@ -35,11 +35,3 @@ def platform_placement(store):
 
 def every_identifier(json_key):
     return {identifier_type: json_key for identifier_type in config.StoreIdentifierType}
-
-
-###########################################################
-# Steam
-###########################################################
-
-# Half-Life 2
-STEAM_APPID = "220"

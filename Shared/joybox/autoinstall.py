@@ -488,7 +488,7 @@ def _reuse_downloaded_image(output_file, version, verify, verify_signature, verb
     return None
 
 # Download the newest published image, checked against what was published when asked; None on failure
-def _download_release_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure):
+def download_release_image(output_file, version, verify = True, verify_signature = True, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Fetch the newest one published
     image = ubunturelease.find_latest_release_image(
@@ -540,10 +540,10 @@ def obtain_source_image(
             return reused
 
     # Fetch the newest one published
-    return _download_release_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure)
+    return download_release_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure)
 
 # The caller's whole seed, or None after logging that the file is missing or empty
-def _read_user_data_file(user_data_file, verbose, exit_on_failure):
+def read_user_data_file(user_data_file, verbose = False, exit_on_failure = False):
     if not paths.is_path_file(user_data_file):
         logger.log_error("User data file not found: %s" % user_data_file)
         return None
@@ -564,7 +564,7 @@ def _gather_build_inputs(profile, user_data_file, overlay_file, verbose, exit_on
     # Seed
     user_data = None
     if user_data_file:
-        user_data = _read_user_data_file(user_data_file, verbose, exit_on_failure)
+        user_data = read_user_data_file(user_data_file, verbose, exit_on_failure)
         if not user_data:
             return False, None, None
     else:

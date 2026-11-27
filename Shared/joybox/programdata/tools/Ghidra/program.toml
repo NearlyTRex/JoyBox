@@ -27,3 +27,39 @@ template = "patternconstraints.xml"
 [[config_files]]
 path = "Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patterns.xml"
 template = "x86watcomcpp_patterns.xml"
+
+[[setup]]
+kind = "binary_build"
+platform = "lib"
+for = "library"
+host = "windows"
+release_url = "https://github.com/NearlyTRex/Ghidra.git"
+release_branch = "dev-testing"
+output_file = ".zip"
+output_dir = "build/dist"
+search_file = "ghidraRun"
+build_cmd = [
+    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle", "&&",
+    "gradlew.bat", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test",
+]
+
+[[setup]]
+kind = "binary_build"
+platform = "lib"
+for = "library"
+host = "linux"
+release_url = "https://github.com/NearlyTRex/Ghidra.git"
+release_branch = "dev-testing"
+output_file = ".zip"
+output_dir = "build/dist"
+search_file = "ghidraRun"
+build_cmd = [
+    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle", "&&",
+    "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test",
+]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"
+search_file = "ghidraRun"

@@ -60,7 +60,7 @@ def read_game_json_data(
 ############################################################
 
 # Make the json file's directory and write the json data into it
-def _write_new_json_file(
+def write_new_json_file(
     json_file_path,
     json_obj,
     verbose = False,
@@ -119,7 +119,7 @@ def create_game_json_file(
         json_platform = game_platform)
 
     # Write json file
-    return _write_new_json_file(
+    return write_new_json_file(
         json_file_path = json_file_path,
         json_obj = json_obj,
         verbose = verbose,
@@ -136,7 +136,7 @@ _ROM_SUBFILE_KEYS = (
     config.JSON_KEY_DEPENDENCIES)
 
 # Read the game's json file into a JsonData for its platform, empty for a dry run that did not create it; None when missing otherwise
-def _read_game_json_obj(
+def read_game_json_obj(
     json_file_path,
     game_subcategory,
     verbose = False,
@@ -162,7 +162,7 @@ def _read_game_json_obj(
         json_platform = gamenaming.derive_game_platform_from_categories(game_subcategory))
 
 # Files under the game root relative to it, naming encrypted ones by their embedded name when readable
-def _list_game_root_files(
+def list_game_root_files(
     game_root,
     locker_type = None,
     verbose = False,
@@ -205,7 +205,7 @@ def _fill_game_file_keys(
     exit_on_failure = False):
 
     # Get rebased files
-    rebased_files = _list_game_root_files(
+    rebased_files = list_game_root_files(
         game_root = game_root,
         locker_type = locker_type,
         verbose = verbose,
@@ -313,7 +313,7 @@ def _fill_rom_keys(
         exit_on_failure = exit_on_failure)
 
 # Write the json data and clean the file, sorting keys and dropping empty values
-def _write_and_clean_json_file(
+def write_and_clean_json_file(
     json_file_path,
     json_obj,
     verbose = False,
@@ -374,7 +374,7 @@ def _refill_and_write_game_json(
         exit_on_failure = exit_on_failure)
 
     # Write json file
-    return _write_and_clean_json_file(
+    return write_and_clean_json_file(
         json_file_path = json_file_path,
         json_obj = json_obj,
         verbose = verbose,
@@ -399,7 +399,7 @@ def update_game_json_file(
 
     # Read json data
     json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
-    json_obj = _read_game_json_obj(
+    json_obj = read_game_json_obj(
         json_file_path = json_file_path,
         game_subcategory = game_subcategory,
         verbose = verbose,
@@ -422,23 +422,6 @@ def update_game_json_file(
         exit_on_failure = exit_on_failure)
 
 ############################################################
-
-# The given game root when it is a directory, else the game's locker files dir
-def _resolve_game_root(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    game_name,
-    game_root = None,
-    locker_type = None):
-    if paths.is_path_directory(game_root):
-        return game_root
-    return environment.get_locker_gaming_files_dir(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
-        locker_type = locker_type)
 
 # Create then update the game's json file from the game root
 def _create_and_update_game_json_file(
@@ -527,7 +510,7 @@ def build_game_json_file(
     exit_on_failure = False):
 
     # Get game root
-    game_root = _resolve_game_root(game_supercategory, game_category, game_subcategory, game_name, game_root, locker_type)
+    game_root = gamecollection.resolve_game_root(game_supercategory, game_category, game_subcategory, game_name, game_root, locker_type)
     if not paths.is_path_directory(game_root):
         return False
 

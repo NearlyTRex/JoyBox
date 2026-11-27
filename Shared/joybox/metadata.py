@@ -344,7 +344,7 @@ class Metadata:
 ###########################################################
 
 # (platform, entry) for every game entry of each Pegasus metadata file under the directory
-def _iterate_metadata_dir_entries(metadata_dir):
+def iterate_metadata_dir_entries(metadata_dir):
     for filename in paths.build_file_list(metadata_dir):
         if not environment.is_game_metadata_file(filename):
             continue
@@ -355,10 +355,10 @@ def _iterate_metadata_dir_entries(metadata_dir):
                 yield game_platform, game_entry
 
 # (asset files present, missing asset files by asset type) over every asset type of every entry
-def _find_entry_asset_files(metadata_dir):
+def find_entry_asset_files(metadata_dir):
     found_assets = set()
     missing_assets = {}
-    for game_platform, game_entry in _iterate_metadata_dir_entries(metadata_dir):
+    for game_platform, game_entry in iterate_metadata_dir_entries(metadata_dir):
         for asset_type in config.AssetType.members():
 
             # Get asset file
@@ -377,7 +377,7 @@ def _find_entry_asset_files(metadata_dir):
 # each list to a file
 def report_missing_game_assets(assets_dir, metadata_dir, verbose = False, pretend_run = False):
     all_assets = set(paths.build_file_list(assets_dir))
-    found_assets, missing_assets = _find_entry_asset_files(metadata_dir)
+    found_assets, missing_assets = find_entry_asset_files(metadata_dir)
 
     # Report and write missing assets
     for asset_type in config.AssetType.members():
@@ -415,7 +415,7 @@ def report_missing_game_metadata(metadata_dir, keys_to_check, verbose = False, p
     missing_by_key = {key: [] for key in keys_to_check}
     total_entries = 0
     entries_with_missing = set()
-    for game_platform, game_entry in _iterate_metadata_dir_entries(metadata_dir):
+    for game_platform, game_entry in iterate_metadata_dir_entries(metadata_dir):
         total_entries += 1
         entry_id = "%s - %s" % (game_platform, game_entry.get_game())
         for key in keys_to_check:

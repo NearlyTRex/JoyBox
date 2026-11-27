@@ -21,11 +21,11 @@ def build_parser():
     parser.add_string_argument(args = ("-a", "--address"), default = virtualmachine.DEFAULT_ADDRESS, description = "`create`: address reserved for the guest on the libvirt network")
     parser.add_string_argument(args = ("-k", "--ssh_key"), description = "`create`: SSH public key file to authorise for root; `~/.ssh/id_ed25519.pub` or `id_rsa.pub` when omitted")
     parser.add_string_argument(args = ("-d", "--domain"), default = "joybox.test", description = "`hosts`: domain whose name and configured subdomains point at the guest")
-    parser.add_string_argument(args = ("--release"), default = virtualmachine.DEFAULT_RELEASE, description = "`create`: Ubuntu release codename of the cloud image, e.g. `noble`")
-    parser.add_integer_argument(args = ("--memory"), default = virtualmachine.DEFAULT_MEMORY, description = "`create`: memory in MB")
-    parser.add_integer_argument(args = ("--vcpus"), default = virtualmachine.DEFAULT_VCPUS, description = "`create`: processor count")
-    parser.add_integer_argument(args = ("--disk_size"), default = virtualmachine.DEFAULT_DISK_SIZE, description = "`create`: disk size in GB")
-    parser.add_boolean_argument(args = ("--remove"), description = "`hosts`: remove the managed block from `/etc/hosts` instead of writing it")
+    parser.add_string_argument(args = ("--release",), default = virtualmachine.DEFAULT_RELEASE, description = "`create`: Ubuntu release codename of the cloud image, e.g. `noble`")
+    parser.add_integer_argument(args = ("--memory",), default = virtualmachine.DEFAULT_MEMORY, description = "`create`: memory in MB")
+    parser.add_integer_argument(args = ("--vcpus",), default = virtualmachine.DEFAULT_VCPUS, description = "`create`: processor count")
+    parser.add_integer_argument(args = ("--disk_size",), default = virtualmachine.DEFAULT_DISK_SIZE, description = "`create`: disk size in GB")
+    parser.add_boolean_argument(args = ("--remove",), description = "`hosts`: remove the managed block from `/etc/hosts` instead of writing it")
     parser.add_common_arguments()
     return parser
 

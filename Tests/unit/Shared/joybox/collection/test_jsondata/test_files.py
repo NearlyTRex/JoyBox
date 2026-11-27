@@ -220,3 +220,55 @@ def test_ignore_lists_are_kept_per_supercategory(metadata_root):
         config.Supercategory.DLC, CATEGORY, SUBCATEGORY)
 
     assert other == {}
+
+
+###########################################################
+# Writing and reading one json file
+###########################################################
+
+def test_a_new_json_file_is_written_with_its_directory(tmp_path):
+    target = tmp_path / "Nes" / "Game.json"
+
+    assert jsondata.write_new_json_file(str(target), jsondata.jsondata.JsonData({"b": 1}, "Nintendo NES")) is True
+    assert json.loads(target.read_text()) == {"b": 1}
+
+
+def test_a_json_file_is_written_sorted_without_empty_values(tmp_path):
+    target = tmp_path / "Game.json"
+
+    assert jsondata.write_and_clean_json_file(str(target), jsondata.jsondata.JsonData({"b": 1, "a": "", "c": 2}, "Nintendo NES")) is True
+    assert list(json.loads(target.read_text())) == ["b", "c"]
+
+
+def test_a_game_json_obj_is_read_for_its_platform(tmp_path):
+    target = tmp_path / "Game.json"
+    target.write_text(json.dumps({"files": ["Game.nes"]}))
+
+    json_obj = jsondata.read_game_json_obj(str(target), SUBCATEGORY)
+
+    assert json_obj.get_value(config.JSON_KEY_FILES) == ["Game.nes"]
+
+
+def test_a_missing_game_json_obj_is_none_unless_pretending(tmp_path):
+    target = str(tmp_path / "Game.json")
+
+    assert jsondata.read_game_json_obj(target, SUBCATEGORY) is None
+    assert jsondata.read_game_json_obj(target, SUBCATEGORY, pretend_run = True).get_data() == {}
+
+
+class PlainLocker:
+
+    def __init__(self, locker_type = None):
+        self.locker_type = locker_type
+
+    def get_passphrase(self):
+        return None
+
+
+def test_game_root_files_are_listed_relative_to_it(tmp_path, monkeypatch):
+    monkeypatch.setattr(jsondata.lockerinfo, "LockerInfo", PlainLocker)
+    (tmp_path / "DLC").mkdir()
+    (tmp_path / "Game.nes").write_text("x")
+    (tmp_path / "DLC" / "Extra.nes").write_text("x")
+
+    assert sorted(jsondata.list_game_root_files(str(tmp_path))) == [os.path.join("DLC", "Extra.nes"), "Game.nes"]

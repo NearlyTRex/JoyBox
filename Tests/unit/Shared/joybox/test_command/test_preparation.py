@@ -141,6 +141,13 @@ def test_an_ordinary_command_is_left_as_it_is():
     assert new_cmd == ["/usr/bin/true"]
 
 
+def test_each_preprocessing_without_options_gets_its_own():
+    _, first_options = command.preprocess_command(["/usr/bin/true"])
+    _, second_options = command.preprocess_command(["/usr/bin/true"])
+
+    assert first_options is not second_options
+
+
 def test_powershell_can_be_forced_onto_an_ordinary_command():
     options = commandbase.create_command_options(force_powershell = True)
 

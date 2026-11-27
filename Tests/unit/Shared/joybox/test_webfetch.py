@@ -258,6 +258,30 @@ def test_natural_ordering_picks_the_highest_name(names, latest):
     assert max(names, key = webfetch.get_natural_sort_key) == latest
 
 
+def test_the_latest_url_is_the_one_whose_name_sorts_highest():
+    urls = ["https://cdn.example/1.2/app-1.2.zip", "https://cdn.example/1.10/app-1.10.zip"]
+
+    assert webfetch.select_latest_url(urls, verbose = True) == "https://cdn.example/1.10/app-1.10.zip"
+
+
+def test_of_urls_sharing_a_name_the_last_listed_is_latest():
+    urls = ["https://mirror-a.example/app.zip", "https://mirror-b.example/app.zip"]
+
+    assert webfetch.select_latest_url(urls) == "https://mirror-b.example/app.zip"
+
+
+def test_page_urls_are_found_in_links_attributes_and_text():
+    parser = webpage.parse_html_page_source(
+        '<a href="/rel.zip">r</a><div data-src="https://cdn.example/attr.zip?x=1"></div><p>https://cdn.example/text.zip</p>')
+
+    found = webfetch.find_potential_page_urls(parser, "https://site.example")
+
+    assert "https://site.example/rel.zip" in found
+    assert "https://cdn.example/attr.zip?x=1" in found
+    assert "https://cdn.example/attr.zip" in found
+    assert "https://cdn.example/text.zip" in found
+
+
 ###########################################################
 # Fetching a page
 #

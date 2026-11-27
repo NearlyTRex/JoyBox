@@ -96,6 +96,50 @@ def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
+# The given game root when it is a directory, else the game's files dir in the locker
+def resolve_game_root(game_supercategory, game_category, game_subcategory, game_name, game_root = None, locker_type = None):
+    if paths.is_path_directory(game_root):
+        return game_root
+    return environment.get_locker_gaming_files_dir(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        locker_type = locker_type)
+
+# Log an error against the game's supercategory, category and subcategory
+def log_game_error(game_info, message):
+    logger.log_error(
+        message = message,
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory())
+
+# Log an error against the game and its categories, then quit
+def log_game_error_and_quit(game_info, message):
+    logger.log_error(
+        message = message,
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory(),
+        game_name = game_info.get_name(),
+        quit_program = True)
+
+# Run an action on the info of every rom game with json metadata, passing over games include
+# rejects; stops at the first game the action fails
+def run_on_all_rom_games(action, include = None, verbose = False, pretend_run = False, exit_on_failure = False, **action_args):
+    for game_info in iterate_rom_game_infos(verbose, exit_on_failure):
+        if include and not include(game_info):
+            continue
+        if not action(
+            game_info = game_info,
+            **action_args,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
+    return True
+
 # Yield (supercategory, category, subcategory) the parser selected: the one named in its
 # arguments in custom mode, else every selected combination in sorted order
 def iterate_selected_game_categories(

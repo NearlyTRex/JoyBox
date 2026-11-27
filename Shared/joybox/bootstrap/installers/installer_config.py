@@ -1,5 +1,4 @@
 # Local imports
-from joybox.bootstrap import constants
 from joybox import default_settings
 from joybox import runoptions
 from joybox import logger
@@ -30,15 +29,6 @@ class Config(installer.Installer):
     def generate_config_content(self, sections=None, full=False):
         target_sections = None if full else (sections if sections else self.minimal_sections)
         return default_settings.generate_default_config_content(sections=target_sections)
-
-    # Every local and remote environment type
-    def get_supported_environments(self):
-        return [
-            constants.EnvironmentType.LOCAL_UBUNTU,
-            constants.EnvironmentType.LOCAL_WINDOWS,
-            constants.EnvironmentType.REMOTE_UBUNTU,
-            constants.EnvironmentType.REMOTE_WINDOWS,
-        ]
 
     # Whether the home JoyBox.ini exists
     def is_installed(self):

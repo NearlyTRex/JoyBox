@@ -276,32 +276,27 @@ def transform_ps3_disc_image(
     disc_image_files = _list_disc_image_files(source_file, source_file.endswith(".iso"), verbose, pretend_run, exit_on_failure)
 
     # Extract disc images
-    for disc_image_file in disc_image_files:
-        if disc_image_file.endswith(".iso"):
-            error = _extract_ps3_disc(
-                paths.join_paths(paths.get_filename_directory(source_file), disc_image_file),
-                source_file_dkey, output_dir, verbose, pretend_run, exit_on_failure)
-            if error:
-                return (False, error)
+    iso_files = [disc_image_file for disc_image_file in disc_image_files if disc_image_file.endswith(".iso")]
+    for iso_file in iso_files:
+        success = playstation.extract_ps3_iso(
+            iso_file = paths.join_paths(paths.get_filename_directory(source_file), iso_file),
+            dkey_file = source_file_dkey,
+            extract_dir = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return (False, "Unable to extract ps3 disc images")
+
+    # Extract the game and extra pkgs the discs hold, once for all discs
+    if iso_files and not _extract_ps3_disc_packages(output_dir, verbose, pretend_run, exit_on_failure):
+        return (False, "Unable to extract ps3 pkg files")
 
     # Touch index file
     return _touch_raw_index(output_dir, verbose, pretend_run, exit_on_failure)
 
-# Extract a PS3 ISO with its disc key into output_dir, then the game and extra pkgs on it; the error, or None
-def _extract_ps3_disc(iso_file, dkey_file, output_dir, verbose, pretend_run, exit_on_failure):
-
-    # Extract ps3 disc image
-    success = playstation.extract_ps3_iso(
-        iso_file = iso_file,
-        dkey_file = dkey_file,
-        extract_dir = output_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return "Unable to extract ps3 disc images"
-
-    # Extract ps3 pkg files
+# Extract each game and extra pkg of extracted PS3 discs beside itself; False at the first that fails
+def _extract_ps3_disc_packages(output_dir, verbose, pretend_run, exit_on_failure):
     for pkg_file in paths.build_file_list_by_extensions(output_dir, extensions = [".PKG", ".pkg"]):
         should_extract = False
         if "PS3_GAME/PKGDIR" in pkg_file:
@@ -319,8 +314,8 @@ def _extract_ps3_disc(iso_file, dkey_file, output_dir, verbose, pretend_run, exi
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            return "Unable to extract ps3 pkg files"
-    return None
+            return False
+    return True
 
 ###########################################################
 

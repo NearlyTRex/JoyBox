@@ -327,6 +327,57 @@ def test_an_unsupported_driver_type_creates_nothing(chosen):
     assert chosen == []
 
 
+def test_a_given_driver_type_wins_over_the_settings(isolated_settings):
+    isolated_settings.set_value("UserData.Scraping", "web_driver_type", "chrome")
+
+    assert webpage.resolve_driver_type(webpage.config.WebDriverType.BRAVE) == webpage.config.WebDriverType.BRAVE
+
+
+def test_the_driver_type_comes_from_the_settings_when_none_is_given(isolated_settings):
+    isolated_settings.set_value("UserData.Scraping", "web_driver_type", "chrome")
+
+    assert webpage.resolve_driver_type() == webpage.config.WebDriverType.CHROME
+
+
+###########################################################
+# Browser options
+###########################################################
+
+def test_chrome_options_take_each_existing_location(browsers, tmp_path):
+    options = webpage.get_chrome_options(
+        download_dir = str(tmp_path), profile_dir = str(tmp_path), binary_location = str(tmp_path), make_headless = True)
+
+    assert options.experimental["prefs"]["download.default_directory"] == str(tmp_path)
+    assert "--user-data-dir=%s" % tmp_path in options.arguments
+    assert "--headless" in options.arguments
+    assert options.binary_location == str(tmp_path)
+
+
+def test_chrome_options_leave_out_missing_locations(browsers, tmp_path):
+    options = webpage.get_chrome_options(download_dir = str(tmp_path / "absent"))
+
+    assert options.experimental == {}
+    assert "--headless" not in options.arguments
+    assert options.binary_location is None
+
+
+def test_firefox_options_take_each_existing_location(browsers, tmp_path):
+    options = webpage.get_firefox_options(
+        download_dir = str(tmp_path), profile_dir = str(tmp_path), binary_location = str(tmp_path), make_headless = True)
+
+    assert options.preferences["browser.download.dir"] == str(tmp_path)
+    assert options.profile == str(tmp_path)
+    assert options.arguments == ["--headless"]
+    assert options.binary_location == str(tmp_path)
+
+
+def test_firefox_options_leave_out_missing_locations(browsers, tmp_path):
+    options = webpage.get_firefox_options(profile_dir = str(tmp_path / "absent"))
+
+    assert options.preferences == {}
+    assert options.profile is None
+
+
 ###########################################################
 # Teardown
 ###########################################################

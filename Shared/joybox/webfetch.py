@@ -172,7 +172,7 @@ def _process_tag_url(value, base_url, is_iframe = False):
 def _find_matching_page_urls(parser, base_url, starts_with, ends_with, verbose):
     if verbose:
         logger.log_info("GetMatchingUrls: Parsing HTML content for URLs")
-    potential_urls = _find_potential_page_urls(parser, base_url)
+    potential_urls = find_potential_page_urls(parser, base_url)
 
     # Filter URLs that match the starts_with and ends_with patterns
     if verbose:
@@ -190,7 +190,7 @@ def _find_matching_page_urls(parser, base_url, starts_with, ends_with, verbose):
     return matching_urls
 
 # Every url in a parsed page's links, iframes, attributes and text, each also without its query
-def _find_potential_page_urls(parser, base_url):
+def find_potential_page_urls(parser, base_url):
 
     # List to store potential URLs
     potential_urls = []
@@ -263,7 +263,7 @@ def get_matching_url(
 # The latest of the urls when get_latest, else the first
 def _select_matching_url(potential_urls, get_latest, verbose):
     if get_latest:
-        matching_url = _select_latest_url(potential_urls, verbose)
+        matching_url = select_latest_url(potential_urls, verbose)
     else:
         matching_url = potential_urls[0]
         if verbose:
@@ -284,7 +284,7 @@ def _log_url_search(url, base_url, params, starts_with, ends_with, get_latest):
         logger.log_info("  Params: %s" % params)
 
 # The url whose last path segment sorts highest naturally; of urls sharing a segment, the last one listed
-def _select_latest_url(potential_urls, verbose):
+def select_latest_url(potential_urls, verbose = False):
     potential_map = {}
     for potential_url in potential_urls:
         potential_map[potential_url.split("/")[-1]] = potential_url

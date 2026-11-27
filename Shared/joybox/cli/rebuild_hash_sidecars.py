@@ -28,7 +28,7 @@ def build_parser():
     parser.add_group("Behavior")
     parser.add_boolean_argument(
         args = ("-c", "--clear"),
-        description = "Delete the existing database at the destination root before rebuilding")
+        description = "Delete the existing database entries under `--path`, or the whole database when it is empty, before rebuilding")
     parser.add_boolean_argument(
         args = ("-s", "--skip_existing"),
         description = "Leave existing database entries untouched and add only paths that have none")
@@ -43,7 +43,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# After a preview, rebuild the remote locker's hash sidecar database from the local content, clearing the old one first when asked
+# After a preview, rebuild the remote locker's hash sidecar database from the local content, first clearing the old entries under the path when asked
 def main():
 
     # Parse arguments
@@ -71,7 +71,7 @@ def main():
             logger.log_warning("Operation cancelled by user")
             return
 
-    # Rebuild, clearing existing sidecars at the destination root first if requested
+    # Rebuild, clearing the existing sidecar entries under the path first if requested
     synctransfers.rebuild_hash_sidecars(
         target,
         parallel_dirs = args.parallel_dirs,

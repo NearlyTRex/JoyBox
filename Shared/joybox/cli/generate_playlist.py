@@ -20,8 +20,8 @@ def build_parser():
         default = config.PlaylistType.TREE,
         description = "`Tree` writes one playlist for the whole tree; `Local` writes one inside each directory that holds matching files")
     parser.add_group("Behavior")
-    parser.add_boolean_argument(args = ("--allow_empty_lists"), description = "Write playlists that have no entries instead of skipping them")
-    parser.add_boolean_argument(args = ("--allow_single_lists"), description = "Write playlists that have a single entry instead of skipping them")
+    parser.add_boolean_argument(args = ("--allow_empty_lists",), description = "Write playlists that have no entries instead of skipping them")
+    parser.add_boolean_argument(args = ("--allow_single_lists",), description = "Write playlists that have a single entry instead of skipping them")
     parser.add_common_arguments()
     return parser
 

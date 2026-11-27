@@ -567,7 +567,7 @@ def _apply_coding_preset(backend_kind, endpoint, model, num_ctx, system, system_
 
 # (backend, model) connected to the chosen service, the model defaulting to the first it offers;
 # None, logged, when it cannot connect, offers no models or does not offer the model
-def _connect_backend(backend_kind, endpoint, api_key, model):
+def connect_backend(backend_kind, endpoint = None, api_key = "", model = None):
     backend = make_backend(backend_kind, endpoint, api_key, model)
     if not backend:
         return None
@@ -661,7 +661,7 @@ def run_llm_chat(
         if not preset:
             return False
         model, num_ctx, system = preset
-    connection = _connect_backend(backend_kind, endpoint, api_key, model)
+    connection = connect_backend(backend_kind, endpoint, api_key, model)
     if not connection:
         return False
     backend, model = connection

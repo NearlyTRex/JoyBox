@@ -109,3 +109,11 @@ def test_every_platform_directory_layout_parses(metadata_root):
 
     assert layouts
     assert not broken, "%s do not round-trip through their path" % broken
+
+
+@pytest.mark.parametrize("relative_path, category", [
+    (os.path.join("Computer", "Steam", "Game"), config.Category.COMPUTER),
+    (os.path.join("Sony", "Sony PlayStation", "Game"), config.Category.SONY),
+    (os.path.join("Arcade", "Game"), config.Category.OTHER)])
+def test_a_category_is_derived_from_the_start_of_a_path(relative_path, category):
+    assert gameinfo.derive_game_category_from_path(relative_path) == category

@@ -9,10 +9,10 @@ from joybox import logger
 def build_parser():
     parser = arguments.ArgumentParser(command = "launch_moonlight")
     parser.add_group("Stream")
-    parser.add_string_argument(args = ("--host"), description = "Sunshine host to stream from, by address or name; defaults to `[Tools.Moonlight] moonlight_host`")
-    parser.add_string_argument(args = ("--app"), description = "App on the host to start; defaults to `[Tools.Moonlight] moonlight_app`")
-    parser.add_boolean_argument(args = ("--pair"), description = "Pair with the host instead of streaming")
-    parser.add_boolean_argument(args = ("--list"), description = "List the apps the host offers instead of streaming")
+    parser.add_string_argument(args = ("--host",), description = "Sunshine host to stream from, by address or name; defaults to `[Tools.Moonlight] moonlight_host`")
+    parser.add_string_argument(args = ("--app",), description = "App on the host to start; defaults to `[Tools.Moonlight] moonlight_app`")
+    parser.add_boolean_argument(args = ("--pair",), description = "Pair with the host instead of streaming")
+    parser.add_boolean_argument(args = ("--list",), description = "List the apps the host offers instead of streaming")
     parser.add_common_arguments()
     return parser
 

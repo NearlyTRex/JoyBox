@@ -207,7 +207,7 @@ def decrypt_aax_to_m4a(
         exit_on_failure = exit_on_failure)
 
 # The .m4a path in output_dir named after the input file; None without an output_dir
-def _get_m4a_output_file(input_file, output_dir):
+def get_m4a_output_file(input_file, output_dir):
     if not output_dir:
         return None
     filename = paths.get_filename_file(input_file)
@@ -257,7 +257,7 @@ def _decrypt_each_file(input_files, output_dir, activation_bytes, overwrite, ver
         # Decrypt file
         success = decrypt_aax_to_m4a(
             input_file = input_file,
-            output_file = _get_m4a_output_file(input_file, output_dir),
+            output_file = get_m4a_output_file(input_file, output_dir),
             activation_bytes = activation_bytes,
             overwrite = overwrite,
             verbose = verbose,
@@ -277,7 +277,7 @@ def _is_aax_filename(filename):
     return filename.lower().endswith((".aax", ".aa"))
 
 # The .aax and .aa files in the directory, or under it when recursive
-def _find_aax_files(input_dir, recursive):
+def find_aax_files(input_dir, recursive = False):
     aax_files = []
     if recursive:
         for root, _, files in os.walk(input_dir):
@@ -314,7 +314,7 @@ def decrypt_aax_directory(
     _make_missing_directory(output_dir, verbose, pretend_run, exit_on_failure)
 
     # Find AAX files
-    aax_files = _find_aax_files(input_dir, recursive)
+    aax_files = find_aax_files(input_dir, recursive)
     if not aax_files:
         logger.log_warning(f"No AAX/AA files found in: {input_dir}")
         return True

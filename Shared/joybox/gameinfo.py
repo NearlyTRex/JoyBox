@@ -385,7 +385,7 @@ class GameInfo:
     ##############################
 
     # Locker path the game's asset of the given type belongs at, whether or not it exists
-    def _get_asset_file(self, asset_type):
+    def get_asset_file(self, asset_type):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
@@ -394,27 +394,27 @@ class GameInfo:
 
     # Locker path the game's background image belongs at, whether or not it exists
     def get_background_asset(self):
-        return self._get_asset_file(config.AssetType.BACKGROUND)
+        return self.get_asset_file(config.AssetType.BACKGROUND)
 
     # Locker path the game's back cover image belongs at, whether or not it exists
     def get_boxback_asset(self):
-        return self._get_asset_file(config.AssetType.BOXBACK)
+        return self.get_asset_file(config.AssetType.BOXBACK)
 
     # Locker path the game's front cover image belongs at, whether or not it exists
     def get_boxfront_asset(self):
-        return self._get_asset_file(config.AssetType.BOXFRONT)
+        return self.get_asset_file(config.AssetType.BOXFRONT)
 
     # Locker path the game's disc or cartridge label image belongs at, whether or not it exists
     def get_label_asset(self):
-        return self._get_asset_file(config.AssetType.LABEL)
+        return self.get_asset_file(config.AssetType.LABEL)
 
     # Locker path the game's screenshot belongs at, whether or not it exists
     def get_screenshot_asset(self):
-        return self._get_asset_file(config.AssetType.SCREENSHOT)
+        return self.get_asset_file(config.AssetType.SCREENSHOT)
 
     # Locker path the game's preview video belongs at, whether or not it exists
     def get_video_asset(self):
-        return self._get_asset_file(config.AssetType.VIDEO)
+        return self.get_asset_file(config.AssetType.VIDEO)
 
     ##############################
 
@@ -711,7 +711,7 @@ class GameInfo:
 
         # No existing entries: scan the install and try to record these for later
         if len(launch_programs) == 0:
-            launch_programs.extend(_scan_launch_programs(base_dir))
+            launch_programs.extend(scan_launch_programs(base_dir))
             self.set_store_launch_programs(launch_programs, store_key)
             self.update_json_file()
 
@@ -775,7 +775,7 @@ class GameInfo:
 
 # Programs for the runnable files under base_dir likely to be games, skipping the ignored
 # install paths
-def _scan_launch_programs(base_dir):
+def scan_launch_programs(base_dir):
 
     # Get the complete list of runnable files from the install
     runnable_files_all = paths.build_file_list_by_extensions(
@@ -875,11 +875,11 @@ def derive_game_categories_from_file(game_file):
 
     # Get derived category and subcategory
     derived_subcategory = config.Subcategory.from_string(relative_file_path_tokens[1])
-    derived_category = _derive_category_from_path(relative_file_path)
+    derived_category = derive_game_category_from_path(relative_file_path)
     return (derived_supercategory, derived_category, derived_subcategory)
 
 # The Computer, Microsoft, Nintendo or Sony category the relative path starts with, else Other
-def _derive_category_from_path(relative_file_path):
+def derive_game_category_from_path(relative_file_path):
     for category in (config.Category.COMPUTER, config.Category.MICROSOFT, config.Category.NINTENDO, config.Category.SONY):
         if relative_file_path.startswith(category.val()):
             return category

@@ -104,13 +104,55 @@ def test_a_remote_without_a_path_uses_its_top_level(tool):
     assert tool.uploaded[0]["local_root"] == ""
 
 
-def test_clear_always_targets_the_destination_root(tool, tmp_path):
+def test_clear_targets_the_root_database_scoped_to_the_subpath(tool, tmp_path):
     (tmp_path / "Music").mkdir()
 
     tool.run("--no-preview", "-c", "--path", "Music")
 
     assert tool.cleared[0]["remote_path"] == "/Locker"
+    assert tool.cleared[0]["subpath"] == "Music"
     assert tool.uploaded[0]["remote_path"] == "/Locker/Music"
+
+
+def test_clear_without_a_subpath_clears_the_whole_database(tool):
+    tool.run("--no-preview", "-c")
+
+    assert tool.cleared[0]["subpath"] == ""
+
+
+def test_a_single_file_is_hashed_into_its_directory(tool, tmp_path):
+    (tmp_path / "Music").mkdir()
+    (tmp_path / "Music" / "a.mp3").write_text("a")
+
+    tool.run("--no-preview", "--path", "Music/a.mp3")
+
+    assert tool.uploaded[0]["local_path"] == str(tmp_path / "Music" / "a.mp3")
+    assert tool.uploaded[0]["remote_path"] == "/Locker/Music"
+
+
+@pytest.mark.parametrize("path", ["..", "../Other", "Music/../.."])
+def test_a_path_outside_the_locker_is_refused(tool, path):
+    assert tool.exit_code("--no-preview", "-c", "--path", path) != 0
+    assert tool.cleared == []
+    assert tool.uploaded == []
+
+
+@pytest.mark.parametrize("path", ["/", ".", "./"])
+def test_a_root_path_rebuilds_the_whole_locker(tool, tmp_path, path):
+    tool.run("--no-preview", "-c", "--path", path)
+
+    assert tool.cleared[0]["subpath"] == ""
+    assert tool.uploaded[0]["local_path"] == str(tmp_path)
+    assert tool.uploaded[0]["remote_path"] == "/Locker"
+
+
+def test_a_rooted_path_stays_inside_the_locker(tool, tmp_path):
+    (tmp_path / "Music").mkdir()
+
+    tool.run("--no-preview", "-c", "--path", "/Music/")
+
+    assert tool.cleared[0]["subpath"] == "Music"
+    assert tool.uploaded[0]["local_path"] == str(tmp_path / "Music")
 
 
 def test_failed_clear_stops_before_uploading(tool):

@@ -400,7 +400,7 @@ def create_vm(
     exit_on_failure = False):
 
     # Check prerequisites
-    if not _can_create_vm(vm_name, verbose, pretend_run):
+    if not can_create_vm(vm_name, verbose, pretend_run):
         return False
 
     # Read what the guest will trust
@@ -448,7 +448,7 @@ def _create_vm_disk(vm_name, release, image_dir, disk_size, verbose, pretend_run
     return connection, disk_image
 
 # Whether the host has every tool and no guest is already named vm_name, logging what is wrong
-def _can_create_vm(vm_name, verbose, pretend_run):
+def can_create_vm(vm_name, verbose = False, pretend_run = False):
 
     # Check prerequisites
     missing = get_missing_tools()

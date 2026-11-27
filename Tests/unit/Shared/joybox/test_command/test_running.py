@@ -39,6 +39,17 @@ def test_a_missing_options_object_falls_back_to_defaults(processes):
     assert run(options = None) == ("out", 0)
 
 
+def test_each_run_without_options_gets_its_own(monkeypatch):
+    # Options built once as a default would carry one run's changes into the next.
+    seen = []
+    monkeypatch.setattr(commandrun, "run_prepared_command", lambda cmd, options, **kwargs: seen.append(options) or ("", 0))
+
+    command.run_command(["/usr/bin/tool"])
+    command.run_command(["/usr/bin/tool"])
+
+    assert seen[0] is not seen[1]
+
+
 ###########################################################
 # Captured output
 ###########################################################

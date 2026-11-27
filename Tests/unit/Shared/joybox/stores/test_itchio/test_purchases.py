@@ -8,6 +8,7 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import storebase
 from joybox.stores import itchio
 from itchio_helpers import FakeElement, GAME_URL, game_cell
 
@@ -196,6 +197,6 @@ def test_an_unusable_cache_is_refetched(itchio_store, browser, cache_file, conte
 @pytest.mark.parametrize("verbose", [False, True])
 def test_a_cache_that_cannot_be_written_still_returns_the_purchases(itchio_store, browser, monkeypatch, verbose):
     browser.add(game_cell())
-    monkeypatch.setattr(itchio.serialization, "write_json_file", lambda **kwargs: False)
+    monkeypatch.setattr(storebase.serialization, "write_json_file", lambda **kwargs: False)
 
     assert summary(itchio_store.get_latest_purchases(verbose = verbose)) == [("1234", GAME_URL, "Cool Game")]

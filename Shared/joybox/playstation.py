@@ -122,7 +122,7 @@ def extract_ps3_iso(
     exit_on_failure = False):
 
     # Decrypt and extract, removing the decrypted scratch copy whatever the outcome
-    iso_file_dec = paths.join_paths(paths.get_filename_directory(iso_file), paths.get_filename_basename(iso_file) + ".dec.iso")
+    iso_file_dec = paths.change_filename_extension(iso_file, ".dec.iso")
     try:
         success = decrypt_and_extract_ps3_iso(iso_file, iso_file_dec, dkey_file, extract_dir, verbose, pretend_run, exit_on_failure)
     finally:
@@ -452,7 +452,7 @@ def rename_psn_rap_file(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    pkg_file = paths.join_paths(paths.get_filename_directory(rap_file), paths.get_filename_basename(rap_file) + ".pkg")
+    pkg_file = paths.change_filename_extension(rap_file, ".pkg")
     if not paths.is_path_file(pkg_file):
         return False
     content_id = get_psn_package_content_id(pkg_file)

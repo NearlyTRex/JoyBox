@@ -284,3 +284,81 @@ def test_a_pretend_verification_passes_without_real_hashes(locker_hashes):
     params = config.SetupParams(pretend_run = True)
 
     assert build({}).verify_system_files(SYSTEM_FILES, params) is True
+
+
+###########################################################
+# Config files
+###########################################################
+
+@pytest.fixture
+def touched(monkeypatch, emulator_root):
+    calls = []
+    state = {"ok": True}
+
+    def touch_file(src, contents, **kwargs):
+        calls.append((src, contents))
+        return state["ok"]
+
+    monkeypatch.setattr(emulatorbase.fileops, "touch_file", touch_file)
+    return {"calls": calls, "state": state}
+
+
+def with_config_files(files):
+    emulator = build({})
+    emulator.get_config_files = lambda: files
+    return emulator
+
+
+def test_config_files_are_written_stripped_under_the_emulator_root(touched):
+    assert with_config_files({"a.ini": " a \n", "b.ini": "b"}).write_config_files() is True
+    assert touched["calls"] == [(ROOT + "/a.ini", "a"), (ROOT + "/b.ini", "b")]
+
+
+def test_a_failed_config_file_stops_and_logs_its_label(touched, monkeypatch):
+    errors = []
+    monkeypatch.setattr(emulatorbase.logger, "log_error", errors.append)
+    touched["state"]["ok"] = False
+
+    assert with_config_files({"a.ini": "a", "b.ini": "b"}).write_config_files(label = "Pair") is False
+    assert len(touched["calls"]) == 1
+    assert errors == ["Could not setup Pair config files"]
+
+
+###########################################################
+# System archives
+###########################################################
+
+@pytest.fixture
+def system_archive(monkeypatch, tmp_path):
+    extracted = []
+    state = {"ok": True}
+
+    def extract_archive(archive_file, extract_dir, **kwargs):
+        extracted.append((archive_file, extract_dir, kwargs["skip_existing"]))
+        return state["ok"]
+
+    monkeypatch.setattr(emulatorbase.environment, "get_locker_gaming_emulator_setup_dir", lambda name: str(tmp_path))
+    monkeypatch.setattr(emulatorbase.programs, "get_emulator_path_config_value",
+        lambda name, key, platform = None: "/emu/%s/%s/%s" % (name, key, platform))
+    monkeypatch.setattr(emulatorbase.archive, "extract_archive", extract_archive)
+    return {"root": tmp_path, "extracted": extracted, "state": state}
+
+
+def test_a_missing_system_archive_is_skipped(system_archive):
+    assert build({}).extract_system_archive("linux", "nand", config.SetupParams()) is True
+    assert system_archive["extracted"] == []
+
+
+def test_a_system_archive_unzips_into_the_platform_setup_dir(system_archive):
+    archive_file = system_archive["root"] / "nand.zip"
+    archive_file.write_text("zip")
+
+    assert build({}).extract_system_archive("linux", "nand", config.SetupParams()) is True
+    assert system_archive["extracted"] == [(str(archive_file), "/emu/TestMulator/setup_dir/linux/nand", True)]
+
+
+def test_a_failed_system_archive_extraction_fails(system_archive):
+    (system_archive["root"] / "nand.zip").write_text("zip")
+    system_archive["state"]["ok"] = False
+
+    assert build({}).extract_system_archive("linux", "nand", config.SetupParams()) is False

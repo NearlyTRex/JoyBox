@@ -9,6 +9,7 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import storebase
 from joybox.stores import steam
 from steam_helpers import STEAM_SETTINGS, STEAMID64
 
@@ -187,7 +188,7 @@ def test_purchases_need_the_api(steam_store, owned, reachable):
 
 
 def test_a_failed_cache_write_still_returns_purchases(steam_store, owned, monkeypatch):
-    monkeypatch.setattr(steam.serialization, "write_json_file", lambda **kwargs: False)
+    monkeypatch.setattr(storebase.serialization, "write_json_file", lambda **kwargs: False)
 
     assert len(steam_store.get_latest_purchases(verbose = True)) == 2
 

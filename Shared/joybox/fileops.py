@@ -622,6 +622,13 @@ def make_directory(src, verbose = False, pretend_run = False, exit_on_failure = 
             return report_failure("Unable to make directory %s" % src, e, exit_on_failure)
         return True
 
+# Make each directory and its parents in order; False at the first that fails
+def make_directories(dirs, verbose = False, pretend_run = False, exit_on_failure = False):
+    for directory in dirs:
+        if not make_directory(src = directory, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+            return False
+    return True
+
 # Delete src when it is a regular file; True when there is nothing to delete
 def remove_file(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:

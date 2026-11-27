@@ -7,9 +7,7 @@ import re
 from joybox import config
 from joybox import logger
 from joybox import paths
-from joybox import fileops
 from joybox import command
-from joybox import backup
 from joybox import programs
 from joybox import serialization
 from joybox import jsondata
@@ -139,11 +137,9 @@ class Amazon(storebase.StoreBase):
         cache_file_purchases = paths.join_paths(cache_dir, "amazon_purchases_cache.json")
 
         # Load from cache if recent
-        cached_purchases = self._read_purchases_cache(
-            cache_file_purchases = cache_file_purchases,
-            verbose = verbose)
-        if cached_purchases is not None:
-            return cached_purchases
+        cached_data = self.read_purchases_cache(cache_file_purchases, "Amazon", verbose = verbose)
+        if cached_data is not None:
+            return self.make_purchases(cached_data)
 
         # Get library list
         list_output = self._fetch_library_list(
@@ -155,10 +151,11 @@ class Amazon(storebase.StoreBase):
 
         # Parse output and save to cache
         purchases, purchases_data = self._parse_library_list(list_output)
-        self._write_purchases_cache(
+        self.write_purchases_cache(
             cache_dir = cache_dir,
-            cache_file_purchases = cache_file_purchases,
+            cache_file = cache_file_purchases,
             purchases_data = purchases_data,
+            store_label = "Amazon",
             verbose = verbose,
             pretend_run = pretend_run)
         return purchases
@@ -202,35 +199,6 @@ class Amazon(storebase.StoreBase):
             return None
         return list_output
 
-    # Cached purchases when the cache is under a day old and well formed; None otherwise
-    def _read_purchases_cache(self, cache_file_purchases, verbose = False):
-
-        # Check if cache exists and is recent (less than 24 hours old)
-        if not paths.does_path_exist(cache_file_purchases):
-            return None
-        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-        if cache_age_hours >= 24:
-            return None
-        if verbose:
-            logger.log_info("Using cached Amazon purchases data (%.1f hours old)" % cache_age_hours)
-
-        # Load from cache
-        cached_data = serialization.read_json_file(
-            src = cache_file_purchases,
-            verbose = verbose,
-            exit_on_failure = False)
-        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-            cached_purchases = []
-            for purchase_data in cached_data:
-                purchase = jsondata.JsonData(
-                    json_data = purchase_data,
-                    json_platform = self.get_platform())
-                cached_purchases.append(purchase)
-            return cached_purchases
-        if verbose:
-            logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
-        return None
-
     # Purchases and their cacheable appid/name dicts from Nile's library list output
     def _parse_library_list(self, list_output):
         purchases = []
@@ -259,26 +227,6 @@ class Amazon(storebase.StoreBase):
                 config.JSON_KEY_STORE_NAME: line_title
             })
         return purchases, purchases_data
-
-    # Write the purchases cache, logging the outcome when verbose
-    def _write_purchases_cache(
-        self,
-        cache_dir,
-        cache_file_purchases,
-        purchases_data,
-        verbose = False,
-        pretend_run = False):
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved Amazon purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save Amazon cache")
 
     ############################################################
     # Json
@@ -407,9 +355,9 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Download and archive
-        return self._download_and_archive(
-            script_cmd = script_cmd,
-            identifier = identifier,
+        return self.download_and_archive(
+            fetch_func = lambda download_dir: self._run_download_command(
+                script_cmd, identifier, download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure),
             output_dir = output_dir,
             output_name = output_name,
             clean_output = clean_output,
@@ -419,48 +367,6 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Nile-verify the game into a temp dir and archive it into output_dir; True when output_dir ends up with files
-    def _download_and_archive(
-        self,
-        script_cmd,
-        identifier,
-        output_dir,
-        output_name,
-        clean_output,
-        show_progress,
-        skip_existing,
-        skip_identical,
-        verbose,
-        pretend_run,
-        exit_on_failure):
-
-        # Download into a temporary directory and archive it
-        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
-            if not tmp_dir_result:
-                return False
-
-            # Run download command
-            if not self._run_download_command(script_cmd, identifier, tmp_dir_result, verbose, pretend_run, exit_on_failure):
-                return False
-
-            # Archive downloaded files
-            success = backup.archive_folder(
-                input_path = tmp_dir_result,
-                output_path = output_dir,
-                output_name = output_name,
-                clean_output = clean_output,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-        # Check results
-        return paths.does_directory_contain_files(output_dir)
 
     # Fetch the game into download_dir with Nile's verify; True when Nile exits cleanly
     def _run_download_command(

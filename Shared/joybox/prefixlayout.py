@@ -95,12 +95,10 @@ def get_disc_token(disc_file):
             return disc_token
     return config.TOKEN_DISC_MAIN_ROOT
 
-# Map each disc's token to its drive letter in order, its path under disc_base_dir, or its bare name
+# Map each disc's token to its drive letter in order, its path under disc_base_dir, or its bare name;
+# discs past the last free drive letter fall back to the path
 def add_disc_tokens(token_map, disc_files, disc_base_dir, use_drive_letters):
     for disc_letter_index, disc_file in enumerate(disc_files):
-
-        # Get drive letter
-        disc_letter_drive = config.drives_regular[disc_letter_index]
 
         # Get file basename
         disc_file_basename = paths.get_filename_basename(disc_file)
@@ -109,8 +107,8 @@ def add_disc_tokens(token_map, disc_files, disc_base_dir, use_drive_letters):
         disc_token_to_use = get_disc_token(disc_file)
 
         # Add entry
-        if use_drive_letters:
-            token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
+        if use_drive_letters and disc_letter_index < len(config.drives_regular):
+            token_map[disc_token_to_use] = "%s:/" % config.drives_regular[disc_letter_index]
         elif disc_base_dir:
             token_map[disc_token_to_use] = paths.join_paths(disc_base_dir, disc_file_basename)
         else:

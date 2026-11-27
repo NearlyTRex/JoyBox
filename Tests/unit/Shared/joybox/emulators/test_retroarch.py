@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import release
 from joybox.emulators import retroarch
 from emulator_helpers import ConfigureSeams, Release
 
@@ -35,14 +36,14 @@ def program_paths(monkeypatch):
 @pytest.fixture
 def download(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(retroarch.release, "download_general_release", fake)
+    monkeypatch.setattr(release, "download_general_release", fake)
     return fake
 
 
 @pytest.fixture
 def stored(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(retroarch.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "setup_stored_release", fake)
     return fake
 
 

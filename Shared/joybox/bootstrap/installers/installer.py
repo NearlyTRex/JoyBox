@@ -8,6 +8,24 @@ from joybox import platform_info
 from joybox import programs
 from joybox import settings
 
+# The identifier of a package list entry: the entry itself when a string, else its "id"
+def get_package_id(pkg):
+    if isinstance(pkg, str):
+        return pkg
+    return pkg.get("id", "")
+
+# The id, name, description and category of a package list entry, a string entry
+# naming itself with no description or category
+def get_package_info(pkg):
+    if isinstance(pkg, str):
+        return {"id": pkg, "name": pkg, "description": "", "category": ""}
+    return {
+        "id": pkg.get("id", ""),
+        "name": pkg.get("name", pkg.get("id", "")),
+        "description": pkg.get("description", ""),
+        "category": pkg.get("category", "")
+    }
+
 # Base for a bootstrap component: holds the connection and tool paths and
 # defines the install, uninstall and status contract subclasses override
 class Installer:

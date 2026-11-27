@@ -129,6 +129,15 @@ def test_random_selection_without_an_entry_launches_nothing(tool, monkeypatch):
     assert tool.launched == []
 
 
+def test_random_selection_without_a_launchable_platform_launches_nothing(tool, monkeypatch):
+    monkeypatch.setattr(launch_game_json.collection.launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert tool.exit_code("-r", "-c", "Nintendo") != 0
+
+    assert tool.popups == ["No json file specified"]
+    assert tool.launched == []
+
+
 def test_without_any_selection_nothing_is_launched(tool):
     assert tool.exit_code("-c", "Nintendo") != 0
 

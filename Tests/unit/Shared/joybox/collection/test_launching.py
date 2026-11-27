@@ -350,6 +350,26 @@ def test_a_local_launch_reports_the_export_result(steps, store, launcher):
     assert launching.launch_local_game(FakeGameInfo()) is False
 
 
+def test_a_launcher_setup_is_applied_and_reverted_on_its_own(steps, tmp_path):
+    config_file = tmp_path / "emulator.cfg"
+    config_file.write_text("setting")
+    launcher = FakeLauncher(config_file = str(config_file), save_dir = str(tmp_path / "saves"))
+    game = FakeGameInfo(save_dir = "/cache/saves/game")
+
+    assert launching.apply_launcher_setup(game, launcher) is True
+    assert launching.revert_launcher_setup(game, launcher) is True
+    assert steps.names() == [
+        "create_symlink", "replace_strings_in_file", "replace_strings_in_file", "remove_object", "make_directory"]
+
+
+def test_a_failed_launcher_setup_stops_before_the_config(steps, tmp_path):
+    steps.results["create_symlink"] = False
+    launcher = FakeLauncher(save_dir = str(tmp_path / "saves"))
+
+    assert launching.apply_launcher_setup(FakeGameInfo(), launcher) is False
+    assert steps.names() == ["create_symlink"]
+
+
 ###########################################################
 # Choosing the launch path
 ###########################################################
@@ -368,3 +388,26 @@ def test_other_platforms_launch_through_their_emulator(steps, store, launcher):
     assert steps.kwargs("export_local_game_save")["locker_type"] == config.LockerType.LOCAL
     assert launcher.launches[0]["capture_type"] == config.CaptureType.SCREENSHOT
     assert store.launches == []
+
+
+###########################################################
+# Choosing a random game
+###########################################################
+
+def test_a_random_subcategory_has_a_launcher():
+    chosen = {launching.choose_random_launchable_subcategory(config.Category.NINTENDO) for _ in range(20)}
+
+    assert chosen <= set(config.subcategory_map[config.Category.NINTENDO])
+    assert config.Subcategory.NINTENDO_AMIIBO not in chosen
+
+
+def test_a_category_without_launchers_has_no_random_subcategory(monkeypatch):
+    monkeypatch.setattr(launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert launching.choose_random_launchable_subcategory(config.Category.NINTENDO) is None
+
+
+def test_a_category_with_nothing_launchable_chooses_no_game(monkeypatch, quiet):
+    monkeypatch.setattr(launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert launching.choose_random_game_json_file(config.Category.NINTENDO) is None

@@ -1,7 +1,6 @@
 # Local imports
 from joybox import fileops
 from joybox import gamecollection
-from joybox import logger
 from joybox import stores
 from .purchase import download_game_store_purchase
 from .uploading import upload_game_files
@@ -117,16 +116,12 @@ def backup_all_game_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = backup_game_files(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        backup_game_files,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
 
@@ -145,10 +140,4 @@ def backup_game_infos(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error(
-                message = "Backup of game files failed!",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+            gamecollection.log_game_error_and_quit(game_info, "Backup of game files failed!")

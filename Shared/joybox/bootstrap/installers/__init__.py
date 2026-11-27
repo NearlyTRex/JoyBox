@@ -1,7 +1,5 @@
 # Imports
 from joybox.bootstrap.installers.installer_aptget import (
-    get_aptget_package_id,
-    get_aptget_package_info,
     AptGet)
 from joybox.bootstrap.installers.installer_autostart import (
     Autostart)
@@ -79,11 +77,9 @@ from joybox.bootstrap.installers.installer_pidgin import (
 from joybox.bootstrap.installers.installer_pipewire import (
     Pipewire)
 from joybox.bootstrap.installers.installer_python import (
-    get_python_package_id,
     get_package_spec,
     is_isolated_package,
     get_package_commands,
-    get_python_package_info,
     get_requirement_name,
     get_requirement_names,
     Python)
@@ -124,12 +120,12 @@ from joybox.bootstrap.installers.installer_xorg import (
 from joybox.bootstrap.installers.installer_zram import (
     Zram)
 from joybox.bootstrap.installers.installer import (
+    get_package_id,
+    get_package_info,
     Installer)
 
 # The names this package re-exports
 __all__ = [
-    "get_aptget_package_id",
-    "get_aptget_package_info",
     "AptGet",
     "Autostart",
     "AwsCli",
@@ -171,11 +167,9 @@ __all__ = [
     "OnePassword",
     "Pidgin",
     "Pipewire",
-    "get_python_package_id",
     "get_package_spec",
     "is_isolated_package",
     "get_package_commands",
-    "get_python_package_info",
     "get_requirement_name",
     "get_requirement_names",
     "Python",
@@ -198,5 +192,7 @@ __all__ = [
     "Wrappers",
     "Xorg",
     "Zram",
+    "get_package_id",
+    "get_package_info",
     "Installer",
 ]

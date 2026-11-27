@@ -97,9 +97,9 @@ def should_program_be_installed(program_name, program_platform = None):
         return False
     return True
 
-# Determine if library should be installed
-def should_library_be_installed(library_name):
-    return paths.is_directory_empty(get_library_install_dir(library_name))
+# Whether a library's install dir, or its platform sub folder when one is given, is still empty
+def should_library_be_installed(library_name, library_platform = None):
+    return paths.is_directory_empty(get_library_install_dir(library_name, library_platform))
 
 # Determine if program is installed
 def is_program_installed(program_name, program_platform = None):
@@ -252,19 +252,13 @@ def is_program_path_sandboxed_tool(program_path, program_platform = None):
     tool_name = derive_tool_name_from_program_path(program_path, program_platform)
     if not tool_name:
         return False
-    tool_config = get_tool_config_value(tool_name, "run_sandboxed", program_platform)
-    if tool_config:
-        return tool_config
-    return False
+    return is_program_name_sandboxed_tool(tool_name, program_platform)
 
 # Determine if program path is a sandboxed emulator
 def is_program_path_sandboxed_emulator(program_path, program_platform = None):
     emulator_name = derive_emulator_name_from_program_path(program_path, program_platform)
     if not emulator_name:
         return False
-    emulator_config = get_emulator_config_value(emulator_name, "run_sandboxed", program_platform)
-    if emulator_config:
-        return emulator_config
-    return False
+    return is_program_name_sandboxed_emulator(emulator_name, program_platform)
 
 ###########################################################

@@ -273,6 +273,17 @@ def test_a_disc_package_is_unpacked_beside_itself(ps3_tools, tmp_path):
     assert ps3_tools["pkg"][0]["dir"] == str(output / "PS3_EXTRA" / "bonus")
 
 
+def test_each_disc_package_of_a_playlist_is_unpacked_once(ps3_tools, tmp_path):
+    source = write(tmp_path / "discs" / "Game.m3u", "Game (Disc 1).iso\nGame (Disc 2).iso\n")
+    output = tmp_path / "out"
+    write(output / "PS3_EXTRA" / "bonus.pkg")
+
+    transform.transform_ps3_disc_image(source, "/keys/Game.dkey", str(output))
+
+    assert len(ps3_tools["iso"]) == 2
+    assert [call["pkg"] for call in ps3_tools["pkg"]] == [str(output / "PS3_EXTRA" / "bonus.pkg")]
+
+
 def test_a_failed_disc_package_extract_reports_its_reason(ps3_tools, monkeypatch, tmp_path):
     monkeypatch.setattr(transform.playstation, "extract_psn_pkg", lambda **kwargs: False)
     source = write(tmp_path / "discs" / "Game.iso")

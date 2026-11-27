@@ -18,7 +18,7 @@ from joybox import programsetup
 # argument installs into the wrong place for every program at once.
 ###########################################################
 
-PARAMS = types.SimpleNamespace(verbose = True, pretend_run = False, exit_on_failure = False, locker_type = "LOCKER")
+PARAMS = types.SimpleNamespace(verbose = True, pretend_run = False, exit_on_failure = False, locker_type = "LOCKER", skip_autobackup = True)
 
 
 @pytest.fixture
@@ -33,8 +33,8 @@ def setup_world(monkeypatch):
     def should_program_be_installed(name, platform = None):
         state["gates"].append(("program", name, platform))
         return (name, platform) in state["needs_install"]
-    def should_library_be_installed(name):
-        state["gates"].append(("library", name))
+    def should_library_be_installed(name, platform = None):
+        state["gates"].append(("library", name, platform))
         return (name, "library") in state["needs_install"]
     programs = programsetup.programs
     monkeypatch.setattr(programs, "should_program_be_installed", should_program_be_installed)
@@ -45,6 +45,9 @@ def setup_world(monkeypatch):
     monkeypatch.setattr(programs, "get_library_backup_dir", lambda name, platform = None: "/libbackups/%s/%s" % (name, platform))
     monkeypatch.setattr(programs, "get_tool_config_value", lambda name, key: "tool:%s:%s" % (name, key))
     monkeypatch.setattr(programs, "get_emulator_config_value", lambda name, key: "emulator:%s:%s" % (name, key))
+    monkeypatch.setattr(programs, "get_tool_path_config_value", lambda name, key, platform = None: "/tools/%s/%s/%s" % (name, key, platform))
+    monkeypatch.setattr(programs, "get_emulator_path_config_value", lambda name, key, platform = None: "/emulators/%s/%s/%s" % (name, key, platform))
+    monkeypatch.setattr(programsetup.platform_info, "get_current_platform", lambda: "linux")
     monkeypatch.setattr(programsetup.logger, "log_error", state["errors"].append)
 
     for module, function_name in programsetup.STEP_KINDS.values():
@@ -76,7 +79,7 @@ def test_a_release_step_installs_into_the_program_dirs_with_a_backup(setup_world
     assert run(setup_world, [{"kind": kind, "platform": "linux", "ends_with": ".zip"}]) is True
     assert setup_world["calls"] == [(function_name, {
         "ends_with": ".zip", "install_name": "Tool", "install_dir": "/tools/Tool/linux",
-        "backups_dir": "/backups/Tool/linux", "locker_type": "LOCKER", **FLAGS})]
+        "backups_dir": "/backups/Tool/linux", "locker_type": "LOCKER", "skip_autobackup": True, **FLAGS})]
 
 
 def test_a_stored_release_installs_from_the_backups_dir(setup_world):
@@ -99,7 +102,7 @@ def test_a_library_clones_and_archives_once_its_dir_needs_filling(setup_world):
     ]
 
     assert run(setup_world, steps) is True
-    assert setup_world["gates"] == [("library", "Tool")]
+    assert setup_world["gates"] == [("library", "Tool", "lib")]
     assert setup_world["calls"] == [
         ("download_github_repository", {"github_branch": "tool:Tool:github_branch", "output_dir": "/libs/Tool/lib", **FLAGS}),
         ("archive_github_repository", {"output_dir": "/libbackups/Tool/lib", "locker_type": "LOCKER", **FLAGS}),
@@ -126,6 +129,48 @@ def test_an_emulators_config_values_come_from_the_emulator_config(setup_world):
 
     assert setup_world["calls"][0][1]["starts_with"] == "emulator:Emu:prefix"
 
+
+
+@pytest.mark.parametrize("family, name, expected", [
+    (programcatalog.FAMILY_TOOLS, "Tool", "/tools/Tool/themes_dir/windows"),
+    (programcatalog.FAMILY_EMULATORS, "Emu", "/emulators/Emu/themes_dir/windows"),
+])
+def test_a_path_config_value_is_the_programs_path_for_the_steps_platform(setup_world, family, name, expected):
+    setup_world["needs_install"] = {(name, "windows")}
+
+    run(setup_world, [{"kind": "github_release", "platform": "windows", "install_dir": "{program_path_config:themes_dir}"}],
+        family = family, name = name)
+
+    assert setup_world["calls"][0][1]["install_dir"] == expected
+
+
+def test_a_path_config_value_may_name_a_sub_path(setup_world):
+    setup_world["needs_install"] = {("Tool", "linux")}
+
+    run(setup_world, [{"kind": "github_repository", "platform": "linux", "output_dir": "{program_path_config:themes_dir}/Grid"}])
+
+    assert setup_world["calls"][0][1]["output_dir"] == "/tools/Tool/themes_dir/linux/Grid"
+
+
+def test_a_step_for_another_host_is_left_out(setup_world):
+    setup_world["needs_install"] = {("Tool", "library")}
+    steps = [
+        {"kind": "binary_build", "platform": "lib", "for": "library", "host": "windows", "build_cmd": ["gradlew.bat"]},
+        {"kind": "binary_build", "platform": "lib", "for": "library", "host": "linux", "build_cmd": ["./gradlew"]},
+    ]
+
+    assert run(setup_world, steps) is True
+    assert [call[1]["build_cmd"] for call in setup_world["calls"]] == [["./gradlew"]]
+    assert "host" not in setup_world["calls"][0][1]
+
+
+def test_a_failed_step_is_named_by_its_label(setup_world):
+    setup_world["needs_install"] = {("Tool", "linux")}
+    setup_world["results"]["download_github_repository"] = False
+
+    assert run(setup_world, [{"kind": "github_repository", "platform": "linux", "label": "Tool theme"}]) is False
+    assert setup_world["errors"] == ["Could not setup Tool theme"]
+    assert "label" not in setup_world["calls"][0][1]
 
 def test_a_release_type_is_given_by_its_member_name(setup_world):
     setup_world["needs_install"] = {("Tool", "linux")}

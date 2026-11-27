@@ -83,7 +83,7 @@ def _install_selected_packages(package_list, package_type, root_dir, offline, co
 
         # Install package
         logger.log_info("Installing %s %s ..." % (package_type, package_name))
-        success = _install_package(package, offline, configure, setup_params)
+        success = install_package(package, offline = offline, configure = configure, setup_params = setup_params)
         if not success:
             return False
     return True
@@ -106,7 +106,7 @@ def _remove_package_install_dirs(package, root_dir, setup_params):
             _remove_install_directory(install_dir, setup_params)
 
 # Set the package up online or offline, then configure it when asked; False when either step fails
-def _install_package(package, offline, configure, setup_params):
+def install_package(package, offline = False, configure = False, setup_params = None):
     success = False
     if offline:
         success = package.setup_offline(setup_params = setup_params)
@@ -169,13 +169,18 @@ def setup_assets(verbose = False, pretend_run = False, exit_on_failure = False):
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             logger.log_info("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
-            success = _link_subcategory_assets(game_category, game_subcategory, verbose, pretend_run, exit_on_failure)
+            success = link_subcategory_assets(
+                game_category,
+                game_subcategory,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             if not success:
                 return False
     return True
 
 # Symlink each asset type's locker directory into the subcategory's Pegasus metadata; False at the first failure
-def _link_subcategory_assets(game_category, game_subcategory, verbose, pretend_run, exit_on_failure):
+def link_subcategory_assets(game_category, game_subcategory, verbose = False, pretend_run = False, exit_on_failure = False):
     for asset_type in config.AssetType.members():
 
         # Get directories

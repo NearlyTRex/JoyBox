@@ -4,11 +4,9 @@ import types
 # Local imports
 from joybox import config
 from joybox import logger
-from joybox import fileops
 from joybox import programs
 from joybox import serialization
 from joybox import command
-from joybox import backup
 from joybox import jsondata
 from joybox import storebase
 from joybox import strings
@@ -188,11 +186,9 @@ class HumbleBundle(storebase.StoreBase):
         cache_file_purchases = paths.join_paths(cache_dir, "humble_purchases_cache.json")
 
         # Load from cache if recent
-        cached_purchases = self._read_purchases_cache(
-            cache_file_purchases = cache_file_purchases,
-            verbose = verbose)
-        if cached_purchases is not None:
-            return cached_purchases
+        cached_data = self.read_purchases_cache(cache_file_purchases, "Humble Bundle", verbose = verbose)
+        if cached_data is not None:
+            return self.make_purchases(cached_data)
 
         # Fetch purchases from the manager
         fetched = self._fetch_purchases(
@@ -204,10 +200,11 @@ class HumbleBundle(storebase.StoreBase):
 
         # Save to cache
         purchases, purchases_data = fetched
-        self._write_purchases_cache(
+        self.write_purchases_cache(
             cache_dir = cache_dir,
-            cache_file_purchases = cache_file_purchases,
+            cache_file = cache_file_purchases,
             purchases_data = purchases_data,
+            store_label = "Humble Bundle",
             verbose = verbose,
             pretend_run = pretend_run)
         return purchases
@@ -266,35 +263,6 @@ class HumbleBundle(storebase.StoreBase):
             logger.log_error("Unable to find humble purchases")
             return None
         return list_output
-
-    # Cached purchases when the cache is under a day old and well formed; None otherwise
-    def _read_purchases_cache(self, cache_file_purchases, verbose = False):
-
-        # Check if cache exists and is recent (less than 24 hours old)
-        if not paths.does_path_exist(cache_file_purchases):
-            return None
-        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-        if cache_age_hours >= 24:
-            return None
-        if verbose:
-            logger.log_info("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
-
-        # Load from cache
-        cached_data = serialization.read_json_file(
-            src = cache_file_purchases,
-            verbose = verbose,
-            exit_on_failure = False)
-        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-            cached_purchases = []
-            for purchase_data in cached_data:
-                purchase = jsondata.JsonData(
-                    json_data = purchase_data,
-                    json_platform = self.get_platform())
-                cached_purchases.append(purchase)
-            return cached_purchases
-        if verbose:
-            logger.log_warning("Failed to load Humble Bundle cache, will fetch fresh data")
-        return None
 
     # Purchases and their cacheable dicts for each appname line of the listing; None when a
     # purchase cannot be described or the output names no games
@@ -357,26 +325,6 @@ class HumbleBundle(storebase.StoreBase):
             config.JSON_KEY_STORE_NAME: line_name
         }
         return purchase, purchase_data
-
-    # Write the purchases cache, logging the outcome when verbose
-    def _write_purchases_cache(
-        self,
-        cache_dir,
-        cache_file_purchases,
-        purchases_data,
-        verbose = False,
-        pretend_run = False):
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved Humble Bundle purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save Humble Bundle cache")
 
     ############################################################
     # Json
@@ -454,9 +402,9 @@ class HumbleBundle(storebase.StoreBase):
             return False
 
         # Download and archive
-        return self._download_and_archive(
-            manager_cmd = manager_cmd,
-            identifier = identifier,
+        return self.download_and_archive(
+            fetch_func = lambda download_dir: self._run_download_command(
+                manager_cmd, identifier, download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure),
             output_dir = output_dir,
             output_name = output_name,
             clean_output = clean_output,
@@ -466,48 +414,6 @@ class HumbleBundle(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Download the game into a temp dir and archive it into output_dir; True when output_dir ends up with files
-    def _download_and_archive(
-        self,
-        manager_cmd,
-        identifier,
-        output_dir,
-        output_name,
-        clean_output,
-        show_progress,
-        skip_existing,
-        skip_identical,
-        verbose,
-        pretend_run,
-        exit_on_failure):
-
-        # Download into a temporary directory and archive it
-        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
-            if not tmp_dir_result:
-                return False
-
-            # Run download command
-            if not self._run_download_command(manager_cmd, identifier, tmp_dir_result, verbose, pretend_run, exit_on_failure):
-                return False
-
-            # Archive downloaded files
-            success = backup.archive_folder(
-                input_path = tmp_dir_result,
-                output_path = output_dir,
-                output_name = output_name,
-                clean_output = clean_output,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-        # Check results
-        return paths.does_directory_contain_files(output_dir)
 
     # Download the preferred platform's build into download_dir; True when the manager exits cleanly
     def _run_download_command(

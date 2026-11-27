@@ -47,3 +47,15 @@ kind = "stored_release"
 platform = "linux"
 search_file = "citra-qt.AppImage"
 skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "citra-qt.exe"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "citra-qt.AppImage"
+skip_if_missing = true

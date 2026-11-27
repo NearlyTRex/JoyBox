@@ -7,7 +7,6 @@ from joybox import config
 from joybox import command
 from joybox import commandbase
 from joybox import programs
-from joybox import serialization
 from joybox import logger
 from joybox import fileops
 from joybox import network
@@ -255,9 +254,9 @@ class Steam(storebase.StoreBase):
         cache_file_purchases = paths.join_paths(cache_dir, "steam_purchases_cache.json")
 
         # Load from cache if available
-        cached_purchases = self._load_cached_purchases(cache_file_purchases, verbose = verbose)
-        if cached_purchases is not None:
-            return cached_purchases
+        cached_data = self.read_purchases_cache(cache_file_purchases, "Steam", verbose = verbose)
+        if cached_data is not None:
+            return self.make_purchases(cached_data)
 
         # Get steam json
         steam_json = self._fetch_owned_games(verbose = verbose, exit_on_failure = exit_on_failure)
@@ -278,34 +277,8 @@ class Steam(storebase.StoreBase):
             purchases_data.append(purchase_data)
 
         # Save to cache
-        self._save_purchases_cache(cache_dir, cache_file_purchases, purchases_data, verbose = verbose, pretend_run = pretend_run)
+        self.write_purchases_cache(cache_dir, cache_file_purchases, purchases_data, "Steam", verbose = verbose, pretend_run = pretend_run)
         return purchases
-
-    # Cached purchases when the cache is under a day old and holds a list of dicts, else None
-    def _load_cached_purchases(self, cache_file_purchases, verbose = False):
-
-        # Check if cache exists and is recent (less than 24 hours old)
-        if not paths.does_path_exist(cache_file_purchases):
-            return None
-        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-        if cache_age_hours >= 24:
-            return None
-        if verbose:
-            logger.log_info("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
-
-        # Load from cache
-        cached_data = serialization.read_json_file(
-            src = cache_file_purchases,
-            verbose = verbose,
-            exit_on_failure = False)
-        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-            return [
-                jsondata.JsonData(json_data = purchase_data, json_platform = self.get_platform())
-                for purchase_data in cached_data
-            ]
-        if verbose:
-            logger.log_warning("Failed to load Steam cache, will fetch fresh data")
-        return None
 
     # The Web API's owned-games json, free games and app info included; None when unreachable or empty
     def _fetch_owned_games(self, verbose = False, exit_on_failure = False):
@@ -346,20 +319,6 @@ class Steam(storebase.StoreBase):
                 paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, line_appid)
             ]
         }
-
-    # Write the purchase fields to the cache file, logging the outcome when verbose
-    def _save_purchases_cache(self, cache_dir, cache_file_purchases, purchases_data, verbose = False, pretend_run = False):
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved Steam purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save Steam cache")
 
     ############################################################
     # Json
@@ -513,57 +472,11 @@ class Steam(storebase.StoreBase):
             return None
 
         # Scrape the store page with retries
-        return self._scrape_metadata_with_retries(identifier, verbose = verbose, pretend_run = pretend_run)
-
-    # Retry the page scrape in a fresh headless driver, disconnecting it between attempts and at the end
-    def _scrape_metadata_with_retries(self, identifier, verbose = False, pretend_run = False):
-
-        # Store web driver for cleanup
-        web_driver = None
-
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            if web_driver:
-                self.web_disconnect(
-                    web_driver = web_driver,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                web_driver = None
-
-        # Fetch function
-        def attempt_metadata_fetch():
-            nonlocal web_driver
-            web_driver = self._connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
-            if not web_driver:
-                return None
-            return self._scrape_metadata_page(web_driver, identifier, verbose = verbose)
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_metadata_fetch,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = "Steam metadata fetch for '%s'" % identifier)
-        finally:
-
-            # Final cleanup
-            cleanup_driver()
-
-    # A headless web driver; None in a pretend run that got none, else ScrapeFailed without one
-    def _connect_scrape_driver(self, verbose = False, pretend_run = False):
-        web_driver = self.web_connect(
-            headless = True,
+        return self.scrape_with_retries(
+            scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
+            operation_name = "Steam metadata fetch for '%s'" % identifier,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not web_driver:
-            if pretend_run:
-                return None
-            raise webpage.ScrapeFailed("Failed to connect to web driver")
-        return web_driver
+            pretend_run = pretend_run)
 
     # Load the store page past its age gate and read the description and details into a metadata entry
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False):

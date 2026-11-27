@@ -225,6 +225,21 @@ class ArgumentParser:
 
     #################################################
 
+    # Declare an option converted by value_type; a positional one becomes optional when it has a default
+    def _add_typed_argument(self, args, value_type, default, required, description):
+        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
+        if is_positional:
+            return self._add_argument(args, description,
+                default = default,
+                nargs = "?" if default is not None else None,
+                type = value_type,
+                help = description)
+        return self._add_argument(args, description,
+            default = default,
+            required = required,
+            type = value_type,
+            help = description)
+
     # Declare a text option; a positional one becomes optional when it has a default
     def add_string_argument(
         self,
@@ -232,18 +247,7 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
-        if is_positional:
-            return self._add_argument(args, description,
-                default = default,
-                nargs = "?" if default is not None else None,
-                type = str,
-                help = description)
-        return self._add_argument(args, description,
-            default = default,
-            required = required,
-            type = str,
-            help = description)
+        return self._add_typed_argument(args, str, default, required, description)
 
     # Add string list argument
     # With several_per_flag, "-c a b" and "-c a -c b" both give ["a", "b"]
@@ -269,18 +273,7 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
-        if is_positional:
-            return self._add_argument(args, description,
-                default = default,
-                nargs = "?" if default is not None else None,
-                type = int,
-                help = description)
-        return self._add_argument(args, description,
-            default = default,
-            required = required,
-            type = int,
-            help = description)
+        return self._add_typed_argument(args, int, default, required, description)
 
     # Declare an on/off flag that is False unless passed
     def add_boolean_argument(

@@ -4,10 +4,7 @@ import types
 
 # Local imports
 from joybox import config
-from joybox import serialization
 from joybox import logger
-from joybox import fileops
-from joybox import jsondata
 from joybox import webpage
 from joybox import webcookies
 from joybox import webfetch
@@ -89,30 +86,18 @@ class Itchio(storebase.StoreBase):
         if self.is_logged_in():
             return True
 
-        # Connect to web
-        web_driver = self.web_connect(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return False
-
         # Log into website
-        success = False
-        try:
-            success = webcookies.login_cookie_website(
+        success = self.run_with_web_driver(
+            func = lambda web_driver: webcookies.login_cookie_website(
                 driver = web_driver,
                 url = "https://itch.io/login",
                 cookie = self.get_cookie_file(),
                 locator = webpage.ElementLocator({"link_text": "My feed"}),
-                verbose = verbose)
-        finally:
-            disconnected = self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        if not success or not disconnected:
+                verbose = verbose),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
             return False
 
         # Should be successful
@@ -135,9 +120,7 @@ class Itchio(storebase.StoreBase):
         cache_file_purchases = paths.join_paths(cache_dir, "itchio_purchases_cache.json")
 
         # Load from cache if recent
-        cached_data = self._read_purchases_cache(
-            cache_file_purchases = cache_file_purchases,
-            verbose = verbose)
+        cached_data = self.read_purchases_cache(cache_file_purchases, "itch.io", verbose = verbose)
         if cached_data is not None:
             return self.make_purchases(cached_data)
 
@@ -150,43 +133,10 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Save to cache
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved itch.io purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save itch.io cache")
+        self.write_purchases_cache(cache_dir, cache_file_purchases, purchases_data, "itch.io", verbose = verbose, pretend_run = pretend_run)
 
         # Return purchases
         return self.make_purchases(purchases_data)
-
-    # Cached purchase dicts when the cache is under a day old and well formed; None otherwise
-    def _read_purchases_cache(self, cache_file_purchases, verbose = False):
-
-        # Check if cache exists and is recent (less than 24 hours old)
-        if not paths.does_path_exist(cache_file_purchases):
-            return None
-        cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-        if cache_age_hours >= 24:
-            return None
-        if verbose:
-            logger.log_info("Using cached itch.io purchases data (%.1f hours old)" % cache_age_hours)
-
-        # Load from cache
-        cached_data = serialization.read_json_file(
-            src = cache_file_purchases,
-            verbose = verbose,
-            exit_on_failure = False)
-        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-            return cached_data
-        if verbose:
-            logger.log_warning("Failed to load itch.io cache, will fetch fresh data")
-        return None
 
     # Scrape the purchase dicts in a headless browser; None when it cannot connect, scrape or disconnect
     def _scrape_purchases_headless(
@@ -195,41 +145,16 @@ class Itchio(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Connect to web
-        web_driver = self.web_connect(
+        return self.run_with_web_driver(
+            func = lambda web_driver: self.scrape_purchases(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure),
             headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
-
-        # Scrape purchases
-        purchases_data = None
-        try:
-            purchases_data = self.scrape_purchases(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        finally:
-            disconnected = self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        if purchases_data is None or not disconnected:
-            return None
-        return purchases_data
-
-    # Wrap each cached or scraped purchase dict as a JsonData for the itch.io platform
-    def make_purchases(self, purchases_data):
-        purchases = []
-        for purchase_data in purchases_data:
-            purchases.append(jsondata.JsonData(
-                json_data = purchase_data,
-                json_platform = self.get_platform()))
-        return purchases
 
     # Scroll to the end of the page until its grid loader is gone; False when it is still there at the deadline
     def scroll_until_loaded(self, web_driver):
@@ -319,54 +244,12 @@ class Itchio(storebase.StoreBase):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
-        # Store web driver for cleanup
-        web_driver = None
-
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            self._disconnect_metadata_driver(web_driver, verbose = verbose, pretend_run = pretend_run)
-            web_driver = None
-
-        # Fetch function
-        def attempt_metadata_fetch():
-            nonlocal web_driver
-            web_driver = self._connect_metadata_driver(verbose = verbose, pretend_run = pretend_run)
-            if not web_driver:
-                return None
-            return self._scrape_metadata_page(web_driver, identifier, verbose = verbose, pretend_run = pretend_run)
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_metadata_fetch,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = "Itch.io metadata fetch for '%s'" % identifier)
-        finally:
-
-            # Final cleanup
-            cleanup_driver()
-
-    # Headless browser for one metadata attempt; None in a pretend run, else ScrapeFailed when it cannot start
-    def _connect_metadata_driver(self, verbose = False, pretend_run = False):
-        web_driver = self.web_connect(
-            headless = True,
+        # Scrape the game page with retries
+        return self.scrape_with_retries(
+            scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose, pretend_run = pretend_run),
+            operation_name = "Itch.io metadata fetch for '%s'" % identifier,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not web_driver and not pretend_run:
-            raise webpage.ScrapeFailed("Failed to connect to web driver")
-        return web_driver
-
-    # Close a metadata attempt's browser, if one was opened
-    def _disconnect_metadata_driver(self, web_driver, verbose = False, pretend_run = False):
-        if web_driver:
-            self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
+            pretend_run = pretend_run)
 
     # Load the game page with the saved cookie and read its metadata; ScrapeFailed when it does not load
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False, pretend_run = False):
@@ -503,33 +386,17 @@ class Itchio(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Connect to web
-        web_driver = self.web_connect(
-            headless = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
-
-        # Search for cover
-        latest_asset_url = None
-        try:
-            latest_asset_url = self.search_cover(
+        return self.run_with_web_driver(
+            func = lambda web_driver: self.search_cover(
                 web_driver = web_driver,
                 identifier = identifier,
                 verbose = verbose,
                 pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        finally:
-            disconnected = self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        if not disconnected:
-            return None
-        return latest_asset_url
+                exit_on_failure = exit_on_failure),
+            headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Search itch.io by the page's path and return the cover image of the result linking to that exact page, else None
     def search_cover(

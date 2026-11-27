@@ -9,7 +9,7 @@ from joybox import fileops
 from joybox import logger
 from joybox import sync
 from joybox import synctransfers
-from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, make_database
+from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, make_database, read_database
 
 
 ###########################################################
@@ -117,6 +117,39 @@ def test_clearing_the_sidecar_deletes_only_the_database(monkeypatch):
     assert synctransfers.clear_hash_sidecar_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True) is True
     assert deleted[0]["remote_path"] == synctransfers.get_hash_database_path(REMOTE_PATH)
     assert deleted[0]["pretend_run"] is True
+
+
+def test_clearing_a_subpath_keeps_the_entries_outside_it(remote, temp_dirs, monkeypatch):
+    monkeypatch.setattr(sync, "delete_file_on_remote", lambda **kwargs: pytest.fail("deleted the database"))
+    make_database(remote.store, [
+        {"file_path": "Music", "hash": "m", "size": 1, "mtime": 1.0},
+        {"file_path": "Music/a.mp3", "hash": "a", "size": 1, "mtime": 1.0},
+        {"file_path": "Music/Live/b.mp3", "hash": "b", "size": 1, "mtime": 1.0},
+        {"file_path": "Musicals/c.mp3", "hash": "c", "size": 1, "mtime": 1.0},
+        {"file_path": "Games/d.zip", "hash": "d", "size": 1, "mtime": 1.0}])
+
+    assert synctransfers.clear_hash_sidecar_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, subpath = "/Music/") is True
+    assert sorted(read_database(remote.store)) == ["Games/d.zip", "Musicals/c.mp3"]
+    assert remote.uploads[0]["remote_path"] == REMOTE_PATH
+
+
+def test_clearing_a_subpath_without_a_database_changes_nothing(remote, temp_dirs):
+    assert synctransfers.clear_hash_sidecar_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, subpath = "Music") is True
+    assert remote.uploads == []
+
+
+def test_clearing_a_subpath_fails_when_the_database_cannot_be_fetched(remote, temp_dirs, quiet):
+    make_database(remote.store, [])
+    remote.download_result = False
+
+    assert synctransfers.clear_hash_sidecar_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, subpath = "Music") is False
+    assert remote.uploads == []
+
+
+def test_clearing_a_subpath_without_a_temporary_directory_is_a_failure(remote, quiet, monkeypatch):
+    monkeypatch.setattr(fileops, "create_temporary_directory", lambda **kwargs: (False, None))
+
+    assert synctransfers.clear_hash_sidecar_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, subpath = "Music") is False
 
 
 ###########################################################

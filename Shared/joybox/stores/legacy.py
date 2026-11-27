@@ -145,52 +145,12 @@ class Legacy(storebase.StoreBase):
             logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
-        # Store web driver for cleanup
-        web_driver = None
-
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            self._disconnect_search_driver(web_driver, verbose = verbose, pretend_run = pretend_run)
-            web_driver = None
-
-        # Search function
-        def attempt_url_search():
-            nonlocal web_driver
-            web_driver = self._connect_search_driver(verbose = verbose, pretend_run = pretend_run)
-            if not web_driver:
-                return None
-            return self._search_store_url(web_driver, identifier, verbose = verbose)
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_url_search,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = "Legacy store URL search for '%s'" % identifier)
-        finally:
-            cleanup_driver()
-
-    # Headless browser for one search attempt; None in a pretend run, else ScrapeFailed when it cannot start
-    def _connect_search_driver(self, verbose = False, pretend_run = False):
-        web_driver = self.web_connect(
-            headless = True,
+        # Search the store with retries
+        return self.scrape_with_retries(
+            scrape_func = lambda web_driver: self._search_store_url(web_driver, identifier, verbose = verbose),
+            operation_name = "Legacy store URL search for '%s'" % identifier,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not web_driver and not pretend_run:
-            raise webpage.ScrapeFailed("Failed to connect to web driver")
-        return web_driver
-
-    # Close a search attempt's browser, if one was opened
-    def _disconnect_search_driver(self, web_driver, verbose = False, pretend_run = False):
-        if web_driver:
-            self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
+            pretend_run = pretend_run)
 
     # Search Big Fish Games for the title and return the best close match's page; ScrapeFailed when the search does not load
     def _search_store_url(self, web_driver, identifier, verbose = False):

@@ -21,13 +21,8 @@ def build_hash_files(
     exit_on_failure = False):
 
     # Get game root
-    if not paths.is_path_directory(game_root):
-        game_root = environment.get_locker_gaming_files_dir(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name(),
-            locker_type = locker_type)
+    game_root = gamecollection.resolve_game_root(
+        game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_info.get_name(), game_root, locker_type)
     if not paths.is_path_directory(game_root):
         return False
 
@@ -82,16 +77,12 @@ def build_all_hash_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = build_hash_files(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        build_hash_files,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
@@ -118,16 +109,9 @@ def sort_hash_file(
         exit_on_failure = exit_on_failure)
     return success
 
-# Yield every supercategory, category and subcategory combination
-def _iterate_game_categories():
-    for game_supercategory in config.Supercategory.members():
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                yield game_supercategory, game_category, game_subcategory
-
 # Yield each existing hash file across all supercategories, categories and subcategories
-def _iterate_existing_hash_files():
-    for game_supercategory, game_category, game_subcategory in _iterate_game_categories():
+def iterate_existing_hash_files():
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_all_categories():
         hash_file = environment.get_game_hashes_metadata_file(
             game_supercategory = game_supercategory,
             game_category = game_category,
@@ -142,7 +126,7 @@ def sort_all_hash_files(
     exit_on_failure = False):
 
     # Sort hash files
-    for hash_file in _iterate_existing_hash_files():
+    for hash_file in iterate_existing_hash_files():
         success = hashing.sort_hash_file(
             src = hash_file,
             verbose = verbose,
@@ -190,13 +174,7 @@ def build_hash_files_for_games(games, locker_type = None, verbose = False, prete
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error(
-                message = "Build of hash files failed!",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+            gamecollection.log_game_error_and_quit(game_info, "Build of hash files failed!")
 
 # Drop the missing-file entries from the hash file of each subcategory the games cover, once
 # per subcategory, against the locker base's or the locker's Gaming root; quits on a failure

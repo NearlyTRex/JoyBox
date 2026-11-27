@@ -81,13 +81,6 @@ def scan_game_files(
 # Verifying
 ############################################################
 
-# Every supercategory, category and subcategory combination, in config order
-def _iterate_game_categories():
-    for game_supercategory in config.Supercategory.members():
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                yield game_supercategory, game_category, game_subcategory
-
 # Quit on a json file whose game has no directory in the locker
 def _check_json_files_have_games():
     for json_file in paths.build_file_list_by_extensions(environment.get_game_json_metadata_root_dir(), extensions = [".json"]):
@@ -149,8 +142,8 @@ def _check_hash_file_references(game_supercategory, game_category, game_subcateg
 def verify_game_files(verbose = False, exit_on_failure = False):
     _check_json_files_have_games()
     _verify_metadata_files(verbose)
-    for game_supercategory, game_category, game_subcategory in _iterate_game_categories():
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_all_categories():
         for game_name in gamecollection.find_json_game_names(game_supercategory, game_category, game_subcategory):
             _check_json_game_files(game_supercategory, game_category, game_subcategory, game_name, verbose, exit_on_failure)
-    for game_supercategory, game_category, game_subcategory in _iterate_game_categories():
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_all_categories():
         _check_hash_file_references(game_supercategory, game_category, game_subcategory)

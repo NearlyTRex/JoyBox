@@ -88,7 +88,7 @@ def create_sandboxie_prefix(
     exit_on_failure = False):
 
     # Make directories
-    success = _make_directories(
+    success = fileops.make_directories(
         dirs = [
             options.get_prefix_dir(),
             prefixlayout.get_sandboxie_real_drive_path(options, "C"),
@@ -115,18 +115,6 @@ def create_sandboxie_prefix(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-# Make each directory in order; False at the first that fails
-def _make_directories(dirs, verbose, pretend_run, exit_on_failure):
-    for prefix_subdir in dirs:
-        success = fileops.make_directory(
-            src = prefix_subdir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
 
 # Set each box setting for the prefix's box with SandboxieIni; False at the first non-zero exit
 def _write_sandboxie_box_params(sandboxie_ini_tool, new_options, verbose, pretend_run, exit_on_failure):
@@ -299,15 +287,11 @@ def _has_linkable_prefix(options):
 
 # Make each of the computer user folders inside the general prefix; False at the first that fails
 def _make_general_prefix_folders(options, verbose, pretend_run, exit_on_failure):
-    for folder in config.computer_user_folders:
-        success = fileops.make_directory(
-            src = paths.join_paths(options.get_general_prefix_dir(), folder),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return fileops.make_directories(
+        dirs = [paths.join_paths(options.get_general_prefix_dir(), folder) for folder in config.computer_user_folders],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Create a Wine prefix linked to the general prefix, or a Sandboxie prefix for any other type
 def _create_linked_prefix_of_type(options, verbose, pretend_run, exit_on_failure):

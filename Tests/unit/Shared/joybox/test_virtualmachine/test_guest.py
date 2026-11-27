@@ -690,3 +690,27 @@ def test_an_existing_snapshot_is_deleted(monkeypatch):
     virtualmachine.delete_snapshot(NAME, "pre-sshd")
 
     assert [call for call in recorder.calls if call["cmd"][3:] == ["snapshot-delete", NAME, "pre-sshd"]]
+
+
+###########################################################
+# Checking a guest can be created
+###########################################################
+
+def test_a_guest_can_be_created_with_every_tool_and_no_namesake(monkeypatch):
+    monkeypatch.setattr(virtualmachine, "get_missing_tools", lambda: [])
+    monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: False)
+
+    assert virtualmachine.can_create_vm(NAME) is True
+
+
+def test_a_guest_cannot_be_created_without_its_tools(monkeypatch):
+    monkeypatch.setattr(virtualmachine, "get_missing_tools", lambda: ["virsh"])
+
+    assert virtualmachine.can_create_vm(NAME) is False
+
+
+def test_a_guest_cannot_be_created_over_an_existing_one(monkeypatch):
+    monkeypatch.setattr(virtualmachine, "get_missing_tools", lambda: [])
+    monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
+
+    assert virtualmachine.can_create_vm(NAME) is False

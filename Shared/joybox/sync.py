@@ -1,6 +1,7 @@
 # Imports
 import os
 import os.path
+import posixpath
 import re
 
 # Local imports
@@ -466,6 +467,15 @@ def delete_file_on_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# The recycle bin path under remote_path, or None, logging an error, when the recycle folder
+# is empty or does not name a folder inside remote_path
+def get_recycle_bin_path(remote_path, recycle_folder):
+    folder = posixpath.normpath((recycle_folder or "").replace("\\", "/"))
+    if folder in (".", "..") or folder.startswith(("/", "../")):
+        logger.log_error("Recycle folder must name a folder inside %s, not '%s'" % (remote_path, recycle_folder))
+        return None
+    return os.path.join(remote_path, folder).replace("\\", "/")
+
 # Move files to recycle bin on remote
 def recycle_files_on_remote(
     remote_name,
@@ -483,7 +493,9 @@ def recycle_files_on_remote(
         return False
 
     # Get recycle bin path on remote
-    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+    recycle_bin_path = get_recycle_bin_path(remote_path, recycle_folder)
+    if not recycle_bin_path:
+        return False
 
     # Move files to recycle bin
     return move_files_on_remote(
@@ -507,7 +519,9 @@ def empty_recycle_bin(
     exit_on_failure = False):
 
     # Get recycle bin path on remote
-    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+    recycle_bin_path = get_recycle_bin_path(remote_path, recycle_folder)
+    if not recycle_bin_path:
+        return False
 
     # Purge recycle bin
     return purge_path_on_remote(

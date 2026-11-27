@@ -4,7 +4,9 @@ from joybox.collection.asset import (
     does_metadata_asset_exist,
     download_metadata_asset,
     download_all_metadata_assets,
-    download_metadata_asset_for_games)
+    download_metadata_asset_for_games,
+    find_reachable_asset_url,
+    download_game_assets)
 from joybox.collection.backup import (
     should_backup_store_game_files,
     backup_store_game_files,
@@ -22,7 +24,8 @@ from joybox.collection.hashing import (
     get_hash_game_roots,
     build_hash_files_for_games,
     clean_missing_hash_entries_for_games,
-    build_selected_hash_files)
+    build_selected_hash_files,
+    iterate_existing_hash_files)
 from joybox.collection.installing import (
     is_store_game_installed,
     install_store_game,
@@ -54,14 +57,21 @@ from joybox.collection.jsondata import (
     find_problem_game_json_files,
     analyze_game_json_files,
     find_existing_game_json_files,
-    clean_game_json_files)
+    clean_game_json_files,
+    write_new_json_file,
+    read_game_json_obj,
+    list_game_root_files,
+    write_and_clean_json_file)
 from joybox.collection.launching import (
     launch_store_game,
     launch_local_game,
     launch_game,
+    choose_random_launchable_subcategory,
     choose_random_game_json_file,
     select_game_json_file,
-    launch_game_from_json)
+    launch_game_from_json,
+    revert_launcher_setup,
+    apply_launcher_setup)
 from joybox.collection.metadata import (
     are_game_metadata_file_possible,
     create_game_metadata_entry,
@@ -72,7 +82,11 @@ from joybox.collection.metadata import (
     publish_game_metadata_entries,
     publish_all_game_metadata_entries,
     get_metadata_games,
-    build_metadata_entries_for_games)
+    build_metadata_entries_for_games,
+    load_metadata_file,
+    write_metadata_file,
+    build_new_game_entry,
+    fetch_latest_game_metadata)
 from joybox.collection.purchase import (
     login_game_store,
     login_all_game_stores,
@@ -83,14 +97,16 @@ from joybox.collection.purchase import (
     build_all_game_store_purchases,
     download_game_store_purchase,
     download_all_game_store_purchases,
-    build_store_purchases_for_categories)
+    build_store_purchases_for_categories,
+    get_importable_store,
+    get_purchase_output_dir,
+    download_latest_store_build)
 from joybox.collection.saves import (
     is_save_dir_packable,
     is_save_dir_unpackable,
     can_save_be_packed,
     can_save_be_unpacked,
     pack_save,
-    log_save_error,
     pack_save_dir,
     create_save_archive,
     get_save_locker_types,
@@ -200,7 +216,6 @@ __all__ = [
     "can_save_be_packed",
     "can_save_be_unpacked",
     "pack_save",
-    "log_save_error",
     "pack_save_dir",
     "create_save_archive",
     "get_save_locker_types",
@@ -226,12 +241,15 @@ __all__ = [
     "upload_game_files",
     "upload_all_game_files",
     "download_metadata_asset_for_games",
+    "find_reachable_asset_url",
+    "download_game_assets",
     "backup_game_infos",
     "get_hash_game_root",
     "get_hash_game_roots",
     "build_hash_files_for_games",
     "clean_missing_hash_entries_for_games",
     "build_selected_hash_files",
+    "iterate_existing_hash_files",
     "get_named_game_json_file",
     "check_game_json_file",
     "install_game_from_json",
@@ -241,12 +259,26 @@ __all__ = [
     "analyze_game_json_files",
     "find_existing_game_json_files",
     "clean_game_json_files",
+    "write_new_json_file",
+    "read_game_json_obj",
+    "list_game_root_files",
+    "write_and_clean_json_file",
+    "choose_random_launchable_subcategory",
     "choose_random_game_json_file",
     "select_game_json_file",
     "launch_game_from_json",
+    "revert_launcher_setup",
+    "apply_launcher_setup",
     "get_metadata_games",
     "build_metadata_entries_for_games",
+    "load_metadata_file",
+    "write_metadata_file",
+    "build_new_game_entry",
+    "fetch_latest_game_metadata",
     "build_store_purchases_for_categories",
+    "get_importable_store",
+    "get_purchase_output_dir",
+    "download_latest_store_build",
     "get_save_action_games",
     "run_save_action",
     "check_scan_filters",

@@ -357,6 +357,17 @@ def test_playlist_with_no_output_returns_empty_list(ytdlp, recording_command, ou
     recording_command.output = output
     assert google.get_playlist_video_ids("https://www.youtube.com/@chan") == []
 
+def test_playlist_lines_parse_into_unique_ids_and_urls():
+    output = "a\thttps://x/a\nb\t%s\na\thttps://x/a2\n%s\thttps://x/n\n\nc\n" % (
+        google.YTDLP_MISSING_FIELD, google.YTDLP_MISSING_FIELD)
+
+    assert google.parse_playlist_video_ids(output) == [("a", "https://x/a"), ("b", ""), ("c", "")]
+
+
+def test_no_playlist_output_parses_to_nothing():
+    assert google.parse_playlist_video_ids(None) == []
+
+
 ###########################################################
 # download_video
 ###########################################################

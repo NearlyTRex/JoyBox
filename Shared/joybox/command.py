@@ -60,11 +60,11 @@ def is_prefix_command(cmd):
 # Wrap a command in "powershell -NoProfile -Command" unless it already starts with PowerShell
 def setup_powershell_command(
     cmd,
-    options = create_command_options()):
+    options = None):
 
     # Copy params
     new_cmd = cmd
-    new_options = options.copy()
+    new_options = options.copy() if options else create_command_options()
 
     # Setup powershell command
     new_cmd = []
@@ -76,11 +76,11 @@ def setup_powershell_command(
 # Point the XDG config, cache, data and state dirs at an AppImage's portable .home folder when it has one
 def setup_appimage_command(
     cmd,
-    options = create_command_options()):
+    options = None):
 
     # Copy params
     new_cmd = cmd
-    new_options = options.copy()
+    new_options = options.copy() if options else create_command_options()
 
     # Setup appimage command
     for cmd_segment in cmdline.create_command_list(cmd):
@@ -97,14 +97,14 @@ def setup_appimage_command(
 # Create the default Wine or Sandboxie prefix if the options lack a ready one, then rewrite the command to run inside it
 def setup_prefix_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Copy params
     new_cmd = cmd
-    new_options = options.copy()
+    new_options = options.copy() if options else create_command_options()
 
     # Create prefix if necessary
     if not new_options.has_ready_prefix():
@@ -134,10 +134,12 @@ def setup_prefix_command(
 # Pre-process command
 def preprocess_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    if not options:
+        options = create_command_options()
 
     # Preprocess for powershell
     if is_powershell_command(cmd) or options.force_powershell():
@@ -166,10 +168,12 @@ def preprocess_command(
 # Post-process command
 def postprocess_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    if not options:
+        options = create_command_options()
 
     # Postprocess for wine; Sandboxie has nothing to stop
     if sandbox.should_be_run_via_wine(cmd):
@@ -229,7 +233,7 @@ def finish_command(
 # a pretend run returns ("", 0) and an OS error returns ("", 1)
 def run_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     capture_output = True,
     log_stdout = False,
     log_stderr = False,
@@ -270,7 +274,7 @@ def run_command(
 # Captured output of a command, without logging its streams; empty on a pretend run or error
 def run_output_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -288,7 +292,7 @@ def run_output_command(
 # Exit code of a command whose stdout and stderr go to the log uncaptured; 0 on a pretend run
 def run_returncode_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -432,7 +436,7 @@ def _run_prepared_interactive_command(cmd, options, verbose, pretend_run, exit_o
 # Run a command on a pseudo-terminal, relaying its output and the user's typed input live; returns its exit code
 def run_interactive_command(
     cmd,
-    options = create_command_options(),
+    options = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

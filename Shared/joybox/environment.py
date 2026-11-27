@@ -466,6 +466,17 @@ def get_cache_gaming_root_dir():
         get_cache_root_dir(),
         config.LockerFolderType.GAMING)
 
+# Cache folder for one game under a supercategory, by category, subcategory and name path
+def get_cache_gaming_game_dir(game_supercategory, game_category, game_subcategory, game_name):
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
+    return paths.join_paths(
+        get_cache_gaming_root_dir(),
+        game_supercategory,
+        game_category,
+        game_subcategory,
+        game_name_path)
+
 # The ROMs supercategory folder under the cache's Gaming folder
 def get_cache_gaming_roms_root_dir():
     return paths.join_paths(
@@ -474,13 +485,7 @@ def get_cache_gaming_roms_root_dir():
 
 # Cache folder for one game's ROM files, by category, subcategory and name path
 def get_cache_gaming_rom_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
-    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
-    return paths.join_paths(
-        get_cache_gaming_roms_root_dir(),
-        game_category,
-        game_subcategory,
-        game_name_path)
+    return get_cache_gaming_game_dir(config.Supercategory.ROMS, game_category, game_subcategory, game_name)
 
 # The Installs supercategory folder under the cache's Gaming folder
 def get_cache_gaming_installs_root_dir():
@@ -490,13 +495,7 @@ def get_cache_gaming_installs_root_dir():
 
 # Cache folder one game installs into, by category, subcategory and name path
 def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
-    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
-    return paths.join_paths(
-        get_cache_gaming_installs_root_dir(),
-        game_category,
-        game_subcategory,
-        game_name_path)
+    return get_cache_gaming_game_dir(config.Supercategory.INSTALLS, game_category, game_subcategory, game_name)
 
 # The Saves supercategory folder under the cache's Gaming folder
 def get_cache_gaming_saves_root_dir():
@@ -506,20 +505,10 @@ def get_cache_gaming_saves_root_dir():
 
 # Cache folder for one game's saves, narrowed to a save type folder when given one
 def get_cache_gaming_save_dir(game_category, game_subcategory, game_name, save_type = None):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
-    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
+    save_dir = get_cache_gaming_game_dir(config.Supercategory.SAVES, game_category, game_subcategory, game_name)
     if save_type:
-        return paths.join_paths(
-            get_cache_gaming_saves_root_dir(),
-            game_category,
-            game_subcategory,
-            game_name_path,
-            save_type)
-    return paths.join_paths(
-        get_cache_gaming_saves_root_dir(),
-        game_category,
-        game_subcategory,
-        game_name_path)
+        return paths.join_paths(save_dir, save_type)
+    return save_dir
 
 # The Setup supercategory folder under the cache's Gaming folder
 def get_cache_gaming_setup_root_dir():
@@ -529,10 +518,4 @@ def get_cache_gaming_setup_root_dir():
 
 # Cache folder for one game's setup files, by category, subcategory and name path
 def get_cache_gaming_setup_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
-    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
-    return paths.join_paths(
-        get_cache_gaming_setup_root_dir(),
-        game_category,
-        game_subcategory,
-        game_name_path)
+    return get_cache_gaming_game_dir(config.Supercategory.SETUP, game_category, game_subcategory, game_name)

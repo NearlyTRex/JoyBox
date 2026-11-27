@@ -572,3 +572,54 @@ def test_a_banner_line_is_not_mistaken_for_a_file(installed, monkeypatch):
 def test_listing_without_the_tool_yields_nothing(missing, recording_command):
     assert archive.list_archive("/in/Game.7z") == []
     assert recording_command.ran() is False
+
+
+def test_a_listing_is_parsed_into_its_file_paths():
+    assert archive.parse_archive_listing(LISTING) == ["nested/file.txt", "top.txt"]
+
+
+###########################################################
+# Archive type checks
+###########################################################
+
+def test_a_creatable_archive_type_is_returned():
+    assert archive.get_creatable_archive_type("/out/Game.7z") == config.ArchiveFileType.SEVENZIP
+
+
+@pytest.mark.parametrize("archive_file", ["/out/Game.rar", "/out/Game.unknown"])
+def test_an_uncreatable_archive_type_is_none(archive_file):
+    assert archive.get_creatable_archive_type(archive_file) is None
+
+
+def test_a_known_archive_is_extractable():
+    assert archive.is_extractable_archive("/in/Game.rar") is True
+
+
+def test_an_unknown_archive_is_not_extractable():
+    assert archive.is_extractable_archive("/in/Game.unknown") is False
+
+
+@pytest.mark.parametrize(("path", "file_types", "expected"), [
+    ("/in/Game.iso", ".iso,.bin", True),
+    ("/in/Game.bin", ".iso,.bin", True),
+    ("/in/Game.cue", ".iso,.bin", False),
+    ("/in/Game.cue", "", True),
+])
+def test_a_path_is_matched_against_the_listed_file_types(path, file_types, expected):
+    assert archive.has_listed_file_type(path, file_types) is expected
+
+
+###########################################################
+# Rezipping
+###########################################################
+
+def test_a_zip_is_extracted_then_rezipped_in_place(monkeypatch):
+    calls = []
+    monkeypatch.setattr(archive, "extract_archive", lambda **kwargs: calls.append(("extract", kwargs)) or True)
+    monkeypatch.setattr(archive, "create_archive_from_folder", lambda **kwargs: calls.append(("create", kwargs)) or True)
+
+    archive.rezip_archive("/in/Game.zip")
+
+    assert [(name, kwargs["archive_file"]) for name, kwargs in calls] == [
+        ("extract", "/in/Game.zip"), ("create", "/in/Game.zip")]
+    assert calls[0][1]["extract_dir"] == calls[1][1]["source_dir"] == "/in/Game_extracted"

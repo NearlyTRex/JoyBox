@@ -12,9 +12,9 @@ from joybox import lockerauth
 def build_parser():
     parser = arguments.ArgumentParser(command = "locker_auth_tool")
     parser.add_enum_argument(args = ("-l", "--locker_type"), arg_type = config.LockerType, default = config.LockerType.GDRIVE, description = "Remote locker to sign in")
-    parser.add_string_argument(args = ("--client_file"), description = "JSON file downloaded for a Desktop app OAuth client; without it the stored client is used")
-    parser.add_string_argument(args = ("--folder_id"), description = "Id or URL of the Drive folder the locker is kept in; without it the stored folder is used")
-    parser.add_boolean_argument(args = ("--no_browser"), description = "Print the sign-in link instead of opening a browser")
+    parser.add_string_argument(args = ("--client_file",), description = "JSON file downloaded for a Desktop app OAuth client; without it the stored client is used")
+    parser.add_string_argument(args = ("--folder_id",), description = "Id or URL of the Drive folder the locker is kept in; without it the stored folder is used")
+    parser.add_boolean_argument(args = ("--no_browser",), description = "Print the sign-in link instead of opening a browser")
     parser.add_common_arguments()
     return parser
 

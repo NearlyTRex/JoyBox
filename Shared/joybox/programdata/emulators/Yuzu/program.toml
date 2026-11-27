@@ -79,3 +79,16 @@ kind = "stored_release"
 platform = "linux"
 preferred_archive = "Linux-Yuzu-EA-4176"
 skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+preferred_archive = "Windows-Yuzu-EA-4176"
+search_file = "yuzu.exe"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+preferred_archive = "Linux-Yuzu-EA-4176"
+skip_if_missing = true

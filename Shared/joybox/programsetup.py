@@ -5,11 +5,14 @@
 # Each step names a kind, the platform it installs (a program platform, or a
 # library's sub folder such as "lib"), `for = "library"` when it installs into
 # the program's library dirs, `program` when it installs another program than
-# the one the data belongs to (a tool that ships several), and that kind's own
-# arguments. A release_type is given by its config.ReleaseType member name. The runner adds
-# what every step of a kind needs: the program's name, its install and backups
-# dirs for the platform, the locker and the run flags. A string argument that is
-# "{program_config:<key>}" is that key of the program's own config.
+# the one the data belongs to (a tool that ships several), `host` when it runs
+# only on that OS ("windows" or "linux"), `label` to name what failed instead of
+# the program, and that kind's own arguments. A release_type is given by its
+# config.ReleaseType member name. The runner adds what every step of a kind
+# needs: the program's name, its install and backups dirs for the platform, the
+# locker and the run flags. A string argument that is "{program_config:<key>}"
+# is that key of the program's own config; "{program_path_config:<key>}" is
+# that path key for the step's platform, optionally followed by "/<sub path>".
 #
 # Steps run in order. Consecutive steps for the same target and platform form a
 # group that runs only when that target still needs installing, decided once
@@ -23,6 +26,8 @@ import re
 from joybox import config
 from joybox import logger
 from joybox import network
+from joybox import paths
+from joybox import platform_info
 from joybox import programcatalog
 from joybox import programs
 from joybox import release
@@ -31,6 +36,9 @@ from joybox import sourcebuild
 
 # A step argument that names a key of the program's own config
 PROGRAM_CONFIG_VALUE = re.compile(r"^\{program_config:([A-Za-z0-9_]+)\}$")
+
+# A step argument that names a path key of the program's config, with an optional sub path
+PROGRAM_PATH_CONFIG_VALUE = re.compile(r"^\{program_path_config:([A-Za-z0-9_]+)\}(?:/(.+))?$")
 
 # The steps a program installs with, and the module function each kind calls,
 # looked up when the step runs
@@ -51,7 +59,7 @@ STEP_KINDS = {
 RELEASE_KINDS = ("webpage_release", "github_release", "general_release", "appimage_build", "binary_build")
 
 # Keys a step uses for itself rather than passing on
-STEP_KEYS = ("kind", "platform", "for", "program")
+STEP_KEYS = ("kind", "platform", "for", "program", "host", "label")
 
 # The program a step installs: the one it names, otherwise the program the data belongs to
 def get_step_program(name, step):
@@ -64,11 +72,15 @@ def get_step_dirs(name, step):
         return programs.get_library_install_dir(name, platform), programs.get_library_backup_dir(name, platform)
     return programs.get_program_install_dir(name, platform), programs.get_program_backup_dir(name, platform)
 
-# Whether a step's target still needs installing
+# Whether a step's target still needs installing: its library dir for the platform, or the program for the platform
 def should_install(name, step):
     if step.get("for") == "library":
-        return programs.should_library_be_installed(name)
+        return programs.should_library_be_installed(name, step.get("platform"))
     return programs.should_program_be_installed(name, step.get("platform"))
+
+# Whether a step runs on this OS: any OS unless it names a host
+def is_step_for_host(step):
+    return step.get("host") in (None, platform_info.get_current_platform())
 
 # The arguments the runner adds to a step of each kind
 def get_added_arguments(name, step, setup_params):
@@ -76,7 +88,9 @@ def get_added_arguments(name, step, setup_params):
     install_dir, backups_dir = get_step_dirs(name, step)
     flags = {"verbose": setup_params.verbose, "pretend_run": setup_params.pretend_run, "exit_on_failure": setup_params.exit_on_failure}
     if kind in RELEASE_KINDS:
-        return {"install_name": name, "install_dir": install_dir, "backups_dir": backups_dir, "locker_type": setup_params.locker_type, **flags}
+        return {
+            "install_name": name, "install_dir": install_dir, "backups_dir": backups_dir,
+            "locker_type": setup_params.locker_type, "skip_autobackup": setup_params.skip_autobackup, **flags}
     if kind == "stored_release":
         return {"install_name": name, "install_dir": install_dir, "archive_dir": backups_dir, **flags}
     if kind == "github_repository":
@@ -85,24 +99,42 @@ def get_added_arguments(name, step, setup_params):
         return {"output_dir": backups_dir, "locker_type": setup_params.locker_type, **flags}
     return {"tool_name": name, **flags}
 
-# A step argument with any {program_config:<key>} filled in from the program's config,
+# A {program_config:<key>} or {program_path_config:<key>}[/<sub path>] value from the program's
+# config; None when the value names neither
+def get_program_config_argument(family, name, value, platform):
+    is_emulator = family == programcatalog.FAMILY_EMULATORS
+    match = PROGRAM_CONFIG_VALUE.match(value)
+    if match:
+        if is_emulator:
+            return programs.get_emulator_config_value(name, match[1])
+        return programs.get_tool_config_value(name, match[1])
+    match = PROGRAM_PATH_CONFIG_VALUE.match(value)
+    if not match:
+        return None
+    if is_emulator:
+        path = programs.get_emulator_path_config_value(name, match[1], platform)
+    else:
+        path = programs.get_tool_path_config_value(name, match[1], platform)
+    return paths.join_paths(path, match[2]) if match[2] else path
+
+# A step argument with any program config reference filled in for the step's platform,
 # and a release_type turned into its config.ReleaseType member
-def fill_argument(family, name, key, value):
+def fill_argument(family, name, key, value, platform = None):
     if key == "release_type":
         return config.ReleaseType[value]
-    match = PROGRAM_CONFIG_VALUE.match(value) if isinstance(value, str) else None
-    if not match:
+    if not isinstance(value, str):
         return value
-    if family == programcatalog.FAMILY_EMULATORS:
-        return programs.get_emulator_config_value(name, match[1])
-    return programs.get_tool_config_value(name, match[1])
+    filled = get_program_config_argument(family, name, value, platform)
+    return value if filled is None else filled
 
 # Run one step; False when its kind's function reports a failure
 def run_step(family, name, step, setup_params):
     if step.get("kind") not in STEP_KINDS:
         raise ValueError("Unknown setup step kind '%s' in %s's program data" % (step.get("kind"), name))
     program = get_step_program(name, step)
-    arguments = {key: fill_argument(family, program, key, value) for key, value in step.items() if key not in STEP_KEYS}
+    arguments = {
+        key: fill_argument(family, program, key, value, step.get("platform"))
+        for key, value in step.items() if key not in STEP_KEYS}
     arguments.update({key: value for key, value in get_added_arguments(program, step, setup_params).items() if key not in arguments})
     module, function_name = STEP_KINDS[step["kind"]]
     return getattr(module, function_name)(**arguments)
@@ -118,15 +150,16 @@ def group_steps(steps):
             groups.append((key, [step]))
     return [group for _, group in groups]
 
-# Run a program's setup or offline setup steps; True when it has none, False at the first failure
+# Run a program's setup or offline setup steps for this OS; True when it has none, False at the first failure
 def run_setup_steps(family, name, offline = False, setup_params = None):
     if not setup_params:
         setup_params = config.SetupParams()
-    for group in group_steps(programcatalog.get_setup_steps(family, name, offline)):
+    steps = [step for step in programcatalog.get_setup_steps(family, name, offline) if is_step_for_host(step)]
+    for group in group_steps(steps):
         if not should_install(get_step_program(name, group[0]), group[0]):
             continue
         for step in group:
             if not run_step(family, name, step, setup_params):
-                logger.log_error("Could not setup %s" % get_step_program(name, step))
+                logger.log_error("Could not setup %s" % step.get("label", get_step_program(name, step)))
                 return False
     return True

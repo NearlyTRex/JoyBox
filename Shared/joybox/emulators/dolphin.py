@@ -1,14 +1,8 @@
 # Imports
-import os
-import os.path
 
 # Local imports
 from joybox import config
-from joybox import environment
-from joybox import fileops
-from joybox import logger
 from joybox import programs
-from joybox import archive
 from joybox.nintendo import wii
 from joybox import paths
 from joybox import emulatorcommon
@@ -27,23 +21,6 @@ def install_package_dir(package_dir, verbose = False, pretend_run = False, exit_
             return False
     return True
 
-# Unzip the locker's Wii archive into the platform's setup dir, keeping files
-# already there; True when the locker has no such archive
-def extract_system_archive(platform, obj, setup_params):
-    if not os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Dolphin"), obj + config.ArchiveFileType.ZIP.cval())):
-        return True
-    success = archive.extract_archive(
-        archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Dolphin"), obj + config.ArchiveFileType.ZIP.cval()),
-        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Dolphin", "setup_dir", platform), obj),
-        skip_existing = True,
-        verbose = setup_params.verbose,
-        pretend_run = setup_params.pretend_run,
-        exit_on_failure = setup_params.exit_on_failure)
-    if not success:
-        logger.log_error("Could not extract Dolphin system files")
-        return False
-    return True
-
 # Dolphin emulator
 class Dolphin(emulatorbase.EmulatorBase):
 
@@ -51,13 +28,13 @@ class Dolphin(emulatorbase.EmulatorBase):
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
-        dlc_dirs = [] if dlc_dirs is None else dlc_dirs
-        update_dirs = [] if update_dirs is None else update_dirs
-        for package_dirset in [dlc_dirs, update_dirs]:
-            for package_dir in package_dirset:
-                if not install_package_dir(package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
-                    return False
-        return True
+        return emulatorcommon.install_package_dirs(
+            install_package_dir,
+            dlc_dirs = dlc_dirs,
+            update_dirs = update_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Write its config files, verify the locker system files, then unzip the Wii archive
     # into each platform's setup dir, keeping files already there
@@ -66,16 +43,8 @@ class Dolphin(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in self.get_config_files().items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Dolphin config files")
-                return False
+        if not self.write_config_files(setup_params):
+            return False
 
         # Verify system files
         if not self.verify_system_files(self.get_system_files(), setup_params):
@@ -84,7 +53,7 @@ class Dolphin(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["Wii"]:
-                if not extract_system_archive(platform, obj, setup_params):
+                if not self.extract_system_archive(platform, obj, setup_params):
                     return False
         return True
 

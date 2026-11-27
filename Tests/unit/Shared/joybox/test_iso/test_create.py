@@ -142,3 +142,13 @@ def test_a_successful_create_keeps_the_source_by_default(installed, recording_co
 
 def test_a_create_that_writes_nothing_reports_failure(installed, recording_command, tmp_path):
     assert iso.create_iso(str(tmp_path / "Game.iso"), source_dir = str(tmp_path)) is False
+
+
+def test_a_zip_is_extracted_beside_itself_then_built_into_an_iso(monkeypatch):
+    calls = []
+    monkeypatch.setattr(iso.archive, "extract_archive", lambda **kwargs: calls.append(("extract", kwargs["extract_dir"])))
+    monkeypatch.setattr(iso, "create_iso", lambda **kwargs: calls.append(("create", kwargs["source_dir"], kwargs["volume_name"])))
+
+    iso.create_iso_from_zip("/in/Game.zip", "/in/Game.iso", volume_name = "GAME")
+
+    assert calls == [("extract", "/in/Game_extracted"), ("create", "/in/Game_extracted", "GAME")]

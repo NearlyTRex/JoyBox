@@ -141,7 +141,7 @@ def test_convert_to_native_save_stops_on_a_failed_cleanup(monkeypatch, tmp_path,
 @pytest.fixture
 def library(monkeypatch):
     wanted = [True]
-    monkeypatch.setattr(goldbergemu.programs, "should_library_be_installed", lambda name: wanted[0])
+    monkeypatch.setattr(goldbergemu.programs, "should_library_be_installed", lambda name, platform = None: wanted[0])
     monkeypatch.setattr(goldbergemu.programs, "get_library_install_dir", lambda name, platform: "/install/%s" % platform)
     monkeypatch.setattr(goldbergemu.programs, "get_library_backup_dir", lambda name, platform: "/backup/%s" % platform)
     return wanted

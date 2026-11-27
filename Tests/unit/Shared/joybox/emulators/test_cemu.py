@@ -149,8 +149,8 @@ def touched(monkeypatch):
         calls.append((src, contents, kwargs))
         return state["ok"]
 
-    monkeypatch.setattr(cemu.environment, "get_emulators_root_dir", lambda: "/emulators")
-    monkeypatch.setattr(cemu.fileops, "touch_file", touch)
+    monkeypatch.setattr(cemu.emulatorbase.environment, "get_emulators_root_dir", lambda: "/emulators")
+    monkeypatch.setattr(cemu.emulatorbase.fileops, "touch_file", touch)
     return {"calls": calls, "state": state}
 
 

@@ -412,6 +412,27 @@ def test_an_unusable_scratch_directory_uploads_nothing(backends, encryption, mon
     assert remote_backend(backends).copied == []
 
 
+class FakePassphraseLocker:
+
+    def __init__(self, local_only, passphrase):
+        self.local_only = local_only
+        self.passphrase = passphrase
+
+    def is_local_only(self):
+        return self.local_only
+
+    def get_passphrase(self):
+        return self.passphrase
+
+
+@pytest.mark.parametrize("local_only, passphrase, expected", [
+    (False, "secret", "secret"),
+    (True, "secret", None),
+    (False, None, None)])
+def test_an_upload_passphrase_needs_a_remote_locker_with_one(quiet, local_only, passphrase, expected):
+    assert locker.get_upload_passphrase(FakePassphraseLocker(local_only, passphrase), REMOTE) == expected
+
+
 ###########################################################
 # Backing up
 ###########################################################

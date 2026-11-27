@@ -440,10 +440,6 @@ def unmount_disc_chd(
     # Check result
     return not is_disc_chd_mounted(chd_file, mount_dir)
 
-# Path beside a file, with its extension replaced by the given suffix
-def _get_sibling_path(file, suffix):
-    return paths.join_paths(paths.get_filename_directory(file), paths.get_filename_basename(file) + suffix)
-
 # Convert each disc image of the given types under input_path into a chd beside it, skipping
 # images whose chd already exists
 def convert_disc_images_to_chd(
@@ -455,7 +451,7 @@ def convert_disc_images_to_chd(
     exit_on_failure = False):
     disc_image_extensions = [disc_image_type.cval() for disc_image_type in disc_image_types]
     for current_file in paths.build_file_list_by_extensions(input_path, extensions = disc_image_extensions):
-        output_chd = _get_sibling_path(current_file, config.DiscImageFileType.CHD.cval())
+        output_chd = paths.change_filename_extension(current_file, config.DiscImageFileType.CHD.cval())
         if paths.does_path_exist(output_chd):
             continue
         create_disc_chd(
@@ -468,8 +464,8 @@ def convert_disc_images_to_chd(
 
 # Extract a chd into an iso beside it, unless the iso or its first numbered track exists
 def _extract_chd_to_sibling_iso(chd_file, delete_originals, verbose, pretend_run, exit_on_failure):
-    output_iso = _get_sibling_path(chd_file, ".iso")
-    output_track = _get_sibling_path(chd_file, "01.iso")
+    output_iso = paths.change_filename_extension(chd_file, ".iso")
+    output_track = paths.change_filename_extension(chd_file, "01.iso")
     if paths.does_path_exist(output_iso) or paths.does_path_exist(output_track):
         return
     extract_disc_chd_to_iso(
@@ -482,8 +478,8 @@ def _extract_chd_to_sibling_iso(chd_file, delete_originals, verbose, pretend_run
 
 # Extract a chd into a binary and toc file beside it, unless either exists
 def _extract_chd_to_sibling_toc(chd_file, extract_format, bin_ext, delete_originals, verbose, pretend_run, exit_on_failure):
-    output_bin = _get_sibling_path(chd_file, bin_ext)
-    output_toc = _get_sibling_path(chd_file, extract_format.cval())
+    output_bin = paths.change_filename_extension(chd_file, bin_ext)
+    output_toc = paths.change_filename_extension(chd_file, extract_format.cval())
     if paths.does_path_exist(output_bin) or paths.does_path_exist(output_toc):
         return
     extract_disc_chd(
@@ -519,7 +515,7 @@ def archive_disc_chds(
     pretend_run = False,
     exit_on_failure = False):
     for current_file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):
-        output_zip = _get_sibling_path(current_file, config.ArchiveFileType.ZIP.cval())
+        output_zip = paths.change_filename_extension(current_file, config.ArchiveFileType.ZIP.cval())
         if paths.does_path_exist(output_zip):
             continue
         archive_disc_chd(

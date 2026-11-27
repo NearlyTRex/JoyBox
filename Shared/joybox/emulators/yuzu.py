@@ -1,7 +1,6 @@
 # Local imports
 from joybox import config
 from joybox import environment
-from joybox import fileops
 from joybox import filebulk
 from joybox import logger
 from joybox import programs
@@ -45,19 +44,13 @@ class Yuzu(emulatorbase.EmulatorBase):
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
-        dlc_dirs = [] if dlc_dirs is None else dlc_dirs
-        update_dirs = [] if update_dirs is None else update_dirs
-        for package_dirset in [dlc_dirs, update_dirs]:
-            for package_dir in package_dirset:
-                if not install_package_dir(package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
-                    return False
-        return True
-
-    # Same as setup, which already works only from stored releases
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-        return self.setup(setup_params = setup_params)
+        return emulatorcommon.install_package_dirs(
+            install_package_dir,
+            dlc_dirs = dlc_dirs,
+            update_dirs = update_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Write its config files, write each platform's profiles file for the configured user,
     # then verify the locker system files and copy them into each platform's setup dir
@@ -66,16 +59,8 @@ class Yuzu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in self.get_config_files().items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Yuzu config files")
-                return False
+        if not self.write_config_files(setup_params):
+            return False
 
         # Create profiles
         if not create_profiles(setup_params):

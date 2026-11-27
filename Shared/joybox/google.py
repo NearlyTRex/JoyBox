@@ -40,19 +40,6 @@ MAX_IMAGE_SEARCH_RESULTS = 10
 # yt-dlp prints this for a field the extractor did not provide
 YTDLP_MISSING_FIELD = "NA"
 
-# Get yt-dlp program
-def get_youtube_tool():
-    if programs.is_tool_installed("YtDlp"):
-        return programs.get_tool_program("YtDlp")
-    return None
-
-# The yt-dlp program; None, logged as an error, when it is not installed
-def _find_youtube_tool():
-    youtube_tool = get_youtube_tool()
-    if not youtube_tool:
-        logger.log_error("YtDlp was not found")
-    return youtube_tool
-
 # Get yt-dlp cookie args
 def get_cookie_args(cookie_source):
     if not isinstance(cookie_source, str) or len(cookie_source) == 0:
@@ -251,7 +238,7 @@ def find_videos(
     exit_on_failure = False):
 
     # Get tool
-    youtube_tool = _find_youtube_tool()
+    youtube_tool = programs.find_tool_program("YtDlp")
     if not youtube_tool:
         return []
 
@@ -303,7 +290,7 @@ def get_playlist_video_ids(
             exit_on_failure = exit_on_failure)
 
     # Get tool
-    youtube_tool = _find_youtube_tool()
+    youtube_tool = programs.find_tool_program("YtDlp")
     if not youtube_tool:
         return []
 
@@ -318,11 +305,11 @@ def get_playlist_video_ids(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return _parse_playlist_video_ids(output)
+    return parse_playlist_video_ids(output)
 
 # Ordered unique (id, url) pairs from yt-dlp's "id<TAB>url" lines; a missing url becomes empty
 # and lines without an id are dropped
-def _parse_playlist_video_ids(output):
+def parse_playlist_video_ids(output):
     videos = []
     seen = set()
     for line in (output or "").splitlines():
@@ -516,7 +503,7 @@ def download_video(
     exit_on_failure = False):
 
     # Get tool
-    youtube_tool = _find_youtube_tool()
+    youtube_tool = programs.find_tool_program("YtDlp")
     if not youtube_tool:
         return False
 

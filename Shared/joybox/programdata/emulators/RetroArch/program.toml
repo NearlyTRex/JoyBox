@@ -95,3 +95,59 @@ md5 = "255113ba943c92a54facd25a10fd780c"
 [[system_files]]
 path = "system/mpr-19367-mx.ic1"
 md5 = "1cd19988d1d72a3e7caa0b73234c96b4"
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z"
+search_file = "retroarch.exe"
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+label = "RetroArch cores"
+archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z"
+search_file = "snes9x_libretro.dll"
+install_dir = "{program_path_config:cores_dir}"
+
+[[setup]]
+kind = "general_release"
+platform = "linux"
+archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z"
+search_file = "RetroArch-Linux-x86_64.AppImage"
+
+[[setup]]
+kind = "general_release"
+platform = "linux"
+label = "RetroArch cores"
+archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z"
+search_file = "snes9x_libretro.so"
+install_dir = "{program_path_config:cores_dir}"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+preferred_archive = "RetroArch.7z"
+search_file = "retroarch.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+label = "RetroArch cores"
+preferred_archive = "RetroArch_cores.7z"
+search_file = "snes9x_libretro.dll"
+install_dir = "{program_path_config:cores_dir}"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+preferred_archive = "RetroArch.7z"
+search_file = "RetroArch-Linux-x86_64.AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+label = "RetroArch cores"
+preferred_archive = "RetroArch_cores.7z"
+search_file = "snes9x_libretro.so"
+install_dir = "{program_path_config:cores_dir}"

@@ -13,6 +13,45 @@ from joybox import dispatch, llmchat
 # Backend selection
 ###########################################################
 
+@pytest.fixture
+def offered(monkeypatch, backend):
+    made = []
+
+    def make_backend(kind, endpoint = None, api_key = "", model = None):
+        made.append((kind, endpoint, api_key, model))
+        return backend
+
+    monkeypatch.setattr(llmchat, "make_backend", make_backend)
+    return made
+
+
+def test_a_connection_defaults_to_the_first_offered_model(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, endpoint = "http://box:11434") == (backend, "small")
+    assert offered == [(llmchat.BACKEND_OLLAMA, "http://box:11434", "", None)]
+
+
+def test_a_connection_keeps_an_offered_model(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, model = "large") == (backend, "large")
+
+
+def test_a_connection_refuses_a_model_not_offered(offered):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, model = "huge") is None
+
+
+def test_claude_takes_a_model_it_does_not_list(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_CLAUDE, model = "huge") == (backend, "huge")
+
+
+def test_a_backend_offering_no_models_cannot_connect(offered, backend):
+    backend.model_names = []
+
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA) is None
+
+
+def test_an_unknown_backend_cannot_connect():
+    assert llmchat.connect_backend("not-a-backend") is None
+
+
 def test_every_backend_key_builds_its_backend():
     built = {key: type(llmchat.make_backend(key)) for key in llmchat.get_backend_keys()}
 

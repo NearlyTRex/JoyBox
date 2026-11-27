@@ -52,7 +52,7 @@ def _read_detail_row(element_detail_text, metadata_entry):
         metadata_entry.set_genre(genre_text)
 
 # HeroicGogDL's program and auth json paths; Nones, logged, when either is missing
-def _find_gogdl_script():
+def find_gogdl_script():
     gogdl_script = None
     auth_json = None
     if programs.is_tool_installed("HeroicGogDL"):
@@ -335,40 +335,17 @@ class GOG(storebase.StoreBase):
         cache_file_manifest = paths.join_paths(cache_dir, "gog_purchases_cache.json")
 
         # Load from cache if available
-        gog_json = self._load_cached_game_list(cache_file_manifest, verbose = verbose)
+        gog_json = self.read_purchases_cache(cache_file_manifest, "GOG", verbose = verbose)
 
         # Fetch fresh data if not using cache
         if gog_json is None:
             gog_json = self._list_owned_games(verbose = verbose, exit_on_failure = exit_on_failure)
             if gog_json is None:
                 return None
-            self._save_purchases_cache(cache_dir, cache_file_manifest, gog_json, verbose = verbose, pretend_run = pretend_run)
+            self.write_purchases_cache(cache_dir, cache_file_manifest, gog_json, "GOG", verbose = verbose, pretend_run = pretend_run)
 
         # Parse json
         return [self._create_purchase(entry) for entry in gog_json]
-
-    # Cached game list when the cache is under a day old and holds a list of dicts, else None
-    def _load_cached_game_list(self, cache_file_manifest, verbose = False):
-
-        # Check if cache exists and is recent (less than 24 hours old)
-        if not paths.does_path_exist(cache_file_manifest):
-            return None
-        cache_age_hours = paths.get_file_age_in_hours(cache_file_manifest)
-        if cache_age_hours >= 24:
-            return None
-        if verbose:
-            logger.log_info("Using cached GOG purchases data (%.1f hours old)" % cache_age_hours)
-
-        # Load from cache
-        gog_json = serialization.read_json_file(
-            src = cache_file_manifest,
-            verbose = verbose,
-            exit_on_failure = False)
-        if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
-            if verbose:
-                logger.log_warning("Failed to load GOG cache, will fetch fresh data")
-            return None
-        return gog_json
 
     # LGOGDownloader's JSON game list, read back from a temporary file; None, logged, when it fails
     def _list_owned_games(self, verbose = False, exit_on_failure = False):
@@ -407,20 +384,6 @@ class GOG(storebase.StoreBase):
                 logger.log_error("Unable to parse gog game list")
                 return None
             return gog_json
-
-    # Write the game list to the cache file, logging the outcome when verbose
-    def _save_purchases_cache(self, cache_dir, cache_file_manifest, gog_json, verbose = False, pretend_run = False):
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_manifest,
-            json_data = gog_json,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved GOG purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save GOG cache")
 
     # Purchase with slug, product id, page and title for one game list entry
     def _create_purchase(self, entry):
@@ -550,57 +513,11 @@ class GOG(storebase.StoreBase):
             return None
 
         # Scrape the game page with retries
-        return self._scrape_metadata_with_retries(identifier, verbose = verbose, pretend_run = pretend_run)
-
-    # Retry the page scrape in a fresh headless driver, disconnecting it between attempts and at the end
-    def _scrape_metadata_with_retries(self, identifier, verbose = False, pretend_run = False):
-
-        # Store web driver for cleanup
-        web_driver = None
-
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            if web_driver:
-                self.web_disconnect(
-                    web_driver = web_driver,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                web_driver = None
-
-        # Fetch function
-        def attempt_metadata_fetch():
-            nonlocal web_driver
-            web_driver = self._connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
-            if not web_driver:
-                return None
-            return self._scrape_metadata_page(web_driver, identifier, verbose = verbose)
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_metadata_fetch,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = "GOG metadata fetch for '%s'" % identifier)
-        finally:
-
-            # Final cleanup
-            cleanup_driver()
-
-    # A headless web driver; None in a pretend run that got none, else ScrapeFailed without one
-    def _connect_scrape_driver(self, verbose = False, pretend_run = False):
-        web_driver = self.web_connect(
-            headless = True,
+        return self.scrape_with_retries(
+            scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
+            operation_name = "GOG metadata fetch for '%s'" % identifier,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not web_driver:
-            if pretend_run:
-                return None
-            raise webpage.ScrapeFailed("Failed to connect to web driver")
-        return web_driver
+            pretend_run = pretend_run)
 
     # Load the game page and read its description and detail rows into a metadata entry
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
@@ -721,7 +638,7 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get script
-        gogdl_script, auth_json = _find_gogdl_script()
+        gogdl_script, auth_json = find_gogdl_script()
         if not gogdl_script:
             return False
 

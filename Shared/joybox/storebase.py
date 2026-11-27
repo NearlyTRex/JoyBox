@@ -6,6 +6,7 @@ import os.path
 # Local imports
 from joybox import config
 from joybox import logger
+from joybox import backup
 from joybox import jsondata
 from joybox import webpage
 from joybox import webcookies
@@ -14,6 +15,7 @@ from joybox import strings
 from joybox import manifest
 from joybox import environment
 from joybox import fileops
+from joybox import serialization
 from joybox import metadataassetcollector
 from joybox import metadatacollector
 
@@ -292,6 +294,88 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Run func(web_driver) on a driver from web_connect and disconnect it afterwards;
+    # func's result, or None when connecting or disconnecting fails
+    def run_with_web_driver(
+        self,
+        func,
+        headless = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Connect to web
+        web_driver = self.web_connect(
+            headless = headless,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not web_driver:
+            return None
+
+        # Run, then disconnect whatever the outcome
+        result = None
+        try:
+            result = func(web_driver)
+        finally:
+            disconnected = self.web_disconnect(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        if not disconnected:
+            return None
+        return result
+
+    # A headless web driver for one scrape attempt; None in a pretend run that got none, else ScrapeFailed without one
+    def connect_scrape_driver(self, verbose = False, pretend_run = False):
+        web_driver = self.web_connect(
+            headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not web_driver:
+            if pretend_run:
+                return None
+            raise webpage.ScrapeFailed("Failed to connect to web driver")
+        return web_driver
+
+    # Run scrape_func(web_driver) on a fresh headless driver per attempt with retries,
+    # disconnecting the driver between attempts and at the end; the scrape's result
+    def scrape_with_retries(self, scrape_func, operation_name, verbose = False, pretend_run = False):
+
+        # Store web driver for cleanup
+        web_driver = None
+
+        # Cleanup function
+        def cleanup_driver():
+            nonlocal web_driver
+            if web_driver:
+                self.web_disconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                web_driver = None
+
+        # Scrape function
+        def attempt_scrape():
+            nonlocal web_driver
+            web_driver = self.connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
+            if not web_driver:
+                return None
+            return scrape_func(web_driver)
+
+        # Use retry function with cleanup
+        try:
+            return webpage.retry_scrape(
+                func = attempt_scrape,
+                cleanup_func = cleanup_driver,
+                verbose = verbose,
+                operation_name = operation_name)
+        finally:
+            cleanup_driver()
+
     # Saved browser cookie file named after the store
     def get_cookie_file(self):
         return webcookies.get_cookie_file(self.get_name().lower())
@@ -344,6 +428,58 @@ class StoreBase:
         cache_dir = environment.get_cache_purchases_dir()
         fileops.make_directory(src = cache_dir)
         return cache_dir
+
+    # Purchase dicts saved in cache_file when it is under a day old and holds a list of
+    # dicts; None otherwise. store_label names the store in the log
+    def read_purchases_cache(self, cache_file, store_label, verbose = False):
+
+        # Check if cache exists and is recent (less than 24 hours old)
+        if not paths.does_path_exist(cache_file):
+            return None
+        cache_age_hours = paths.get_file_age_in_hours(cache_file)
+        if cache_age_hours >= 24:
+            return None
+        if verbose:
+            logger.log_info("Using cached %s purchases data (%.1f hours old)" % (store_label, cache_age_hours))
+
+        # Load from cache
+        cached_data = serialization.read_json_file(
+            src = cache_file,
+            verbose = verbose,
+            exit_on_failure = False)
+        if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+            return cached_data
+        if verbose:
+            logger.log_warning("Failed to load %s cache, will fetch fresh data" % store_label)
+        return None
+
+    # Save purchase data to cache_file in cache_dir, logging the outcome when verbose
+    def write_purchases_cache(
+        self,
+        cache_dir,
+        cache_file,
+        purchases_data,
+        store_label,
+        verbose = False,
+        pretend_run = False):
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
+            src = cache_file,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            logger.log_info("Saved %s purchases data to cache" % store_label)
+        elif not success and verbose:
+            logger.log_warning("Failed to save %s cache" % store_label)
+
+    # Wrap each purchase dict as a JsonData for the store's platform
+    def make_purchases(self, purchases_data):
+        return [
+            jsondata.JsonData(json_data = purchase_data, json_platform = self.get_platform())
+            for purchase_data in purchases_data
+        ]
 
     # Games the account owns, from the store; empty in the base
     def get_latest_purchases(
@@ -549,6 +685,44 @@ class StoreBase:
         del (identifier, output_dir, output_name, branch, clean_output, show_progress,
             skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
         return False
+
+    # Run fetch_func(download_dir) in a temporary directory and archive what it fetched
+    # into output_dir; True when the fetch succeeds and output_dir ends up with files
+    def download_and_archive(
+        self,
+        fetch_func,
+        output_dir,
+        output_name = None,
+        clean_output = False,
+        show_progress = False,
+        skip_existing = False,
+        skip_identical = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Download into a temporary directory and archive it
+        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
+            if not fetch_func(tmp_dir_result):
+                return False
+            success = backup.archive_folder(
+                input_path = tmp_dir_result,
+                output_path = output_dir,
+                output_name = output_name,
+                clean_output = clean_output,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+        # Check results
+        return paths.does_directory_contain_files(output_dir)
 
     ############################################################
     # Paths

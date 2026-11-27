@@ -19,20 +19,20 @@ def build_parser():
         args = ("-l", "--locker_type"),
         arg_type = config.LockerType,
         description = "Remote locker to operate on")
-    parser.add_string_argument(args = ("--excludes"), default = "", description = "Comma-separated rclone exclude patterns to use instead of the locker's configured `excluded_dirs`")
+    parser.add_string_argument(args = ("--excludes",), default = "", description = "Comma-separated rclone exclude patterns to use instead of the locker's configured `excluded_dirs`")
     parser.add_group("Diff files")
-    parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "File listing every path with a marker: `=` same, `*` differs, `+` local only, `-` remote only, `!` error")
-    parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "File listing paths present on both sides whose contents differ")
-    parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "File listing paths only on the remote (missing locally)")
-    parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "File listing paths only in the local locker (missing on the remote)")
-    parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "File listing paths that could not be compared; written by `Diff` only")
-    parser.add_string_argument(args = ("--diff_dir"), description = "For `DiffSync`: directory holding the lists from an earlier `Diff`; when omitted a fresh diff is run into a temporary directory")
+    parser.add_string_argument(args = ("--diff_combined_path",), default = "diff_combined.txt", description = "File listing every path with a marker: `=` same, `*` differs, `+` local only, `-` remote only, `!` error")
+    parser.add_string_argument(args = ("--diff_intersected_path",), default = "diff_intersected.txt", description = "File listing paths present on both sides whose contents differ")
+    parser.add_string_argument(args = ("--diff_missing_src_path",), default = "diff_missing_src.txt", description = "File listing paths only on the remote (missing locally)")
+    parser.add_string_argument(args = ("--diff_missing_dest_path",), default = "diff_missing_dest.txt", description = "File listing paths only in the local locker (missing on the remote)")
+    parser.add_string_argument(args = ("--diff_error_path",), default = "diff_errors.txt", description = "File listing paths that could not be compared; written by `Diff` only")
+    parser.add_string_argument(args = ("--diff_dir",), description = "For `DiffSync`: directory holding the lists from an earlier `Diff`; when omitted a fresh diff is run into a temporary directory")
     parser.add_group("Behavior")
     parser.add_boolean_argument(args = ("-e", "--resync"), description = "For `Merge`: pass `--resync` to bisync, needed on the first run or after bisync's state is lost")
     parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Pass `--interactive` to rclone so it asks before each change; applies to the transfer actions and `DiffSync`")
     parser.add_boolean_argument(args = ("-q", "--quick"), description = "For `Diff` and `DiffSync`: compare file sizes only instead of hashes")
     parser.add_boolean_argument(args = ("-r", "--recycle_missing"), description = "For `DiffSync`: move remote-only files into the remote recycle folder instead of downloading them")
-    parser.add_string_argument(args = ("--recycle_folder"), default = ".recycle_bin", description = "Name of the recycle folder at the remote locker's root, used by `DiffSync`, `EmptyRecycle` and excluded from diffs")
+    parser.add_string_argument(args = ("--recycle_folder",), default = ".recycle_bin", description = "Name of the recycle folder at the remote locker's root, used by `DiffSync`, `EmptyRecycle` and excluded from diffs")
     parser.add_common_arguments()
     return parser
 

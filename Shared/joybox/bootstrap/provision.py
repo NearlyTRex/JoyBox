@@ -259,7 +259,7 @@ class Provisioner:
         # Wait for it to answer
         logger.log_info("Waiting for %s to answer on ssh" % address)
         deadline = time.monotonic() + BOOT_TIMEOUT_SECONDS
-        if not self._wait_for_ssh(address, deadline):
+        if not self.wait_for_ssh(address, deadline):
             return False
 
         # A new guest finishes first boot before anything else runs, and that
@@ -295,7 +295,7 @@ class Provisioner:
             verbose = verbose, exit_on_failure = False)
 
     # Poll the ssh port until it answers; False once the deadline passes
-    def _wait_for_ssh(self, address, deadline):
+    def wait_for_ssh(self, address, deadline):
         while not self.wait_for_port(address, self.server.get_port()):
             if time.monotonic() > deadline:
                 logger.log_error("%s did not answer within %d seconds" % (address, BOOT_TIMEOUT_SECONDS))

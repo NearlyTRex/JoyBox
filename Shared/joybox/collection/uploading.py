@@ -10,17 +10,6 @@ from .hashing import build_hash_files
 
 ############################################################
 
-# The given game root when it is a directory, else the game's locker files dir
-def _resolve_game_root(game_info, game_root = None, locker_type = None):
-    if paths.is_path_directory(game_root):
-        return game_root
-    return environment.get_locker_gaming_files_dir(
-        game_supercategory = game_info.get_supercategory(),
-        game_category = game_info.get_category(),
-        game_subcategory = game_info.get_subcategory(),
-        game_name = game_info.get_name(),
-        locker_type = locker_type)
-
 # Encrypt the game root's files in place, replacing the originals, then rebuild their hashes
 def _encrypt_and_hash_files(
     game_info,
@@ -62,7 +51,8 @@ def upload_game_files(
     exit_on_failure = False):
 
     # Get game root
-    game_root = _resolve_game_root(game_info, game_root, locker_type)
+    game_root = gamecollection.resolve_game_root(
+        game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_info.get_name(), game_root, locker_type)
     if not paths.is_path_directory(game_root):
         return False
 
@@ -99,16 +89,12 @@ def upload_all_game_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = upload_game_files(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        upload_game_files,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
@@ -153,10 +139,4 @@ def upload_game_roots(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error(
-                message = "Upload of game files failed!",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+            gamecollection.log_game_error_and_quit(game_info, "Upload of game files failed!")

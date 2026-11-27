@@ -201,6 +201,27 @@ def _encrypt_tree_file(
         return False
     return True
 
+# Check the passphrase, then run crypt_tree_file over each non-excluded file under the input; False at the first failure
+def _crypt_tree_files(
+    crypt_tree_file, input_base_path, output_base_path, passphrase, exclude_paths, delete_original,
+    skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
+
+    # Validate passphrase
+    if not cryption.is_passphrase_valid(passphrase):
+        logger.log_error("Invalid passphrase")
+        return False
+
+    # Look at non-excluded files in the input base path
+    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        success = crypt_tree_file(
+            src_file, input_base_path, output_base_path, passphrase, delete_original,
+            skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
+        if not success:
+            return False
+
+    # Should be successful
+    return True
+
 # Encrypt every non-excluded file under one folder into the same relative spot under another, under an encrypted name
 def copy_and_encrypt_files(
     input_base_path,
@@ -214,21 +235,9 @@ def copy_and_encrypt_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Validate passphrase
-    if not cryption.is_passphrase_valid(passphrase):
-        logger.log_error("Invalid passphrase")
-        return False
-
-    # Look at non-excluded files in the input base path
-    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
-        success = _encrypt_tree_file(
-            src_file, input_base_path, output_base_path, passphrase, delete_original,
-            skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
-        if not success:
-            return False
-
-    # Should be successful
-    return True
+    return _crypt_tree_files(
+        _encrypt_tree_file, input_base_path, output_base_path, passphrase, exclude_paths, delete_original,
+        skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
 
 # The real name embedded in an encrypted file, or a plain file's own name;
 # None after logging when the embedded name cannot be read
@@ -314,21 +323,9 @@ def copy_and_decrypt_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Validate passphrase
-    if not cryption.is_passphrase_valid(passphrase):
-        logger.log_error("Invalid passphrase")
-        return False
-
-    # Look at non-excluded files in the input base path
-    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
-        success = _decrypt_tree_file(
-            src_file, input_base_path, output_base_path, passphrase, delete_original,
-            skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
-        if not success:
-            return False
-
-    # Should be successful
-    return True
+    return _crypt_tree_files(
+        _decrypt_tree_file, input_base_path, output_base_path, passphrase, exclude_paths, delete_original,
+        skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
 
 # Encrypt or decrypt a folder tree with the locker's passphrase; False for any other cryption type
 def _copy_files_with_cryption(cryption_type, locker_type, delete_original, copy_options):

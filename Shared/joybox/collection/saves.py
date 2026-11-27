@@ -72,14 +72,6 @@ def pack_save(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Log a save failure against the game's category
-def log_save_error(game_info, message):
-    logger.log_error(
-        message = message,
-        game_supercategory = game_info.get_supercategory(),
-        game_category = game_info.get_category(),
-        game_subcategory = game_info.get_subcategory())
-
 # Pack a save directory already known to hold save data
 def pack_save_dir(
     game_info,
@@ -127,7 +119,7 @@ def create_save_archive(game_info, archive_file, input_save_dir, verbose = False
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        log_save_error(game_info, "Unable to archive save")
+        gamecollection.log_game_error(game_info, "Unable to archive save")
         return False
     success = archive.test_archive(
         archive_file = archive_file,
@@ -135,7 +127,7 @@ def create_save_archive(game_info, archive_file, input_save_dir, verbose = False
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        log_save_error(game_info, "Unable to validate save")
+        gamecollection.log_game_error(game_info, "Unable to validate save")
         return False
     return True
 
@@ -159,7 +151,7 @@ def backup_save_archive(game_info, archive_file, dest_rel_path, locker_types, ve
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            log_save_error(game_info, "Unable to backup save")
+            gamecollection.log_game_error(game_info, "Unable to backup save")
             return False
     return True
 
@@ -202,18 +194,13 @@ def pack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        if not can_save_be_packed(game_info):
-            continue
-        success = pack_save(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        pack_save,
+        include = can_save_be_packed,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
@@ -261,10 +248,10 @@ def extract_save_archive(game_info, archive_file, output_save_dir, verbose = Fal
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        log_save_error(game_info, "Unable to unpack save")
+        gamecollection.log_game_error(game_info, "Unable to unpack save")
         return False
     if not pretend_run and paths.is_directory_empty(output_save_dir):
-        log_save_error(game_info, "Unpacked save is empty")
+        gamecollection.log_game_error(game_info, "Unpacked save is empty")
         return False
     return True
 
@@ -273,17 +260,12 @@ def unpack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        if not can_save_be_unpacked(game_info):
-            continue
-        success = unpack_save(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        unpack_save,
+        include = can_save_be_unpacked,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
@@ -469,15 +451,11 @@ def import_all_game_save_paths(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = import_game_save_paths(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        import_game_save_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Unpack a local game's newest save; store games pass, as their store restores saves
 def import_game_save(
@@ -499,15 +477,11 @@ def import_all_game_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = import_game_save(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        import_game_save,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Pack the save from the store save paths for store games, otherwise from the local save dir
 def export_game_save(
@@ -536,16 +510,12 @@ def export_all_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        success = export_game_save(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        export_game_save,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 
@@ -599,10 +569,4 @@ def run_save_action(
             handler_kwargs["locker_type"] = locker_type
         success = handler(**handler_kwargs)
         if not success:
-            logger.log_error(
-                message = error_message,
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+            gamecollection.log_game_error_and_quit(game_info, error_message)

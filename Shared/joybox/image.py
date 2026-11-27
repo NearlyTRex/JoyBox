@@ -49,7 +49,7 @@ def is_image_png(image_file):
         image_format = config.ImageFileType.PNG)
 
 # The JPEG or PNG format a destination's extension names; None for any other extension
-def _get_image_format_from_extension(image_dest):
+def get_image_format_from_extension(image_dest):
     image_ext = paths.get_filename_extension(image_dest).lower()
     if image_ext in [".jpg", ".jpeg"]:
         return config.ImageFileType.JPEG
@@ -76,7 +76,7 @@ def convert_image(
             src_image.seek(0)
         rgb_image = src_image.convert("RGB")
         if not image_format:
-            image_format = _get_image_format_from_extension(image_dest)
+            image_format = get_image_format_from_extension(image_dest)
         if not image_format:
             if exit_on_failure:
                 logger.log_error("Unable to tell which image format to convert %s to" % image_dest)

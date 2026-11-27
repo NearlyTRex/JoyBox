@@ -87,18 +87,8 @@ def check_archive_compression_output_files(
             return False
     return True
 
-# The installed tool's program, or None after logging that it was not found
-def _find_archive_tool(tool_name):
-    archive_tool = None
-    if programs.is_tool_installed(tool_name):
-        archive_tool = programs.get_tool_program(tool_name)
-    if not archive_tool:
-        logger.log_error("%s was not found" % tool_name)
-        return None
-    return archive_tool
-
 # The archive's type when 7-Zip can create it, or None after logging why not
-def _get_creatable_archive_type(archive_file):
+def get_creatable_archive_type(archive_file):
 
     # Get archive type
     archive_type = archiveinfo.get_archive_type(archive_file)
@@ -114,10 +104,10 @@ def _get_creatable_archive_type(archive_file):
 
 # 7-Zip and the archive's creatable type, or (None, None) after logging why not
 def _get_create_tool_and_type(archive_file):
-    archive_tool = _find_archive_tool("7-Zip")
+    archive_tool = programs.find_tool_program("7-Zip")
     if not archive_tool:
         return None, None
-    archive_type = _get_creatable_archive_type(archive_file)
+    archive_type = get_creatable_archive_type(archive_file)
     if not archive_type:
         return None, None
     return archive_tool, archive_type
@@ -313,7 +303,7 @@ def _get_extract_tool_name(archive_file):
     return "7-Zip"
 
 # Whether the archive's type is known and extractable, logging why not
-def _is_extractable_archive(archive_file):
+def is_extractable_archive(archive_file):
 
     # Get archive type
     archive_type = archiveinfo.get_archive_type(archive_file)
@@ -413,10 +403,10 @@ def _decode_lzh_names(archive_file, extract_dir, verbose, pretend_run, exit_on_f
 
 # The tool that extracts this archive, or None after logging why it cannot be extracted
 def _get_extract_tool(archive_file):
-    archive_tool = _find_archive_tool(_get_extract_tool_name(archive_file))
+    archive_tool = programs.find_tool_program(_get_extract_tool_name(archive_file))
     if not archive_tool:
         return None
-    if not _is_extractable_archive(archive_file):
+    if not is_extractable_archive(archive_file):
         return None
     return archive_tool
 
@@ -509,7 +499,7 @@ def test_archive(
     exit_on_failure = False):
 
     # Get tool
-    archive_tool = _find_archive_tool("7-Zip")
+    archive_tool = programs.find_tool_program("7-Zip")
     if not archive_tool:
         return False
 
@@ -531,7 +521,7 @@ def test_archive(
     return code == 0
 
 # Paths of the non-directory entries in 7-Zip's listing text
-def _parse_archive_listing(list_text):
+def parse_archive_listing(list_text):
     all_paths = []
     for line in list_text.splitlines():
         pattern = r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} (\S+)\s+(\d+)\s+(\d+)\s+(.+)$"
@@ -559,7 +549,7 @@ def list_archive(
     exit_on_failure = False):
 
     # Get tool
-    archive_tool = _find_archive_tool("7-Zip")
+    archive_tool = programs.find_tool_program("7-Zip")
     if not archive_tool:
         return []
 
@@ -584,7 +574,7 @@ def list_archive(
         list_text = list_output.decode()
 
     # Get full list of paths
-    all_paths = _parse_archive_listing(list_text)
+    all_paths = parse_archive_listing(list_text)
 
     # Condense paths
     return _condense_archive_paths(all_paths)
@@ -615,7 +605,7 @@ def extract_archives_by_type(input_path, archive_types, same_dir = False, delete
             exit_on_failure = exit_on_failure)
 
 # Whether the path ends with one of the comma-separated file types
-def _has_listed_file_type(path, file_types):
+def has_listed_file_type(path, file_types):
     return any(path.endswith(file_type) for file_type in file_types.split(","))
 
 # Archive each file directly in input_dir whose name ends with one of the comma-separated
@@ -634,7 +624,7 @@ def archive_files_in_directory(
         obj_path = paths.join_paths(input_dir, obj)
         if not paths.is_path_file(obj_path):
             continue
-        if not _has_listed_file_type(obj_path, file_types):
+        if not has_listed_file_type(obj_path, file_types):
             continue
         output_file = paths.join_paths(input_dir, paths.get_filename_basename(obj_path) + archive_type.cval())
         if paths.does_path_exist(output_file):
@@ -682,7 +672,7 @@ def archive_folders_in_directory(
 ###########################################################
 
 # Extract a zip beside itself, then zip the folder back in its place; quits when either step fails
-def _rezip_archive(zip_file, verbose, pretend_run, exit_on_failure):
+def rezip_archive(zip_file, verbose = False, pretend_run = False, exit_on_failure = False):
     zip_dir = paths.get_filename_directory(zip_file)
     zip_basename = paths.get_filename_basename(zip_file)
     extract_dir = paths.join_paths(zip_dir, zip_basename + "_extracted")
@@ -714,4 +704,4 @@ def _rezip_archive(zip_file, verbose, pretend_run, exit_on_failure):
 # Rezip every .zip under input_path deterministically, in place; quits on the first failure
 def rezip_archives(input_path, verbose = False, pretend_run = False, exit_on_failure = False):
     for zip_file in paths.build_file_list_by_extensions(input_path, extensions = [".zip"]):
-        _rezip_archive(zip_file, verbose, pretend_run, exit_on_failure)
+        rezip_archive(zip_file, verbose, pretend_run, exit_on_failure)

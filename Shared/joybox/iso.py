@@ -27,24 +27,15 @@ def is_iso_mounted(iso_file, mount_dir):
 
 # The XorrISO program path; None, logging an error, when it is not installed
 def get_iso_tool():
-    if programs.is_tool_installed("XorrISO"):
-        return programs.get_tool_program("XorrISO")
-    logger.log_error("XorrISO was not found")
-    return None
+    return programs.find_tool_program("XorrISO")
 
 # The FuseISO program path; None, logging an error, when it is not installed
 def get_mount_tool():
-    if programs.is_tool_installed("FuseISO"):
-        return programs.get_tool_program("FuseISO")
-    logger.log_error("FuseISO was not found")
-    return None
+    return programs.find_tool_program("FuseISO")
 
 # The FUserMount program path; None, logging an error, when it is not installed
 def get_unmount_tool():
-    if programs.is_tool_installed("FUserMount"):
-        return programs.get_tool_program("FUserMount")
-    logger.log_error("FUserMount was not found")
-    return None
+    return programs.find_tool_program("FUserMount")
 
 # The xorriso mkisofs command packing the valid source folders as an ISO 9660 + Joliet image
 def _get_create_iso_command(iso_tool, iso_file, source_dir, source_dirs, volume_name):
@@ -680,7 +671,7 @@ def unmount_iso(
 ###########################################################
 
 # Extract one disc image: the Mac side for HFS, otherwise as an ISO or as a 7-Zip archive
-def _extract_disc_image(image_file, output_dir, filesystem, extract_method, skip_existing = False, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def extract_disc_image(image_file, output_dir, filesystem, extract_method, skip_existing = False, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
     if filesystem == config.DiscFilesystemType.HFS:
         hfs.extract_hfs(
             image_file = image_file,
@@ -717,7 +708,7 @@ def extract_disc_images(input_path, filesystem, extract_method, skip_existing = 
         output_dir = paths.join_paths(current_dir, current_basename)
         if paths.is_path_directory(output_dir):
             continue
-        _extract_disc_image(
+        extract_disc_image(
             file, output_dir, filesystem, extract_method,
             skip_existing = skip_existing,
             delete_original = delete_originals,
@@ -745,7 +736,7 @@ def create_isos_from_folders(input_path, volume_name = "", auto_volume_name = Fa
             exit_on_failure = exit_on_failure)
 
 # Extract one zip beside itself and build an ISO from its contents
-def _create_iso_from_zip(zip_file, output_file, volume_name, delete_originals = False, verbose = False, pretend_run = False, exit_on_failure = False):
+def create_iso_from_zip(zip_file, output_file, volume_name = None, delete_originals = False, verbose = False, pretend_run = False, exit_on_failure = False):
     current_dir = paths.get_filename_directory(zip_file)
     current_basename = paths.get_filename_basename(zip_file)
     extracted_dir = paths.join_paths(current_dir, current_basename + "_extracted")
@@ -774,7 +765,7 @@ def create_isos_from_zips(input_path, volume_name = "", auto_volume_name = False
         output_file = paths.join_paths(current_dir, current_basename + config.DiscImageFileType.ISO.cval())
         if paths.does_path_exist(output_file):
             continue
-        _create_iso_from_zip(
+        create_iso_from_zip(
             file, output_file,
             current_basename if auto_volume_name else volume_name,
             delete_originals = delete_originals,

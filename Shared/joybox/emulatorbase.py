@@ -2,6 +2,9 @@
 from abc import ABC
 
 # Local imports
+from joybox import archive
+from joybox import config
+from joybox import fileops
 from joybox import programcatalog
 from joybox import programsetup
 from joybox import programs
@@ -120,6 +123,43 @@ class EmulatorBase(ABC):
     # Write the config files and copy in verified system files after install; the base does nothing
     def configure(self, setup_params = None):
         del setup_params
+        return True
+
+    # Write each config file the emulator lists under the emulators root, logging the
+    # failure under label (its name by default); False at the first that fails
+    def write_config_files(self, setup_params = None, label = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+        for config_filename, config_contents in self.get_config_files().items():
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup %s config files" % (label or self.get_name()))
+                return False
+        return True
+
+    # Unzip the locker's archive of a system folder into the platform's setup dir, keeping
+    # files already there; True when the locker has no such archive
+    def extract_system_archive(self, platform, obj, setup_params):
+        archive_file = paths.join_paths(
+            environment.get_locker_gaming_emulator_setup_dir(self.get_name()),
+            obj + config.ArchiveFileType.ZIP.cval())
+        if not paths.does_path_exist(archive_file):
+            return True
+        success = archive.extract_archive(
+            archive_file = archive_file,
+            extract_dir = paths.join_paths(programs.get_emulator_path_config_value(self.get_name(), "setup_dir", platform), obj),
+            skip_existing = True,
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not extract %s system files" % self.get_name())
+            return False
         return True
 
     # Verify locker system files against their expected md5s

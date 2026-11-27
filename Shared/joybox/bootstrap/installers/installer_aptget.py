@@ -5,23 +5,6 @@ from joybox import runoptions
 from joybox import logger
 from . import installer
 
-# Extract package identifier from string or dict
-def get_aptget_package_id(pkg):
-    if isinstance(pkg, str):
-        return pkg
-    return pkg.get("id", "")
-
-# Get display info for a package
-def get_aptget_package_info(pkg):
-    if isinstance(pkg, str):
-        return {"id": pkg, "name": pkg, "description": "", "category": ""}
-    return {
-        "id": pkg.get("id", ""),
-        "name": pkg.get("name", pkg.get("id", "")),
-        "description": pkg.get("description", ""),
-        "category": pkg.get("category", "")
-    }
-
 # Installs the environment's apt package list, enabling any foreign architectures it names
 class AptGet(installer.Installer):
     def __init__(
@@ -45,7 +28,7 @@ class AptGet(installer.Installer):
     # Whether dpkg reports every listed package installed
     def is_installed(self):
         for pkg in self.get_packages():
-            pkg_id = get_aptget_package_id(pkg)
+            pkg_id = installer.get_package_id(pkg)
             if not self.is_package_installed(pkg_id):
                 return False
         return True
@@ -55,8 +38,8 @@ class AptGet(installer.Installer):
         installed = []
         missing = []
         for pkg in self.get_packages():
-            pkg_id = get_aptget_package_id(pkg)
-            pkg_info = get_aptget_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if self.is_package_installed(pkg_id):
                 installed.append(display_name)
@@ -71,8 +54,8 @@ class AptGet(installer.Installer):
         if not self.ensure_foreign_architectures():
             return False
         for pkg in self.get_packages():
-            pkg_id = get_aptget_package_id(pkg)
-            pkg_info = get_aptget_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.install_package(pkg_id):
                 logger.log_error(f"Unable to install package {display_name}")
@@ -83,8 +66,8 @@ class AptGet(installer.Installer):
     def uninstall(self):
         logger.log_info("Uninstalling AptGet packages")
         for pkg in self.get_packages():
-            pkg_id = get_aptget_package_id(pkg)
-            pkg_info = get_aptget_package_info(pkg)
+            pkg_id = installer.get_package_id(pkg)
+            pkg_info = installer.get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.uninstall_package(pkg_id):
                 logger.log_error(f"Unable to uninstall package {display_name}")
@@ -96,7 +79,7 @@ class AptGet(installer.Installer):
     def ensure_foreign_architectures(self):
         architectures = []
         for pkg in self.get_packages():
-            pkg_id = get_aptget_package_id(pkg)
+            pkg_id = installer.get_package_id(pkg)
             if ":" in pkg_id:
                 arch = pkg_id.split(":", 1)[1]
                 if arch and arch not in architectures:

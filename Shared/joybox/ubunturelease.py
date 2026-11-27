@@ -114,10 +114,7 @@ def get_signing_fingerprint():
 
 # Get the signature verification tool
 def get_signature_tool():
-    if programs.is_tool_installed("Gpg"):
-        return programs.get_tool_program("Gpg")
-    logger.log_error("Gpg was not found")
-    return None
+    return programs.find_tool_program("Gpg")
 
 # Read the fingerprint a verification reported
 # A signature that checks out against a keyring only says it was made by one
@@ -303,10 +300,10 @@ def verify_image_checksum(
     if not expected:
         logger.log_error("No published checksum was found for %s" % image)
         return False
-    return _does_file_match_checksum(iso_file, expected, verbose, pretend_run, exit_on_failure)
+    return does_file_match_checksum(iso_file, expected, verbose, pretend_run, exit_on_failure)
 
 # Whether the file's sha256 is the expected checksum, logging both when it is not or cannot be read
-def _does_file_match_checksum(iso_file, expected, verbose, pretend_run, exit_on_failure):
+def does_file_match_checksum(iso_file, expected, verbose = False, pretend_run = False, exit_on_failure = False):
     logger.log_info("Verifying %s" % iso_file)
     actual = hashutil.calculate_file_sha256(
         src = iso_file,

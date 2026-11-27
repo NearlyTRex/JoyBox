@@ -1,5 +1,6 @@
 # Imports
 import importlib
+import base64
 import ctypes
 import os
 import os.path
@@ -285,6 +286,7 @@ def download_git_url(
     branch = None,
     recursive = True,
     clean = False,
+    env_vars = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -302,12 +304,11 @@ def download_git_url(
     if not download_tool:
         return False
 
-    # Get download command
+    # Run clone command
     download_cmd = build_git_clone_cmd(download_tool, url, output_dir, branch, recursive)
-
-    # Run download command
     options = commandbase.create_command_options(
         cwd = os.path.expanduser("~"),
+        env = {**os.environ, **(env_vars or {})},
         blocking_processes = [download_tool])
     if not run_download_command(download_cmd, options, "Git download of %s failed" % url, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
@@ -562,7 +563,17 @@ def get_github_repositories(
             logger.log_error(e, quit_program = True)
         return []
 
-# Clone a GitHub repo over HTTPS, embedding the token in the URL when one is given
+# Git settings that send a token as GitHub's basic auth header, set through the
+# environment so the token stays out of the command line and the clone's .git/config
+def get_github_auth_env(github_token):
+    credentials = base64.b64encode(("x-access-token:%s" % github_token).encode()).decode()
+    return {
+        "GIT_CONFIG_COUNT": "1",
+        "GIT_CONFIG_KEY_0": "http.https://github.com/.extraheader",
+        "GIT_CONFIG_VALUE_0": "Authorization: Basic %s" % credentials
+    }
+
+# Clone a GitHub repo over HTTPS, authenticating with the token when one is given
 def download_github_repository(
     github_user,
     github_repo,
@@ -574,15 +585,16 @@ def download_github_repository(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
+    env_vars = None
     if github_token and isinstance(github_token, str) and len(github_token):
-        github_url = "https://%s@github.com/%s/%s.git" % (github_token, github_user, github_repo)
+        env_vars = get_github_auth_env(github_token)
     return download_git_url(
-        url = github_url,
+        url = "https://github.com/%s/%s.git" % (github_user, github_repo),
         output_dir = output_dir,
         branch = github_branch,
         recursive = recursive,
         clean = clean,
+        env_vars = env_vars,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -597,7 +609,16 @@ def log_github_update_response(github_user, github_repo, update_response):
     if "branch is not behind" in update_message.lower():
         logger.log_info("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
 
-# Sync a fork branch with its upstream through the GitHub merge-upstream API; False when the call fails
+# Headers for a GitHub REST API call authenticated with the token, pinned to the 2022-11-28 API version
+def get_github_api_headers(github_token):
+    return {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer %s" % github_token,
+        "X-GitHub-Api-Version": "2022-11-28"
+    }
+
+# Sync a fork branch with its upstream through the GitHub merge-upstream API; False without a
+# token, which the API requires, or when the call fails
 def update_github_repository(
     github_user,
     github_repo,
@@ -606,6 +627,11 @@ def update_github_repository(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # The API refuses an unauthenticated merge
+    if not github_token:
+        logger.log_error("Updating repository '%s' - '%s' from upstream needs a GitHub token" % (github_user, github_repo))
+        return False
 
     # A pretend run must not merge anything
     if pretend_run:
@@ -618,11 +644,7 @@ def update_github_repository(
     # Post update json
     update_response = post_remote_json(
         url = update_url,
-        headers = {
-            "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer %s" % github_token,
-            "X-GitHub-Api-Version": "2022-11-28"
-        },
+        headers = get_github_api_headers(github_token),
         data = {
             "branch": github_branch
         },

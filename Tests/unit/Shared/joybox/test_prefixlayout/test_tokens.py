@@ -129,6 +129,20 @@ def test_drive_letters_are_assigned_in_order():
         ["d:/", "e:/", "f:/", "g:/"]
 
 
+def test_more_discs_than_drive_letters_map_without_drive_letters():
+    discs = ["/discs/Extra %d.chd" % index for index in range(len(config.drives_regular))] + ["/discs/Game.chd"]
+    token_map = build(disc_files = discs, disc_base_dir = "/mnt")
+
+    assert token_map[config.TOKEN_DISC_MAIN_ROOT] == "/mnt/Game"
+
+
+def test_a_disc_past_the_last_drive_letter_falls_back_to_its_path():
+    discs = ["/discs/Extra %d.chd" % index for index in range(len(config.drives_regular))] + ["/discs/Game.chd"]
+    token_map = build(disc_files = discs, disc_base_dir = "/mnt", use_drive_letters = True)
+
+    assert token_map[config.TOKEN_DISC_MAIN_ROOT] == "/mnt/Game"
+
+
 def test_a_drive_letter_is_taken_even_by_an_unnumbered_disc():
     token_map = build(
         disc_files = ["/discs/Game.chd", "/discs/Game (Disc 1).chd"],

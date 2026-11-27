@@ -367,7 +367,7 @@ def calculate_hash(
     return _get_plain_hash_data(path_full, path_dir, path_file, include_enc_fields, verbose, pretend_run, exit_on_failure)
 
 # (read, write) functions for the hash file format, JSON unless it is CSV
-def _get_hash_file_funcs(hash_format):
+def get_hash_file_funcs(hash_format = None):
     if hash_format is None:
         hash_format = config.HashFormatType.JSON
     if hash_format == config.HashFormatType.JSON:
@@ -489,7 +489,7 @@ def hash_files(
     exit_on_failure = False):
 
     # Determine read/write functions, then base path and file list
-    read_func, write_func = _get_hash_file_funcs(hash_format)
+    read_func, write_func = get_hash_file_funcs(hash_format)
     hash_inputs = _get_hash_inputs(src, base_path)
     if hash_inputs is None:
         return False
@@ -515,7 +515,7 @@ def hash_files(
     return True
 
 # Remove the entries whose files are missing under locker_root; whether any were removed
-def _remove_missing_hash_entries(hash_contents, locker_root, verbose):
+def remove_missing_hash_entries(hash_contents, locker_root, verbose = False):
     modified = False
     for key in list(hash_contents.keys()):
         entry = hash_contents[key]
@@ -537,7 +537,7 @@ def clean_missing_hash_entries(
     exit_on_failure = False):
 
     # Determine read/write functions
-    read_func, write_func = _get_hash_file_funcs(hash_format)
+    read_func, write_func = get_hash_file_funcs(hash_format)
 
     # Read hash file
     if not paths.is_path_file(hash_file):
@@ -548,7 +548,7 @@ def clean_missing_hash_entries(
         exit_on_failure = exit_on_failure)
 
     # Check each entry and remove if file doesn't exist
-    modified = _remove_missing_hash_entries(hash_contents, locker_root, verbose)
+    modified = remove_missing_hash_entries(hash_contents, locker_root, verbose)
 
     # Write hash file if modified
     if modified and not pretend_run:
@@ -569,7 +569,7 @@ HASH_FUNC_NAMES = (
     (config.HashType.CRC32, "calculate_file_crc32"))
 
 # The hashutil file hash function for the hash type, MD5 when it is not supported
-def _get_hash_func(hash_type):
+def get_hash_func(hash_type):
     for supported_type, func_name in HASH_FUNC_NAMES:
         if hash_type == supported_type:
             return getattr(hashutil, func_name)
@@ -632,7 +632,7 @@ def build_hash_map(
         return hash_map
 
     # Determine hash function, defaulting to MD5
-    hash_func = _get_hash_func(hash_type)
+    hash_func = get_hash_func(hash_type)
 
     # Build file list
     file_list = paths.build_file_list(src_path, use_relative_paths = True)
@@ -663,7 +663,7 @@ def _split_filter_patterns(filter_text):
 
 # The relative locker files the filters keep: hidden ones dropped unless included, then only
 # those matching an include pattern, then none matching an exclude pattern
-def _filter_locker_files(file_list, include_patterns, exclude_patterns, include_hidden = False):
+def filter_locker_files(file_list, include_patterns = (), exclude_patterns = (), include_hidden = False):
     if not include_hidden:
         file_list = [f for f in file_list if not any(part.startswith(".") for part in f.split(os.sep))]
     if include_patterns:
@@ -735,7 +735,7 @@ def hash_locker_files(locker_base_directory, include_filter = None, exclude_filt
     # Gather the filtered files, grouped by their hash file
     logger.log_info("Scanning files...")
     file_list = paths.build_file_list(base_dir, use_relative_paths = True)
-    file_list = _filter_locker_files(file_list, include_patterns, exclude_patterns, include_hidden = include_hidden)
+    file_list = filter_locker_files(file_list, include_patterns, exclude_patterns, include_hidden = include_hidden)
     logger.log_info("Found %d files" % len(file_list))
     files_by_hash_file = {}
     for file_path in file_list:

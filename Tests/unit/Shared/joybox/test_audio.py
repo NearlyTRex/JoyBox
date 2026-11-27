@@ -521,3 +521,58 @@ def test_an_unreadable_archive_yields_nothing(tmp_path):
     target.write_bytes(b"youtube \xff\xfe\n")
 
     assert audio.get_archived_video_ids(str(target)) == set()
+
+
+###########################################################
+# Audio files and album metadata files
+###########################################################
+
+@pytest.mark.parametrize("file_name,expected", [
+    ("Track.mp3", True),
+    ("Track.FLAC", True),
+    ("Track.m4a", True),
+    ("cover.jpg", False),
+])
+def test_audio_files_are_recognised_by_extension(file_name, expected):
+    assert audio.is_audio_filename(file_name) is expected
+
+
+def test_only_top_level_audio_files_are_moved(tmp_path):
+    work = tmp_path / "work"
+    (work / "nested").mkdir(parents = True)
+    (work / "Track.mp3").write_bytes(b"ID3")
+    (work / "cover.jpg").write_bytes(b"")
+    (work / "nested" / "Other.mp3").write_bytes(b"ID3")
+    audio_only = tmp_path / "audio"
+
+    audio.move_audio_files(str(work), str(audio_only))
+
+    assert sorted(path.name for path in audio_only.iterdir()) == ["Track.mp3"]
+    assert (work / "cover.jpg").exists()
+
+
+def test_an_album_metadata_file_is_named_after_the_album(monkeypatch):
+    seen = []
+    monkeypatch.setattr(
+        audio.environment, "get_file_audio_metadata_file",
+        lambda *args: seen.append(args) or "/meta/Album.json")
+
+    assert audio.get_album_metadata_file(GENRE, "Album", "Artist") == "/meta/Album.json"
+    assert seen == [(config.AudioMetadataType.TAG.value, GENRE.value, "Album", "Artist")]
+
+
+def test_an_album_metadata_file_round_trips(tmp_path):
+    json_file = str(tmp_path / "Album.json")
+
+    assert audio.write_album_metadata_file(json_file, {"album": "Album"}) is True
+    assert audio.read_album_metadata_file(json_file) == {"album": "Album"}
+
+
+def test_a_missing_album_metadata_file_reads_as_none(tmp_path):
+    assert audio.read_album_metadata_file(str(tmp_path / "absent.json")) is None
+
+
+def test_a_genre_tag_policy_forces_the_genre():
+    force_tags, _ = audio.get_genre_tag_policy(GENRE)
+
+    assert force_tags == {"genre": GENRE.value}

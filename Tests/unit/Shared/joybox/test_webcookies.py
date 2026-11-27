@@ -142,6 +142,20 @@ def test_cookies_survive_a_save_and_load(tmp_path):
     assert driver.added_cookies == COOKIES
 
 
+def test_a_cookie_file_is_written_with_its_directory(tmp_path):
+    target = tmp_path / "Cookies" / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
+
+    assert webcookies.write_cookie_file(str(target), COOKIES) is True
+    assert json.loads(target.read_text()) == COOKIES
+
+
+def test_adding_cookies_counts_those_the_browser_took():
+    driver = FakeDriver()
+
+    assert webcookies.add_cookies(driver, [{"bad": "cookie"}] + COOKIES, verbose = True) == len(COOKIES)
+    assert driver.added_cookies == COOKIES
+
+
 ###########################################################
 # Cookie backed sessions
 ###########################################################

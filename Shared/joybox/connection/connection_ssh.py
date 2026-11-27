@@ -325,14 +325,6 @@ class ConnectionSSH(connection.Connection):
             else:
                 time.sleep(0.1)
 
-    # Run blocking; on a nonzero exit raise ValueError when asked, otherwise quit with that code
-    def run_checked(self, cmd, sudo = False, throw_exception = False):
-        code = self.run_blocking(cmd = cmd, sudo = sudo)
-        if code != 0:
-            if throw_exception:
-                raise ValueError("Unable to run command: %s" % cmd)
-            runtime.quit_program(code)
-
     # Create a remote temp directory by mktemp -d; None in a pretend run or on failure
     def make_temporary_directory(self):
         if self.flags.pretend_run:

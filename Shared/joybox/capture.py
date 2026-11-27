@@ -118,7 +118,7 @@ def capture_screenshot_while_running(
     return _check_capture_result(run_success, output_file, pretend_run)
 
 # The last desktop audio monitor source pactl lists, or None when there is none
-def _get_linux_audio_device(pretend_run):
+def get_linux_audio_device(pretend_run = False):
     audio_device = None
     audio_sources = command.run_output_command(
         cmd = ["pactl", "list", "sources", "short"],
@@ -144,7 +144,7 @@ def _get_linux_capture_sources(capture_origin, pretend_run):
     ]
 
     # Audio
-    audio_device = _get_linux_audio_device(pretend_run)
+    audio_device = get_linux_audio_device(pretend_run)
     if audio_device:
         sources += [
             "-f", "pulse",
@@ -292,7 +292,7 @@ def capture_video_while_running(
     return _check_capture_result(run_success, output_file, pretend_run)
 
 # The [UserData.Capture] settings: timing, region, framerate and whether to overwrite existing captures
-def _get_capture_settings():
+def get_capture_settings():
     return {
         "duration": settings.get_integer_value("UserData.Capture", "capture_duration"),
         "interval": settings.get_integer_value("UserData.Capture", "capture_interval"),
@@ -341,12 +341,14 @@ def _run_with_video(run_start, capture_file, capture_settings, verbose, pretend_
 # Run a command while taking screenshots or video per the capture settings; existing captures are kept unless overwrite is set
 def run_capture_command(
     cmd,
-    options = commandbase.create_command_options(),
+    options = None,
     capture_type = None,
     capture_file = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    if options is None:
+        options = commandbase.create_command_options()
 
     # Blocking start method
     def run_start():
@@ -359,7 +361,7 @@ def run_capture_command(
         return code == 0
 
     # Get capture info
-    capture_settings = _get_capture_settings()
+    capture_settings = get_capture_settings()
 
     # Screenshot capturing
     if capture_type == config.CaptureType.SCREENSHOT:

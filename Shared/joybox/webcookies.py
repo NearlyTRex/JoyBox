@@ -34,7 +34,7 @@ def save_cookie(
             return False
         if verbose:
             logger.log_info("Saving cookies to %s" % path)
-        return _write_cookie_file(path, cookies, verbose, pretend_run, exit_on_failure)
+        return write_cookie_file(path, cookies, verbose, pretend_run, exit_on_failure)
     except (webpage.get_selenium_errors().WebDriverException, TypeError) as e:
         if verbose:
             logger.log_warning("SaveCookie: Failed to save cookies: %s" % str(e))
@@ -45,7 +45,7 @@ def save_cookie(
         return False
 
 # Write cookies to path as JSON, making its directory first; whether the file was written
-def _write_cookie_file(path, cookies, verbose, pretend_run, exit_on_failure):
+def write_cookie_file(path, cookies, verbose = False, pretend_run = False, exit_on_failure = False):
     success = fileops.make_directory(
         src = paths.get_filename_directory(path),
         verbose = verbose,
@@ -89,7 +89,7 @@ def load_cookie(
             logger.log_warning("LoadCookie: Cookie file does not contain valid cookie list")
         return False
     if not pretend_run:
-        cookies_loaded = _add_cookies(driver, cookie_list, verbose)
+        cookies_loaded = add_cookies(driver, cookie_list, verbose)
         if cookies_loaded == 0:
             if verbose:
                 logger.log_warning("LoadCookie: No cookies could be added")
@@ -99,7 +99,7 @@ def load_cookie(
     return True
 
 # Add each cookie to the browser session, skipping those it refuses; how many were added
-def _add_cookies(driver, cookie_list, verbose):
+def add_cookies(driver, cookie_list, verbose = False):
     cookies_loaded = 0
     for cookie in cookie_list:
         try:

@@ -296,6 +296,16 @@ def test_nothing_runs_without_ghidra(ghidra, project, run, ghidra_dir):
     assert not ghidra["command"].ran()
 
 
+def test_the_ghidra_install_directory_is_found(ghidra):
+    assert decompiler.find_ghidra_install_dir() == ghidra["ghidra"]
+
+
+def test_a_missing_ghidra_install_directory_is_none(ghidra):
+    ghidra["ghidra"] = "/nonexistent/Ghidra/lib"
+
+    assert decompiler.find_ghidra_install_dir() is None
+
+
 def test_a_script_runs_against_the_project(ghidra, project):
     assert run_project_script(project, verbose = True) is True
 

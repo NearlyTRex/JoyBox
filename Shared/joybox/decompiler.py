@@ -97,7 +97,7 @@ def list_preset_scripts(preset_name):
 ###########################################################
 
 # The Ghidra library install directory pyghidra needs; None, logged, when it is missing
-def _find_ghidra_install_dir():
+def find_ghidra_install_dir():
     ghidra_install_dir = programs.get_library_install_dir("Ghidra", "lib")
     if not ghidra_install_dir or not os.path.isdir(ghidra_install_dir):
         logger.log_error("Ghidra installation not found at: %s" % ghidra_install_dir)
@@ -110,7 +110,7 @@ def _find_pyghidra_tools():
     python_tool = programs.find_tool_program("PythonVenvPython")
     if not python_tool:
         return None, None
-    return python_tool, _find_ghidra_install_dir()
+    return python_tool, find_ghidra_install_dir()
 
 # Open the Ghidra GUI through pyghidra -g in the venv Python; False when Python or Ghidra
 # is missing or it exits nonzero

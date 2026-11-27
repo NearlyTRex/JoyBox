@@ -90,6 +90,15 @@ def test_a_missing_file_falls_back_to_its_extension(tmp_path, name, expected):
     assert image.get_image_format(str(tmp_path / name)) == expected
 
 
+@pytest.mark.parametrize("name,expected", [
+    ("art.JPEG", config.ImageFileType.JPEG),
+    ("art.png", config.ImageFileType.PNG),
+    ("art.gif", None),
+])
+def test_a_destination_extension_names_its_format(name, expected):
+    assert image.get_image_format_from_extension(name) == expected
+
+
 ###########################################################
 # Conversion
 ###########################################################

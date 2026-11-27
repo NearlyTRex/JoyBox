@@ -23,7 +23,7 @@ def are_game_metadata_file_possible(
 ############################################################
 
 # The category's metadata file, loaded when it exists, else an empty Metadata
-def _load_metadata_file(metadata_file_path, verbose = False, exit_on_failure = False):
+def load_metadata_file(metadata_file_path, verbose = False, exit_on_failure = False):
     metadata_obj = metadata.Metadata()
     if paths.does_path_exist(metadata_file_path):
         metadata_obj.import_from_metadata_file(
@@ -33,7 +33,7 @@ def _load_metadata_file(metadata_file_path, verbose = False, exit_on_failure = F
     return metadata_obj
 
 # Write the whole metadata file from the Metadata, replacing what was there
-def _write_metadata_file(
+def write_metadata_file(
     metadata_obj,
     metadata_file_path,
     verbose = False,
@@ -47,7 +47,7 @@ def _write_metadata_file(
         exit_on_failure = exit_on_failure)
 
 # A new entry for the game pointing at its json file, defaulting players, coop and playable and keeping an http url
-def _build_new_game_entry(
+def build_new_game_entry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -103,16 +103,16 @@ def create_game_metadata_entry(
 
     # Load metadata file
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
-    metadata_obj = _load_metadata_file(metadata_file_path, verbose = verbose, exit_on_failure = exit_on_failure)
+    metadata_obj = load_metadata_file(metadata_file_path, verbose = verbose, exit_on_failure = exit_on_failure)
     if metadata_obj.has_game(game_platform, game_name):
         return True
 
     # Set game entry
-    game_entry = _build_new_game_entry(game_supercategory, game_category, game_subcategory, game_name, game_url, initial_data)
+    game_entry = build_new_game_entry(game_supercategory, game_category, game_subcategory, game_name, game_url, initial_data)
     metadata_obj.set_game(game_platform, game_name, game_entry)
 
     # Write metadata file
-    _write_metadata_file(
+    write_metadata_file(
         metadata_obj = metadata_obj,
         metadata_file_path = metadata_file_path,
         verbose = verbose,
@@ -142,7 +142,7 @@ def _find_game_entry_to_update(
     # Load metadata file
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
-    metadata_obj = _load_metadata_file(metadata_file_path, verbose = verbose, exit_on_failure = exit_on_failure)
+    metadata_obj = load_metadata_file(metadata_file_path, verbose = verbose, exit_on_failure = exit_on_failure)
     if not metadata_obj.has_game(game_platform, game_name):
         return None
 
@@ -162,7 +162,7 @@ def _find_game_entry_to_update(
     return metadata_file_path, metadata_obj, json_obj, game_entry
 
 # Latest metadata from the game's store by its json identifier, or from the metadata collectors when it has none
-def _fetch_latest_metadata(
+def fetch_latest_game_metadata(
     json_obj,
     game_platform,
     game_name,
@@ -214,7 +214,7 @@ def update_game_metadata_entry(
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Merge latest data
-    latest_metadata = _fetch_latest_metadata(json_obj, game_platform, game_name, stats, verbose, pretend_run, exit_on_failure)
+    latest_metadata = fetch_latest_game_metadata(json_obj, game_platform, game_name, stats, verbose, pretend_run, exit_on_failure)
     if latest_metadata:
         game_entry.merge(latest_metadata)
         game_entry.sync_assets()
@@ -223,7 +223,7 @@ def update_game_metadata_entry(
     metadata_obj.set_game(game_platform, game_name, game_entry)
 
     # Write metadata file
-    _write_metadata_file(
+    write_metadata_file(
         metadata_obj = metadata_obj,
         metadata_file_path = metadata_file_path,
         verbose = verbose,

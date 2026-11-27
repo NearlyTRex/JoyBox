@@ -59,13 +59,13 @@ def get_archived_video_ids(archive_file):
     return ids
 
 # Whether the name has one of the collected audio extensions, in any case
-def _is_audio_filename(file_name):
+def is_audio_filename(file_name):
     return file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg'))
 
 # Move the directory's top-level audio files into audio_only_dir, making it on the first move
-def _move_audio_files(work_dir, audio_only_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+def move_audio_files(work_dir, audio_only_dir, verbose = False, pretend_run = False, exit_on_failure = False):
     for file_name in paths.get_directory_contents(work_dir):
-        if not _is_audio_filename(file_name):
+        if not is_audio_filename(file_name):
             continue
         src_file = paths.join_paths(work_dir, file_name)
         if not paths.is_path_file(src_file):
@@ -90,12 +90,12 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
     # etc.). The subdir may already hold files from a previous interrupted upload,
     # so we merge into it rather than treating an empty top level as "nothing to do".
     audio_only_dir = paths.join_paths(work_dir, "audio_only")
-    _move_audio_files(work_dir, audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    move_audio_files(work_dir, audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Upload anything pending (just-moved or left by a previous interrupted run)
     if not paths.is_path_directory(audio_only_dir):
         return True
-    pending = [f for f in paths.get_directory_contents(audio_only_dir) if _is_audio_filename(f)]
+    pending = [f for f in paths.get_directory_contents(audio_only_dir) if is_audio_filename(f)]
     if not pending:
         return True
 
@@ -345,7 +345,7 @@ def detect_album_artist(album_dir, genre_type = None):
     return parent_name
 
 # The album's JSON tag metadata file
-def _get_album_metadata_file(genre_type, album_name, artist_name):
+def get_album_metadata_file(genre_type, album_name, artist_name = None):
     return environment.get_file_audio_metadata_file(
         config.AudioMetadataType.TAG.value,
         genre_type.value if genre_type else None,
@@ -353,7 +353,7 @@ def _get_album_metadata_file(genre_type, album_name, artist_name):
         artist_name)
 
 # Write the album's tags to its JSON metadata file, logging the outcome; False on failure
-def _write_album_metadata_file(json_file, album_data, verbose, pretend_run, exit_on_failure):
+def write_album_metadata_file(json_file, album_data, verbose = False, pretend_run = False, exit_on_failure = False):
     if serialization.write_json_file(
         src = json_file,
         json_data = album_data,
@@ -391,8 +391,8 @@ def _build_album_metadata_file(
         return False
 
     # Write album metadata JSON
-    json_file = _get_album_metadata_file(genre_type, album_name, detected_artist_name)
-    return _write_album_metadata_file(json_file, album_data, verbose, pretend_run, exit_on_failure)
+    json_file = get_album_metadata_file(genre_type, album_name, detected_artist_name)
+    return write_album_metadata_file(json_file, album_data, verbose, pretend_run, exit_on_failure)
 
 # Read the tags of each selected album and write them to its JSON metadata file; False on the first failure
 def build_audio_metadata_files(
@@ -464,7 +464,7 @@ def clear_audio_metadata_tags(
     return True
 
 # The album's JSON metadata, or None after logging that it is missing or unreadable
-def _read_album_metadata_file(json_file, verbose, exit_on_failure):
+def read_album_metadata_file(json_file, verbose = False, exit_on_failure = False):
     if not paths.is_path_file(json_file):
         logger.log_error(f"Metadata file not found: {json_file}")
         return None
@@ -485,8 +485,8 @@ def _apply_album_metadata_file(audio_metadata, album_dir, genre_type, clear_exis
     detected_artist_name = detect_album_artist(album_dir, genre_type)
 
     # Read album metadata
-    json_file = _get_album_metadata_file(genre_type, album_name, detected_artist_name)
-    album_data = _read_album_metadata_file(json_file, verbose, exit_on_failure)
+    json_file = get_album_metadata_file(genre_type, album_name, detected_artist_name)
+    album_data = read_album_metadata_file(json_file, verbose, exit_on_failure)
     if not album_data:
         return False
 
@@ -577,7 +577,7 @@ def run_metadata_action(
 
 # (force_tags, use_index_for_track_number) for a genre. Universal policy: comments excluded,
 # genre forced to the genre folder. Per-genre: renumber tracks by index for YouTube-sourced genres.
-def _get_genre_tag_policy(genre_type, extra_force_tags):
+def get_genre_tag_policy(genre_type, extra_force_tags = None):
     force_tags = { "genre": genre_type.value }
     force_tags.update(extra_force_tags or {})
     use_index_for_track_number = genre_type.value in config.audio_track_index_genres
@@ -601,7 +601,7 @@ def tag_genre_with_policy(
         return True
 
     # Universal and per-genre policy
-    force_tags, use_index_for_track_number = _get_genre_tag_policy(genre_type, extra_force_tags)
+    force_tags, use_index_for_track_number = get_genre_tag_policy(genre_type, extra_force_tags)
     logger.log_info(
         f"Tagging genre: {genre_type.value}"
         + (" (renumbering tracks by index)" if use_index_for_track_number else ""))

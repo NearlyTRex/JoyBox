@@ -116,11 +116,9 @@ class Seams:
         self.copied = Recorder()
         self.extracted = Recorder()
         self.launched = Recorder()
-        if hasattr(module, "fileops"):
-            monkeypatch.setattr(module.fileops, "touch_file", self.touched)
-            monkeypatch.setattr(filebulk, "smart_copy", self.copied)
-        if hasattr(module, "archive"):
-            monkeypatch.setattr(module.archive, "extract_archive", self.extracted)
+        monkeypatch.setattr(module.emulatorbase.fileops, "touch_file", self.touched)
+        monkeypatch.setattr(filebulk, "smart_copy", self.copied)
+        monkeypatch.setattr(module.emulatorbase.archive, "extract_archive", self.extracted)
         if hasattr(module, "emulatorcommon"):
             monkeypatch.setattr(module.emulatorcommon, "simple_launch", self.launched)
         if hasattr(module, "gui"):
@@ -266,12 +264,12 @@ class ConfigureSeams:
         self.touch_ok = True
         self.copy_ok = True
         self.hashes = dict(find_emulator_class(module)().get_system_files())
-        monkeypatch.setattr(module.environment, "get_emulators_root_dir", lambda: "/emulators")
-        monkeypatch.setattr(module.environment, "get_locker_gaming_emulator_setup_dir",
+        monkeypatch.setattr(module.emulatorbase.environment, "get_emulators_root_dir", lambda: "/emulators")
+        monkeypatch.setattr(module.emulatorbase.environment, "get_locker_gaming_emulator_setup_dir",
             lambda name: "/locker/%s" % name)
         monkeypatch.setattr(program_paths, "get_emulator_path_config_value",
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
-        monkeypatch.setattr(module.fileops, "touch_file", self.touch)
+        monkeypatch.setattr(module.emulatorbase.fileops, "touch_file", self.touch)
         monkeypatch.setattr(filebulk, "smart_copy", self.copy)
         monkeypatch.setattr(module.emulatorbase.hashutil, "calculate_file_md5", self.md5)
 

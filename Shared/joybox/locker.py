@@ -261,7 +261,7 @@ def copy_to_locker(
 
 # The passphrase to encrypt an upload with; None for a local-only locker, and None with a
 # warning when the locker has none configured
-def _get_upload_passphrase(locker_info, locker_type):
+def get_upload_passphrase(locker_info, locker_type):
 
     # For local-only lockers, skip encryption (just do a plain copy)
     if locker_info.is_local_only():
@@ -327,7 +327,7 @@ def copy_to_locker_encrypted(
 
     # Get destination locker info and the passphrase to encrypt with
     locker_info = lockerinfo.LockerInfo(locker_type)
-    passphrase = _get_upload_passphrase(locker_info, locker_type)
+    passphrase = get_upload_passphrase(locker_info, locker_type)
 
     # Without one, just do a plain copy
     if not passphrase:
@@ -563,10 +563,9 @@ def _run_transfer_action(action, remote, target, resync, interactive, flags):
 
 # Target excludes plus the recycle folder, which diffs leave out
 def _get_diff_excludes(excludes, recycle_folder):
-    diff_excludes = list(excludes)
     if recycle_folder:
-        diff_excludes.append(recycle_folder + "/**")
-    return diff_excludes
+        return sync.get_excludes_with(excludes, recycle_folder + "/**")
+    return list(excludes)
 
 # Diff the target's local path against its remote into the combined, intersected,
 # missing-on-source, missing-on-destination and error files of diff_paths

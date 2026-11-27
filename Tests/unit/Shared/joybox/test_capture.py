@@ -290,6 +290,10 @@ def test_a_linux_video_records_the_output_monitor(ffmpeg, tmp_path):
     assert ["-f", "pulse", "-ac", "2", "-i", "2"] == cmd[12:18]
 
 
+def test_the_desktop_audio_device_is_the_output_monitor(ffmpeg):
+    assert capture.get_linux_audio_device() == "2"
+
+
 def test_a_linux_video_without_a_monitor_source_has_no_audio(ffmpeg, tmp_path):
     ffmpeg["runs"].output = "1\talsa_input.usb-mic\tPipeWire\ts16le 1ch 48000Hz\tSUSPENDED"
 
@@ -529,6 +533,34 @@ def test_a_failed_run_is_reported(capturing):
     capturing["runs"].returncode = 1
 
     assert run() is False
+
+
+def test_the_capture_settings_are_read_from_the_config(capturing):
+    capturing["settings"].set_value("UserData.Capture", "capture_framerate", "24")
+    capturing["settings"].set_value("UserData.Capture", "capture_origin_x", "5")
+    capturing["settings"].set_value("UserData.Capture", "capture_origin_y", "6")
+
+    capture_settings = capture.get_capture_settings()
+
+    assert capture_settings["framerate"] == 24
+    assert capture_settings["origin"] == (5, 6)
+
+
+def test_each_run_without_options_gets_its_own(capturing):
+    run()
+    run()
+
+    first, second = (call["options"] for call in capturing["runs"].calls)
+    assert first is not None
+    assert first is not second
+
+
+def test_given_options_reach_the_command(capturing):
+    options = capture.commandbase.create_command_options(cwd = "/games")
+
+    run(options = options)
+
+    assert capturing["runs"].calls[0]["options"] is options
 
 
 def test_the_run_flags_reach_the_command(capturing):

@@ -3,6 +3,10 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import network
+from joybox import programs
+from joybox import release
+from joybox import sourcebuild
 from joybox.tools import pegasus
 
 
@@ -23,11 +27,11 @@ class Recorder:
 @pytest.fixture
 def installed(monkeypatch):
     platforms = {"windows", "linux"}
-    monkeypatch.setattr(pegasus.programs, "should_program_be_installed", lambda name, platform: platform in platforms)
-    monkeypatch.setattr(pegasus.programs, "get_program_install_dir", lambda name, platform: "/install/%s" % platform)
-    monkeypatch.setattr(pegasus.programs, "get_program_backup_dir", lambda name, platform: "/backup/%s" % platform)
-    monkeypatch.setattr(pegasus.programs, "get_tool_config_value", lambda name, key: "dev")
-    monkeypatch.setattr(pegasus.programs, "get_tool_path_config_value", lambda name, key, platform: "/themes/%s" % platform)
+    monkeypatch.setattr(programs, "should_program_be_installed", lambda name, platform: platform in platforms)
+    monkeypatch.setattr(programs, "get_program_install_dir", lambda name, platform: "/install/%s" % platform)
+    monkeypatch.setattr(programs, "get_program_backup_dir", lambda name, platform: "/backup/%s" % platform)
+    monkeypatch.setattr(programs, "get_tool_config_value", lambda name, key: "dev")
+    monkeypatch.setattr(programs, "get_tool_path_config_value", lambda name, key, platform: "/themes/%s" % platform)
     return platforms
 
 
@@ -46,9 +50,9 @@ def online(monkeypatch, installed):
         "appimage": Recorder(),
         "theme": Recorder(),
     }
-    monkeypatch.setattr(pegasus.release, "download_github_release", recording("github", fakes["github"]))
-    monkeypatch.setattr(pegasus.sourcebuild, "build_appimage_from_source", recording("appimage", fakes["appimage"]))
-    monkeypatch.setattr(pegasus.network, "download_github_repository", recording("theme", fakes["theme"]))
+    monkeypatch.setattr(release, "download_github_release", recording("github", fakes["github"]))
+    monkeypatch.setattr(sourcebuild, "build_appimage_from_source", recording("appimage", fakes["appimage"]))
+    monkeypatch.setattr(network, "download_github_repository", recording("theme", fakes["theme"]))
     fakes["order"] = calls
     return fakes
 
@@ -103,7 +107,7 @@ def test_setup_stops_at_the_first_failure(online, kind, results, expected):
 
 def test_setup_offline_installs_each_platform(monkeypatch, installed):
     stored = Recorder()
-    monkeypatch.setattr(pegasus.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert pegasus.Pegasus().setup_offline()
 
@@ -113,7 +117,7 @@ def test_setup_offline_installs_each_platform(monkeypatch, installed):
 
 def test_setup_offline_windows_matches_the_online_install(monkeypatch, online):
     stored = Recorder()
-    monkeypatch.setattr(pegasus.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
     tool = pegasus.Pegasus()
 
     assert tool.setup()
@@ -128,7 +132,7 @@ def test_setup_offline_windows_matches_the_online_install(monkeypatch, online):
 def test_setup_offline_skips_platforms_not_installed(monkeypatch, installed):
     installed.clear()
     stored = Recorder()
-    monkeypatch.setattr(pegasus.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert pegasus.Pegasus().setup_offline(config.SetupParams())
     assert stored.calls == []
@@ -137,7 +141,7 @@ def test_setup_offline_skips_platforms_not_installed(monkeypatch, installed):
 @pytest.mark.parametrize("results", [[False], [True, False]])
 def test_setup_offline_stops_on_a_failed_install(monkeypatch, installed, results):
     stored = Recorder(results)
-    monkeypatch.setattr(pegasus.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert not pegasus.Pegasus().setup_offline()
     assert len(stored.calls) == len(results)

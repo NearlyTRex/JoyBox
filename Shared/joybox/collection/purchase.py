@@ -64,7 +64,7 @@ def login_all_game_stores(
 ############################################################
 
 # The store for these categories when it can import purchases; None otherwise
-def _get_importable_store(game_supercategory, game_category, game_subcategory):
+def get_importable_store(game_supercategory, game_category, game_subcategory):
 
     # Get store
     store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
@@ -116,7 +116,7 @@ def _load_store_purchases(
     exit_on_failure = False):
 
     # Get store
-    store_obj = _get_importable_store(game_supercategory, game_category, game_subcategory)
+    store_obj = get_importable_store(game_supercategory, game_category, game_subcategory)
     if not store_obj:
         return None
 
@@ -578,7 +578,7 @@ def build_all_game_store_purchases(
 ############################################################
 
 # The game's folder under the output dir, laid out like the locker, or its locker folder when no output dir is given
-def _get_purchase_output_dir(game_info, output_dir = None):
+def get_purchase_output_dir(game_info, output_dir = None):
     if output_dir:
         output_offset = environment.get_locker_gaming_files_offset(
             game_supercategory = game_info.get_supercategory(),
@@ -593,7 +593,7 @@ def _get_purchase_output_dir(game_info, output_dir = None):
         game_name = game_info.get_name())
 
 # Download the store's latest build of the game into the output dir, named with its version
-def _download_latest_build(
+def download_latest_store_build(
     store_obj,
     game_info,
     output_dir,
@@ -645,12 +645,12 @@ def download_game_store_purchase(
         return True
 
     # Get output dir
-    output_dir = _get_purchase_output_dir(game_info, output_dir)
+    output_dir = get_purchase_output_dir(game_info, output_dir)
     if skip_existing and paths.does_directory_contain_files(output_dir):
         return True
 
     # Download latest build
-    return _download_latest_build(
+    return download_latest_store_build(
         store_obj = store_obj,
         game_info = game_info,
         output_dir = output_dir,
@@ -663,17 +663,12 @@ def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
-        if not stores.is_store_platform(game_info.get_platform()):
-            continue
-        success = download_game_store_purchase(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    return True
+    return gamecollection.run_on_all_rom_games(
+        download_game_store_purchase,
+        include = lambda game_info: stores.is_store_platform(game_info.get_platform()),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
 

@@ -152,3 +152,14 @@ def test_a_pretend_run_verifies_without_fetching_anything(monkeypatch, tmp_path)
     assert ubunturelease.verify_image_checksum(
         str(tmp_path / "ubuntu.iso"), "24.04", image_named("24.04.1"),
         pretend_run = True) is True
+
+
+@pytest.mark.parametrize("actual,expected", [
+    (CHECKSUM.upper(), True),
+    ("0" * 64, False),
+    (None, False),
+])
+def test_a_file_is_checked_against_its_checksum(monkeypatch, actual, expected):
+    monkeypatch.setattr(ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: actual)
+
+    assert ubunturelease.does_file_match_checksum("/images/ubuntu.iso", CHECKSUM.lower()) is expected

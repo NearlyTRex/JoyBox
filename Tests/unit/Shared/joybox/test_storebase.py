@@ -1,5 +1,7 @@
 # Imports
+import json
 import os
+import time
 
 # Third-party imports
 import pytest
@@ -595,6 +597,70 @@ def test_the_purchases_cache_dir_is_created(monkeypatch, tmp_path):
     assert os.path.isdir(cache_dir)
 
 
+def write_cache(path, data, age_hours = 0):
+    path.write_text(json.dumps(data))
+    stamp = time.time() - age_hours * 3600
+    os.utime(path, (stamp, stamp))
+    return str(path)
+
+
+def test_a_fresh_purchases_cache_is_read_back(tmp_path):
+    cache_file = write_cache(tmp_path / "cache.json", [{"appid": "1"}])
+
+    assert SampleStore().read_purchases_cache(cache_file, "Sample") == [{"appid": "1"}]
+
+
+def test_a_missing_purchases_cache_is_nothing(tmp_path):
+    assert SampleStore().read_purchases_cache(str(tmp_path / "absent.json"), "Sample") is None
+
+
+def test_a_day_old_purchases_cache_is_ignored(tmp_path):
+    cache_file = write_cache(tmp_path / "cache.json", [{"appid": "1"}], age_hours = 25)
+
+    assert SampleStore().read_purchases_cache(cache_file, "Sample") is None
+
+
+@pytest.mark.parametrize("data", [{"appid": "1"}, ["not a dict"]])
+def test_a_malformed_purchases_cache_is_ignored(tmp_path, data):
+    cache_file = write_cache(tmp_path / "cache.json", data)
+
+    assert SampleStore().read_purchases_cache(cache_file, "Sample", verbose = True) is None
+
+
+def test_a_verbose_cache_read_names_the_store(tmp_path, caplog):
+    cache_file = write_cache(tmp_path / "cache.json", [])
+
+    SampleStore().read_purchases_cache(cache_file, "Sample Label", verbose = True)
+
+    assert "Using cached Sample Label purchases data" in caplog.text
+
+
+def test_written_purchases_are_read_back(tmp_path):
+    cache_dir = tmp_path / "Purchases"
+    cache_file = str(cache_dir / "cache.json")
+
+    SampleStore().write_purchases_cache(str(cache_dir), cache_file, [{"appid": "1"}], "Sample", verbose = True)
+
+    assert SampleStore().read_purchases_cache(cache_file, "Sample") == [{"appid": "1"}]
+
+
+def test_a_failed_cache_write_is_survived(tmp_path, monkeypatch):
+    monkeypatch.setattr(storebase.serialization, "write_json_file", lambda **kwargs: False)
+
+    SampleStore().write_purchases_cache(str(tmp_path), str(tmp_path / "cache.json"), [], "Sample", verbose = True)
+
+    assert not (tmp_path / "cache.json").exists()
+
+
+def test_purchases_are_wrapped_for_the_store_platform():
+    store = SampleStore()
+
+    purchases = store.make_purchases([{config.JSON_KEY_STORE_APPID: "1"}])
+
+    assert [purchase.get_value(config.JSON_KEY_STORE_APPID) for purchase in purchases] == ["1"]
+    assert purchases[0].get_platform() == store.get_platform()
+
+
 ###########################################################
 # Web driver
 ###########################################################
@@ -613,6 +679,146 @@ def test_web_disconnect_destroys_the_driver(monkeypatch):
 
     assert SampleStore().web_disconnect("driver") is True
     assert calls[0]["driver"] == "driver"
+
+
+@pytest.fixture
+def drivers(monkeypatch):
+    state = {"connect_ok": True, "disconnect_ok": True, "connects": [], "disconnected": []}
+
+    def web_connect(store, headless = False, **kwargs):
+        state["connects"].append(headless)
+        return "driver-%d" % len(state["connects"]) if state["connect_ok"] else None
+
+    def web_disconnect(store, web_driver, **kwargs):
+        state["disconnected"].append(web_driver)
+        return state["disconnect_ok"]
+
+    monkeypatch.setattr(SampleStore, "web_connect", web_connect)
+    monkeypatch.setattr(SampleStore, "web_disconnect", web_disconnect)
+    monkeypatch.setattr(storebase.webpage.datautils.time, "sleep", lambda seconds: None)
+    return state
+
+
+def test_a_driver_run_returns_the_result_and_disconnects(drivers):
+    assert SampleStore().run_with_web_driver(lambda driver: driver + " ok", headless = True) == "driver-1 ok"
+    assert drivers["connects"] == [True]
+    assert drivers["disconnected"] == ["driver-1"]
+
+
+def test_a_driver_run_that_cannot_connect_runs_nothing(drivers):
+    drivers["connect_ok"] = False
+    ran = []
+
+    assert SampleStore().run_with_web_driver(ran.append) is None
+    assert ran == []
+
+
+def test_a_driver_run_that_cannot_disconnect_returns_nothing(drivers):
+    drivers["disconnect_ok"] = False
+
+    assert SampleStore().run_with_web_driver(lambda driver: "result") is None
+
+
+def test_a_driver_run_disconnects_even_when_it_raises(drivers):
+    def fail(driver):
+        raise RuntimeError("boom")
+
+    with pytest.raises(RuntimeError):
+        SampleStore().run_with_web_driver(fail)
+    assert drivers["disconnected"] == ["driver-1"]
+
+
+def test_a_scrape_driver_is_headless(drivers):
+    assert SampleStore().connect_scrape_driver() == "driver-1"
+    assert drivers["connects"] == [True]
+
+
+def test_a_scrape_driver_that_cannot_start_fails_the_attempt(drivers):
+    drivers["connect_ok"] = False
+
+    with pytest.raises(storebase.webpage.ScrapeFailed):
+        SampleStore().connect_scrape_driver()
+
+
+def test_a_pretend_scrape_driver_that_cannot_start_is_nothing(drivers):
+    drivers["connect_ok"] = False
+
+    assert SampleStore().connect_scrape_driver(pretend_run = True) is None
+
+
+def test_a_scrape_returns_its_result_and_disconnects(drivers):
+    assert SampleStore().scrape_with_retries(lambda driver: "page of " + driver, "scrape") == "page of driver-1"
+    assert drivers["disconnected"] == ["driver-1"]
+
+
+def test_a_failed_scrape_attempt_is_retried_on_a_fresh_driver(drivers):
+    attempts = []
+
+    def scrape(driver):
+        attempts.append(driver)
+        if len(attempts) == 1:
+            raise storebase.webpage.ScrapeFailed("not yet")
+        return "page"
+
+    assert SampleStore().scrape_with_retries(scrape, "scrape") == "page"
+    assert attempts == ["driver-1", "driver-2"]
+    assert drivers["disconnected"] == ["driver-1", "driver-2"]
+
+
+def test_a_pretend_scrape_without_a_driver_scrapes_nothing(drivers):
+    drivers["connect_ok"] = False
+    scraped = []
+
+    assert SampleStore().scrape_with_retries(scraped.append, "scrape", pretend_run = True) is None
+    assert scraped == []
+    assert drivers["disconnected"] == []
+
+
+###########################################################
+# Downloading through a temporary directory
+###########################################################
+
+@pytest.fixture
+def archiving(monkeypatch, tmp_path):
+    state = {"archived": [], "archive_ok": True, "output": tmp_path / "out"}
+
+    def archive_folder(**kwargs):
+        state["archived"].append(kwargs)
+        if state["archive_ok"]:
+            state["output"].mkdir(exist_ok = True)
+            (state["output"] / "game.7z").write_text("x")
+        return state["archive_ok"]
+
+    monkeypatch.setattr(storebase.backup, "archive_folder", archive_folder)
+    return state
+
+
+def test_a_fetch_is_archived_into_the_output(archiving):
+    fetched = []
+
+    assert SampleStore().download_and_archive(
+        lambda download_dir: fetched.append(download_dir) or True, str(archiving["output"]), output_name = "Game") is True
+    assert archiving["archived"][0]["input_path"] == fetched[0]
+    assert archiving["archived"][0]["output_name"] == "Game"
+
+
+def test_a_failed_fetch_archives_nothing(archiving):
+    assert SampleStore().download_and_archive(lambda download_dir: False, str(archiving["output"])) is False
+    assert archiving["archived"] == []
+
+
+def test_a_failed_archive_fails_the_download(archiving):
+    archiving["archive_ok"] = False
+
+    assert SampleStore().download_and_archive(lambda download_dir: True, str(archiving["output"])) is False
+
+
+def test_a_download_without_a_temporary_directory_fetches_nothing(archiving, monkeypatch):
+    monkeypatch.setattr(storebase.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
+    fetched = []
+
+    assert SampleStore().download_and_archive(fetched.append, str(archiving["output"])) is False
+    assert fetched == []
 
 
 ###########################################################

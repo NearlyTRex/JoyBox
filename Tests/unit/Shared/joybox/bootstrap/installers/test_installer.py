@@ -23,6 +23,27 @@ def build():
 
 
 ###########################################################
+# Package descriptors
+###########################################################
+
+def test_string_package_is_its_own_id_and_name():
+    assert installer.get_package_id("vim") == "vim"
+    assert installer.get_package_info("vim") == {
+        "id": "vim", "name": "vim", "description": "", "category": ""}
+
+
+def test_dict_package_fields():
+    pkg = {"id": "vim", "name": "Vim", "description": "editor", "category": "dev"}
+    assert installer.get_package_id(pkg) == "vim"
+    assert installer.get_package_info(pkg) == pkg
+
+
+def test_dict_package_name_defaults_to_id():
+    assert installer.get_package_id({}) == ""
+    assert installer.get_package_info({"id": "vim"})["name"] == "vim"
+
+
+###########################################################
 # Remote home
 ###########################################################
 

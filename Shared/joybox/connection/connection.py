@@ -122,10 +122,13 @@ class Connection(ABC):
     def run_interactive(self, cmd, sudo = False):
         ...
 
-    # Run a command and fail on a nonzero exit: raise when asked, otherwise quit the program
-    @abstractmethod
+    # Run blocking; on a nonzero exit raise ValueError when asked, otherwise quit with that code
     def run_checked(self, cmd, sudo = False, throw_exception = False):
-        ...
+        code = self.run_blocking(cmd = cmd, sudo = sudo)
+        if code != 0:
+            if throw_exception:
+                raise ValueError("Unable to run command: %s" % cmd)
+            runtime.quit_program(code)
 
     # The home directory of the user on the target host
     @abstractmethod

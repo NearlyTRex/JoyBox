@@ -8,6 +8,7 @@ from joybox import fileops
 from joybox import fileedits
 from joybox import stores
 from joybox import gui
+from joybox import logger
 from joybox import paths
 from joybox import environment
 from joybox import platforms
@@ -93,7 +94,7 @@ def launch_store_game(
 ###########################################################
 
 # Put the tokens back in the launcher's config file and replace its save-dir symlink with an empty directory
-def _revert_launcher_setup(
+def revert_launcher_setup(
     game_info,
     game_launcher,
     verbose = False,
@@ -136,7 +137,7 @@ def _find_game_launcher(game_info):
     return game_launcher
 
 # Symlink the launcher's save dir to the game's and fill the tokens in its config file
-def _apply_launcher_setup(
+def apply_launcher_setup(
     game_info,
     game_launcher,
     verbose = False,
@@ -191,7 +192,7 @@ def _run_launcher(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    reverted = _revert_launcher_setup(
+    reverted = revert_launcher_setup(
         game_info = game_info,
         game_launcher = game_launcher,
         verbose = verbose,
@@ -221,7 +222,7 @@ def _run_with_launcher_setup(
     exit_on_failure = False):
 
     # Setup launcher
-    success = _apply_launcher_setup(
+    success = apply_launcher_setup(
         game_info = game_info,
         game_launcher = game_launcher,
         verbose = verbose,
@@ -339,22 +340,27 @@ def launch_game(
 
 ###########################################################
 
-# A random subcategory of the category whose platform has a launcher
-def _choose_random_launchable_subcategory(game_category):
+# A random subcategory of the category whose platform has a launcher, or None when none has
+def choose_random_launchable_subcategory(game_category):
     potential_subcategories = []
-    for potential_subcategory in config.subcategory_map[game_category]:
+    for potential_subcategory in config.subcategory_map.get(game_category, []):
         potential_platform = gamenaming.derive_game_platform_from_categories(potential_subcategory)
         if not platforms.has_no_launcher(potential_platform):
             potential_subcategories.append(potential_subcategory)
+    if not potential_subcategories:
+        return None
     return random.choice(potential_subcategories)
 
 # The JSON file of a random game, picking the category and subcategory at random when not given;
-# None when the platform's metadata has no entry
+# None when the category has nothing launchable or the platform's metadata has no entry
 def choose_random_game_json_file(game_category = None, game_subcategory = None):
     if not game_category:
         game_category = random.choice(config.Category.members())
     if not game_subcategory:
-        game_subcategory = _choose_random_launchable_subcategory(game_category)
+        game_subcategory = choose_random_launchable_subcategory(game_category)
+    if not game_subcategory:
+        logger.log_error("Category %s has nothing launchable" % game_category)
+        return None
 
     # Select a random entry from this category/subcategory pair's metadata
     metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)

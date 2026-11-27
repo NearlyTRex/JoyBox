@@ -10,7 +10,7 @@ def build_parser():
     parser = arguments.ArgumentParser(command = "provision_server")
     parser.add_integer_argument(args = ("-s", "--server"), description = "Index of the server entry under `[UserData.Servers]`")
     parser.add_string_list_argument(args = ("-c", "--components"), several_per_flag = True, description = "Components to deploy; every remote component when omitted")
-    parser.add_string_list_argument(args = ("--stages"), several_per_flag = True, description = "Stages to run, from `vm`, `login`, `day0`, `deploy`, `sshd` and `verify`; all of them when omitted")
+    parser.add_string_list_argument(args = ("--stages",), several_per_flag = True, description = "Stages to run, from `vm`, `login`, `day0`, `deploy`, `sshd` and `verify`; all of them when omitted")
     parser.add_common_arguments()
     return parser
 

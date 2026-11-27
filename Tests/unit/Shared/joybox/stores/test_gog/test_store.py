@@ -115,6 +115,21 @@ def test_gogdl_login_needs_its_script_and_auth_file(gog_store, tools, recording_
     assert recording_command.calls == []
 
 
+def test_gogdl_is_found_with_its_auth_file(tools):
+    assert gog.find_gogdl_script() == (
+        tools["programs"]["HeroicGogDL"], tools["paths"][("HeroicGogDL", "auth_json")])
+
+
+@pytest.mark.parametrize("missing", ["program", "auth_json"])
+def test_gogdl_without_its_program_or_auth_file_is_not_found(tools, missing):
+    if missing == "program":
+        del tools["programs"]["HeroicGogDL"]
+    else:
+        del tools["paths"][("HeroicGogDL", "auth_json")]
+
+    assert gog.find_gogdl_script() == (None, None)
+
+
 ###########################################################
 # Installing
 ###########################################################

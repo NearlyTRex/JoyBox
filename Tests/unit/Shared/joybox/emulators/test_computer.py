@@ -191,8 +191,8 @@ def touched(monkeypatch):
         calls.append((src, contents, kwargs))
         return state["ok"]
 
-    monkeypatch.setattr(computer.environment, "get_emulators_root_dir", lambda: "/emulators")
-    monkeypatch.setattr(computer.fileops, "touch_file", touch)
+    monkeypatch.setattr(computer.emulatorbase.environment, "get_emulators_root_dir", lambda: "/emulators")
+    monkeypatch.setattr(computer.emulatorbase.fileops, "touch_file", touch)
     return {"calls": calls, "state": state}
 
 

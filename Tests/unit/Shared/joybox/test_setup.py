@@ -131,6 +131,20 @@ def test_configure_runs_after_each_setup(tmp_path):
     assert {passed for package in (first, second) for _, passed in package.calls} == {params}
 
 
+def test_one_package_is_set_up_then_configured():
+    package = Package("Only")
+
+    assert setup.install_package(package, offline = True, configure = True) is True
+    assert actions(package) == ["setup_offline", "configure"]
+
+
+def test_a_package_that_fails_setup_is_not_configured():
+    package = Package("Only", setup_ok = False)
+
+    assert setup.install_package(package, configure = True) is False
+    assert actions(package) == ["setup"]
+
+
 def test_failed_backups_are_listed_once_the_run_is_done(tmp_path, monkeypatch):
     warnings = []
     monkeypatch.setattr(setup.logger, "log_warning", lambda message, *a, **k: warnings.append(message))
@@ -332,3 +346,17 @@ def test_assets_stop_at_the_first_failed_link(asset_dirs, monkeypatch):
     assert setup.setup_assets(verbose = True, pretend_run = True, exit_on_failure = True) is False
     assert len(links) == 1
     assert (links[0]["verbose"], links[0]["pretend_run"], links[0]["exit_on_failure"]) == (True, True, True)
+
+
+def test_one_subcategory_links_each_asset_type(asset_dirs, monkeypatch):
+    links = []
+
+    def create_symlink(src, dest, cwd, **kwargs):
+        links.append(dest)
+        return True
+
+    monkeypatch.setattr(setup.fileops, "create_symlink", create_symlink)
+    category, subcategory, _ = next(every_asset_dir())
+
+    assert setup.link_subcategory_assets(category, subcategory) is True
+    assert len(links) == len(config.AssetType.members())

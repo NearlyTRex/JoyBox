@@ -33,7 +33,7 @@ def build_parser():
         default = None,
         description = "Locker root to list and read games from instead of the `-l` locker's mount path (its Gaming folder is used)")
     parser.add_group("Output")
-    parser.add_boolean_argument(args = ("--create_playlists"), description = "Write a `.m3u` playlist into the folder of each multi-disc `Roms` game that has none; off by default so read-only lockers are left untouched")
+    parser.add_boolean_argument(args = ("--create_playlists",), description = "Write a `.m3u` playlist into the folder of each multi-disc `Roms` game that has none; off by default so read-only lockers are left untouched")
     parser.add_common_arguments()
     return parser
 

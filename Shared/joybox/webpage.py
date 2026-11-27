@@ -191,7 +191,7 @@ def _find_webdriver_tool(tool_name):
 
 # Chrome options for a maximized, sandboxless desktop browser, adding each given existing download dir,
 # profile and binary, and headless at 1920x1080 when asked
-def _get_chrome_options(download_dir, profile_dir, binary_location, make_headless):
+def get_chrome_options(download_dir = None, profile_dir = None, binary_location = None, make_headless = False):
     options = _get_selenium("webdriver.chrome.options").Options()
     options.add_argument("--start-maximized")
     options.add_argument("--no-sandbox")
@@ -215,7 +215,7 @@ def _get_chrome_options(download_dir, profile_dir, binary_location, make_headles
     return options
 
 # Firefox options adding each given existing download dir, profile and binary, and headless when asked
-def _get_firefox_options(download_dir, profile_dir, binary_location, make_headless):
+def get_firefox_options(download_dir = None, profile_dir = None, binary_location = None, make_headless = False):
     options = _get_selenium("webdriver.firefox.options").Options()
     if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
         options.set_preference("browser.download.folderList", 2)
@@ -253,7 +253,7 @@ def create_chrome_web_driver(
                 executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = _get_chrome_options(download_dir, profile_dir, binary_location, make_headless)
+            options = get_chrome_options(download_dir, profile_dir, binary_location, make_headless)
             return start_browser(_get_selenium("webdriver").Chrome, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
@@ -290,7 +290,7 @@ def create_firefox_web_driver(
                 executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = _get_firefox_options(download_dir, profile_dir, binary_location, make_headless)
+            options = get_firefox_options(download_dir, profile_dir, binary_location, make_headless)
             return start_browser(_get_selenium("webdriver").Firefox, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
@@ -303,7 +303,7 @@ def create_firefox_web_driver(
     return None
 
 # The given driver type, else the one the settings name, else Firefox
-def _resolve_driver_type(driver_type):
+def resolve_driver_type(driver_type = None):
     if not driver_type:
         driver_type_name = settings.get_value("UserData.Scraping", "web_driver_type", throw_exception = False)
         if isinstance(driver_type_name, str):
@@ -321,7 +321,7 @@ def create_web_driver(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    driver_type = _resolve_driver_type(driver_type)
+    driver_type = resolve_driver_type(driver_type)
     if driver_type == config.WebDriverType.FIREFOX:
         return create_firefox_web_driver(
             download_dir = download_dir,

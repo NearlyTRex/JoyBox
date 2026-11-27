@@ -148,3 +148,19 @@ def test_a_guest_without_a_domain_leaves_the_hosts_file_alone(guest, entry):
 
     assert build(World({})).run_vm() is True
     assert not any(event[0] == "hosts" for event in guest)
+
+
+def test_ssh_is_polled_until_the_port_answers(monkeypatch):
+    answers = iter([False, True])
+    monkeypatch.setattr(provision.time, "sleep", lambda seconds: None)
+    provisioner = build(World({}))
+    provisioner.wait_for_port = lambda host, port: next(answers)
+
+    assert provisioner.wait_for_ssh("10.0.0.2", deadline = float("inf")) is True
+
+
+def test_ssh_that_never_answers_gives_up_at_the_deadline():
+    provisioner = build(World({}))
+    provisioner.wait_for_port = lambda host, port: False
+
+    assert provisioner.wait_for_ssh("10.0.0.2", deadline = -1) is False

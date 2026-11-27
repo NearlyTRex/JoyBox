@@ -48,7 +48,7 @@ rather than upload one holding only the newly hashed files.
 
 | Option | Description |
 |--------|-------------|
-| `-c, --clear` | Delete the existing database at the destination root before rebuilding. |
+| `-c, --clear` | Delete the existing database entries under `--path`, or the whole database when it is empty, before rebuilding. |
 | `-s, --skip_existing` | Leave existing database entries untouched and add only paths that have none. |
 | `-r, --parallel_dirs <parallel_dirs>` | Number of directories hashed at the same time. Default: `4`. |
 | `-f, --parallel_files <parallel_files>` | Number of files hashed at the same time within each directory. Default: `4`. |

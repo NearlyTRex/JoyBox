@@ -419,3 +419,19 @@ def test_set_modified_time_leaves_the_file_date_in_a_pretend_run(tmp_path):
 
     assert fileops.set_file_modified_time(path, 1104537600, pretend_run = True) is True
     assert os.path.getmtime(path) == before
+
+
+def test_each_directory_is_made_with_its_parents(tmp_path):
+    first = tmp_path / "a" / "b"
+    second = tmp_path / "c"
+
+    assert fileops.make_directories([str(first), str(second)]) is True
+    assert first.is_dir() and second.is_dir()
+
+
+def test_making_directories_stops_at_the_first_failure(tmp_path, monkeypatch):
+    made = []
+    monkeypatch.setattr(fileops, "make_directory", lambda src, **kwargs: made.append(src) or False)
+
+    assert fileops.make_directories([str(tmp_path / "a"), str(tmp_path / "b")]) is False
+    assert made == [str(tmp_path / "a")]

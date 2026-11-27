@@ -1,6 +1,5 @@
 # Local imports
 from joybox import config
-from joybox import logger
 from joybox import environment
 from joybox import fileops
 from joybox import gameinfo
@@ -16,35 +15,12 @@ from joybox import metadataassetcollector
 
 # Check if metadata asset exists
 def does_metadata_asset_exist(game_info, asset_type):
-
-    # Check if exists
-    output_asset_file = environment.get_locker_gaming_asset_file(
-        game_category = game_info.get_category(),
-        game_subcategory = game_info.get_subcategory(),
-        game_name = game_info.get_name(),
-        asset_type = asset_type)
-    return paths.does_path_exist(output_asset_file)
+    return paths.does_path_exist(game_info.get_asset_file(asset_type))
 
 ############################################################
 
-# Log an asset step failure against the game's categories
-def _log_asset_error(game_info, message):
-    logger.log_error(
-        message = message,
-        game_supercategory = game_info.get_supercategory(),
-        game_category = game_info.get_category(),
-        game_subcategory = game_info.get_subcategory())
-
-# Locker file the game's asset of this type is backed up to
-def _get_output_asset_file(game_info, asset_type):
-    return environment.get_locker_gaming_asset_file(
-        game_info.get_category(),
-        game_info.get_subcategory(),
-        game_info.get_name(),
-        asset_type)
-
 # Reachable asset url from the game's store, or from the metadata collectors when it has none; None after logging
-def _find_reachable_asset_url(
+def find_reachable_asset_url(
     game_info,
     asset_type,
     verbose = False,
@@ -77,7 +53,7 @@ def _find_reachable_asset_url(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not network.is_url_reachable(latest_asset_url):
-        _log_asset_error(game_info, "No reachable url for asset %s " % (asset_type))
+        gamecollection.log_game_error(game_info, "No reachable url for asset %s " % (asset_type))
         return None
     return latest_asset_url
 
@@ -92,7 +68,7 @@ def _download_and_convert_asset(
     exit_on_failure = False):
 
     # Get temp asset
-    output_asset_ext = paths.get_filename_extension(_get_output_asset_file(game_info, asset_type))
+    output_asset_ext = paths.get_filename_extension(game_info.get_asset_file(asset_type))
     tmp_asset_file_original = paths.join_paths(tmp_dir, paths.replace_invalid_path_characters(paths.get_filename_file(asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
 
@@ -105,7 +81,7 @@ def _download_and_convert_asset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        _log_asset_error(game_info, "Download failed for asset %s " % (asset_type))
+        gamecollection.log_game_error(game_info, "Download failed for asset %s " % (asset_type))
         return None
 
     # Convert asset
@@ -117,7 +93,7 @@ def _download_and_convert_asset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        _log_asset_error(game_info, "Convert failed for asset %s " % (asset_type))
+        gamecollection.log_game_error(game_info, "Convert failed for asset %s " % (asset_type))
         return None
     return tmp_asset_file_converted
 
@@ -131,7 +107,7 @@ def _fetch_asset(
     exit_on_failure = False):
 
     # Get latest asset url
-    latest_asset_url = _find_reachable_asset_url(
+    latest_asset_url = find_reachable_asset_url(
         game_info = game_info,
         asset_type = asset_type,
         verbose = verbose,
@@ -178,11 +154,11 @@ def _clean_and_backup_asset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        _log_asset_error(game_info, "Clean failed for asset %s " % (asset_type))
+        gamecollection.log_game_error(game_info, "Clean failed for asset %s " % (asset_type))
         return False
 
     # Backup asset
-    dest_rel_path = locker.convert_to_relative_path(_get_output_asset_file(game_info, asset_type))
+    dest_rel_path = locker.convert_to_relative_path(game_info.get_asset_file(asset_type))
     success = locker.backup(
         src = asset_file,
         dest_rel_path = dest_rel_path,
@@ -193,7 +169,7 @@ def _clean_and_backup_asset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        _log_asset_error(game_info, "Backup failed for asset %s " % (asset_type))
+        gamecollection.log_game_error(game_info, "Backup failed for asset %s " % (asset_type))
         return False
     return True
 
@@ -238,7 +214,7 @@ def download_metadata_asset(
             exit_on_failure = exit_on_failure)
 
 # Download every minimum asset type for one game; stops at the first failure
-def _download_game_assets(
+def download_game_assets(
     game_info,
     locker_type = None,
     skip_existing = False,
@@ -285,7 +261,7 @@ def _download_category_assets(
                 game_name = game_name,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            success = _download_game_assets(
+            success = download_game_assets(
                 game_info = game_info,
                 locker_type = locker_type,
                 skip_existing = skip_existing,
@@ -345,10 +321,4 @@ def download_metadata_asset_for_games(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error(
-                message = "Download of metadata assets failed!",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+            gamecollection.log_game_error_and_quit(game_info, "Download of metadata assets failed!")

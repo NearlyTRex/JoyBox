@@ -212,6 +212,27 @@ def test_a_category_without_metadata_writes_nothing(metadata_root):
     assert not metadata_file(metadata_root).exists()
 
 
+def test_a_missing_metadata_file_loads_empty(metadata_root):
+    assert metadata.load_metadata_file(str(metadata_file(metadata_root))).get_sorted_platforms() == []
+
+
+def test_a_written_metadata_file_loads_back(metadata_root):
+    obj = metadata_module.Metadata()
+    obj.set_game(platform_of(), GAME, metadata.build_new_game_entry(ROMS, CATEGORY, SUBCATEGORY, GAME))
+
+    metadata.write_metadata_file(obj, str(metadata_file(metadata_root)))
+
+    assert metadata.load_metadata_file(str(metadata_file(metadata_root))).has_game(platform_of(), GAME)
+
+
+def test_a_new_entry_points_at_its_json_file_with_defaults(metadata_root):
+    entry = metadata.build_new_game_entry(ROMS, CATEGORY, SUBCATEGORY, GAME, game_url = "https://store.example/hl2")
+
+    assert entry.get_file() == "%s/%s/%s.json" % (CATEGORY, SUBCATEGORY, GAME)
+    assert (entry.get_players(), entry.get_coop(), entry.get_playable()) == ("1", "No", "Yes")
+    assert entry.get_url() == "https://store.example/hl2"
+
+
 ###########################################################
 # Updating an entry
 ###########################################################
@@ -445,6 +466,22 @@ def test_a_store_game_without_json_data_is_asked_without_an_identifier(metadata_
 
     assert update(metadata_root) is True
     assert scraping["store"].asked == [None]
+
+
+def test_latest_metadata_comes_from_the_store(scraping):
+    scraping["store"] = FakeStore(scraped(developer = "Valve"))
+
+    latest = metadata.fetch_latest_game_metadata(FakeJson(), platform_of(), GAME)
+
+    assert latest.get_developer() == "Valve"
+    assert scraping["store"].asked == ["steam/appurl"]
+
+
+def test_latest_metadata_without_a_store_is_collected(scraping):
+    scraping["latest"] = scraped(developer = "Valve")
+
+    assert metadata.fetch_latest_game_metadata(None, platform_of(), GAME).get_developer() == "Valve"
+    assert scraping["collected"][0]["game_name"] == GAME
 
 
 ###########################################################
