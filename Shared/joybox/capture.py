@@ -4,7 +4,11 @@ import os.path
 import threading
 
 # Local imports
+from joybox import command
 from joybox import commandbase
+from joybox import config
+from joybox import paths
+from joybox import settings
 from joybox import validation
 from joybox import logger
 from joybox import programs
@@ -108,9 +112,6 @@ def capture_video(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Imports
-    from joybox import command
 
     # Check params
     validation.assert_is_valid_path(output_file, "output_file")
@@ -253,3 +254,73 @@ def capture_video_while_running(
     if pretend_run:
         return True
     return os.path.exists(output_file)
+
+# Run capture command
+def run_capture_command(
+    cmd,
+    options = commandbase.create_command_options(),
+    capture_type = None,
+    capture_file = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Blocking start method
+    def run_start():
+        code = command.run_returncode_command(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
+
+    # Get capture info
+    capture_duration = settings.get_integer_value("UserData.Capture", "capture_duration")
+    capture_interval = settings.get_integer_value("UserData.Capture", "capture_interval")
+    capture_origin_x = settings.get_integer_value("UserData.Capture", "capture_origin_x")
+    capture_origin_y = settings.get_integer_value("UserData.Capture", "capture_origin_y")
+    capture_resolution_w = settings.get_integer_value("UserData.Capture", "capture_resolution_w")
+    capture_resolution_h = settings.get_integer_value("UserData.Capture", "capture_resolution_h")
+    capture_framerate = settings.get_integer_value("UserData.Capture", "capture_framerate")
+    overwrite_screenshots = settings.get_bool_value("UserData.Capture", "overwrite_screenshots")
+    overwrite_videos = settings.get_bool_value("UserData.Capture", "overwrite_videos")
+
+    # Screenshot capturing
+    if capture_type == config.CaptureType.SCREENSHOT:
+
+        # Run while capturing screenshots
+        if paths.is_path_file(capture_file) and not overwrite_screenshots:
+            return run_start()
+        return capture_screenshot_while_running(
+            run_func = run_start,
+            output_file = capture_file,
+            time_duration = capture_duration,
+            time_interval = capture_interval,
+            time_units_type = config.UnitType.SECONDS,
+            capture_origin = (capture_origin_x, capture_origin_y),
+            capture_resolution = (capture_resolution_w, capture_resolution_h),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Video capturing
+    elif capture_type == config.CaptureType.VIDEO:
+
+        # Run while capturing video
+        if paths.is_path_file(capture_file) and not overwrite_videos:
+            return run_start()
+        return capture_video_while_running(
+            run_func = run_start,
+            output_file = capture_file,
+            capture_origin = (capture_origin_x, capture_origin_y),
+            capture_resolution = (capture_resolution_w, capture_resolution_h),
+            capture_framerate = capture_framerate,
+            capture_duration = capture_duration,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # No capture
+    else:
+        return run_start()

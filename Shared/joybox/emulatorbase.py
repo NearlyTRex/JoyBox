@@ -6,7 +6,7 @@ from joybox import programcatalog
 from joybox import programs
 from joybox import environment
 from joybox import paths
-from joybox import hashing
+from joybox import hashutil
 from joybox import logger
 from joybox import platform_info
 
@@ -121,7 +121,7 @@ class EmulatorBase(ABC):
     def verify_system_files(self, system_files, setup_params):
         setup_dir = environment.get_locker_gaming_emulator_setup_dir(self.get_name())
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.calculate_file_md5(
+            actual_md5 = hashutil.calculate_file_md5(
                 src = paths.join_paths(setup_dir, filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

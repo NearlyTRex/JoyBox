@@ -6,11 +6,18 @@ import os.path
 from joybox import config
 from joybox import logger
 from joybox import validation
-from joybox import display
 from joybox import programs
 from joybox import modules
 from joybox import platform_info, runtime
 from joybox import paths
+
+# Get current screen resolution
+def get_current_screen_resolution():
+    import screeninfo
+    for monitor in screeninfo.get_monitors():
+        if monitor.is_primary:
+            return (monitor.width, monitor.height)
+    return (0, 0)
 
 # Display popup
 def display_popup(
@@ -231,7 +238,7 @@ def display_loading_window(
 
     # Get window size
     if window_size == (None, None):
-        window_size = display.get_current_screen_resolution()
+        window_size = get_current_screen_resolution()
 
     # Set theme
     psg.theme(theme)
@@ -357,7 +364,7 @@ def display_choices_window(
 
     # Get window size
     if window_size == (None, None):
-        window_size = display.get_current_screen_resolution()
+        window_size = get_current_screen_resolution()
 
     # Run selected choice
     def run_selected_choice(choice):

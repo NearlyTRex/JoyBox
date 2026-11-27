@@ -4,15 +4,17 @@ import os.path
 
 # Local imports
 from joybox import config
+from joybox import sandboxprefix
 from joybox import environment
 from joybox import fileops
 from joybox import filebulk
 from joybox import jsondata
 from joybox import paths
 from joybox import command
+from joybox import capture
 from joybox import commandbase
 from joybox import programs
-from joybox import sandbox
+from joybox import prefixlayout
 from joybox import sandboxdrives
 from joybox import archive
 from joybox import display
@@ -34,7 +36,7 @@ class Program(jsondata.JsonData):
     def get_exe(self, token_map = None):
         path = self.get_value(config.PROGRAM_KEY_EXE)
         if path and token_map:
-            return sandbox.resolve_path(path, token_map)
+            return prefixlayout.resolve_path(path, token_map)
         return path
 
     # Current working directory
@@ -43,7 +45,7 @@ class Program(jsondata.JsonData):
     def get_cwd(self, token_map = None):
         path = self.get_value(config.PROGRAM_KEY_CWD)
         if path and token_map:
-            return sandbox.resolve_path(path, token_map)
+            return prefixlayout.resolve_path(path, token_map)
         return path
 
     # Environment variables
@@ -143,8 +145,8 @@ class Program(jsondata.JsonData):
         exit_on_failure = False):
 
         # Get program info
-        program_exe = sandbox.resolve_path(self.get_exe() or "", token_map)
-        program_cwd = sandbox.resolve_path(self.get_cwd() or "", token_map)
+        program_exe = prefixlayout.resolve_path(self.get_exe() or "", token_map)
+        program_cwd = prefixlayout.resolve_path(self.get_cwd() or "", token_map)
         program_args = self.get_args()
         program_is_dos = self.is_dos()
         program_is_win31 = self.is_win31()
@@ -225,7 +227,7 @@ class Program(jsondata.JsonData):
             program_cmd = [program_path] + program_args
 
         # Launch game
-        success = command.run_capture_command(
+        success = capture.run_capture_command(
             cmd = program_cmd,
             options = program_options,
             capture_type = capture_type,
@@ -299,9 +301,9 @@ class ProgramStep(jsondata.JsonData):
         exit_on_failure = False):
 
         # Get program step info
-        program_step_from = sandbox.resolve_path(self.get_from(), token_map)
-        program_step_to = sandbox.resolve_path(self.get_to(), token_map)
-        program_step_dir = sandbox.resolve_path(self.get_dir(), token_map)
+        program_step_from = prefixlayout.resolve_path(self.get_from(), token_map)
+        program_step_to = prefixlayout.resolve_path(self.get_to(), token_map)
+        program_step_dir = prefixlayout.resolve_path(self.get_dir(), token_map)
         program_step_type = self.get_type()
         program_skip_existing = self.skip_existing()
         program_skip_identical = self.skip_identical()
@@ -381,7 +383,8 @@ def setup_computer_game(
     game_setup_options = commandbase.create_command_options()
 
     # Create prefix
-    success = game_setup_options.create_prefix(
+    success = sandboxprefix.create_prefix(
+        options = game_setup_options,
         is_wine_prefix = platform_info.is_wine_platform(),
         is_sandboxie_prefix = platform_info.is_sandboxie_platform(),
         prefix_name = config.PrefixType.SETUP,
@@ -407,7 +410,7 @@ def setup_computer_game(
     game_disc_files = paths.build_file_list_by_extensions(game_setup_dir, extensions = [".chd"])
 
     # Build token map
-    game_token_map = sandbox.build_token_map(
+    game_token_map = prefixlayout.build_token_map(
         store_install_dir = game_info.get_main_store_install_dir(),
         setup_base_dir = game_setup_dir,
         hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
@@ -485,7 +488,7 @@ def setup_computer_game(
             exit_on_failure = exit_on_failure)
 
     # Copy public files
-    prefix_public_profile_path = sandbox.get_public_profile_path(game_setup_options)
+    prefix_public_profile_path = prefixlayout.get_public_profile_path(game_setup_options)
     if os.path.exists(prefix_public_profile_path):
         fileops.make_directory(
             src = paths.join_paths(game_setup_options.get_prefix_c_drive_real(), "Public"),
@@ -561,7 +564,8 @@ def launch_computer_game(
     # Create game prefix
     def create_game_prefix():
         nonlocal game_launch_options
-        return game_launch_options.create_prefix(
+        return sandboxprefix.create_prefix(
+            options = game_launch_options,
             is_wine_prefix = platform_info.is_linux_platform(),
             is_sandboxie_prefix = platform_info.is_windows_platform(),
             prefix_name = config.PrefixType.GAME,
@@ -581,7 +585,7 @@ def launch_computer_game(
         run_func = create_game_prefix)
 
     # Build token map
-    game_token_map = sandbox.build_token_map(
+    game_token_map = prefixlayout.build_token_map(
         hdd_base_dir = game_launch_options.get_prefix_c_drive_real())
 
     # Get launch directory

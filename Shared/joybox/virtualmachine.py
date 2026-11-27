@@ -54,7 +54,7 @@ SSH_KEY_NAMES = ["id_ed25519.pub", "id_rsa.pub"]
 # Get the tools that are missing from this workstation
 def get_missing_tools():
     return [tool for tool in REQUIRED_TOOLS
-            if not commandbase.is_runnable_command(tool)]
+            if not paths.is_runnable_command(tool)]
 
 # Check the workstation can manage a virtual machine
 def are_tools_installed():

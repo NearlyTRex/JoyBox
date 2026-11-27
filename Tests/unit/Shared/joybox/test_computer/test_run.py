@@ -34,7 +34,7 @@ def test_a_refused_program_does_not_reach_the_launcher(monkeypatch):
     def fail(*args, **kwargs):
         raise AssertionError("nothing should be launched")
 
-    monkeypatch.setattr(computer.command, "run_capture_command", fail)
+    monkeypatch.setattr(computer.capture, "run_capture_command", fail)
 
     assert computer.Program().run(FakeOptions(), {}) is False
 
@@ -45,7 +45,7 @@ def test_an_emulated_program_needs_no_executable(setter, monkeypatch):
     # guard must not reject them for having no windows executable.
     captured = []
     monkeypatch.setattr(
-        computer.command, "run_capture_command",
+        computer.capture, "run_capture_command",
         lambda **kwargs: captured.append(kwargs) or True)
     monkeypatch.setattr(
         computer.display, "restore_default_screen_resolution", lambda **kwargs: True)
@@ -79,7 +79,7 @@ def launcher(monkeypatch):
         return lambda **kwargs: calls[name].append(kwargs) or value
 
     monkeypatch.setattr(
-        computer.command, "run_capture_command",
+        computer.capture, "run_capture_command",
         lambda **kwargs: calls["capture"].append(kwargs) or results["capture"])
     monkeypatch.setattr(
         computer.display, "restore_default_screen_resolution",

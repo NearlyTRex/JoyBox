@@ -548,7 +548,7 @@ def test_a_supplied_seed_that_is_missing_stops_the_build(tmp_path, stock_image):
 
 def test_a_downloaded_image_is_checked_before_it_is_used(tmp_path, monkeypatch, stock_image):
     # A truncated download would otherwise be unpacked and built from.
-    from joybox import hashing
+    from joybox import hashutil
 
     checked = []
     monkeypatch.setattr(
@@ -561,7 +561,7 @@ def test_a_downloaded_image_is_checked_before_it_is_used(tmp_path, monkeypatch, 
         ubunturelease, "fetch_release_checksums",
         lambda **kwargs: checked.append(kwargs) or {
             "ubuntu-24.04.1-live-server-amd64.iso":
-                hashing.calculate_file_sha256(src = stock_image)})
+                hashutil.calculate_file_sha256(src = stock_image)})
 
     obtained = autoinstall.obtain_source_image(
         output_file = str(tmp_path / "downloaded.iso"),

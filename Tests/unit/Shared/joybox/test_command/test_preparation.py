@@ -235,9 +235,9 @@ def test_a_prefix_command_is_one_for_wine_or_sandboxie(monkeypatch, wine, sandbo
 def prefix_sandbox(monkeypatch):
     state = {"created": [], "steps": []}
 
-    def create_prefix(self, **kwargs):
+    def create_prefix(options, **kwargs):
         state["created"].append(kwargs)
-        self.set_prefix_name(kwargs["prefix_name"])
+        options.set_prefix_name(kwargs["prefix_name"])
         return True
 
     def step(name):
@@ -248,7 +248,7 @@ def prefix_sandbox(monkeypatch):
 
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(type(commandbase.create_command_options()), "create_prefix", create_prefix)
+    monkeypatch.setattr(command.sandboxprefix, "create_prefix", create_prefix)
     monkeypatch.setattr(command.sandbox, "setup_prefix_command", step("command"))
     monkeypatch.setattr(command.sandbox, "setup_prefix_environment", step("environment"))
     return state
@@ -308,7 +308,7 @@ def test_a_wine_command_is_cleaned_up_afterwards(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/games/Game.exe"])
 
@@ -319,7 +319,7 @@ def test_a_sandboxie_command_has_nothing_to_stop(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/games/Game.exe"])
 
@@ -330,7 +330,7 @@ def test_a_native_command_needs_no_cleanup(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/usr/bin/true"])
 
@@ -376,7 +376,7 @@ def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
 
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", record)
     monkeypatch.setattr(command.sandboxpaths, "transfer_from_sandbox", record)
     options = commandbase.create_command_options(output_paths = ["/out/one"])
 

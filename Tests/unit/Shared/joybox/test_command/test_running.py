@@ -7,6 +7,7 @@ import pytest
 
 # Local imports
 from joybox import command
+from joybox import commandrun
 from joybox import commandbase
 
 
@@ -110,7 +111,7 @@ def test_a_shell_command_is_launched_as_one_string(processes):
 
 def test_a_verbose_run_prints_the_command(processes, monkeypatch):
     printed = []
-    monkeypatch.setattr(command, "print_command", printed.append)
+    monkeypatch.setattr(commandrun, "print_command", printed.append)
 
     run(verbose = True)
 

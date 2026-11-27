@@ -18,7 +18,7 @@ def host(monkeypatch):
     state = {"windows": False, "linux": True, "symlinks": True, "ini": True}
     monkeypatch.setattr(setup.platform_info, "is_windows_platform", lambda: state["windows"])
     monkeypatch.setattr(setup.platform_info, "is_linux_platform", lambda: state["linux"])
-    monkeypatch.setattr(setup.environment, "are_symlinks_supported", lambda: state["symlinks"])
+    monkeypatch.setattr(setup.fileops, "are_symlinks_supported", lambda: state["symlinks"])
     monkeypatch.setattr(setup.settings, "is_present", lambda: state["ini"])
     return state
 

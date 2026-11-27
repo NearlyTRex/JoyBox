@@ -1,5 +1,6 @@
 # Local imports
-from joybox import config, sandbox
+from joybox import config
+from joybox import prefixlayout
 
 
 ###########################################################
@@ -10,7 +11,7 @@ from joybox import config, sandbox
 ###########################################################
 
 def build(**kwargs):
-    return sandbox.build_token_map(**kwargs)
+    return prefixlayout.build_token_map(**kwargs)
 
 
 def test_an_empty_token_map_is_built():
@@ -154,7 +155,7 @@ def test_discs_and_directories_are_tokenized_together():
 def test_a_token_is_replaced():
     token_map = {config.TOKEN_GAME_INSTALL_DIR: "/prefix/drive_c/Game"}
 
-    assert sandbox.resolve_path(
+    assert prefixlayout.resolve_path(
         config.TOKEN_GAME_INSTALL_DIR + "/game.exe", token_map) == \
         "/prefix/drive_c/Game/game.exe"
 
@@ -164,7 +165,7 @@ def test_every_token_in_a_path_is_replaced():
         config.TOKEN_GAME_INSTALL_DIR: "/game",
         config.TOKEN_DISC_MAIN_ROOT: "/mnt/disc",
     }
-    resolved = sandbox.resolve_path(
+    resolved = prefixlayout.resolve_path(
         "%s/tool.exe %s" % (config.TOKEN_GAME_INSTALL_DIR, config.TOKEN_DISC_MAIN_ROOT),
         token_map)
 
@@ -174,28 +175,28 @@ def test_every_token_in_a_path_is_replaced():
 def test_a_repeated_token_is_replaced_everywhere():
     token_map = {config.TOKEN_GAME_INSTALL_DIR: "/game"}
     token = config.TOKEN_GAME_INSTALL_DIR
-    resolved = sandbox.resolve_path("%s/a %s/b" % (token, token), token_map)
+    resolved = prefixlayout.resolve_path("%s/a %s/b" % (token, token), token_map)
 
     assert resolved == "/game/a /game/b"
 
 
 def test_an_unknown_token_is_left_in_place():
-    assert sandbox.resolve_path("UNKNOWN_TOKEN/game.exe", {}) == "UNKNOWN_TOKEN/game.exe"
+    assert prefixlayout.resolve_path("UNKNOWN_TOKEN/game.exe", {}) == "UNKNOWN_TOKEN/game.exe"
 
 
 def test_a_path_without_tokens_is_unchanged():
     token_map = {config.TOKEN_GAME_INSTALL_DIR: "/game"}
 
-    assert sandbox.resolve_path("/absolute/game.exe", token_map) == "/absolute/game.exe"
+    assert prefixlayout.resolve_path("/absolute/game.exe", token_map) == "/absolute/game.exe"
 
 
 def test_an_empty_path_stays_empty():
-    assert sandbox.resolve_path("", {config.TOKEN_GAME_INSTALL_DIR: "/game"}) == ""
+    assert prefixlayout.resolve_path("", {config.TOKEN_GAME_INSTALL_DIR: "/game"}) == ""
 
 
 def test_a_built_token_map_resolves_its_own_tokens():
     token_map = build(game_install_dir = "/prefix/drive_c/Game", hdd_base_dir = "/hdd")
 
-    resolved = {token: sandbox.resolve_path(token, token_map) for token in token_map}
+    resolved = {token: prefixlayout.resolve_path(token, token_map) for token in token_map}
 
     assert resolved == token_map

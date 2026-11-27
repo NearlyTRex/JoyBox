@@ -6,6 +6,7 @@ import os
 
 # Local imports
 from joybox import archive
+from joybox import archiveinfo
 from joybox import command
 from joybox import commandbase
 from joybox import environment
@@ -329,7 +330,7 @@ def build_binary_from_source(
             final_file = install_name + paths.get_filename_extension(output_file)
 
         # Check if output is an archive that needs extraction
-        is_archive = archive.is_archive(built_file)
+        is_archive = archiveinfo.is_archive(built_file)
         if is_archive and search_file:
 
             # Extract archive and install contents

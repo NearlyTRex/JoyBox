@@ -1,6 +1,6 @@
 # Local imports
 from joybox import config
-from joybox import command
+from joybox import capture
 from joybox import logger
 from joybox import paths
 from joybox import gui
@@ -72,7 +72,7 @@ def simple_launch(
         real_launch_cmd += [cmd_segment]
 
     # Launch game
-    return command.run_capture_command(
+    return capture.run_capture_command(
         cmd = real_launch_cmd,
         options = launch_options,
         capture_type = capture_type,

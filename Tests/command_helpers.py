@@ -4,14 +4,15 @@ import subprocess
 
 # Local imports
 from joybox import command
+from joybox import commandrun
 
 
 ###########################################################
 # Process doubles
 #
-# command.run_* hand everything to subprocess. The doubles stand in for the
-# child process so the stream plumbing, return codes and post-run steps can be
-# checked without launching anything.
+# command.run_* and commandrun hand everything to subprocess. The doubles stand
+# in for the child process so the stream plumbing, return codes and post-run
+# steps can be checked without launching anything.
 ###########################################################
 
 class FakeStdin:
@@ -88,11 +89,11 @@ class FakeProcesses:
             self.events.append("blocking")
             self.waited_for.append(list(names))
 
-        monkeypatch.setattr(command.subprocess, "Popen", popen)
-        monkeypatch.setattr(command.subprocess, "call", call)
+        monkeypatch.setattr(commandrun.subprocess, "Popen", popen)
+        monkeypatch.setattr(commandrun.subprocess, "call", call)
         monkeypatch.setattr(command, "postprocess_command", postprocess)
-        monkeypatch.setattr(command.process, "wait_for_named_processes", wait_for)
-        monkeypatch.setattr(command.runtime, "sleep_program", self.slept.append)
+        monkeypatch.setattr(commandrun.process, "wait_for_named_processes", wait_for)
+        monkeypatch.setattr(commandrun.runtime, "sleep_program", self.slept.append)
 
     # The single launched process, failing loudly when there was not exactly one
     def only(self):

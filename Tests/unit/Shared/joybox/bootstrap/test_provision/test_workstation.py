@@ -30,7 +30,7 @@ def test_a_refused_port_is_closed(monkeypatch):
 
 
 def mkcert(monkeypatch, runnable = True, output = ""):
-    monkeypatch.setattr(provision.commandbase, "is_runnable_command", lambda cmd: runnable)
+    monkeypatch.setattr(provision.paths, "is_runnable_command", lambda cmd: runnable)
     monkeypatch.setattr(provision.command, "run_output_command", lambda **kwargs: output)
 
 

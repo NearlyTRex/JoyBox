@@ -14,7 +14,7 @@ from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
 from joybox import sqlitedb
 from joybox import sync
 
@@ -190,7 +190,7 @@ def get_hash_database_path(remote_path = ""):
 
 # Get the hash data a sidecar keeps for a file, or None when it cannot be hashed
 def get_file_hash_data(file_path, pretend_run = False):
-    file_hash = hashing.calculate_file_md5(src = file_path, verbose = False, pretend_run = pretend_run)
+    file_hash = hashutil.calculate_file_md5(src = file_path, verbose = False, pretend_run = pretend_run)
     if not file_hash:
         return None
     return {

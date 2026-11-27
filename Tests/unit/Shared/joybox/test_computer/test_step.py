@@ -34,7 +34,7 @@ def test_step_fields_do_not_collide():
 
 @pytest.mark.parametrize("accessor", ["get_from", "get_to", "get_dir"])
 def test_an_unset_step_path_is_an_empty_string(accessor):
-    # run() passes these straight to sandbox.resolve_path, which indexes into
+    # run() passes these straight to prefixlayout.resolve_path, which indexes into
     # the string.
     assert getattr(computer.ProgramStep(), accessor)() == ""
 

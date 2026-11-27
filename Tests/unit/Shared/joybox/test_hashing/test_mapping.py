@@ -6,7 +6,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, hashing
+from joybox import config, hashing, hashutil
 from hashing_helpers import write_file
 
 
@@ -70,16 +70,16 @@ def test_an_entry_records_the_size_and_time(tree):
 def test_the_default_hash_is_md5(tree):
     hash_map = hashing.build_hash_map(tree)
 
-    expected = hashing.calculate_file_md5(os.path.join(tree, "one.bin"))
+    expected = hashutil.calculate_file_md5(os.path.join(tree, "one.bin"))
     assert hash_map["one.bin"]["hash"] == expected
 
 
 @pytest.mark.parametrize("hash_type,function", [
-    (config.HashType.MD5, hashing.calculate_file_md5),
-    (config.HashType.SHA1, hashing.calculate_file_sha1),
-    (config.HashType.XXH3, hashing.calculate_file_xxh3),
-    (config.HashType.SHA256, hashing.calculate_file_sha256),
-    (config.HashType.CRC32, hashing.calculate_file_crc32),
+    (config.HashType.MD5, hashutil.calculate_file_md5),
+    (config.HashType.SHA1, hashutil.calculate_file_sha1),
+    (config.HashType.XXH3, hashutil.calculate_file_xxh3),
+    (config.HashType.SHA256, hashutil.calculate_file_sha256),
+    (config.HashType.CRC32, hashutil.calculate_file_crc32),
 ])
 def test_the_hash_type_chooses_the_digest(tree, hash_type, function):
     hash_map = hashing.build_hash_map(tree, hash_type = hash_type)
@@ -90,7 +90,7 @@ def test_the_hash_type_chooses_the_digest(tree, hash_type, function):
 def test_an_unknown_hash_type_falls_back_to_md5(tree):
     hash_map = hashing.build_hash_map(tree, hash_type = "Whirlpool")
 
-    assert hash_map["one.bin"]["hash"] == hashing.calculate_file_md5(os.path.join(tree, "one.bin"))
+    assert hash_map["one.bin"]["hash"] == hashutil.calculate_file_md5(os.path.join(tree, "one.bin"))
 
 
 def test_a_verbose_map_reports_progress_every_hundred_files(tmp_path, monkeypatch):

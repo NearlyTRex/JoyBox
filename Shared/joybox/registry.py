@@ -3,6 +3,7 @@ import os
 import os.path
 
 # Local imports
+from joybox import config
 from joybox import validation
 from joybox import paths
 from joybox import fileops
@@ -245,3 +246,75 @@ def backup_user_registry(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+# Restore registry
+def restore_registry(
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get registry dir
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
+
+    # Get registry file
+    registry_file = ""
+    if options.get_prefix_name() == config.PrefixType.SETUP:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP)
+    elif options.get_prefix_name() == config.PrefixType.GAME:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME)
+    if not paths.does_path_exist(registry_file):
+        return True
+
+    # Import registry file
+    return import_registry_file(
+        registry_file = registry_file,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Backup registry
+def backup_registry(
+    options,
+    registry_keys = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get registry keys
+    registry_keys = [] if registry_keys is None else registry_keys
+
+    # Ignore empty keys
+    if not registry_keys:
+        return True
+
+    # Get registry dir
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
+
+    # Get registry file, export keys, and ignore keys
+    if options.get_prefix_name() == config.PrefixType.SETUP:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP)
+        registry_export_keys = config.registry_export_keys_setup
+        registry_ignore_keys = config.ignored_registry_keys_setup
+    elif options.get_prefix_name() == config.PrefixType.GAME:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME)
+        registry_export_keys = config.registry_export_keys_game
+        registry_ignore_keys = config.ignored_registry_keys_game
+    else:
+        return False
+
+    # Backup registry
+    return backup_user_registry(
+        registry_file = registry_file,
+        options = options,
+        export_keys = registry_export_keys,
+        ignore_keys = registry_ignore_keys,
+        keep_keys = registry_keys,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

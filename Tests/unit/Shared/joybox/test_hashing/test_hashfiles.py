@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, hashing
+from joybox import config, hashing, hashutil
 from hashing_helpers import write_file
 
 
@@ -46,7 +46,7 @@ def test_an_entry_records_the_file(tree):
 def test_an_entry_hashes_with_xxh3(tree):
     data = hashing.calculate_hash("one.bin", base_path = tree)
 
-    assert data["hash"] == hashing.calculate_file_xxh3(os.path.join(tree, "one.bin"))
+    assert data["hash"] == hashutil.calculate_file_xxh3(os.path.join(tree, "one.bin"))
 
 
 def test_a_nested_entry_records_its_directory(tree):
@@ -281,8 +281,8 @@ def test_an_offset_run_skips_what_it_already_hashed(tree, output_file, monkeypat
     hashing.hash_files(tree, output_file, offset = "Games")
 
     hashed = []
-    real = hashing.calculate_file_xxh3
-    monkeypatch.setattr(hashing, "calculate_file_xxh3",
+    real = hashutil.calculate_file_xxh3
+    monkeypatch.setattr(hashutil, "calculate_file_xxh3",
         lambda *args, **kwargs: (hashed.append(1), real(*args, **kwargs))[1])
 
     hashing.hash_files(tree, output_file, offset = "Games")

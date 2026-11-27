@@ -7,7 +7,7 @@ from joybox import fileops
 from joybox import filebulk
 from joybox import archive
 from joybox import cryption
-from joybox import hashing
+from joybox import hashutil
 from joybox import lockerinfo
 
 # Resolve path
@@ -107,7 +107,7 @@ def does_encrypted_file_match(encrypted_file, plain_file, passphrase, verbose = 
             output_file = tmp_decrypted,
             verbose = verbose,
             exit_on_failure = False)
-        return hashing.are_files_identical(
+        return hashutil.are_files_identical(
             first = plain_file,
             second = tmp_decrypted,
             verbose = verbose,
@@ -126,7 +126,7 @@ def update_decrypted_file(src_path, dest_path, passphrase, delete_original = Fal
             output_file = tmp_decrypted,
             verbose = verbose,
             exit_on_failure = False)
-        if hashing.are_files_identical(first = tmp_decrypted, second = dest_path, verbose = verbose, exit_on_failure = False):
+        if hashutil.are_files_identical(first = tmp_decrypted, second = dest_path, verbose = verbose, exit_on_failure = False):
             logger.log_info("Skipping (identical): '%s'" % dest_path)
             return True
         logger.log_info("Updating: '%s'" % dest_path)

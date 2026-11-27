@@ -97,7 +97,7 @@ class Seams:
         environment = module.emulatorbase.environment
         monkeypatch.setattr(environment, "get_emulators_root_dir", lambda: "/emulators")
         monkeypatch.setattr(environment, "get_locker_gaming_emulator_setup_dir", self.locker)
-        monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
+        monkeypatch.setattr(module.emulatorbase.hashutil, "calculate_file_md5", self.md5)
 
         self.touched = Recorder()
         self.copied = Recorder()
@@ -260,7 +260,7 @@ class ConfigureSeams:
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
         monkeypatch.setattr(module.fileops, "touch_file", self.touch)
         monkeypatch.setattr(filebulk, "smart_copy", self.copy)
-        monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
+        monkeypatch.setattr(module.emulatorbase.hashutil, "calculate_file_md5", self.md5)
 
     def touch(self, src, contents, **kwargs):
         self.touched.append((src, contents))

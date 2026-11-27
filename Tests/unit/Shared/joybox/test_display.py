@@ -1,7 +1,4 @@
-# Imports
-import sys
-import types
-
+# Third-party imports
 import pytest
 
 # Local imports
@@ -22,21 +19,6 @@ DEFAULT_H = 1080
 DEFAULT_C = 32
 
 
-class Monitor:
-    def __init__(self, width, height, is_primary):
-        self.width = width
-        self.height = height
-        self.is_primary = is_primary
-
-
-@pytest.fixture
-def monitors(monkeypatch):
-    found = []
-    module = types.SimpleNamespace(get_monitors = lambda: found)
-    monkeypatch.setitem(sys.modules, "screeninfo", module)
-    return found
-
-
 @pytest.fixture
 def nircmd_runs(monkeypatch):
     runs = []
@@ -53,20 +35,11 @@ def default_resolution(isolated_settings):
     isolated_settings.set_value("UserData.Resolution", "screen_resolution_c", str(DEFAULT_C))
 
 
-def test_the_primary_monitor_gives_the_resolution(monitors):
-    monitors += [Monitor(800, 600, False), Monitor(2560, 1440, True)]
-    assert display.get_current_screen_resolution() == (2560, 1440)
-
-
-def test_no_primary_monitor_reads_as_zero(monitors):
-    monitors.append(Monitor(800, 600, False))
-    assert display.get_current_screen_resolution() == (0, 0)
-
-
 def test_setting_the_resolution_runs_nircmd(nircmd_runs):
     assert display.set_screen_resolution(1280, 720, 16, pretend_run = True)
     assert nircmd_runs[0]["cmd"] == ["nircmd.exe", "setdisplay", "1280", "720", "16"]
     assert nircmd_runs[0]["pretend_run"] is True
+    assert nircmd_runs[0]["options"].is_shell()
 
 
 def test_setting_the_resolution_without_nircmd_fails(monkeypatch):
@@ -74,13 +47,13 @@ def test_setting_the_resolution_without_nircmd_fails(monkeypatch):
     assert display.set_screen_resolution(1280, 720, 16) is False
 
 
-def test_restoring_at_the_default_resolution_does_nothing(default_resolution, monitors, nircmd_runs):
-    monitors.append(Monitor(DEFAULT_W, DEFAULT_H, True))
+def test_restoring_at_the_default_resolution_does_nothing(default_resolution, monkeypatch, nircmd_runs):
+    monkeypatch.setattr(display.gui, "get_current_screen_resolution", lambda: (DEFAULT_W, DEFAULT_H))
     assert display.restore_default_screen_resolution()
     assert nircmd_runs == []
 
 
-def test_restoring_from_another_resolution_sets_the_default(default_resolution, monitors, nircmd_runs):
-    monitors.append(Monitor(1280, 720, True))
+def test_restoring_from_another_resolution_sets_the_default(default_resolution, monkeypatch, nircmd_runs):
+    monkeypatch.setattr(display.gui, "get_current_screen_resolution", lambda: (1280, 720))
     assert display.restore_default_screen_resolution()
     assert nircmd_runs[0]["cmd"] == ["nircmd.exe", "setdisplay", str(DEFAULT_W), str(DEFAULT_H), str(DEFAULT_C)]

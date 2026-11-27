@@ -8,7 +8,7 @@ from joybox import config
 from joybox import validation
 from joybox import fileops
 from joybox import paths
-from joybox import sandbox
+from joybox import prefixlayout
 
 ###########################################################
 
@@ -22,7 +22,7 @@ def find_first_available_real_drive_path(options):
     for letter in config.drives_regular:
 
         # Get drive path and check if its available
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
         if not paths.does_path_exist(drive_path):
@@ -42,7 +42,7 @@ def find_first_taken_real_drive_path(src, options):
     for letter in config.drives_regular:
 
         # Get drive path and check if its available
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
         if paths.does_path_exist(drive_path):
@@ -190,7 +190,7 @@ def unmount_all_mounted_drives(
     for letter in config.drives_regular:
 
         # Get real drive path
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
 

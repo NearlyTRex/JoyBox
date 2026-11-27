@@ -12,9 +12,11 @@ import ntpath
 
 # Local imports
 from joybox import config
+from joybox import hashutil
 from joybox import logger
 from joybox import modules
 from joybox import paths
+from joybox import platform_info
 from joybox import runtime
 from joybox import text
 
@@ -415,6 +417,20 @@ def create_symlink(
         if prev_cwd is not None:
             os.chdir(prev_cwd)
 
+# Determine if symlinks are supported
+def are_symlinks_supported():
+    if platform_info.is_unix_platform():
+        return True
+    else:
+        test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
+        test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
+        if os.path.islink(test_file_dest):
+            return True
+        touch_file(test_file_src)
+        create_symlink(test_file_src, test_file_dest)
+        return os.path.islink(test_file_dest)
+    return False
+
 # Resolve symlink
 def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
@@ -435,10 +451,9 @@ def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure =
 # Get why a copy or move can skip its destination: "exists" when skipping existing ones,
 # "identical" when skipping ones with the same contents, or None to go ahead
 def get_skip_reason(src, dest, skip_existing = False, skip_identical = False, case_sensitive_paths = True, verbose = False, exit_on_failure = False):
-    from joybox import hashing
     if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
         return "exists"
-    if skip_identical and hashing.are_files_identical(
+    if skip_identical and hashutil.are_files_identical(
         first = src,
         second = dest,
         case_sensitive_paths = case_sensitive_paths,

@@ -6,8 +6,8 @@ import os
 import pytest
 
 # Local imports
-import joybox.command as command
-from joybox import commandoptions, config, sandbox, sandboxprefix
+from joybox import commandoptions, commandrun, config, sandbox, sandboxprefix
+from joybox import prefixlayout
 
 
 ###########################################################
@@ -24,7 +24,7 @@ TOOLS = {"WineBoot": "/tools/wineboot", "WineTricks": "/tools/winetricks", "Wine
 def ran(monkeypatch, tmp_path):
     commands = []
     monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: TOOLS[name])
-    monkeypatch.setattr(command, "run_returncode_command",
+    monkeypatch.setattr(commandrun, "run_prepared_returncode_command",
                         lambda cmd, **kwargs: commands.append(cmd) or 0)
     return commands
 
@@ -52,7 +52,7 @@ def test_no_tricks_runs_only_wineboot(ran, tmp_path):
 def test_wine_prefix_creation_stops_at_the_first_failing_command(monkeypatch, tmp_path):
     ran = []
     monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: TOOLS[name])
-    monkeypatch.setattr(command, "run_returncode_command", lambda cmd, **kwargs: ran.append(cmd) or 1)
+    monkeypatch.setattr(commandrun, "run_prepared_returncode_command", lambda cmd, **kwargs: ran.append(cmd) or 1)
 
     assert sandboxprefix.create_wine_prefix(build(tmp_path, ["d3dx9"])) is False
     assert ran == [["/tools/wineboot"]]
@@ -68,7 +68,7 @@ def test_wine_prefix_creation_fails_when_its_directory_cannot_be_made(ran, tmp_p
 def test_wine_prefix_commands_run_against_the_new_prefix(monkeypatch, tmp_path):
     seen = []
     monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: TOOLS[name])
-    monkeypatch.setattr(command, "run_returncode_command",
+    monkeypatch.setattr(commandrun, "run_prepared_returncode_command",
                         lambda cmd, options, **kwargs: seen.append(options.get_env()) or 0)
 
     sandboxprefix.create_wine_prefix(build(tmp_path, []))
@@ -240,7 +240,7 @@ def test_a_linked_wine_prefix_points_its_profile_at_the_general_prefix(created, 
 
     assert sandboxprefix.create_linked_prefix(options) is True
 
-    profile = sandbox.get_wine_user_profile_path(options)
+    profile = prefixlayout.get_wine_user_profile_path(options)
     assert os.path.realpath(profile) == str(tmp_path / "general")
     for folder in config.computer_user_folders:
         assert (tmp_path / "general" / folder).is_dir()
@@ -310,3 +310,101 @@ def test_a_linked_prefix_fails_when_another_path_cannot_be_linked(created, tmp_p
     assert sandboxprefix.create_linked_prefix(
         wine(tmp_path), other_links = [{"from": str(source), "to": "Data"}]) is False
     assert len(links) == 2
+
+
+###########################################################
+# Prefix creation
+###########################################################
+
+@pytest.fixture
+def fake_sandbox(monkeypatch, tmp_path):
+    state = {"calls": [], "result": True, "profile": tmp_path / "profile", "c_drive": tmp_path / "drive_c"}
+    state["profile"].mkdir()
+    state["c_drive"].mkdir()
+
+    def create(kind):
+        def run(options, **kwargs):
+            state["calls"].append((kind, kwargs))
+            return state["result"]
+        return run
+
+    monkeypatch.setattr(sandboxprefix, "create_basic_prefix", create("basic"))
+    monkeypatch.setattr(sandboxprefix, "create_linked_prefix", create("linked"))
+    monkeypatch.setattr(prefixlayout, "get_user_profile_path", lambda options: str(state["profile"]))
+    monkeypatch.setattr(prefixlayout, "get_real_c_drive_path", lambda options: str(state["c_drive"]))
+    return state
+
+
+def create(options, **kwargs):
+    return sandboxprefix.create_prefix(
+        options = options,
+        is_wine_prefix = True,
+        is_sandboxie_prefix = False,
+        prefix_name = config.PrefixType.GAME,
+        prefix_dir = "/prefixes/game",
+        **kwargs)
+
+
+def test_creating_a_prefix_records_its_profile_and_drives(fake_sandbox):
+    options = commandoptions.CommandOptions()
+
+    assert create(options) is True
+    assert options.get_prefix_user_profile_dir() == str(fake_sandbox["profile"])
+    assert options.get_prefix_c_drive_real() == str(fake_sandbox["c_drive"])
+    assert options.get_prefix_c_drive_virtual() == config.DRIVE_ROOT_WINDOWS
+
+
+def test_a_basic_prefix_is_created_unless_a_linked_one_is_asked_for(fake_sandbox):
+    create(commandoptions.CommandOptions())
+    create(commandoptions.CommandOptions(), linked_prefix = True, other_links = ["/shared"])
+
+    assert [kind for kind, _ in fake_sandbox["calls"]] == ["basic", "linked"]
+    assert fake_sandbox["calls"][1][1]["other_links"] == ["/shared"]
+
+
+@pytest.mark.parametrize("linked", [False, True])
+def test_prefix_creation_passes_the_run_flags_through(fake_sandbox, linked):
+    create(commandoptions.CommandOptions(), linked_prefix = linked, clean_existing = False,
+        verbose = True, pretend_run = True, exit_on_failure = True)
+
+    _, kwargs = fake_sandbox["calls"][0]
+    assert kwargs["clean_existing"] is False
+    assert kwargs["verbose"] is True
+    assert kwargs["pretend_run"] is True
+    assert kwargs["exit_on_failure"] is True
+
+
+@pytest.mark.parametrize("linked", [False, True])
+def test_a_failed_creation_is_reported(fake_sandbox, linked):
+    fake_sandbox["result"] = False
+
+    assert create(commandoptions.CommandOptions(), linked_prefix = linked) is False
+
+
+def test_a_prefix_without_a_profile_is_not_created(fake_sandbox):
+    fake_sandbox["profile"].rmdir()
+
+    assert create(commandoptions.CommandOptions()) is False
+
+
+def test_a_prefix_without_a_c_drive_is_not_created(fake_sandbox):
+    fake_sandbox["c_drive"].rmdir()
+
+    assert create(commandoptions.CommandOptions()) is False
+
+
+###########################################################
+# Cleaning up after a command
+###########################################################
+
+def test_wine_cleanup_stops_the_wine_server(recording_command, monkeypatch):
+    killed = []
+    monkeypatch.setattr(sandboxprefix.programs, "get_tool_program", lambda name: "/tools/" + name)
+    monkeypatch.setattr(sandboxprefix.process, "kill_active_named_processes", killed.append)
+
+    sandboxprefix.cleanup_wine(pretend_run = True)
+
+    assert recording_command.only() == ["/tools/WineServer", "-k"]
+    assert recording_command.calls[0]["kwargs"]["pretend_run"] is True
+    assert recording_command.calls[0]["options"].is_shell()
+    assert killed == [["/tools/WineServer"]]

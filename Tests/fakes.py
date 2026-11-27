@@ -310,7 +310,8 @@ class RecordingAptGet(RecordingInstaller):
 ###########################################################
 # Command recorder
 #
-# External tool wrappers build an argument list and hand it to joybox.command.
+# External tool wrappers build an argument list and hand it to joybox.command,
+# or to joybox.commandrun when it needs no preparing.
 # Recording that list pins the whole invocation without running anything.
 ###########################################################
 
@@ -318,6 +319,7 @@ class RecordingCommand:
 
     def __init__(self, monkeypatch, returncode = 0, output = ""):
         from joybox import command
+        from joybox import commandrun
 
         self.calls = []
         self.returncode = returncode
@@ -353,6 +355,9 @@ class RecordingCommand:
         ]:
             if hasattr(command, name):
                 monkeypatch.setattr(command, name, replacement)
+
+        # Commands run as they are, the way prefix setup runs its own tools
+        monkeypatch.setattr(commandrun, "run_prepared_returncode_command", run_returncode_command)
 
     # The single recorded command, failing loudly when there was not exactly one
     def only(self):

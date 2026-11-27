@@ -8,6 +8,7 @@ from joybox import logger
 from joybox import fileops
 from joybox import filebulk
 from joybox import archive
+from joybox import archiveinfo
 from joybox import strings
 from joybox import webfetch
 from joybox import network
@@ -55,7 +56,7 @@ def setup_stored_release(
     # Optionally skip when no usable archive is present (e.g. locker not downloaded).
     # This treats a missing directory, an empty directory, or a directory holding
     # only non-archive files all as "nothing to install" so setup can continue.
-    if skip_if_missing and not any(archive.is_archive(potential_archive) for potential_archive in potential_archives):
+    if skip_if_missing and not any(archiveinfo.is_archive(potential_archive) for potential_archive in potential_archives):
         logger.log_warning("Skipping %s: no stored archives available in '%s' (locker not downloaded?)" % (install_name, archive_dir))
         return True
 
@@ -120,12 +121,12 @@ def install_general_release(
     archive_dir = paths.get_filename_directory(archive_file)
     archive_extension = paths.get_filename_extension(archive_file)
     archive_filename = paths.get_filename_file(archive_file)
-    archive_is_zip = archive.is_zip_archive(archive_file)
-    archive_is_7z = archive.is_7z_archive(archive_file)
-    archive_is_rar = archive.is_rar_archive(archive_file)
-    archive_is_tarball = archive.is_tarball_archive(archive_file)
-    archive_is_exe = archive.is_exe_archive(archive_file)
-    archive_is_appimage = archive.is_appimage_archive(archive_file)
+    archive_is_zip = archiveinfo.is_zip_archive(archive_file)
+    archive_is_7z = archiveinfo.is_7z_archive(archive_file)
+    archive_is_rar = archiveinfo.is_rar_archive(archive_file)
+    archive_is_tarball = archiveinfo.is_tarball_archive(archive_file)
+    archive_is_exe = archiveinfo.is_exe_archive(archive_file)
+    archive_is_appimage = archiveinfo.is_appimage_archive(archive_file)
 
     # Create install dir if necessary
     success = fileops.make_directory(

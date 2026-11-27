@@ -12,7 +12,7 @@ from joybox import logger
 from joybox import paths
 from joybox import fileops
 from joybox import filebulk
-from joybox import hashing
+from joybox import hashutil
 from joybox import cryption
 from joybox import sync
 from joybox import synclisting
@@ -237,7 +237,7 @@ class LocalBackend(LockerBackend):
             entry = {
                 "filename": paths.get_filename_file(rel_path),
                 "dir": paths.get_filename_directory(rel_path),
-                "hash": hashing.calculate_file_md5(
+                "hash": hashutil.calculate_file_md5(
                     src = full_path,
                     verbose = False,
                     pretend_run = False,

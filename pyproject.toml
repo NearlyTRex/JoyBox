@@ -159,6 +159,8 @@ standards = [
 wrapper_modules = [
     "Shared/joybox/fileops.py", "Shared/joybox/serialization.py",
     "Shared/joybox/command.py", "Shared/joybox/commandbase.py",
+    # The runner behind command.py, which prefix setup also calls directly
+    "Shared/joybox/commandrun.py",
     # The local process and file layer behind the connection API
     "Shared/joybox/connection/connection_local.py",
     # Imported by fileops, so it cannot use it
@@ -195,10 +197,10 @@ wrapper_modules = [
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
 documented = 800
-doc-paraphrase = 1569
+doc-paraphrase = 1568
 long-functions = 536
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 673
+pylint-source = 639
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

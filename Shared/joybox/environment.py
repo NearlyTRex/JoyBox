@@ -36,21 +36,6 @@ def get_editor():
         return "notepad.exe"
     return "nano"
 
-# Determine if symlinks are supported
-def are_symlinks_supported():
-    if platform_info.is_unix_platform():
-        return True
-    else:
-        from joybox import fileops
-        test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
-        test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
-        if os.path.islink(test_file_dest):
-            return True
-        fileops.touch_file(test_file_src)
-        fileops.create_symlink(test_file_src, test_file_dest)
-        return os.path.islink(test_file_dest)
-    return False
-
 ###########################################################
 # Tools
 ###########################################################

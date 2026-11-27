@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config
-from joybox import command
+from joybox import capture
 from joybox import emulatorcommon
 from joybox import gui
 from joybox import paths
@@ -41,7 +41,7 @@ def launches(monkeypatch):
     def run_capture_command(**kwargs):
         calls.append(kwargs)
         return 0
-    monkeypatch.setattr(command, "run_capture_command", run_capture_command)
+    monkeypatch.setattr(capture, "run_capture_command", run_capture_command)
     return calls
 
 

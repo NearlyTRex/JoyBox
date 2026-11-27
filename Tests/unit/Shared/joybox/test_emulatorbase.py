@@ -257,7 +257,7 @@ def locker_hashes(monkeypatch):
 
     monkeypatch.setattr(emulatorbase.environment, "get_locker_gaming_emulator_setup_dir",
         lambda name: "/locker/%s" % name)
-    monkeypatch.setattr(emulatorbase.hashing, "calculate_file_md5", md5)
+    monkeypatch.setattr(emulatorbase.hashutil, "calculate_file_md5", md5)
     return {"hashes": hashes, "reads": reads}
 
 

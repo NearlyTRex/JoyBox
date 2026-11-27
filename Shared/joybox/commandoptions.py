@@ -7,6 +7,7 @@ import copy
 from joybox import config
 from joybox import jsondata
 from joybox import paths
+from joybox import prefixlayout
 from joybox import settings
 
 # Command options
@@ -334,9 +335,6 @@ class CommandOptions:
         prefix_dir = None,
         general_prefix_dir = None):
 
-        # Imports
-        from joybox import sandbox
-
         # Basic prefix info
         self.set_is_wine_prefix(is_wine_prefix)
         self.set_is_sandboxie_prefix(is_sandboxie_prefix)
@@ -344,78 +342,13 @@ class CommandOptions:
 
         # Prefix dir
         if not paths.is_path_valid(prefix_dir):
-            prefix_dir = sandbox.get_prefix(self)
+            prefix_dir = prefixlayout.get_prefix(self)
         if paths.is_path_valid(prefix_dir):
             self.set_prefix_dir(prefix_dir)
 
         # General prefix dir
         if paths.is_path_valid(general_prefix_dir):
             self.set_general_prefix_dir(general_prefix_dir)
-
-    # Create prefix
-    def create_prefix(
-        self,
-        is_wine_prefix,
-        is_sandboxie_prefix,
-        prefix_name,
-        prefix_dir = None,
-        general_prefix_dir = None,
-        linked_prefix = False,
-        other_links = None,
-        clean_existing = True,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get other links
-        other_links = [] if other_links is None else other_links
-
-        # Imports
-        from joybox import sandbox
-        from joybox import sandboxprefix
-
-        # Setup prefix
-        self.setup_prefix(
-            is_wine_prefix = is_wine_prefix,
-            is_sandboxie_prefix = is_sandboxie_prefix,
-            prefix_name = prefix_name,
-            prefix_dir = prefix_dir,
-            general_prefix_dir = general_prefix_dir)
-
-        # Create prefix
-        if linked_prefix:
-            success = sandboxprefix.create_linked_prefix(
-                options = self,
-                other_links = other_links,
-                clean_existing = clean_existing,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-        else:
-            success = sandboxprefix.create_basic_prefix(
-                options = self,
-                clean_existing = clean_existing,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-        # Set prefix user profile dir
-        self.set_prefix_user_profile_dir(sandbox.get_user_profile_path(self))
-        if not self.has_existing_prefix_user_profile_dir():
-            return False
-
-        # Set prefix C drive
-        self.set_prefix_c_drive_virtual(config.DRIVE_ROOT_WINDOWS)
-        self.set_prefix_c_drive_real(sandbox.get_real_c_drive_path(self))
-        if not self.has_existing_prefix_c_drive_real():
-            return False
-
-        # Should be successful
-        return True
 
     ###########################################################
     # Other

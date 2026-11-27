@@ -29,7 +29,7 @@ def check_requirements():
         logger.log_error("Only windows and linux are supported right now", quit_program = True)
 
     # Check symlink support
-    if not environment.are_symlinks_supported():
+    if not fileops.are_symlinks_supported():
         logger.log_error("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file

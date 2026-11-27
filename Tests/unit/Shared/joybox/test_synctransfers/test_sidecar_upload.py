@@ -6,7 +6,7 @@ import pytest
 
 # Local imports
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
 from joybox import logger
 from joybox import synctransfers
 from sync_helpers import REMOTE, REMOTE_TYPE, make_database, read_database
@@ -59,7 +59,7 @@ def test_a_recorded_file_carries_its_hash_size_and_time(tree, remote, temp_dirs)
     upload(tree)
     entry = read_database(remote.store)["Roms/top.zip"]
 
-    assert entry["hash"] == hashing.calculate_file_md5(str(tree / "top.zip"))
+    assert entry["hash"] == hashutil.calculate_file_md5(str(tree / "top.zip"))
     assert entry["size"] == 3
     assert entry["mtime"] > 0
 
@@ -207,14 +207,14 @@ def test_a_failed_database_upload_is_a_failure(tree, remote, temp_dirs):
 
 @pytest.fixture
 def unreadable(monkeypatch):
-    original = hashing.calculate_file_md5
+    original = hashutil.calculate_file_md5
 
     def calculate(src, **kwargs):
         if os.path.basename(src) == "game.zip":
             return ""
         return original(src, **kwargs)
 
-    monkeypatch.setattr(hashing, "calculate_file_md5", calculate)
+    monkeypatch.setattr(hashutil, "calculate_file_md5", calculate)
 
 
 @pytest.fixture

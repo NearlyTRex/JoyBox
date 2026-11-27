@@ -1,10 +1,10 @@
 # Imports
 import os
 import os.path
-import zipfile
 import re
 
 # Local imports
+from joybox import archiveinfo
 from joybox import config
 from joybox import command
 from joybox import commandbase
@@ -13,170 +13,6 @@ from joybox import logger
 from joybox import paths
 from joybox import fileops
 from joybox import sandboxpaths
-
-# Determine if file is a known archive
-def is_known_archive(archive_file, extensions = (), mime_types = ()):
-    for ext in extensions:
-        if archive_file.lower().endswith(ext.lower()):
-            return True
-    if not paths.is_path_file(archive_file):
-        return False
-    actual_mime_type = paths.get_file_mime_type(archive_file)
-    for potential_mime_type in mime_types:
-        if potential_mime_type.lower() in actual_mime_type.lower():
-            return True
-    return False
-
-# Determine if file is an archive
-def is_archive(archive_file):
-    if is_zip_archive(archive_file):
-        return True
-    elif is_7z_archive(archive_file):
-        return True
-    elif is_rar_archive(archive_file):
-        return True
-    elif is_lzh_archive(archive_file):
-        return True
-    elif is_stuffit_archive(archive_file):
-        return True
-    elif is_tarball_archive(archive_file):
-        return True
-    elif is_disc_archive(archive_file):
-        return True
-    elif is_exe_archive(archive_file):
-        return True
-    elif is_appimage_archive(archive_file):
-        return True
-    return False
-
-# Determine if file is a zip archive
-def is_zip_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveZipFileType.cvalues(),
-        mime_types = config.mime_types_zip)
-
-# Determine if file is a 7z archive
-def is_7z_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.Archive7zFileType.cvalues(),
-        mime_types = config.mime_types_7z)
-
-# Determine if file is a rar archive
-def is_rar_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveRarFileType.cvalues(),
-        mime_types = config.mime_types_rar)
-
-# Determine if file is a lzh archive
-def is_lzh_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveLzhFileType.cvalues(),
-        mime_types = config.mime_types_lzh)
-
-# Determine if file is a stuffit archive
-def is_stuffit_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveStuffItFileType.cvalues(),
-        mime_types = config.mime_types_stuffit)
-
-# Determine if file is a tarball archive
-def is_tarball_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveTarballFileType.cvalues(),
-        mime_types = config.mime_types_tarball)
-
-# Determine if file is a disc archive
-def is_disc_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = config.ArchiveDiscFileType.cvalues(),
-        mime_types = config.mime_types_disc)
-
-# Determine if file is an exe archive
-def is_exe_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = [config.WindowsProgramFileType.EXE.cval()],
-        mime_types = config.mime_types_exe)
-
-# Determine if file is an appimage archive
-def is_appimage_archive(archive_file):
-    return is_known_archive(
-        archive_file = archive_file,
-        extensions = [config.LinuxProgramFileType.APPIMAGE.cval()],
-        mime_types = config.mime_types_appimage)
-
-# Get archive type
-def get_archive_type(archive_file):
-    archive_ext = paths.get_filename_extension(archive_file)
-    for archive_type in config.ArchiveFileType.members():
-        if archive_ext == archive_type.cval():
-            return archive_type
-    if paths.is_path_file(archive_file):
-        if is_zip_archive(archive_file):
-            return config.ArchiveFileType.ZIP
-        if is_7z_archive(archive_file):
-            return config.ArchiveFileType.SEVENZIP
-        if is_rar_archive(archive_file):
-            return config.ArchiveFileType.RAR
-        if is_lzh_archive(archive_file):
-            return config.ArchiveFileType.LZH
-        if is_stuffit_archive(archive_file):
-            return config.ArchiveFileType.SIT
-        if is_tarball_archive(archive_file):
-            return config.ArchiveFileType.TAR_GZ
-        if is_disc_archive(archive_file):
-            return config.ArchiveFileType.ISO
-    return None
-
-# Determine if creatable archive type
-def is_creatable_archive_type(archive_type):
-    if archive_type in config.ArchiveZipFileType.members():
-        return True
-    if archive_type in config.Archive7zFileType.members():
-        return True
-    return False
-
-# Determine if extractable archive type
-def is_extractable_archive_type(archive_type):
-    if archive_type in config.ArchiveZipFileType.members():
-        return True
-    if archive_type in config.Archive7zFileType.members():
-        return True
-    if archive_type in config.ArchiveRarFileType.members():
-        return True
-    if archive_type in config.ArchiveLzhFileType.members():
-        return True
-    if archive_type in config.ArchiveStuffItFileType.members():
-        return True
-    if archive_type in config.ArchiveTarballFileType.members():
-        return True
-    if archive_type in config.ArchiveDiscFileType.members():
-        return True
-    if archive_type == config.ArchiveFileType.EXE:
-        return True
-    return False
-
-# Check archive checksums
-def get_archive_checksums(archive_file):
-    checksums = []
-    if paths.is_path_file(archive_file):
-        if is_zip_archive(archive_file):
-            with zipfile.ZipFile(archive_file) as zf:
-                for info in zf.infolist():
-                    if info.is_dir():
-                        continue
-                    entry = {}
-                    entry["path"] = info.filename
-                    entry["crc"] = "%08x" % info.CRC
-                    checksums.append(entry)
-    return checksums
 
 # Get archive compression flags
 def get_archive_compression_flags(archive_type, password, volume_size):
@@ -271,13 +107,13 @@ def create_archive_from_file(
         return False
 
     # Get archive type
-    archive_type = get_archive_type(archive_file)
+    archive_type = archiveinfo.get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
-    if not is_creatable_archive_type(archive_type):
+    if not archiveinfo.is_creatable_archive_type(archive_type):
         logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
@@ -351,13 +187,13 @@ def create_archive_from_folder(
         return False
 
     # Get archive type
-    archive_type = get_archive_type(archive_file)
+    archive_type = archiveinfo.get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
-    if not is_creatable_archive_type(archive_type):
+    if not archiveinfo.is_creatable_archive_type(archive_type):
         logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
@@ -428,19 +264,19 @@ def extract_archive(
 
     # Get tool
     archive_tool = None
-    if is_tarball_archive(archive_file):
+    if archiveinfo.is_tarball_archive(archive_file):
         if programs.is_tool_installed("Tar"):
             archive_tool = programs.get_tool_program("Tar")
         if not archive_tool:
             logger.log_error("Tar was not found")
             return False
-    elif is_rar_archive(archive_file):
+    elif archiveinfo.is_rar_archive(archive_file):
         if programs.is_tool_installed("Unrar"):
             archive_tool = programs.get_tool_program("Unrar")
         if not archive_tool:
             logger.log_error("Unrar was not found")
             return False
-    elif is_stuffit_archive(archive_file):
+    elif archiveinfo.is_stuffit_archive(archive_file):
         if programs.is_tool_installed("Unar"):
             archive_tool = programs.get_tool_program("Unar")
         if not archive_tool:
@@ -454,13 +290,13 @@ def extract_archive(
             return False
 
     # Get archive type
-    archive_type = get_archive_type(archive_file)
+    archive_type = archiveinfo.get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if extractable
-    if not is_extractable_archive_type(archive_type):
+    if not archiveinfo.is_extractable_archive_type(archive_type):
         logger.log_error("Unable to extract archives of type %s" % archive_type.val())
         return False
 
@@ -473,14 +309,14 @@ def extract_archive(
 
     # Get extract command
     extract_cmd = []
-    if is_tarball_archive(archive_file):
+    if archiveinfo.is_tarball_archive(archive_file):
         extract_cmd = [
             archive_tool,
             "xvf",
             archive_file,
             "-C", extract_dir
         ]
-    elif is_rar_archive(archive_file):
+    elif archiveinfo.is_rar_archive(archive_file):
         extract_cmd = [
             archive_tool,
             "x",
@@ -498,7 +334,7 @@ def extract_archive(
             archive_file,
             extract_dir + os.sep
         ]
-    elif is_stuffit_archive(archive_file):
+    elif archiveinfo.is_stuffit_archive(archive_file):
         extract_cmd = [
             archive_tool,
             "-o", extract_dir,
@@ -541,7 +377,7 @@ def extract_archive(
         return False
 
     # Decode Shift-JIS names, which lzh archives store without saying so
-    if is_lzh_archive(archive_file):
+    if archiveinfo.is_lzh_archive(archive_file):
         success = fileops.decode_legacy_filenames(
             src = extract_dir,
             encoding = "cp932",

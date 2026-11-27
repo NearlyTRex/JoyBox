@@ -1,16 +1,9 @@
 # Local imports
 from joybox import command
 from joybox import commandbase
+from joybox import gui
 from joybox import programs
 from joybox import settings
-
-# Get current screen resolution
-def get_current_screen_resolution():
-    import screeninfo
-    for monitor in screeninfo.get_monitors():
-        if monitor.is_primary:
-            return (monitor.width, monitor.height)
-    return (0, 0)
 
 # Set screen resolution
 def set_screen_resolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -33,7 +26,7 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
     command.run_returncode_command(
         cmd = resolution_cmd,
         options = commandbase.create_command_options(
-            shell = True),
+            is_shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -48,7 +41,7 @@ def restore_default_screen_resolution(verbose = False, pretend_run = False, exit
     screen_resolution_c = settings.get_integer_value("UserData.Resolution", "screen_resolution_c")
 
     # Ignore if already at the default resolution
-    current_w, current_h = get_current_screen_resolution()
+    current_w, current_h = gui.get_current_screen_resolution()
     is_default_w = current_w == screen_resolution_w
     is_default_h = current_h == screen_resolution_h
     if is_default_w and is_default_h:

@@ -1,5 +1,7 @@
 # Creating Wine and Sandboxie prefixes, either self-contained or with the user
-# folders linked to a shared general prefix.
+# folders linked to a shared general prefix, and stopping Wine once a command is
+# done with it. Their tools run through commandrun, as they are; preparing them
+# for a prefix would need the very prefix being made.
 
 # Imports
 import os
@@ -9,9 +11,12 @@ import os.path
 from joybox import config
 from joybox import fileops
 from joybox import commandbase
+from joybox import commandrun
+from joybox import process
 from joybox import programs
 from joybox import paths
 from joybox import sandbox
+from joybox import prefixlayout
 
 ###########################################################
 
@@ -21,9 +26,6 @@ def create_wine_prefix(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Imports
-    from joybox import command
 
     # Make directory
     success = fileops.make_directory(
@@ -57,7 +59,7 @@ def create_wine_prefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        code = command.run_returncode_command(
+        code = commandrun.run_prepared_returncode_command(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,
@@ -76,14 +78,11 @@ def create_sandboxie_prefix(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Imports
-    from joybox import command
-
     # Make directories
     for prefix_subdir in [
         options.get_prefix_dir(),
-        sandbox.get_sandboxie_real_drive_path(options, "C"),
-        sandbox.get_sandboxie_user_profile_path(options)]:
+        prefixlayout.get_sandboxie_real_drive_path(options, "C"),
+        prefixlayout.get_sandboxie_user_profile_path(options)]:
         success = fileops.make_directory(
             src = prefix_subdir,
             verbose = verbose,
@@ -123,7 +122,7 @@ def create_sandboxie_prefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        code = command.run_returncode_command(
+        code = commandrun.run_prepared_returncode_command(
             cmd = new_cmd,
             options = param_options,
             verbose = verbose,
@@ -185,7 +184,7 @@ def create_basic_prefix(
 
         # Replace symlinked directories
         return fileops.replace_symlinked_directories(
-            src = sandbox.get_wine_user_profile_path(options),
+            src = prefixlayout.get_wine_user_profile_path(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -243,7 +242,7 @@ def create_linked_prefix(
             return False
 
     # Get prefix c drive
-    prefix_c_drive = sandbox.get_real_c_drive_path(options)
+    prefix_c_drive = prefixlayout.get_real_c_drive_path(options)
 
     # Setup wine prefix
     if options.is_wine_prefix():
@@ -260,7 +259,7 @@ def create_linked_prefix(
         # Link prefix
         success = fileops.create_symlink(
             src = options.get_general_prefix_dir(),
-            dest = sandbox.get_wine_user_profile_path(options),
+            dest = prefixlayout.get_wine_user_profile_path(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -297,3 +296,82 @@ def create_linked_prefix(
 
     # Creation successful
     return True
+
+# Set up a prefix on the options and create it, then record its user profile and C drive
+def create_prefix(
+    options,
+    is_wine_prefix,
+    is_sandboxie_prefix,
+    prefix_name,
+    prefix_dir = None,
+    general_prefix_dir = None,
+    linked_prefix = False,
+    other_links = None,
+    clean_existing = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get other links
+    other_links = [] if other_links is None else other_links
+
+    # Setup prefix
+    options.setup_prefix(
+        is_wine_prefix = is_wine_prefix,
+        is_sandboxie_prefix = is_sandboxie_prefix,
+        prefix_name = prefix_name,
+        prefix_dir = prefix_dir,
+        general_prefix_dir = general_prefix_dir)
+
+    # Create prefix
+    if linked_prefix:
+        success = create_linked_prefix(
+            options = options,
+            other_links = other_links,
+            clean_existing = clean_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    else:
+        success = create_basic_prefix(
+            options = options,
+            clean_existing = clean_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+
+    # Set prefix user profile dir
+    options.set_prefix_user_profile_dir(prefixlayout.get_user_profile_path(options))
+    if not options.has_existing_prefix_user_profile_dir():
+        return False
+
+    # Set prefix C drive
+    options.set_prefix_c_drive_virtual(config.DRIVE_ROOT_WINDOWS)
+    options.set_prefix_c_drive_real(prefixlayout.get_real_c_drive_path(options))
+    if not options.has_existing_prefix_c_drive_real():
+        return False
+
+    # Should be successful
+    return True
+
+# Cleanup wine
+def cleanup_wine(verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Get wine server tool
+    wine_server_tool = programs.get_tool_program("WineServer")
+
+    # Kill processes running under wine
+    commandrun.run_prepared_returncode_command(
+        cmd = [wine_server_tool, "-k"],
+        options = commandbase.create_command_options(
+            is_shell = True),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Kill wine itself
+    process.kill_active_named_processes([wine_server_tool])

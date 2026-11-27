@@ -116,7 +116,7 @@ def psg(monkeypatch):
     monkeypatch.setattr(
         gui.modules, "import_python_module_file",
         lambda module_path, module_name: fake)
-    monkeypatch.setattr(gui.display, "get_current_screen_resolution", lambda: SCREEN)
+    monkeypatch.setattr(gui, "get_current_screen_resolution", lambda: SCREEN)
     monkeypatch.setattr(gui.platform_info, "is_windows_platform", lambda: False)
     return fake
 
@@ -500,3 +500,34 @@ def test_a_choices_window_needs_button_text(psg):
     with pytest.raises(AssertionError):
         gui.display_choices_window(["First"], "Title", "Message", "")
     assert psg.windows == []
+
+
+###########################################################
+# Screen resolution
+#
+# Windows open at the primary monitor's size.
+###########################################################
+
+class Monitor:
+    def __init__(self, width, height, is_primary):
+        self.width = width
+        self.height = height
+        self.is_primary = is_primary
+
+
+@pytest.fixture
+def monitors(monkeypatch):
+    found = []
+    module = types.SimpleNamespace(get_monitors = lambda: found)
+    monkeypatch.setitem(sys.modules, "screeninfo", module)
+    return found
+
+
+def test_the_primary_monitor_gives_the_resolution(monitors):
+    monitors += [Monitor(800, 600, False), Monitor(2560, 1440, True)]
+    assert gui.get_current_screen_resolution() == (2560, 1440)
+
+
+def test_no_primary_monitor_reads_as_zero(monitors):
+    monitors.append(Monitor(800, 600, False))
+    assert gui.get_current_screen_resolution() == (0, 0)

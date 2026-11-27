@@ -432,9 +432,8 @@ def test_a_library_is_installed_when_its_directory_is_empty(fake_registry):
 
 
 def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registry):
-    from joybox import commandbase
     asked = []
-    monkeypatch.setattr(commandbase, "is_runnable_command", lambda path: asked.append(path) or True)
+    monkeypatch.setattr(programs.paths, "is_runnable_command", lambda path: asked.append(path) or True)
 
     assert programs.is_program_installed("Packer", "linux") is True
     assert programs.is_program_installed("Retro", "linux") is True

@@ -1,21 +1,19 @@
 # Imports
 import os
 import sys
-import contextlib
 import subprocess
 import threading
 
 # Local imports
-from joybox import platform_info, runtime, cmdline
+from joybox import platform_info, cmdline
+from joybox import commandrun
 from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import programs
 from joybox import sandbox
 from joybox import sandboxpaths
-from joybox import capture
-from joybox import settings
-from joybox import process
+from joybox import sandboxprefix
 from joybox.commandbase import (
     create_command_options,
     is_powershell_command,
@@ -84,7 +82,8 @@ def setup_prefix_command(
 
     # Create prefix if necessary
     if not new_options.has_ready_prefix():
-        new_options.create_prefix(
+        sandboxprefix.create_prefix(
+            options = new_options,
             is_wine_prefix = sandbox.should_be_run_via_wine(cmd),
             is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(cmd),
             prefix_name = config.PrefixType.DEFAULT,
@@ -148,7 +147,7 @@ def postprocess_command(
 
     # Postprocess for wine; Sandboxie has nothing to stop
     if sandbox.should_be_run_via_wine(cmd):
-        sandbox.cleanup_wine(
+        sandboxprefix.cleanup_wine(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -165,14 +164,24 @@ def postprocess_command(
 
 ###########################################################
 
-# Wait for a command to finish, stopping it once it has run for timeout seconds
-def wait_for_command(proc, timeout):
-    try:
-        proc.wait(timeout = timeout)
-    except subprocess.TimeoutExpired:
-        logger.log_warning("The command ran for more than %s seconds and was stopped" % timeout)
-        proc.kill()
-        proc.wait()
+# Turn a command into an argument list with options, pre-processed unless the options say not to
+def prepare_command(
+    cmd,
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    cmd = cmdline.create_command_list(cmd)
+    if not options:
+        options = create_command_options()
+    if options.allow_processing():
+        cmd, options = preprocess_command(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return (cmd, options)
 
 # Wait for blocking processes, then post-process
 def finish_command(
@@ -181,8 +190,7 @@ def finish_command(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-        process.wait_for_named_processes(options.get_blocking_processes())
+    commandrun.wait_for_blocking_processes(options)
     if options.allow_processing():
         postprocess_command(
             cmd = cmd,
@@ -190,85 +198,6 @@ def finish_command(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-# Run a command, pumping its output streams in real time
-def run_streamed_command(
-    cmd,
-    options,
-    capture_output = True,
-    log_stdout = False,
-    log_stderr = False):
-
-    # Determine output file handling
-    stdout_path = options.get_stdout() if paths.is_path_valid(options.get_stdout()) else None
-    stderr_path = options.get_stderr() if paths.is_path_valid(options.get_stderr()) else None
-    stdin_input = options.get_stdin_input()
-
-    # Determine stderr disposition:
-    # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
-    # - pipe separately when streaming it live or writing it to a file,
-    # - otherwise inherit the terminal (so it still shows up by default).
-    pipe_stderr = log_stderr or stderr_path is not None
-    capture_stderr = options.include_stderr() and capture_output
-    if options.include_stderr() and not pipe_stderr:
-        stderr_arg = subprocess.STDOUT
-    elif pipe_stderr:
-        stderr_arg = subprocess.PIPE
-    else:
-        stderr_arg = None
-
-    # Get context stack
-    with contextlib.ExitStack() as stack:
-        stdout_target = stack.enter_context(open(stdout_path, "w", encoding = "utf-8")) if stdout_path else None
-        stderr_target = stack.enter_context(open(stderr_path, "w", encoding = "utf-8")) if stderr_path else None
-
-        # Open process
-        proc = subprocess.Popen(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env(),
-            creationflags = options.get_creationflags(),
-            stdout = subprocess.PIPE,
-            stderr = stderr_arg,
-            stdin = subprocess.PIPE if stdin_input is not None else None,
-            text = True,
-            errors = "ignore",
-            bufsize = 1)
-
-        # readline() rather than "for line in pipe", which read-ahead-buffers
-        # and defeats real-time streaming; an empty line is end of stream
-        output_lines = []
-        def pump(stream, capture, log, target):
-            for line in iter(stream.readline, ""):
-                if capture:
-                    output_lines.append(line)
-                if log:
-                    logger.log_info(line.strip())
-                if target:
-                    target.write(line)
-                    target.flush()
-
-        # Run real-time I/O threads
-        threads = [threading.Thread(
-            target = pump,
-            args = (proc.stdout, capture_output, log_stdout, stdout_target))]
-        if pipe_stderr:
-            threads.append(threading.Thread(
-                target = pump,
-                args = (proc.stderr, capture_stderr, log_stderr, stderr_target)))
-        for t in threads:
-            t.start()
-        if stdin_input is not None:
-            try:
-                proc.stdin.write(stdin_input)
-                proc.stdin.close()
-            except BrokenPipeError:
-                logger.log_warning("The command exited before reading all of its input")
-        wait_for_command(proc, options.get_timeout())
-        for t in threads:
-            t.join()
-    return (cmdline.clean_command_output("".join(output_lines).strip()), proc.returncode)
 
 # Run command
 def run_command(
@@ -281,91 +210,30 @@ def run_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = cmdline.create_command_list(cmd)
-        if not options:
-            options = create_command_options()
         if pretend_run:
             return ("", 0)
-
-        # Pre-process command
-        if options.allow_processing():
-            cmd, options = preprocess_command(
-                cmd = cmd,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Log command
-        if verbose:
-            print_command(cmd)
-
-        # Handle shell commands
-        if options.is_shell():
-            cmd = cmdline.create_command_string(cmd)
-
-        # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
-        if options.is_passthrough():
-            returncode = subprocess.call(
-                cmd,
-                shell = options.is_shell(),
-                cwd = options.get_cwd(),
-                env = options.get_env())
-            finish_command(
-                cmd = cmd,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return ("", returncode)
-
-        # Daemon mode - detach and return without waiting or cleaning up after it
-        if options.is_daemon():
-            subprocess.Popen(
-                cmd,
-                shell = options.is_shell(),
-                cwd = options.get_cwd(),
-                env = options.get_env(),
-                creationflags = options.get_creationflags() | getattr(subprocess, "DETACHED_PROCESS", 0),
-                stdout = subprocess.DEVNULL,
-                stderr = subprocess.DEVNULL,
-                stdin = subprocess.DEVNULL,
-                start_new_session = os.name != "nt")
-            runtime.sleep_program(0.5)
-            return ("", 0)
-
-        # Suppressed output - discard streams, just wait
-        if options.is_output_suppressed():
-            proc = subprocess.Popen(
-                cmd,
-                shell = options.is_shell(),
-                cwd = options.get_cwd(),
-                env = options.get_env(),
-                creationflags = options.get_creationflags(),
-                stdout = subprocess.DEVNULL,
-                stderr = subprocess.DEVNULL)
-            wait_for_command(proc, options.get_timeout())
-            finish_command(
-                cmd = cmd,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return ("", proc.returncode)
-
-        # Run with streamed output
-        output, returncode = run_streamed_command(
-            cmd = cmd,
-            options = options,
-            capture_output = capture_output,
-            log_stdout = log_stdout,
-            log_stderr = log_stderr)
-        finish_command(
+        cmd, options = prepare_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+        # Run it, then post-process unless it was left running as a daemon
+        output, returncode = commandrun.run_prepared_command(
+            cmd = cmd,
+            options = options,
+            capture_output = capture_output,
+            log_stdout = log_stdout,
+            log_stderr = log_stderr,
+            verbose = verbose)
+        if options.allow_processing() and not options.is_daemon():
+            postprocess_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
         return (output, returncode)
     except Exception as e:
         if verbose or exit_on_failure:
@@ -416,19 +284,13 @@ def run_interactive_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = cmdline.create_command_list(cmd)
-        if not options:
-            options = create_command_options()
         if not pretend_run:
-
-            # Pre-process command
-            if options.allow_processing():
-                cmd, options = preprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+            cmd, options = prepare_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
             # Log command
             if verbose:
@@ -542,76 +404,6 @@ def run_interactive_command(
         if verbose or exit_on_failure:
             logger.log_error(e, quit_program = exit_on_failure)
         return 1
-
-# Run capture command
-def run_capture_command(
-    cmd,
-    options = create_command_options(),
-    capture_type = None,
-    capture_file = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Blocking start method
-    def run_start():
-        code = run_returncode_command(
-            cmd = cmd,
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return code == 0
-
-    # Get capture info
-    capture_duration = settings.get_integer_value("UserData.Capture", "capture_duration")
-    capture_interval = settings.get_integer_value("UserData.Capture", "capture_interval")
-    capture_origin_x = settings.get_integer_value("UserData.Capture", "capture_origin_x")
-    capture_origin_y = settings.get_integer_value("UserData.Capture", "capture_origin_y")
-    capture_resolution_w = settings.get_integer_value("UserData.Capture", "capture_resolution_w")
-    capture_resolution_h = settings.get_integer_value("UserData.Capture", "capture_resolution_h")
-    capture_framerate = settings.get_integer_value("UserData.Capture", "capture_framerate")
-    overwrite_screenshots = settings.get_bool_value("UserData.Capture", "overwrite_screenshots")
-    overwrite_videos = settings.get_bool_value("UserData.Capture", "overwrite_videos")
-
-    # Screenshot capturing
-    if capture_type == config.CaptureType.SCREENSHOT:
-
-        # Run while capturing screenshots
-        if paths.is_path_file(capture_file) and not overwrite_screenshots:
-            return run_start()
-        return capture.capture_screenshot_while_running(
-            run_func = run_start,
-            output_file = capture_file,
-            time_duration = capture_duration,
-            time_interval = capture_interval,
-            time_units_type = config.UnitType.SECONDS,
-            capture_origin = (capture_origin_x, capture_origin_y),
-            capture_resolution = (capture_resolution_w, capture_resolution_h),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Video capturing
-    elif capture_type == config.CaptureType.VIDEO:
-
-        # Run while capturing video
-        if paths.is_path_file(capture_file) and not overwrite_videos:
-            return run_start()
-        return capture.capture_video_while_running(
-            run_func = run_start,
-            output_file = capture_file,
-            capture_origin = (capture_origin_x, capture_origin_y),
-            capture_resolution = (capture_resolution_w, capture_resolution_h),
-            capture_framerate = capture_framerate,
-            capture_duration = capture_duration,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # No capture
-    else:
-        return run_start()
 
 ###########################################################
 

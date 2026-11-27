@@ -1,5 +1,6 @@
 # Imports
 import os
+import shutil
 import errno
 import fnmatch
 import pathlib
@@ -721,3 +722,27 @@ def is_exclude_path(path, excludes = ()):
         if any(exclude in part for part in path.split(os.sep)):
             return True
     return False
+
+###########################################################
+# Runnable commands
+###########################################################
+
+# Get runnable command path
+def get_runnable_command_path(cmd, search_dirs = ()):
+    for search_dir in search_dirs:
+        potential_paths = [join_paths(search_dir, cmd)]
+        for cmd_ext in config.WindowsProgramFileType.cvalues():
+            potential_paths.append(join_paths(search_dir, cmd + cmd_ext))
+        for potential_path in potential_paths:
+            verified_path = shutil.which(potential_path)
+            if verified_path:
+                return verified_path
+    return shutil.which(cmd)
+
+# Check if runnable command
+def is_runnable_command(cmd, search_dirs = None):
+    search_dirs = [] if search_dirs is None else search_dirs
+    cmd_path = get_runnable_command_path(cmd, search_dirs)
+    if not cmd_path:
+        return False
+    return True

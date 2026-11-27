@@ -87,7 +87,7 @@ def test_the_same_md5_is_stored_once():
 
 
 def test_md5_lookup_is_case_sensitive():
-    # Hashes arrive lowercase from hashing.calculate_file_md5, so an uppercase
+    # Hashes arrive lowercase from hashutil.calculate_file_md5, so an uppercase
     # dat entry would never match a scanned file.
     database = dat.Dat()
     database.add_game(make_entry(md5 = "ABC123"))

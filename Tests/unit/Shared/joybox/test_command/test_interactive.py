@@ -9,6 +9,7 @@ import pytest
 
 # Local imports
 from joybox import command
+from joybox import commandrun
 from joybox import commandbase
 
 
@@ -123,7 +124,7 @@ class Terminal:
         monkeypatch.setattr(command.platform_info, "is_windows_platform", lambda: False)
         monkeypatch.setattr(sys, "stdin", ScriptedInput(["typed\n"]))
         monkeypatch.setattr(
-            command.process, "wait_for_named_processes",
+            commandrun.process, "wait_for_named_processes",
             lambda names: self.waited_for.append(list(names)))
         monkeypatch.setattr(
             command, "postprocess_command",

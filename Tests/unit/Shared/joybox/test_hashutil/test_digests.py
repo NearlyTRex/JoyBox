@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import hashing
+from joybox import hashutil
 from hashing_helpers import expected_digests, write_file
 
 
@@ -19,10 +19,10 @@ from hashing_helpers import expected_digests, write_file
 PAYLOAD = b"The quick brown fox jumps over the lazy dog"
 
 FUNCTIONS = {
-    "crc32": hashing.calculate_file_crc32,
-    "md5": hashing.calculate_file_md5,
-    "sha1": hashing.calculate_file_sha1,
-    "sha256": hashing.calculate_file_sha256,
+    "crc32": hashutil.calculate_file_crc32,
+    "md5": hashutil.calculate_file_md5,
+    "sha1": hashutil.calculate_file_sha1,
+    "sha256": hashutil.calculate_file_sha256,
 }
 
 
@@ -59,10 +59,10 @@ def test_the_chunk_size_does_not_change_the_digest(payload_file, name):
 def test_xxh3_is_stable_across_chunk_sizes(payload_file):
     pytest.importorskip("xxhash")
 
-    whole = hashing.calculate_file_xxh3(payload_file)
+    whole = hashutil.calculate_file_xxh3(payload_file)
 
     assert whole
-    assert hashing.calculate_file_xxh3(payload_file, chunksize = 3) == whole
+    assert hashutil.calculate_file_xxh3(payload_file, chunksize = 3) == whole
 
 
 @pytest.mark.parametrize("name", sorted(FUNCTIONS))
@@ -76,7 +76,7 @@ def test_different_contents_produce_different_digests(tmp_path, name):
 def test_a_crc32_is_rendered_the_way_a_dat_file_stores_one(payload_file):
     # Eight lowercase hex digits, no prefix - so it can be compared against a
     # dat entry without reformatting either side
-    value = hashing.calculate_file_crc32(payload_file)
+    value = hashutil.calculate_file_crc32(payload_file)
 
     assert len(value) == 8
     assert not value.startswith("0x")
@@ -87,7 +87,7 @@ def test_a_crc32_with_leading_zeros_keeps_its_width(tmp_path):
     # "%x" would drop them, giving a checksum narrower than any dat carries
     candidate = write_file(tmp_path, "probe.bin", b"x" * 23)
 
-    assert hashing.calculate_file_crc32(candidate) == "036683ba"
+    assert hashutil.calculate_file_crc32(candidate) == "036683ba"
 
 
 ###########################################################
@@ -107,18 +107,18 @@ def test_a_pretend_run_reads_nothing(payload_file, name):
 def test_a_pretend_run_does_not_need_the_file_to_exist(tmp_path):
     absent = os.path.join(str(tmp_path), "absent.bin")
 
-    assert hashing.calculate_file_md5(absent, pretend_run = True) == ""
+    assert hashutil.calculate_file_md5(absent, pretend_run = True) == ""
 
 
 def test_a_directory_digests_to_nothing(tmp_path):
-    assert hashing.calculate_file_md5(str(tmp_path)) == ""
+    assert hashutil.calculate_file_md5(str(tmp_path)) == ""
 
 
 ###########################################################
 # Verbose and exit-on-failure runs
 ###########################################################
 
-ALL_FUNCTIONS = dict(FUNCTIONS, xxh3 = hashing.calculate_file_xxh3)
+ALL_FUNCTIONS = dict(FUNCTIONS, xxh3 = hashutil.calculate_file_xxh3)
 
 
 def digest(name, *args, **kwargs):
@@ -153,11 +153,11 @@ def test_a_missing_file_quits_when_failures_are_fatal(tmp_path, name):
 def test_a_quiet_xxh3_pretend_run_reads_nothing(tmp_path):
     pytest.importorskip("xxhash")
 
-    assert hashing.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin"),
+    assert hashutil.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin"),
                                        pretend_run = True) == ""
 
 
 def test_a_missing_file_xxh3_digests_to_nothing(tmp_path):
     pytest.importorskip("xxhash")
 
-    assert hashing.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin")) == ""
+    assert hashutil.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin")) == ""

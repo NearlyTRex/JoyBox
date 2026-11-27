@@ -14,6 +14,7 @@ from joybox import commandbase
 from joybox import programs
 from joybox import paths
 from joybox import sandbox
+from joybox import prefixlayout
 
 ###########################################################
 
@@ -65,12 +66,12 @@ def translate_virtual_path_to_real_path(
     # Check prefix
     if not options.get_prefix_dir():
         options = options.copy()
-        options.set_prefix_dir(sandbox.get_prefix(options))
+        options.set_prefix_dir(prefixlayout.get_prefix(options))
     if not options.get_prefix_dir():
         return None
 
     # Get path info
-    path_info = sandbox.get_prefix_path_info(
+    path_info = prefixlayout.get_prefix_path_info(
         path = path,
         options = options,
         is_virtual_path = True,
@@ -96,12 +97,12 @@ def translate_real_path_to_virtual_path(
     # Check prefix
     if not options.get_prefix_dir():
         options = options.copy()
-        options.set_prefix_dir(sandbox.get_prefix(options))
+        options.set_prefix_dir(prefixlayout.get_prefix(options))
     if not options.get_prefix_dir():
         return None
 
     # Get path info
-    path_info = sandbox.get_prefix_path_info(
+    path_info = prefixlayout.get_prefix_path_info(
         path = path,
         options = options,
         is_virtual_path = False,

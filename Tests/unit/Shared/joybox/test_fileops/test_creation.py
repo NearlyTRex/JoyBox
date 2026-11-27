@@ -274,7 +274,55 @@ def test_temporary_file_reports_a_failure(monkeypatch):
 
 ###########################################################
 # Symlinks
+#
+# Unix always has them; Windows is probed with a real link in the home dir,
+# which is left in place so later probes are free.
 ###########################################################
+
+def test_unix_supports_symlinks(monkeypatch):
+    monkeypatch.setattr(fileops.platform_info, "is_unix_platform", lambda: True)
+
+    assert fileops.are_symlinks_supported() is True
+
+
+@pytest.fixture
+def windows_home(monkeypatch, tmp_path):
+    created = []
+
+    def create_symlink(src, dest, **kwargs):
+        created.append(dest)
+        os.symlink(src, dest)
+        return True
+
+    def touch_file(src, **kwargs):
+        with open(src, "w", encoding = "utf-8"):
+            return True
+
+    monkeypatch.setattr(fileops.platform_info, "is_unix_platform", lambda: False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(fileops, "touch_file", touch_file)
+    monkeypatch.setattr(fileops, "create_symlink", create_symlink)
+    return {"home": tmp_path, "created": created}
+
+
+def test_windows_probes_with_a_link_in_the_home_dir(windows_home):
+    assert fileops.are_symlinks_supported() is True
+    assert windows_home["created"] == [str(windows_home["home"] / ".symdest")]
+
+
+def test_an_existing_probe_link_is_reused(windows_home):
+    os.symlink(windows_home["home"] / ".symsrc", windows_home["home"] / ".symdest")
+
+    assert fileops.are_symlinks_supported() is True
+    assert windows_home["created"] == []
+
+
+def test_windows_without_link_rights_is_unsupported(windows_home, monkeypatch):
+    monkeypatch.setattr(fileops, "create_symlink", lambda src, dest, **kwargs: False)
+
+    assert fileops.are_symlinks_supported() is False
+
+
 
 def test_symlink_creates_its_parent(tmp_path):
     target = write(tmp_path / "target.txt")

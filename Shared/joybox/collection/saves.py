@@ -9,7 +9,7 @@ from joybox import locker
 from joybox import gamecollection
 from joybox import stores
 from joybox import storebase
-from joybox import hashing
+from joybox import hashutil
 from joybox import strings
 from joybox import runtime
 
@@ -178,7 +178,7 @@ def archive_and_backup_save(
     tmp_save_archive_file = paths.join_paths(tmp_dir, game_info.get_name() + config.ArchiveFileType.ZIP.cval())
     if not create_save_archive(game_info, tmp_save_archive_file, input_save_dir, verbose, pretend_run, exit_on_failure):
         return False
-    found_files = hashing.find_duplicate_archives(
+    found_files = hashutil.find_duplicate_archives(
         filename = tmp_save_archive_file,
         directory = output_save_dir)
     if found_files:

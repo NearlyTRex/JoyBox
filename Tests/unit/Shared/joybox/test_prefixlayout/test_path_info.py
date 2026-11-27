@@ -3,7 +3,8 @@ import getpass
 import os
 
 # Local imports
-from joybox import sandbox, sandboxpaths
+from joybox import sandboxpaths
+from joybox import prefixlayout
 from sandbox_helpers import WINE, NEITHER, SANDBOX, sandboxie
 
 
@@ -22,24 +23,24 @@ USER = getpass.getuser()
 ###########################################################
 
 def test_an_invalid_path_has_no_info():
-    assert sandbox.get_prefix_path_info("", WINE(), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("", WINE(), is_real_path = True) is None
 
 
 def test_a_prefix_without_a_directory_has_no_info():
-    assert sandbox.get_prefix_path_info("/home/user/a", WINE(prefix_dir = None), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("/home/user/a", WINE(prefix_dir = None), is_real_path = True) is None
 
 
 def test_a_prefix_file_outside_any_drive_has_no_virtual_path():
     # The registry hives sit beside the drives and are not reachable from inside.
-    assert sandbox.get_prefix_path_info("/prefixes/game/system.reg", WINE(), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("/prefixes/game/system.reg", WINE(), is_real_path = True) is None
 
 
 def test_a_dosdevices_folder_without_a_drive_has_no_virtual_path():
-    assert sandbox.get_prefix_path_info("/prefixes/game/dosdevices", WINE(), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("/prefixes/game/dosdevices", WINE(), is_real_path = True) is None
 
 
 def test_the_prefix_itself_has_no_virtual_path():
-    assert sandbox.get_prefix_path_info("/prefixes/game", WINE(), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("/prefixes/game", WINE(), is_real_path = True) is None
 
 
 ###########################################################
@@ -47,7 +48,7 @@ def test_the_prefix_itself_has_no_virtual_path():
 ###########################################################
 
 def test_a_wine_real_path_reports_its_drive_base():
-    info = sandbox.get_prefix_path_info("/prefixes/game/drive_c/Games/save.dat", WINE(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game/drive_c/Games/save.dat", WINE(), is_real_path = True)
 
     assert info["base"] == "/prefixes/game/drive_c"
     assert info["virtual"] == "C:/Games/save.dat"
@@ -55,35 +56,35 @@ def test_a_wine_real_path_reports_its_drive_base():
 
 
 def test_a_wine_dosdevice_path_reports_its_drive_base():
-    info = sandbox.get_prefix_path_info("/prefixes/game/dosdevices/d:/Data/a.bin", WINE(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game/dosdevices/d:/Data/a.bin", WINE(), is_real_path = True)
 
     assert info["base"] == "/prefixes/game/dosdevices/d:"
     assert info["virtual"] == "D:/Data/a.bin"
 
 
 def test_the_root_of_the_wine_c_drive_is_the_c_root():
-    info = sandbox.get_prefix_path_info("/prefixes/game/drive_c", WINE(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game/drive_c", WINE(), is_real_path = True)
 
     assert info["virtual"] == "C:/"
 
 
 def test_a_sibling_prefix_is_not_mistaken_for_the_prefix():
     # /prefixes/game2 shares a string prefix with /prefixes/game but is outside it.
-    info = sandbox.get_prefix_path_info("/prefixes/game2/drive_c/a", WINE(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game2/drive_c/a", WINE(), is_real_path = True)
 
     assert info["letter"] == "z"
     assert info["virtual"] == "Z:/prefixes/game2/drive_c/a"
 
 
 def test_a_wine_virtual_path_on_another_drive_resolves_to_its_dosdevice():
-    info = sandbox.get_prefix_path_info("D:/Data/a.bin", WINE(), is_virtual_path = True)
+    info = prefixlayout.get_prefix_path_info("D:/Data/a.bin", WINE(), is_virtual_path = True)
 
     assert info["is_virtual"] is True
     assert info["real"] == "/prefixes/game/dosdevices/d:/Data/a.bin"
 
 
 def test_a_host_path_given_as_virtual_is_treated_as_real_under_wine():
-    info = sandbox.get_prefix_path_info("/prefixes/game/drive_c/a", WINE(), is_virtual_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game/drive_c/a", WINE(), is_virtual_path = True)
 
     assert info["is_real"] is True
     assert info["is_virtual"] is False
@@ -91,7 +92,7 @@ def test_a_host_path_given_as_virtual_is_treated_as_real_under_wine():
 
 
 def test_path_info_reports_the_prefix_kind():
-    info = sandbox.get_prefix_path_info("C:/a", WINE(), is_virtual_path = True)
+    info = prefixlayout.get_prefix_path_info("C:/a", WINE(), is_virtual_path = True)
 
     assert info["is_wine"] is True
     assert info["is_sandboxie"] is False
@@ -101,7 +102,7 @@ def test_path_info_reports_the_prefix_kind():
 
 def test_path_info_leaves_the_callers_options_alone():
     entry = WINE(prefix_dir = "/prefixes//game/")
-    sandbox.get_prefix_path_info("C:/a", entry, is_virtual_path = True)
+    prefixlayout.get_prefix_path_info("C:/a", entry, is_virtual_path = True)
 
     assert entry.get_prefix_dir() == "/prefixes//game/"
 
@@ -119,7 +120,7 @@ def test_a_sandboxie_virtual_path_resolves_under_its_drive_folder():
 def test_a_sandboxie_virtual_path_resolves_to_the_same_folder_as_the_drive_lookup():
     real = sandboxpaths.translate_virtual_path_to_real_path("D:/Data", sandboxie())
 
-    assert real == sandbox.get_real_drive_path(sandboxie(), "d") + "/Data"
+    assert real == prefixlayout.get_real_drive_path(sandboxie(), "d") + "/Data"
 
 
 def test_a_sandboxie_real_drive_path_translates_back():
@@ -135,7 +136,7 @@ def test_a_sandboxie_user_path_resolves_into_the_current_user_folder():
 
 
 def test_a_sandboxie_user_path_reports_the_user_folder_as_extra():
-    info = sandbox.get_prefix_path_info("C:/Users/%s/Documents" % USER, sandboxie(), is_virtual_path = True)
+    info = prefixlayout.get_prefix_path_info("C:/Users/%s/Documents" % USER, sandboxie(), is_virtual_path = True)
 
     assert info["extra"] == os.path.join("Users", USER)
     assert info["offset"] == "Documents"
@@ -163,14 +164,14 @@ def test_a_similarly_named_user_is_not_the_current_user():
 
 def test_a_host_path_outside_the_sandbox_keeps_its_own_virtual_path():
     # Sandboxie shows the host drives unchanged; no user folder is spliced in.
-    info = sandbox.get_prefix_path_info("C:/Games/save.dat", sandboxie(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("C:/Games/save.dat", sandboxie(), is_real_path = True)
 
     assert info["virtual"] == "C:/Games/save.dat"
     assert info["extra"] == ""
 
 
 def test_a_sandbox_folder_outside_any_drive_has_no_virtual_path():
-    assert sandbox.get_prefix_path_info(SANDBOX + "/RegHive", sandboxie(), is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info(SANDBOX + "/RegHive", sandboxie(), is_real_path = True) is None
 
 
 ###########################################################
@@ -178,18 +179,18 @@ def test_a_sandbox_folder_outside_any_drive_has_no_virtual_path():
 ###########################################################
 
 def test_a_non_prefix_reaches_host_paths_through_z_on_wine_platforms(monkeypatch):
-    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: True)
+    monkeypatch.setattr(prefixlayout.platform_info, "is_wine_platform", lambda: True)
 
-    info = sandbox.get_prefix_path_info("/home/user/a", NEITHER(), is_virtual_path = True)
+    info = prefixlayout.get_prefix_path_info("/home/user/a", NEITHER(), is_virtual_path = True)
 
     assert info["is_real"] is True
     assert info["virtual"] == "Z:/home/user/a"
 
 
 def test_a_non_prefix_keeps_the_drive_letter_elsewhere(monkeypatch):
-    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: False)
+    monkeypatch.setattr(prefixlayout.platform_info, "is_wine_platform", lambda: False)
 
-    info = sandbox.get_prefix_path_info("D:/Games/a", NEITHER(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("D:/Games/a", NEITHER(), is_real_path = True)
 
     assert info["letter"] == "d"
     assert info["virtual"] == "D:/Games/a"

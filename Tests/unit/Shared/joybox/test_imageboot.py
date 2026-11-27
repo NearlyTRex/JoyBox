@@ -328,7 +328,7 @@ def test_zero_is_an_answer_rather_than_an_absent_one(isolated_settings):
 
 def test_the_missing_boot_tools_are_named(monkeypatch):
     monkeypatch.setattr(
-        imageboot.commandbase, "is_runnable_command", lambda tool: tool != "qemu-img")
+        imageboot.paths, "is_runnable_command", lambda tool: tool != "qemu-img")
 
     assert imageboot.get_missing_boot_tools() == ["qemu-img"]
 

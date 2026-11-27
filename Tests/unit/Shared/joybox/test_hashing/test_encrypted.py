@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import hashing
+from joybox import hashutil
 from hashing_helpers import write_file
 
 
@@ -41,7 +42,7 @@ def test_an_encrypted_file_is_recorded_under_its_embedded_name(encrypted_tree):
     assert data["filename"] == "game.zip"
     assert data["filename_enc"] == "abc.enc"
     assert data["hash"] == "plainhash"
-    assert data["hash_enc"] == hashing.calculate_file_md5(os.path.join(root, "Games", "abc.enc"))
+    assert data["hash_enc"] == hashutil.calculate_file_md5(os.path.join(root, "Games", "abc.enc"))
     assert data["size"] == 5
     assert data["size_enc"] == len(b"ciphertext")
     assert data["mtime"] == 1234

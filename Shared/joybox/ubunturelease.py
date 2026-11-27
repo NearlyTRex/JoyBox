@@ -7,7 +7,7 @@ import re
 # Local imports
 from joybox import command
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
 from joybox import logger
 from joybox import network
 from joybox import paths
@@ -295,7 +295,7 @@ def verify_image_checksum(
         logger.log_error("No published checksum was found for %s" % image)
         return False
     logger.log_info("Verifying %s" % iso_file)
-    actual = hashing.calculate_file_sha256(
+    actual = hashutil.calculate_file_sha256(
         src = iso_file,
         verbose = verbose,
         pretend_run = pretend_run,
