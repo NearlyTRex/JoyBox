@@ -59,16 +59,18 @@ def test_without_a_passphrase_nothing_is_processed(tool):
     assert tool.encrypted == []
 
 
-@pytest.mark.parametrize("flags, action", [(["-e"], "Encrypt"), (["-d"], "Decrypt"), ([], "Unknown")])
+@pytest.mark.parametrize("flags, action", [(["-e"], "Encrypt"), (["-d"], "Decrypt")])
 def test_the_preview_names_the_direction(tool, flags, action):
     tool.run("-i", str(tool.data), "-t", "General", *flags)
 
     assert tool.previews[0][0] == "%s files" % action
 
 
-def test_without_a_direction_nothing_is_processed(tool):
-    tool.run("--no-preview", "-i", str(tool.data), "-t", "General")
+def test_without_a_direction_the_tool_stops_before_the_preview(tool):
+    assert tool.exit_code("-i", str(tool.data), "-t", "General") != 0
 
+    assert tool.errors == ["Give -e to encrypt or -d to decrypt"]
+    assert tool.previews == []
     assert tool.encrypted == tool.decrypted == []
 
 

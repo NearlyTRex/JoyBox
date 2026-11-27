@@ -633,3 +633,19 @@ def test_a_file_that_fails_to_decrypt_is_left_out(gpg, monkeypatch, recording_co
     monkeypatch.setattr(cryption, "get_embedded_filename", lambda src, **kwargs: "Save.dat")
 
     assert cryption.decrypt_files(str(tmp_path), PASSPHRASE) == []
+
+
+@pytest.mark.parametrize("encrypt, decrypt, action", [
+    (True, False, "Encrypt"), (False, True, "Decrypt"), (True, True, "Encrypt"), (False, False, None)])
+def test_the_crypt_action_names_the_chosen_direction(encrypt, decrypt, action):
+    assert cryption.get_crypt_action(encrypt, decrypt) == action
+
+
+def test_crypting_in_place_without_a_direction_touches_nothing(monkeypatch, tmp_path):
+    errors = []
+    monkeypatch.setattr(cryption.logger, "log_error", errors.append)
+    monkeypatch.setattr(cryption, "encrypt_file", lambda **kwargs: pytest.fail("nothing may be encrypted"))
+    (tmp_path / "a.txt").write_text("a")
+
+    assert cryption.crypt_files_in_place(str(tmp_path), "phrase") is False
+    assert errors == ["Give -e to encrypt or -d to decrypt"]

@@ -52,14 +52,22 @@ def _get_create_iso_command(iso_tool, iso_file, source_dir, source_dirs, volume_
 
     if volume_name:
         create_command += ["-volid", volume_name]
-    if paths.is_path_valid(source_dir):
-        create_command += [source_dir]
-    for extra_source_dir in source_dirs:
-        if paths.is_path_valid(extra_source_dir):
-            create_command += [extra_source_dir]
-    return create_command
+    return create_command + get_packed_source_dirs(source_dir, source_dirs)
 
-# Build an ISO 9660 + Joliet image from one or more folders with xorriso, optionally deleting the source folder; True when the image exists
+# The valid folders of source_dir and source_dirs, in the order an ISO packs them
+def get_packed_source_dirs(source_dir = None, source_dirs = ()):
+    return [folder for folder in [source_dir, *source_dirs] if paths.is_path_valid(folder)]
+
+# Remove every valid folder of source_dir and source_dirs, the folders an ISO packed
+def remove_packed_source_dirs(source_dir = None, source_dirs = (), verbose = False, pretend_run = False, exit_on_failure = False):
+    for packed_dir in get_packed_source_dirs(source_dir, source_dirs):
+        fileops.remove_directory(
+            src = packed_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Build an ISO 9660 + Joliet image from one or more folders with xorriso, optionally deleting every packed source folder; True when the image exists
 def create_iso(
     iso_file,
     source_dir = None,
@@ -92,11 +100,7 @@ def create_iso(
 
     # Clean up
     if delete_original:
-        fileops.remove_directory(
-            src = source_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        remove_packed_source_dirs(source_dir, source_dirs, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Check result
     return os.path.exists(iso_file)

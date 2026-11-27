@@ -457,9 +457,10 @@ def test_a_missing_tool_fails_when_the_error_does_not_quit(steam_store, tools, r
 
 @pytest.fixture
 def depot(steam_store, tools, recording_command, monkeypatch, tmp_path):
-    state = {"archived": [], "archive_ok": True, "temp": tmp_path / "depot-temp"}
+    state = {"archived": [], "archive_ok": True, "temp": tmp_path / "depot-temp", "temp_kwargs": []}
 
     def create_temporary_directory(**kwargs):
+        state["temp_kwargs"].append(kwargs)
         state["temp"].mkdir()
         return (True, str(state["temp"]))
     monkeypatch.setattr(steam.fileops, "create_temporary_directory", create_temporary_directory)
@@ -519,6 +520,12 @@ def test_a_failed_archive_removes_its_temp(steam_store, depot, tmp_path):
 
     assert steam_store.download("220", str(tmp_path / "out")) is False
     assert not depot["temp"].exists()
+
+
+def test_a_pretend_download_makes_no_real_temp_directory(steam_store, depot, tmp_path):
+    steam_store.download("220", str(tmp_path / "out"), pretend_run = True)
+
+    assert depot["temp_kwargs"][0]["pretend_run"] is True
 
 
 def test_a_download_needs_a_temp_directory(steam_store, depot, recording_command, monkeypatch, tmp_path):

@@ -130,6 +130,22 @@ def test_a_successful_create_can_delete_the_source(installed, recording_command,
     assert not source.exists()
 
 
+def test_a_successful_create_deletes_every_packed_source(installed, recording_command, tmp_path):
+    sources = [tmp_path / name for name in ("main", "extra", "other")]
+    for source in sources:
+        source.mkdir()
+    image = tmp_path / "Game.iso"
+    image.write_bytes(b"x")
+
+    assert iso.create_iso(str(image), source_dirs = [str(source) for source in sources], delete_original = True) is True
+    assert [source.exists() for source in sources] == [False, False, False]
+
+
+def test_packed_source_folders_skip_the_invalid_ones():
+    assert iso.get_packed_source_dirs("/main", [None, "/extra", ""]) == ["/main", "/extra"]
+    assert iso.get_packed_source_dirs() == []
+
+
 def test_a_successful_create_keeps_the_source_by_default(installed, recording_command, tmp_path):
     source = tmp_path / "tree"
     source.mkdir()

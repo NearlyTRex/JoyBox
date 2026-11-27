@@ -694,7 +694,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Download into a temporary directory and archive it
-        with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
             if not tmp_dir_result:
                 return False
 

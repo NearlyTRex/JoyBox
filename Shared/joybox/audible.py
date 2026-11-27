@@ -119,8 +119,7 @@ def _build_ffmpeg_decrypt_command(ffmpeg_tool, input_file, output_file, activati
 
     # -activation_bytes: The Audible activation bytes for decryption
     # -i: Input file
-    # -c copy: Copy streams without re-encoding (preserves quality and chapters)
-    # -vn: Disable video (removes cover art stream if present, but keeps audio)
+    # -c copy: Copy streams without re-encoding (keeps quality, chapters and cover art)
     return [
         ffmpeg_tool,
         "-activation_bytes", activation_bytes,

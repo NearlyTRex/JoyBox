@@ -425,8 +425,14 @@ def get_configured_passphrase(passphrase_type):
         logger.log_error("No passphrase set", quit_program = True)
     return passphrase
 
+# "Encrypt" or "Decrypt" for the chosen direction, encrypting when both are chosen; None for neither
+def get_crypt_action(encrypt = False, decrypt = False):
+    if encrypt:
+        return "Encrypt"
+    return "Decrypt" if decrypt else None
+
 # Encrypt, or else decrypt, every file under the source in place with gpg's default naming;
-# does nothing when neither is asked for
+# False, logged, when neither is asked for
 def crypt_files_in_place(
     src,
     passphrase,
@@ -441,7 +447,8 @@ def crypt_files_in_place(
     elif decrypt:
         crypt_function = decrypt_file
     else:
-        return
+        logger.log_error("Give -e to encrypt or -d to decrypt")
+        return False
     for file in paths.build_file_list(src):
         crypt_function(
             src = file,
@@ -450,3 +457,4 @@ def crypt_files_in_place(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+    return True

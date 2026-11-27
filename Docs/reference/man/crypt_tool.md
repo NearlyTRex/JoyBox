@@ -80,7 +80,8 @@ crypt_tool -i /path/to/file.txt -e -t General
 ## Notes
 
 - `-t` is effectively required: without it no passphrase is found and the tool stops.
-- Give exactly one of `-e` or `-d`; with neither, nothing is done. `-e` wins if both are given.
+- Give exactly one of `-e` or `-d`; with neither, the tool stops with an error. `-e` wins if both
+  are given.
 - A file whose output already exists is skipped and its original is kept. Files already in the
   target form (`.enc` or `.menc` when encrypting, anything else when decrypting) are left alone.
 - Locker encryption normally uses `locker_passphrase`, but a locker with its own

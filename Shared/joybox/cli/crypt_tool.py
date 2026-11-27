@@ -37,17 +37,17 @@ def main():
     # Get input path
     input_path = parser.get_input_path()
 
+    # Check direction
+    action = cryption.get_crypt_action(args.encrypt, args.decrypt)
+    if not action:
+        logger.log_error_and_quit("Give -e to encrypt or -d to decrypt")
+
     # Get passphrase
     passphrase = cryption.get_configured_passphrase(args.passphrase_type)
 
     # Show preview
     if not args.no_preview:
-        action = "Encrypt" if args.encrypt else "Decrypt" if args.decrypt else "Unknown"
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action,
-            "Keep originals: %s" % args.keep_originals
-        ]
+        details = ["Path: %s" % input_path, "Action: %s" % action, "Keep originals: %s" % args.keep_originals]
         if not prompts.prompt_for_preview("%s files" % action, details):
             logger.log_warning("Operation cancelled by user")
             return
