@@ -64,7 +64,8 @@ def test_type_checks(tmp_path):
     assert not paths.is_path_directory(path)
     assert paths.is_path_file_or_directory(path)
     assert paths.is_path_file_or_directory(str(tmp_path))
-    assert not paths.is_path_file_or_directory(str(tmp_path / "dir_link"))
+    assert paths.is_path_file_or_directory(str(tmp_path / "dir_link"))
+    assert paths.is_path_file_or_directory(str(tmp_path / "file_link"))
     assert paths.is_path_symlink(str(tmp_path / "file_link"))
     assert not paths.is_path_symlink(path)
 
@@ -79,6 +80,11 @@ def test_type_checks_refuse_missing_and_invalid_paths(tmp_path, check):
     assert not check(str(tmp_path / "missing"))
     assert not check(None)
     assert not check("")
+
+
+def test_a_dangling_symlink_is_neither_file_nor_directory(tmp_path):
+    os.symlink(tmp_path / "missing", tmp_path / "dangling")
+    assert not paths.is_path_file_or_directory(str(tmp_path / "dangling"))
 
 
 def test_a_dangling_symlink_is_still_a_symlink(tmp_path):

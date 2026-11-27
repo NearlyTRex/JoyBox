@@ -231,7 +231,8 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
             runtime.quit_program()
         return False
 
-# Rewrite a .json file reindented, optionally sorted and without top-level null, false or empty values
+# Rewrite a .json file reindented, optionally sorted and, for an object, without top-level
+# null, false or empty values
 def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
@@ -242,7 +243,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
             json_data = None
             with open(src, "r", encoding = "utf-8") as input_file:
                 json_data = json.loads(input_file.read())
-                if remove_empty_values:
+                if remove_empty_values and isinstance(json_data, dict):
                     json_keys_to_remove = []
                     for key in json_data.keys():
                         json_value = json_data[key]
@@ -270,7 +271,8 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
             runtime.quit_program()
         return False
 
-# The .json files under src whose data contains any of the search values, limited to search_keys when given
+# The .json files under src, each once, whose data contains any of the search values, limited
+# to search_keys when given
 def search_json_files(src, search_values = (), search_keys = None, verbose = False, exit_on_failure = False):
     found_files = []
     for json_file in paths.build_file_list_by_extensions(src, extensions = [".json"]):
@@ -278,14 +280,11 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
             src = json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        for search_value in search_values:
-            if search_value:
-                json_matches = datautils.search_dictionary(
-                    data = json_data,
-                    search_value = search_value,
-                    search_keys = search_keys)
-                if json_matches:
-                    found_files.append(json_file)
+        if any(search_value and datautils.search_dictionary(
+                data = json_data,
+                search_value = search_value,
+                search_keys = search_keys) for search_value in search_values):
+            found_files.append(json_file)
     return found_files
 
 ###########################################################

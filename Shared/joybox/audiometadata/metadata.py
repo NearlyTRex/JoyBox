@@ -1,4 +1,5 @@
 # Local imports
+from joybox.audiometadata.adts import AdtsTagsMixin
 from joybox.audiometadata.albums import AlbumTagsMixin
 from joybox.audiometadata.id3 import Id3TagsMixin
 from joybox.audiometadata.mp4 import Mp4TagsMixin
@@ -9,7 +10,7 @@ from joybox import paths
 
 # Audio metadata class, reading and writing tags through mutagen with the format
 # methods of its mixins
-class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
+class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AdtsTagsMixin, AlbumTagsMixin):
 
     # Constructor
     def __init__(self):
@@ -36,6 +37,9 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
 
         # Store MP4 class
         self.mp4_class = self.mutagen_mp4.MP4
+
+        # mutagen.aac, loaded on the first raw ADTS file
+        self.mutagen_aac = None
 
         # Store frame classes by code
         self.id3_frame_classes = {
@@ -118,7 +122,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
     # Generic Methods (auto-detect format)
     ###########################################################
 
-    # Tags of an MP4-family file (by extension) or else an MP3, as the matching mixin reads them; None when the file is missing
+    # Tags of an MP4-family file (by extension, .aac by container) or else an MP3 or ADTS stream, as the matching mixin reads them; None when the file is missing
     def get_tags(
         self,
         audio_file,
@@ -132,9 +136,8 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
-        # Detect format by extension
-        ext = paths.get_filename_extension(audio_file).lower()
-        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+        # Detect format by extension, and for .aac by container
+        if self.is_mp4_audio_file(audio_file):
             return self.get_mp4_tags(
                 audio_file = audio_file,
                 include_artwork = include_artwork,
@@ -162,9 +165,8 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
-        # Detect format by extension
-        ext = paths.get_filename_extension(audio_file).lower()
-        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+        # Detect format by extension, and for .aac by container
+        if self.is_mp4_audio_file(audio_file):
             return self.set_mp4_tags(
                 audio_file = audio_file,
                 tags = tags,
@@ -194,9 +196,8 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
-        # Detect format by extension
-        ext = paths.get_filename_extension(audio_file).lower()
-        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+        # Detect format by extension, and for .aac by container
+        if self.is_mp4_audio_file(audio_file):
             return self.remove_mp4_tags(
                 audio_file = audio_file,
                 preserve_artwork = preserve_artwork,
@@ -217,13 +218,12 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
         if not paths.is_path_file(audio_file):
             return False
 
-        # Detect format by extension
-        ext = paths.get_filename_extension(audio_file).lower()
-        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+        # Detect format by extension, and for .aac by container
+        if self.is_mp4_audio_file(audio_file):
             return self.has_mp4_tags(audio_file)
         return self.has_id3_tags(audio_file)
 
-    # Size, bitrate, length and stream details from the MP4 or MP3 reader chosen by extension; None when missing
+    # Size, bitrate, length and stream details from the MP4, ADTS or MP3 reader chosen by extension and container; None when missing
     def get_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
@@ -231,10 +231,14 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
-        # Detect format by extension
-        ext = paths.get_filename_extension(audio_file).lower()
-        if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
+        # Detect format by extension, and for .aac by container
+        if self.is_mp4_audio_file(audio_file):
             return self.get_mp4_file_info(
+                audio_file = audio_file,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+        if self.is_adts_audio_file(audio_file):
+            return self.get_adts_file_info(
                 audio_file = audio_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

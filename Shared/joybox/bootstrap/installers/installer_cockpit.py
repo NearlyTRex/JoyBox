@@ -69,7 +69,8 @@ class Cockpit(installer.Installer):
             and self.connection.does_file_or_directory_exist("/etc/systemd/system/cockpit.socket.d/joybox-listen.conf")
             and self.connection.does_file_or_directory_exist(f"/etc/nginx/sites-enabled/{self.app_name}.conf"))
 
-    # Install Cockpit with the cockpit manager, then add and enable its nginx site and restart nginx
+    # Install Cockpit with the cockpit manager, then add and enable its nginx site and
+    # restart nginx; False when the site config cannot be staged
     def install(self):
 
         # Install Cockpit
@@ -78,10 +79,8 @@ class Cockpit(installer.Installer):
 
         # Create Nginx config
         logger.log_info("Creating Nginx config")
-        if self.connection.write_file(f"/tmp/{self.app_name}.conf", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
+        if not self.install_nginx_conf(f"{self.app_name}.conf", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Restart Nginx
         logger.log_info("Restarting Nginx")

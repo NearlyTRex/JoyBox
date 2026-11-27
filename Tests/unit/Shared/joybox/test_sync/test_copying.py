@@ -49,3 +49,20 @@ def test_a_remote_to_remote_copy_without_rclone_reports_failure(no_rclone, recor
     assert sync.copy_remote_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup") is False
     assert recording_command.ran() is False
+
+
+def test_a_verbose_remote_to_remote_copy_shows_progress_by_default(rclone, recording_command):
+    sync.copy_remote_to_remote(
+        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup", verbose = True)
+
+    assert "--progress" in recording_command.only()
+
+
+def test_a_remote_to_remote_copy_can_hide_progress(rclone, recording_command):
+    sync.copy_remote_to_remote(
+        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup",
+        show_progress = False, verbose = True)
+
+    cmd = recording_command.only()
+    assert "--progress" not in cmd
+    assert "--verbose" in cmd

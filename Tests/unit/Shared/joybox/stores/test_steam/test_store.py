@@ -299,6 +299,28 @@ APP_INFO_WITHOUT_INSTALLDIR = '''"220"
 '''
 
 
+def test_manifest_paths_are_rooted_at_the_install_dir_once(steam_store, tools, recording_command, reachable, monkeypatch):
+    bases = []
+
+    class Entry:
+        def get_paths(self, base_path):
+            bases.append(base_path)
+            return []
+        def get_keys(self):
+            return []
+
+    class OneEntryManifest:
+        def find_entry_by_steamid(self, steamid, **kwargs):
+            return Entry()
+        def find_entry_by_name(self, **kwargs):
+            return None
+
+    monkeypatch.setattr(steam.manifest, "get_manifest_instance", OneEntryManifest)
+    app_info(steam_store, recording_command, APP_INFO)
+
+    assert bases == ["STORE_INSTALL_DIR/steamapps/common/Half-Life 2"]
+
+
 def test_an_app_without_an_installdir_takes_manifest_paths_unrooted(steam_store, tools, recording_command, reachable, monkeypatch):
     bases = []
 
@@ -384,6 +406,14 @@ def test_launch_opens_the_steam_url(steam_store, tools, recording_command):
     assert steam_store.launch("220") is True
 
     assert recording_command.only() == ["/tools/steam", "steam://rungameid/220"]
+
+
+def test_launch_checks_the_identifier_as_a_launch_identifier(steam_store, tools, recording_command, monkeypatch):
+    monkeypatch.setattr(steam_store, "is_valid_launch_identifier", lambda identifier: False)
+    monkeypatch.setattr(steam_store, "is_valid_install_identifier", lambda identifier: True)
+
+    assert steam_store.launch("220") is False
+    assert recording_command.calls == []
 
 
 @pytest.mark.parametrize("action", ["install", "launch"])

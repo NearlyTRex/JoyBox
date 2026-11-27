@@ -293,28 +293,33 @@ def extract_disc_chd_to_iso(
     return True
 
 # Mount a chd in a directory and archive its contents, unmounting before the directory goes
+# and deleting the iso and toc that mounting extracted beside the chd
 def archive_mounted_disc_chd(chd_file, zip_file, mount_dir, verbose = False, pretend_run = False, exit_on_failure = False):
-    success = mount_disc_chd(
-        chd_file = chd_file,
-        mount_dir = mount_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
     try:
-        return archive.create_archive_from_folder(
-            archive_file = zip_file,
-            source_dir = mount_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    finally:
-        unmount_disc_chd(
+        success = mount_disc_chd(
             chd_file = chd_file,
             mount_dir = mount_dir,
             verbose = verbose,
-            pretend_run = pretend_run)
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        try:
+            return archive.create_archive_from_folder(
+                archive_file = zip_file,
+                source_dir = mount_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            unmount_disc_chd(
+                chd_file = chd_file,
+                mount_dir = mount_dir,
+                verbose = verbose,
+                pretend_run = pretend_run)
+    finally:
+        for extracted_file in (get_disc_iso(chd_file), get_disc_toc(chd_file)):
+            fileops.remove_file(src = extracted_file, verbose = verbose, pretend_run = pretend_run)
 
 # Zip the files on a chd disc by mounting it in a temporary directory; False unless the zip exists
 def archive_disc_chd(

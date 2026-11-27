@@ -102,8 +102,8 @@ def get_emulator_by_platform(emulator_platform):
     return None
 
 # The emulator registered under a name; None when none matches
-def get_emulator_by_name(tool_name):
+def get_emulator_by_name(emulator_name):
     for instance in get_emulator_list():
-        if instance.get_name() == tool_name:
+        if instance.get_name() == emulator_name:
             return instance
     return None

@@ -70,7 +70,7 @@ class LockerBackend(ABC):
         dest_rel_path,
         cryption_type = None,
         passphrase = None,
-        show_progress = False,
+        show_progress = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -263,7 +263,7 @@ class LocalBackend(LockerBackend):
         dest_rel_path,
         cryption_type = None,
         passphrase = None,
-        show_progress = False,
+        show_progress = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -288,6 +288,7 @@ class LocalBackend(LockerBackend):
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, src_rel_path),
                     local_path = dest_full_path,
+                    show_progress = show_progress,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -308,6 +309,7 @@ class LocalBackend(LockerBackend):
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
                     local_path = temp_dir,
+                    show_progress = show_progress,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -449,6 +451,7 @@ class RemoteBackend(LockerBackend):
         dest_rel_path,
         local_root = None,
         skip_existing = False,
+        show_progress = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -482,6 +485,7 @@ class RemoteBackend(LockerBackend):
                 local_path = upload_path,
                 local_root = local_root,
                 skip_existing = skip_existing,
+                show_progress = show_progress,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -559,6 +563,7 @@ class RemoteBackend(LockerBackend):
                         local_path = src_root,
                         files_from = files_from,
                         update_sidecar = False,
+                        show_progress = show_progress,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -606,7 +611,7 @@ class RemoteBackend(LockerBackend):
             # Stage, encrypt and upload each batch in turn
             for batch in batches:
                 batch_succeeded, batch_failed = self.upload_encrypted_batch(
-                    batch, src_root, stage_parent, passphrase, verbose, pretend_run, exit_on_failure)
+                    batch, src_root, stage_parent, passphrase, verbose, pretend_run, exit_on_failure, show_progress = show_progress)
                 succeeded.extend(batch_succeeded)
                 failed.extend(batch_failed)
             return (succeeded, failed)
@@ -624,7 +629,7 @@ class RemoteBackend(LockerBackend):
 
     # Encrypt a batch of files into a staging directory mirroring their destinations, and upload
     # it in one go, returning the destinations that succeeded and those that failed
-    def upload_encrypted_batch(self, batch, src_root, stage_parent, passphrase, verbose = False, pretend_run = False, exit_on_failure = False):
+    def upload_encrypted_batch(self, batch, src_root, stage_parent, passphrase, verbose = False, pretend_run = False, exit_on_failure = False, show_progress = True):
         with fileops.temporary_directory(directory = stage_parent, verbose = verbose) as staging:
             if not staging:
                 logger.log_error("Failed to create staging directory for encrypted upload")
@@ -638,6 +643,7 @@ class RemoteBackend(LockerBackend):
                 remote_path = self.remote_path,
                 local_path = staging,
                 update_sidecar = False,
+                show_progress = show_progress,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure):
@@ -719,7 +725,7 @@ class RemoteBackend(LockerBackend):
         dest_rel_path,
         cryption_type = None,
         passphrase = None,
-        show_progress = False,
+        show_progress = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -744,6 +750,7 @@ class RemoteBackend(LockerBackend):
                 dest_remote_name = self.remote_name,
                 dest_remote_type = self.remote_type,
                 dest_remote_path = dest_remote_path,
+                show_progress = show_progress,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -756,6 +763,7 @@ class RemoteBackend(LockerBackend):
                     src_full_path = src_full_path,
                     dest_rel_path = dest_rel_path,
                     local_root = self.remote_path,
+                    show_progress = show_progress,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -786,6 +794,7 @@ class RemoteBackend(LockerBackend):
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
                     local_path = download_dir + os.sep,
+                    show_progress = show_progress,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure):
@@ -808,11 +817,12 @@ class RemoteBackend(LockerBackend):
                 remote_path = paths.get_filename_directory(dest_remote_path),
                 local_path = staged_file,
                 local_root = self.remote_path,
+                show_progress = show_progress,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-    # Upload a local file or folder to a relative path; skip_identical and show_progress are ignored
+    # Upload a local file or folder to a relative path; rclone already skips identical files, so skip_identical adds nothing
     def copy_from(
         self,
         src_abs_path,
@@ -827,20 +837,27 @@ class RemoteBackend(LockerBackend):
             src_full_path = src_abs_path,
             dest_rel_path = dest_rel_path,
             skip_existing = skip_existing,
+            show_progress = show_progress,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Whether anything exists at the relative path on the remote; does not check that it is a file
+    # Whether a regular file is stored at the relative path on the remote, under its encrypted name on an encrypted locker
     def file_exists(self, rel_path):
-        full_path = paths.join_paths(self.remote_path, rel_path)
-        return sync.does_path_exist(
+        result = sync.run_remote_query(
             remote_name = self.remote_name,
             remote_type = self.remote_type,
-            remote_path = full_path)
+            remote_path = paths.join_paths(self.remote_path, self.get_stored_rel_path(rel_path)),
+            subcommand = ["lsjson", "--stat"])
+        if result is None or result[1] != 0:
+            return False
+        entry = serialization.parse_json_or_none(result[0])
+        return isinstance(entry, dict) and entry.get("IsDir") is False
 
-    # Whether a file or folder exists at the relative path on the remote
+    # Whether a file or folder exists at the relative path on the remote; an encrypted locker's files are found by stored name
     def path_exists(self, rel_path):
+        if self.locker_info.is_encrypted() and self.file_exists(rel_path):
+            return True
         full_path = paths.join_paths(self.remote_path, rel_path)
         return sync.does_path_exist(
             remote_name = self.remote_name,

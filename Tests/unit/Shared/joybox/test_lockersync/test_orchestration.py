@@ -332,6 +332,17 @@ def test_a_renamed_upload_is_not_recorded_under_a_name_the_primary_lacks(lockers
     assert "Renamed.zip" not in cached("Gdrive", SECONDARY_EXCLUDES)
 
 
+def test_an_upload_renamed_onto_another_primary_file_is_not_cached_as_matching_it(lockers, monkeypatch):
+    lockers.local("Local", {"Game.zip": entry("game"), "Other.zip": entry("other")})
+    lockers.remote("Gdrive", {"Other.zip": entry("other")})
+    monkeypatch.setattr(
+        lockersync.editorprompt, "open_editor",
+        lambda content, **kwargs: content.replace("COPY Game.zip", "COPY Game.zip -> Other.zip"))
+
+    assert run("Local", ["Gdrive"], interactive = True) is True
+    assert "Other.zip" not in cached("Gdrive", SECONDARY_EXCLUDES)
+
+
 def test_a_cancelled_editor_syncs_nothing(lockers, monkeypatch):
     lockers.local("Local", {"Game.zip": entry()})
     secondary = lockers.remote("Gdrive")

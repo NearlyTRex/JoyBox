@@ -357,8 +357,8 @@ class StoreBase:
         json_data.set_value(config.JSON_KEY_STORE_BUILDID, config.DEFAULT_BUILDID)
         return json_data
 
-    # Merge Ludusavi manifest save paths and keys into the json, collapse repeated path segments
-    # and drop C:, store install dir and store user id paths; returns the json sorted
+    # Merge Ludusavi manifest save paths and keys into the json and drop C:, store install
+    # dir and store user id paths; returns the json sorted
     def augment_jsondata(
         self,
         json_data,
@@ -380,29 +380,6 @@ class StoreBase:
             manifest_paths = manifest_entry.get_paths(base_path)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
-
-        # Fix malformed paths with duplicate segments
-        cleaned_paths = []
-        for path in game_paths:
-            parts = path.split('/')
-            cleaned_parts = []
-            i = 0
-            while i < len(parts):
-                found_repeat = False
-                for seq_len in range(1, (len(parts) - i) // 2 + 1):
-                    sequence = parts[i:i+seq_len]
-                    next_sequence = parts[i+seq_len:i+seq_len*2]
-                    if sequence == next_sequence and len(sequence) > 0:
-                        cleaned_parts.extend(sequence)
-                        i += seq_len * 2
-                        found_repeat = True
-                        break
-                if not found_repeat:
-                    cleaned_parts.append(parts[i])
-                    i += 1
-            cleaned_path = '/'.join(cleaned_parts)
-            cleaned_paths.append(cleaned_path)
-        game_paths = cleaned_paths
 
         # Remove invalid paths
         game_paths = [item for item in game_paths if not item.startswith("C:")]

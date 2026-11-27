@@ -7,8 +7,8 @@ from joybox import logger
 from joybox import image
 from joybox import paths
 
-# AudioMetadata's ID3 tag methods for MP3 files, over the mutagen classes and
-# frame mappings its constructor loads
+# AudioMetadata's ID3 tag methods for MP3 files and raw ADTS .aac streams, over
+# the mutagen classes and frame mappings its constructor loads
 class Id3TagsMixin:
 
     # An MP3's text frames, comments and artwork as a dict, artwork base64 and converted to the format (JPEG by default); empty when untagged, None when unreadable
@@ -34,7 +34,7 @@ class Id3TagsMixin:
         if verbose:
             logger.log_info(f"Reading ID3 tags from {audio_file}")
         try:
-            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+            audio = self.open_id3_file(audio_file)
         except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return None
@@ -120,7 +120,7 @@ class Id3TagsMixin:
         if verbose:
             logger.log_info(f"Setting ID3 tags on {audio_file}")
         try:
-            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+            audio = self.open_id3_file(audio_file)
         except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
@@ -181,7 +181,7 @@ class Id3TagsMixin:
         if verbose:
             logger.log_info(f"Removing ID3 tags from {audio_file}")
         try:
-            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+            audio = self.open_id3_file(audio_file)
         except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
@@ -211,6 +211,12 @@ class Id3TagsMixin:
         audio.save()
         return True
 
+    # The file's audio and ID3 tag: an ADTS stream's standalone tag for a raw .aac, else the MP3 reader
+    def open_id3_file(self, audio_file):
+        if self.is_adts_audio_file(audio_file):
+            return self.open_adts_id3_file(audio_file)
+        return self.mp3_class(audio_file, ID3 = self.id3_class)
+
     # Whether the MP3 has an ID3 tag with at least one frame; False when missing or unreadable
     def has_id3_tags(self, audio_file):
 
@@ -220,7 +226,7 @@ class Id3TagsMixin:
 
         # Load and check tags
         try:
-            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+            audio = self.open_id3_file(audio_file)
             return audio.tags is not None and len(audio.tags) > 0
         except self.mutagen.MutagenError:
             return False

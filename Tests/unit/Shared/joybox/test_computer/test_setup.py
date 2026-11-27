@@ -46,10 +46,13 @@ class RecordingStep:
     def __init__(self, log, name):
         self.log = log
         self.name = name
+        self.result = True
 
     def run(self, **kwargs):
         self.log.append((self.name, kwargs))
-        return True
+        return self.result
+
+    run_setup = run
 
 
 class FakeGameInfo:
@@ -308,3 +311,19 @@ def test_a_failed_step_stops_the_setup(world, failing, keep_discs):
 
     assert world.run() is False
     assert world.named("remove_directory") == []
+
+
+@pytest.mark.parametrize("stage", ["preinstall", "postinstall"])
+def test_a_failed_setup_step_stops_before_packing(world, stage):
+    getattr(world.game, stage)[0].result = False
+
+    assert world.run() is False
+    assert world.named("pack_install_image") == []
+
+
+def test_a_failed_setup_program_stops_before_packing(world):
+    world.game.install[0].result = False
+
+    assert world.run() is False
+    assert world.named("pack_install_image") == []
+    assert [name for name, _ in world.order if name == "post"] == []

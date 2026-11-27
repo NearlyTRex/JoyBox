@@ -448,6 +448,22 @@ def test_each_disc_image_is_mounted_on_its_own_drive(dosbox, monkeypatch, tmp_pa
     command.get_dos_launch_command,
     command.get_win31_launch_command,
 ])
+def test_discs_beyond_the_last_drive_letter_are_left_unmounted(dosbox, monkeypatch, tmp_path, builder):
+    discs = ["/discs/%02d.chd" % index for index in range(len(config.drives_regular) + 1)]
+    monkeypatch.setattr(
+        command.paths, "build_file_list_by_extensions", lambda root, extensions = []: discs)
+
+    cmd = builder(options_with_prefix(tmp_path))
+
+    mounts = [part for part in cmd if part.startswith("imgmount")]
+    assert len(mounts) == len(config.drives_regular)
+    assert not any(discs[-1] in mount for mount in mounts)
+
+
+@pytest.mark.parametrize("builder", [
+    command.get_dos_launch_command,
+    command.get_win31_launch_command,
+])
 def test_the_start_drive_is_selected(dosbox, no_discs, tmp_path, builder):
     cmd = builder(options_with_prefix(tmp_path), start_letter = "d")
 

@@ -476,15 +476,32 @@ def sync_contents(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Mirror a source into dest: glob to glob copies matches, a directory syncs, a file copies;
-# False when the source is none of these
+# Copy each file a glob matches into a glob destination's folder, or into a plain destination
+# treated as a directory and created when missing
+def sync_globbed_data(glob_pattern, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
+    dest_dir = data_dest
+    if config.TOKEN_GLOB in paths.get_filename_basename(data_dest):
+        dest_dir = os.path.dirname(data_dest)
+    elif not fileops.make_directory(
+        src = dest_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        return False
+    return copy_globbed_files(
+        glob_pattern = glob_pattern,
+        dest_dir = dest_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Mirror a source into dest: a glob copies its matches into a glob dest's folder or a dest directory,
+# a directory syncs, a file copies; False when the source is none of these
 def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
-    is_glob_src = config.TOKEN_GLOB in paths.get_filename_basename(data_src)
-    is_glob_dest = config.TOKEN_GLOB in paths.get_filename_basename(data_dest)
-    if is_glob_src and is_glob_dest:
-        return copy_globbed_files(
+    if config.TOKEN_GLOB in paths.get_filename_basename(data_src):
+        return sync_globbed_data(
             glob_pattern = data_src,
-            dest_dir = os.path.dirname(data_dest),
+            data_dest = data_dest,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

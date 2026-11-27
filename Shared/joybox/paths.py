@@ -85,13 +85,13 @@ def is_path_symlink(path):
         return False
     return os.path.islink(path)
 
-# Check if path is file or directory
+# Check if path is an existing file or directory, following symlinks to either
 def is_path_file_or_directory(path):
     if not is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
-    return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
+    return os.path.isfile(path) or os.path.isdir(path)
 
 # Check if drive letter is valid
 def is_drive_letter_valid(drive_letter):
@@ -215,12 +215,20 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
                 directories.append(location)
     return prune_paths(directories, excludes)
 
+# Where a path build_directory_list listed sits on disk, undoing its relative form
+def _locate_listed_path(root, listed_path, new_relative_path, use_relative_paths):
+    if not use_relative_paths or os.path.isabs(listed_path):
+        return listed_path
+    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
+        new_relative_path += config.OS_PATHSEP
+    return os.path.join(os.path.abspath(root), listed_path.removeprefix(new_relative_path))
+
 # Directories from build_directory_list that hold nothing
 def build_empty_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False):
     excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
-        if is_directory_empty(potential_dir):
+        if is_directory_empty(_locate_listed_path(root, potential_dir, new_relative_path, use_relative_paths)):
             directories.append(potential_dir)
     return directories
 
@@ -229,7 +237,7 @@ def build_symlink_directory_list(root, excludes = None, new_relative_path = "", 
     excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
-        if os.path.islink(potential_dir):
+        if os.path.islink(_locate_listed_path(root, potential_dir, new_relative_path, use_relative_paths)):
             directories.append(potential_dir)
     return directories
 

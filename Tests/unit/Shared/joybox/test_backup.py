@@ -678,6 +678,32 @@ def test_a_failed_move_reports_failure_and_removes_scratch(source, archiving, mo
     assert not os.path.exists(archiving["scratch"])
 
 
+def test_every_volume_of_a_split_archive_is_moved(source, archiving, monkeypatch, tmp_path):
+    def create_archive_from_folder(archive_file, source_dir, **kwargs):
+        write(archive_file + ".001", "first")
+        write(archive_file + ".002", "second")
+        return True
+
+    monkeypatch.setattr(backup.archive, "create_archive_from_folder", create_archive_from_folder)
+    output = tmp_path / "out"
+
+    assert backup.archive_folder(str(source), str(output), "Backup") is True
+    assert [dest for _, dest in archiving["moved"]] == [
+        str(output / "Backup.7z.001"),
+        str(output / "Backup.7z.002"),
+    ]
+
+
+def test_a_single_file_archive_is_moved_under_its_own_name(source, archiving, monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        backup.archive, "create_archive_from_folder",
+        lambda archive_file, source_dir, **kwargs: write(archive_file, "whole") or True)
+    output = tmp_path / "out"
+
+    assert backup.archive_folder(str(source), str(output), "Backup") is True
+    assert [dest for _, dest in archiving["moved"]] == [str(output / "Backup.7z")]
+
+
 def test_archiving_without_a_scratch_directory_reports_failure(source, monkeypatch, tmp_path):
     monkeypatch.setattr(
         backup.fileops, "create_temporary_directory", lambda **kwargs: (False, ""))
@@ -753,6 +779,18 @@ def test_sub_folder_output_can_be_emptied_first(game_tree, archiving, tmp_path):
     backup.archive_sub_folders(str(game_tree), str(output), clean_output = True)
 
     assert archiving["emptied"] == [str(output / "Gaming")]
+
+
+def test_emptying_sub_folder_output_keeps_the_sibling_archives(archiving, tmp_path):
+    root = tmp_path / "source"
+    write(root / "Gaming" / "GameOne" / "file.txt")
+    write(root / "Gaming" / "GameTwo" / "file.txt")
+    write(root / "Music" / "Album" / "file.txt")
+    output = tmp_path / "out"
+
+    assert backup.archive_sub_folders(str(root), str(output), clean_output = True) is True
+    assert sorted(archiving["emptied"]) == [str(output / "Gaming"), str(output / "Music")]
+    assert len(archiving["moved"]) == 3
 
 
 def test_archiving_sub_folders_without_a_scratch_directory_reports_failure(game_tree, archiving, monkeypatch, tmp_path):

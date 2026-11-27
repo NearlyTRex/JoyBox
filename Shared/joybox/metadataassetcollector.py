@@ -4,7 +4,7 @@ from joybox import logger
 from joybox import prompts
 from joybox import gamenaming
 from joybox import google
-from joybox.stores import steamlookups
+from joybox import steamlookups
 
 ############################################################
 

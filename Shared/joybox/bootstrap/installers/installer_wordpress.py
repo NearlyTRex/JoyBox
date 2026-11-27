@@ -184,36 +184,34 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         self.backup_database = "db"
         self.backup_volumes = ["wp_data"]
 
-    # Replace the apex-root snippet with a proxy to WordPress and install the www redirect
+    # Replace the apex-root snippet with a proxy to WordPress and install the www
+    # redirect; False when either cannot be staged
     def install_nginx_config(self):
 
         # WordPress serves the apex domain, so it takes over the apex-root
         # snippet rather than adding a server block for the same name.
         logger.log_info("Installing apex root snippet")
-        self.install_nginx_snippet("apex-root.conf",
-            APEX_PROXY_SNIPPET_TEMPLATE.format(**self.nginx_config_values))
+        if not self.install_nginx_snippet("apex-root.conf",
+                APEX_PROXY_SNIPPET_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Redirect the www host to the canonical apex
         logger.log_info("Installing www redirect")
-        nginx_tmp_path = f"/tmp/{self.app_name}.conf"
-        if self.connection.write_file(nginx_tmp_path,
-                NGINX_REDIRECT_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", nginx_tmp_path], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.remove_file_or_directory(nginx_tmp_path)
-        return True
+        return self.install_nginx_conf(f"{self.app_name}.conf",
+            NGINX_REDIRECT_CONFIG_TEMPLATE.format(**self.nginx_config_values))
 
-    # Put back the static apex-root snippet and remove the www redirect
+    # Put back the static apex-root snippet and remove the www redirect; False when
+    # the snippet cannot be staged, after the redirect is still removed
     def uninstall_nginx_config(self):
 
         # Hand the apex back to the static fallback
         logger.log_info("Restoring static apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE)
+        restored = self.install_nginx_snippet("apex-root.conf", installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE)
 
         # Remove the www redirect
         logger.log_info("Removing www redirect")
         self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
-        return True
+        return restored
 
     # Once WordPress is healthy, copy the repo's seed files to the server and run
     # seed.sh in the wpcli container; skipped when seeding is off

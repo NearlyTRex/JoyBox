@@ -6,7 +6,7 @@ import pytest
 
 # Local imports
 from joybox import config
-from joybox.stores import steamlookups
+from joybox import steamlookups
 from stores_helpers import STEAM_APPID
 
 

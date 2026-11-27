@@ -73,6 +73,18 @@ def test_the_page_is_scrolled_until_everything_has_loaded(itchio_store, browser)
     assert browser.scrolls == 3
 
 
+def test_a_page_that_never_finishes_loading_gives_up_and_caches_nothing(itchio_store, browser, cache_file, monkeypatch):
+    clock = iter(range(0, 10 * itchio.PURCHASES_LOAD_TIMEOUT_SECONDS, 60))
+    monkeypatch.setattr(itchio.time, "monotonic", lambda: next(clock))
+    browser.add(game_cell())
+    browser.add_loader(scrolls = 10 ** 9)
+
+    assert itchio_store.get_latest_purchases() is None
+    assert browser.scrolls == itchio.PURCHASES_LOAD_TIMEOUT_SECONDS // 60 + 1
+    assert browser.disconnected == [browser.page]
+    assert not cache_file.exists()
+
+
 def test_a_purchase_whose_cover_has_not_loaded_still_counts(itchio_store, browser):
     browser.add(game_cell(cover = None))
 

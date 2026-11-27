@@ -1,6 +1,7 @@
 # Imports
 import importlib
 import os
+import posixpath
 import shlex
 import threading
 import time
@@ -63,7 +64,6 @@ class RememberNewHostKeyPolicy:
 
 # Connection to a remote host over paramiko: commands via exec_command, file contents and uploads via SFTP
 class ConnectionSSH(connection.Connection):
-    ssh_client = None
 
     def __init__(
         self,
@@ -83,23 +83,24 @@ class ConnectionSSH(connection.Connection):
         self.ssh_key_str = ssh_key_str
         self.ssh_password = ssh_password
         self.remote_home_directory = None
+        self.ssh_client = None
 
     # Log in with the key (string preferred over file) or else the password; no-op when a session is already live
     def connect(self, timeout = None):
         paramiko = _get_paramiko()
-        if not ConnectionSSH.ssh_client:
-            ConnectionSSH.ssh_client = paramiko.SSHClient()
+        if not self.ssh_client:
+            self.ssh_client = paramiko.SSHClient()
             known_hosts_path = knownhosts.get_known_hosts_path()
             if paths.does_path_exist(known_hosts_path):
-                ConnectionSSH.ssh_client.load_host_keys(known_hosts_path)
-            ConnectionSSH.ssh_client.set_missing_host_key_policy(RememberNewHostKeyPolicy(known_hosts_path))
+                self.ssh_client.load_host_keys(known_hosts_path)
+            self.ssh_client.set_missing_host_key_policy(RememberNewHostKeyPolicy(known_hosts_path))
         if self.is_connected():
             return
         if self.ssh_key_str or self.ssh_key_filepath:
             private_key = _load_private_key(
                 filepath = self.ssh_key_filepath if not self.ssh_key_str else None,
                 key_str = self.ssh_key_str)
-            ConnectionSSH.ssh_client.connect(
+            self.ssh_client.connect(
                 self.ssh_host,
                 port = self.ssh_port,
                 username = self.ssh_user,
@@ -109,7 +110,7 @@ class ConnectionSSH(connection.Connection):
                 look_for_keys = False
             )
         elif self.ssh_password:
-            ConnectionSSH.ssh_client.connect(
+            self.ssh_client.connect(
                 self.ssh_host,
                 port = self.ssh_port,
                 username = self.ssh_user,
@@ -137,35 +138,35 @@ class ConnectionSSH(connection.Connection):
             self.teardown()
             return False
 
-    # Whether the shared SSH client has an active transport
+    # Whether this connection's SSH client has an active transport
     def is_connected(self):
-        if not ConnectionSSH.ssh_client:
+        if not self.ssh_client:
             return False
-        transport = ConnectionSSH.ssh_client.get_transport()
+        transport = self.ssh_client.get_transport()
         return bool(transport and transport.is_active())
 
     # Open an SFTP session on the live connection
     def _open_sftp(self):
-        if not ConnectionSSH.ssh_client:
+        if not self.ssh_client:
             raise ConnectionError("SSH client not initialized")
-        return ConnectionSSH.ssh_client.open_sftp()
+        return self.ssh_client.open_sftp()
 
-    # Close the shared SSH client and forget it, logging a close failure rather than raising
+    # Close this connection's SSH client and forget it, logging a close failure rather than raising
     def teardown(self):
         try:
-            if ConnectionSSH.ssh_client:
-                ConnectionSSH.ssh_client.close()
+            if self.ssh_client:
+                self.ssh_client.close()
         except _get_ssh_errors() as e:
             logger.log_error("Failed to close SSH connection")
             logger.log_error(e)
-        ConnectionSSH.ssh_client = None
+        self.ssh_client = None
 
     # Remote home, as SFTP resolves the login directory; cached after the first lookup, None when not connected
     def get_home_directory(self):
         if self.remote_home_directory:
             return self.remote_home_directory
         try:
-            if not ConnectionSSH.ssh_client:
+            if not self.ssh_client:
                 return None
             sftp = self._open_sftp()
             try:
@@ -183,6 +184,10 @@ class ConnectionSSH(connection.Connection):
         if isinstance(cmd, list):
             return ["sudo", "-n"] + cmd
         return cmd
+
+    # Add a directory to PATH by the Unix route, as SSH targets are Unix hosts whatever this machine runs
+    def add_to_path(self, src):
+        return self.add_to_unix_path(src)
 
     # Wrap a command string with exports for the option env and a cd to the option cwd, ~ mapped to $HOME
     def process_command(self, cmd):
@@ -205,7 +210,7 @@ class ConnectionSSH(connection.Connection):
     # Run over exec_command and return stripped stdout, plus stderr when the options ask; empty on error
     def run_output(self, cmd, sudo = False):
         try:
-            if not ConnectionSSH.ssh_client:
+            if not self.ssh_client:
                 raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
@@ -214,7 +219,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                _, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, stderr = self.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 output = stdout.read()
@@ -234,7 +239,7 @@ class ConnectionSSH(connection.Connection):
     # Run over exec_command and return the remote exit status; 1 on error
     def run_return_code(self, cmd, sudo = False):
         try:
-            if not ConnectionSSH.ssh_client:
+            if not self.ssh_client:
                 raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
@@ -243,7 +248,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                _, stdout, _ = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, _ = self.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 exit_code = stdout.channel.recv_exit_status()
@@ -258,7 +263,7 @@ class ConnectionSSH(connection.Connection):
     # Run over exec_command, streaming the channel output to the log; returns the exit status, 1 on error
     def run_blocking(self, cmd, sudo = False):
         try:
-            if not ConnectionSSH.ssh_client:
+            if not self.ssh_client:
                 raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
@@ -267,7 +272,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                _, stdout, _ = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, _ = self.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 channel = stdout.channel
@@ -284,7 +289,7 @@ class ConnectionSSH(connection.Connection):
     # Run inside a remote login shell, logging its output when verbose; returns the exit status, 1 on error
     def run_interactive(self, cmd, sudo = False):
         try:
-            if not ConnectionSSH.ssh_client:
+            if not self.ssh_client:
                 raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
@@ -293,7 +298,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                channel = ConnectionSSH.ssh_client.invoke_shell()
+                channel = self.ssh_client.invoke_shell()
                 try:
                     channel.settimeout(5.0)
                     channel.send(cmd + "\nexit $?\n")
@@ -392,7 +397,7 @@ class ConnectionSSH(connection.Connection):
             relative = os.path.relpath(dirpath, src)
             dirnames[:] = [name for name in dirnames
                 if not paths.is_exclude_path(os.path.join(relative, name), excludes = excludes)]
-            remote_dir = dest if dirpath == src else os.path.join(dest, relative)
+            remote_dir = dest if dirpath == src else posixpath.join(dest, *relative.split(os.sep))
             if self.flags.verbose:
                 logger.log_info(f"Making remote directory: {remote_dir}")
             try:
@@ -401,7 +406,7 @@ class ConnectionSSH(connection.Connection):
                 sftp.mkdir(remote_dir)
             for filename in filenames:
                 if not paths.is_exclude_path(filename, excludes = excludes):
-                    file_tasks.append((os.path.join(dirpath, filename), os.path.join(remote_dir, filename)))
+                    file_tasks.append((os.path.join(dirpath, filename), posixpath.join(remote_dir, filename)))
         return file_tasks
 
     def _upload_files(self, sftp, file_tasks):

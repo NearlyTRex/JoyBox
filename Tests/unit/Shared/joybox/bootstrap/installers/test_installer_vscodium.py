@@ -93,6 +93,15 @@ def test_install_dearmors_the_key_and_adds_the_signed_repository(isolated_settin
     assert connection.ran("install -y codium")
 
 
+def test_an_unwritable_source_fails_the_install(isolated_settings, captured, monkeypatch):
+    vscodium, connection = make()
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert vscodium.install() is False
+    assert connection.moved == []
+    assert not connection.ran("install -y codium")
+
+
 def test_an_installed_program_is_not_installed_again(isolated_settings, captured):
     vscodium, connection = make(existing = [PROGRAM])
 

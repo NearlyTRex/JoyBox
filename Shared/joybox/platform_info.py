@@ -59,7 +59,7 @@ def get_linux_distro_value(field):
     for line in serialization.read_text_lines(OS_RELEASE_FILE) or []:
         if line.startswith("#"):
             continue
-        tokens = line.strip().split("=")
+        tokens = line.strip().split("=", 1)
         if len(tokens) == 2 and tokens[0] == field:
             return tokens[1].strip("\"")
     return ""

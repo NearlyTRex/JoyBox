@@ -459,6 +459,20 @@ def test_a_failed_clear_stops_at_that_album(music_root, pipeline):
     assert len(pipeline.calls) == 1
 
 
+def test_without_a_genre_every_genres_albums_are_built(music_root, pipeline):
+    make_album(music_root, GENRE.value, "An Album")
+
+    assert audio.build_audio_metadata_files() is True
+    assert pipeline.written == ["/meta/None/An Album.json"]
+
+
+def test_without_a_genre_every_genres_albums_are_cleared(music_root, pipeline):
+    album = make_album(music_root, GENRE.value, "An Album")
+
+    assert audio.clear_audio_metadata_tags() is True
+    assert pipeline.calls == [("clear", str(album))]
+
+
 @pytest.fixture
 def sidecars(pipeline, monkeypatch):
     stored = {}
@@ -492,6 +506,14 @@ def test_a_failed_apply_stops_at_that_album(music_root, pipeline, sidecars):
     sidecars["/meta/None/An Album.json"] = {"tracks": []}
 
     assert audio.apply_audio_metadata_tags(GENRE) is False
+
+
+def test_without_a_genre_every_genres_albums_are_applied(music_root, pipeline, sidecars):
+    album = make_album(music_root, GENRE.value, "An Album")
+    sidecars["/meta/None/An Album.json"] = {"tracks": ["one"]}
+
+    assert audio.apply_audio_metadata_tags() is True
+    assert pipeline.calls == [("set", str(album), {"tracks": ["one"]})]
 
 
 def test_an_unreadable_archive_yields_nothing(tmp_path):

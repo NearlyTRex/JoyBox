@@ -1,6 +1,9 @@
 # Imports
 import os
 
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import paths
 from file_helpers import write
@@ -114,6 +117,18 @@ def test_empty_and_symlinked_directory_lists(tmp_path):
     os.symlink(os.path.join(root, "sub"), os.path.join(root, "link"))
     assert paths.build_empty_directory_list(root) == [os.path.join(root, "empty")]
     assert paths.build_symlink_directory_list(root) == [os.path.join(root, "link")]
+
+
+@pytest.mark.parametrize("prefix", ["", "base", "base" + os.sep])
+def test_relative_empty_and_symlinked_directory_lists_are_judged_under_the_root(tmp_path, monkeypatch, prefix):
+    root = make_tree(tmp_path / "root")
+    os.symlink(os.path.join(root, "sub"), os.path.join(root, "link"))
+    monkeypatch.chdir(tmp_path)
+
+    empty = paths.build_empty_directory_list(root, new_relative_path = prefix, use_relative_paths = True)
+    linked = paths.build_symlink_directory_list(root, new_relative_path = prefix, use_relative_paths = True)
+
+    assert (empty, linked) == ([os.path.join(prefix, "empty")], [os.path.join(prefix, "link")])
 
 
 ###########################################################

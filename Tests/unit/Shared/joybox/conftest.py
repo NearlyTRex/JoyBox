@@ -15,6 +15,22 @@ from joybox import ollama
 from joybox import commandoptions
 from joybox import sandbox
 from joybox import webfetch
+from joybox import network
+
+
+@pytest.fixture
+def reachable(monkeypatch):
+    # Declares which urls answer, so the probing order is observable.
+    state = {"ok": set(), "all": False, "probed": []}
+
+    def is_url_reachable(url, params = None):
+        state["probed"].append(url)
+        if state["all"]:
+            return True
+        return url in state["ok"]
+
+    monkeypatch.setattr(network, "is_url_reachable", is_url_reachable)
+    return state
 
 
 # Locker backups, recorded instead of copied

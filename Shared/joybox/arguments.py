@@ -406,20 +406,22 @@ class ArgumentParser:
             categories = config.Category.members()
         return categories
 
-    # Map of each selected category to the subcategory passed, or to all of its subcategories when none was
+    # Map of each selected category to the subcategory passed, or to all of its subcategories when none was;
+    # a subcategory passed without a category selects only the categories that hold it
     def get_selected_subcategories(
         self,
         category_argname = "game_category",
         subcategory_argname = "game_subcategory"):
         args, _ = self.parse_known_args()
+        category_arg = getattr(args, category_argname, None)
+        subcategory_arg = getattr(args, subcategory_argname, None)
         subcategory_map = {}
         for category in self.get_selected_categories(argname = category_argname):
-            subcategories = []
-            subcategory_arg = getattr(args, subcategory_argname, None)
+            subcategories = config.subcategory_map.get(category, [])
             if subcategory_arg:
+                if not category_arg and subcategory_arg not in subcategories:
+                    continue
                 subcategories = [subcategory_arg]
-            else:
-                subcategories = config.subcategory_map.get(category, [])
             subcategory_map[category] = subcategories
         return subcategory_map
 

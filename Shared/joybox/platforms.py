@@ -38,9 +38,9 @@ def is_letter_platform(platform_type):
 
 ###########################################################
 
-# Addon kinds (updates, DLC) the platform supports, from config.platforms; None for an unknown platform
+# Addon kinds (updates, DLC) the platform supports, from config.platforms; empty for an unknown platform
 def get_addon_types(platform_type):
-    return get_platform_value(platform_type, config.PLATFORM_KEY_ADDONS)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_ADDONS) or []
 
 # Check if updates are possible
 def are_updates_possible(platform_type):
@@ -56,9 +56,9 @@ def are_addons_possible(platform_type):
 
 ###########################################################
 
-# Launch modes the platform supports, from config.platforms; None for an unknown platform
+# Launch modes the platform supports, from config.platforms; empty for an unknown platform
 def get_launcher_types(platform_type):
-    return get_platform_value(platform_type, config.PLATFORM_KEY_LAUNCHER)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_LAUNCHER) or []
 
 # Check if no launcher available
 def has_no_launcher(platform_type):

@@ -459,6 +459,16 @@ def test_a_subcategory_narrows_its_category(argv):
     assert selected == {config.Category.NINTENDO: [config.Subcategory.NINTENDO_NES]}
 
 
+def test_a_subcategory_alone_selects_only_its_category(argv):
+    parser = build()
+    parser.add_game_category_argument()
+    parser.add_game_subcategory_argument()
+    argv("--game_subcategory", str(config.Subcategory.NINTENDO_NES))
+    selected = parser.get_selected_subcategories()
+
+    assert selected == {config.Category.NINTENDO: [config.Subcategory.NINTENDO_NES]}
+
+
 def test_every_category_is_mapped_when_none_is_given(argv):
     parser = build()
     parser.add_game_category_argument()

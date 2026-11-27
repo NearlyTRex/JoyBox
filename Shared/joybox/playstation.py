@@ -110,7 +110,8 @@ def is_ps3_file_decrypted(extract_dir, rel_path, header, dkey_file, iso_file, ex
         runtime.quit_program()
     return False
 
-# Decrypt to a .dec.iso beside the source, extract it, and check the LIC.DAT and EBOOT.BIN headers prove the key fit
+# Decrypt to a .dec.iso beside the source, extract it, and check the LIC.DAT and EBOOT.BIN headers prove the key fit;
+# the .dec.iso is always removed, and delete_original removes the input iso after a successful extraction
 def extract_ps3_iso(
     iso_file,
     dkey_file,
@@ -120,8 +121,22 @@ def extract_ps3_iso(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Decrypt the iso and extract the decrypted copy
+    # Decrypt and extract, removing the decrypted scratch copy whatever the outcome
     iso_file_dec = paths.join_paths(paths.get_filename_directory(iso_file), paths.get_filename_basename(iso_file) + ".dec.iso")
+    try:
+        success = decrypt_and_extract_ps3_iso(iso_file, iso_file_dec, dkey_file, extract_dir, verbose, pretend_run, exit_on_failure)
+    finally:
+        fileops.remove_file(
+            src = iso_file_dec,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return finish_conversion(iso_file, extract_dir, delete_original, verbose, pretend_run, exit_on_failure)
+
+# Decrypt a ps3 iso to iso_file_dec, extract that copy, and check the extracted headers prove the key fit
+def decrypt_and_extract_ps3_iso(iso_file, iso_file_dec, dkey_file, extract_dir, verbose = False, pretend_run = False, exit_on_failure = False):
     success = decrypt_ps3_iso(
         iso_file_enc = iso_file,
         iso_file_dec = iso_file_dec,
@@ -134,18 +149,16 @@ def extract_ps3_iso(
     success = iso.extract_iso(
         iso_file = iso_file_dec,
         extract_dir = extract_dir,
-        delete_original = delete_original,
+        delete_original = False,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-
-    # Check the decryption held by the extracted files' headers
     for rel_path, header in PS3_DECRYPTED_HEADERS:
         if not is_ps3_file_decrypted(extract_dir, rel_path, header, dkey_file, iso_file, exit_on_failure):
             return False
-    return finish_conversion(iso_file_dec, extract_dir, delete_original, verbose, pretend_run, exit_on_failure)
+    return True
 
 # Extract a ps3 chd within a scratch directory and decrypt it, checking the decryption held
 def extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose = False, pretend_run = False, exit_on_failure = False):

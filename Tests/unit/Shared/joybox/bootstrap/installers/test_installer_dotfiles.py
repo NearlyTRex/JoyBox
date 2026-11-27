@@ -16,8 +16,17 @@ from fakes import RecordingConnection
 # which is also what enables programmable completion.
 ###########################################################
 
+TARGET_HOME = "/home/target"
+
+
+# A target whose home differs from this machine's, as a remote host's does
+class TargetHomeConnection(RecordingConnection):
+    def get_home_directory(self):
+        return TARGET_HOME
+
+
 def build(existing):
-    connection = RecordingConnection()
+    connection = TargetHomeConnection()
     dotfiles = installers.Dotfiles(connection)
     connection.existing_paths.update(
         dotfiles.skel_bashrc_path if path == "skel" else getattr(dotfiles, path)
@@ -43,7 +52,7 @@ def test_an_existing_bashrc_is_kept(isolated_settings):
 # Managed block
 ###########################################################
 
-class FailingWriteConnection(RecordingConnection):
+class FailingWriteConnection(TargetHomeConnection):
     def __init__(self, failing_fragment):
         super().__init__()
         self.failing_fragment = failing_fragment
@@ -85,6 +94,17 @@ def test_install_writes_shell_files_and_both_blocks(isolated_settings):
     assert installer_dotfiles.BLOCK_NOTE in bashrc
     assert f'export JOYBOX_ROOT="{dotfiles.joybox_root}"' in bashrc
     assert 'source "$HOME/.bashrc"' in connection.written_files[dotfiles.bash_profile_path]
+
+
+def test_a_remote_block_leaves_out_this_checkout(isolated_settings, monkeypatch):
+    dotfiles, connection = build([])
+    monkeypatch.setattr(dotfiles, "is_remote_target", lambda: True)
+    assert dotfiles.install()
+
+    bashrc = connection.written_files[dotfiles.bashrc_path]
+    assert "JOYBOX_ROOT" not in bashrc
+    assert dotfiles.joybox_root not in bashrc
+    assert 'source "$HOME/.joybox/$__jb_f.sh"' in bashrc
 
 
 def test_existing_content_is_backed_up_once_and_kept(isolated_settings):
@@ -168,7 +188,14 @@ def test_bash_profile_write_failure_fails_install(isolated_settings):
 ###########################################################
 
 def home(name):
-    return os.path.expandvars(f"$HOME/{name}")
+    return f"{TARGET_HOME}/{name}"
+
+
+def test_home_paths_are_on_the_target(isolated_settings):
+    dotfiles, _ = build([])
+    assert dotfiles.bashrc_path == home(".bashrc")
+    assert dotfiles.bash_profile_path == home(".bash_profile")
+    assert dotfiles.joybox_config_dir == home(".joybox")
 
 
 def test_captured_dotfiles_are_deployed_with_backup(isolated_settings, tmp_path):
@@ -181,12 +208,32 @@ def test_captured_dotfiles_are_deployed_with_backup(isolated_settings, tmp_path)
     assert dotfiles.install()
 
     assert (home(".gitconfig"), home(".gitconfig") + ".joybox.backup") in connection.copied
-    assert (str(tmp_path / "gitconfig"), home(".gitconfig")) in connection.copied
+    assert connection.written_files[home(".gitconfig")] == "[user]\n"
     assert (home(".vimrc"), home(".vimrc") + ".joybox.backup") not in connection.copied
-    assert (str(tmp_path / "vimrc"), home(".vimrc")) in connection.copied
-    assert (str(tmp_path / "inputrc"), home(".inputrc")) in connection.copied
+    assert connection.written_files[home(".vimrc")] == "set nu\n"
+    assert connection.written_files[home(".inputrc")] == "set bell-style none\n"
     assert (home(".inputrc"), home(".inputrc") + ".joybox.backup") not in connection.copied
-    assert not any(dest == home(".tmux.conf") for _, dest in connection.copied)
+    assert home(".tmux.conf") not in connection.written_files
+    assert not [src for src, _ in connection.copied if src.startswith(str(tmp_path))]
+
+
+def test_an_unreadable_capture_is_skipped(isolated_settings, tmp_path):
+    dotfiles, connection = build([])
+    dotfiles.captured_dir = str(tmp_path)
+    (tmp_path / "gitconfig").mkdir()
+    assert dotfiles.install()
+
+    assert home(".gitconfig") not in connection.written_files
+
+
+def test_an_unwritable_captured_dotfile_fails_install(isolated_settings, tmp_path):
+    dotfiles, connection = make_failing(".gitconfig")
+    dotfiles.captured_dir = str(tmp_path)
+    (tmp_path / "gitconfig").write_text("[user]\n")
+    (tmp_path / "vimrc").write_text("set nu\n")
+    assert not dotfiles.install()
+
+    assert home(".vimrc") not in connection.written_files
 
 
 def test_repo_name_drops_the_leading_dot():
@@ -198,11 +245,17 @@ def test_repo_name_drops_the_leading_dot():
 def test_backup_captures_existing_dotfiles(isolated_settings, tmp_path):
     dotfiles, connection = build([])
     dotfiles.captured_dir = str(tmp_path / "captured")
-    connection.existing_paths.add(home(".tmux.conf"))
+    connection.existing_paths.update([home(".tmux.conf"), home(".vimrc"), home(".inputrc")])
+    connection.file_contents[home(".tmux.conf")] = "set -g mouse on\n"
+    connection.file_contents[home(".vimrc")] = None
+    connection.file_contents[home(".inputrc")] = "set bell-style none\n"
+    (tmp_path / "captured" / "inputrc").mkdir(parents = True)
     assert dotfiles.backup()
 
-    assert dotfiles.captured_dir in connection.made_directories
-    assert connection.copied == [(home(".tmux.conf"), os.path.join(dotfiles.captured_dir, "tmux.conf"))]
+    assert sorted(os.listdir(dotfiles.captured_dir)) == ["inputrc", "tmux.conf"]
+    assert (tmp_path / "captured" / "tmux.conf").read_text() == "set -g mouse on\n"
+    assert not (tmp_path / "captured" / "vimrc").exists()
+    assert not connection.copied
 
 
 ###########################################################

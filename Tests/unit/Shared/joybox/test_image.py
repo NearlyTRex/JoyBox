@@ -213,9 +213,13 @@ def test_an_unwritable_target_reports_failure(tmp_path):
 def test_pretending_does_not_write_an_image(tmp_path):
     source = make_image(tmp_path / "art.jpg")
     target = tmp_path / "art.png"
-    image.convert_image_to_png(source, str(target), pretend_run = True)
+    assert image.convert_image_to_png(source, str(target), pretend_run = True) is True
 
     assert not target.exists()
+
+
+def test_pretending_a_conversion_reports_success(tmp_path):
+    assert image.convert_image(str(tmp_path / "absent.jpg"), str(tmp_path / "art.png"), pretend_run = True) is True
 
 
 ###########################################################

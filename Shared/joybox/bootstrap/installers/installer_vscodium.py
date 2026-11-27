@@ -84,16 +84,20 @@ class VSCodium(installer.Installer):
             return False
         return not self.get_outdated_user_files() and not self.get_missing_extensions()
 
-    # Add the VSCodium apt keyring and source, then apt-get install codium
+    # Add the VSCodium apt keyring and source, then apt-get install codium; False
+    # when the source cannot be written
     def install_program(self):
         logger.log_info("Installing VSCodium")
         self.connection.download_file(self.gpg_url, "/tmp/vscodium.gpg")
         self.connection.run_checked([self.gpg_tool, "--dearmor", "-o", self.archive_key_path, "/tmp/vscodium.gpg"], sudo = True)
         self.connection.remove_file_or_directory("/tmp/vscodium.gpg")
-        self.connection.write_file(f"/tmp/{self.sources_list}", f"deb [signed-by={self.archive_key_path}] {self.repo_url} vscodium main\n")
+        if not self.connection.write_file(f"/tmp/{self.sources_list}", f"deb [signed-by={self.archive_key_path}] {self.repo_url} vscodium main\n"):
+            logger.log_error(f"Unable to write /tmp/{self.sources_list}")
+            return False
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo = True)
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "codium"], sudo = True)
+        return True
 
     # Write each outdated captured file into the User dir, saving the first
     # original as .joybox.backup; False when a write fails
@@ -121,8 +125,8 @@ class VSCodium(installer.Installer):
 
     # Install codium when absent, then deploy the user files and missing extensions
     def install(self):
-        if not self.connection.does_file_or_directory_exist(self.program_path):
-            self.install_program()
+        if not self.connection.does_file_or_directory_exist(self.program_path) and not self.install_program():
+            return False
         if not self.deploy_user_files():
             return False
         return self.install_extensions()

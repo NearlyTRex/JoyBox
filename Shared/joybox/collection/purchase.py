@@ -494,12 +494,14 @@ def download_game_store_purchase(
         exit_on_failure = exit_on_failure)
     return success
 
-# Download the store build of every ROM game in the collection; stops at the first failure
+# Download the store build of every store game in the collection, skipping other platforms; stops at the first failure
 def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
+        if not stores.is_store_platform(game_info.get_platform()):
+            continue
         success = download_game_store_purchase(
             game_info = game_info,
             verbose = verbose,

@@ -1,3 +1,6 @@
+# Imports
+import pytest
+
 # Local imports
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.installers as installers
@@ -13,9 +16,13 @@ from fakes import RecordingConnection
 ###########################################################
 
 class UnwritableConnection(RecordingConnection):
+    def __init__(self, failing_path):
+        super().__init__()
+        self.failing_path = failing_path
+
     def write_file(self, src, contents, sudo = False):
-        self._record("write_file", src, contents, sudo = sudo)
-        return False
+        super().write_file(src, contents, sudo = sudo)
+        return src != self.failing_path
 
 
 def make(connection = None):
@@ -51,14 +58,17 @@ def test_install_writes_the_default_entry_snippet_and_page(isolated_settings):
     assert {"/tmp/default", "/tmp/apex-root.conf", "/tmp/index.html"} <= set(connection.removed_paths)
 
 
-def test_unwritable_files_are_not_installed(isolated_settings):
-    nginx, connection = make(UnwritableConnection())
+@pytest.mark.parametrize("failing_path, skipped_action", [
+    ("/tmp/default", "install_conf"),
+    ("/tmp/apex-root.conf", "install_snippet"),
+    ("/tmp/index.html", "copy_html"),
+])
+def test_an_unwritable_file_fails_the_install(isolated_settings, failing_path, skipped_action):
+    nginx, connection = make(UnwritableConnection(failing_path))
 
-    assert nginx.install()
-    assert not connection.ran("install_conf")
-    assert not connection.ran("install_snippet")
-    assert not connection.ran("copy_html")
-    assert connection.ran(nginx.nginx_manager_tool, "systemctl restart")
+    assert nginx.install() is False
+    assert not connection.ran(skipped_action)
+    assert not connection.ran("systemctl restart")
 
 
 def test_uninstall_stops_and_removes(isolated_settings):

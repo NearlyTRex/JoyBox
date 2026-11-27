@@ -287,22 +287,72 @@ def test_an_image_without_those_files_is_not_judged_by_them(decrypted, monkeypat
     assert playstation.extract_ps3_iso("/in/Game.iso", key_file, str(tmp_path / "out")) is True
 
 
-def test_extracting_can_remove_the_decrypted_copy(decrypted, extracted, key_file, monkeypatch):
-    # The decrypted image is twice the size of the source and is scratch data.
+@pytest.fixture
+def on_disk(monkeypatch, tmp_path):
+    # A real input iso, and a decrypt step that writes the .dec.iso beside it.
+    source = tmp_path / "in" / "Game.iso"
+    source.parent.mkdir()
+    source.write_bytes(b"encrypted")
+
+    def decrypt_ps3_iso(iso_file_enc, iso_file_dec, dkey_file, verbose = False, pretend_run = False, exit_on_failure = False):
+        with open(iso_file_dec, "wb") as handle:
+            handle.write(b"decrypted")
+        return True
+
+    monkeypatch.setattr(playstation, "decrypt_ps3_iso", decrypt_ps3_iso)
+    return source
+
+
+def test_extracting_keeps_the_input_and_removes_the_decrypted_copy(on_disk, extracted, key_file):
+    assert playstation.extract_ps3_iso(str(on_disk), key_file, extracted) is True
+
+    assert on_disk.exists()
+    assert not (on_disk.parent / "Game.dec.iso").exists()
+
+
+def test_extracting_can_remove_the_input(on_disk, extracted, key_file):
+    assert playstation.extract_ps3_iso(str(on_disk), key_file, extracted, delete_original = True) is True
+
+    assert not on_disk.exists()
+    assert not (on_disk.parent / "Game.dec.iso").exists()
+
+
+def test_a_failed_extraction_removes_the_decrypted_copy_and_keeps_the_input(on_disk, monkeypatch, key_file, tmp_path):
+    monkeypatch.setattr(playstation.iso, "extract_iso", lambda **kwargs: False)
+
+    assert playstation.extract_ps3_iso(str(on_disk), key_file, str(tmp_path / "out"), delete_original = True) is False
+
+    assert on_disk.exists()
+    assert not (on_disk.parent / "Game.dec.iso").exists()
+
+
+def test_a_bad_key_quit_still_removes_the_decrypted_copy(on_disk, extracted, key_file, monkeypatch):
+    monkeypatch.setattr(fileedits, "is_file_correctly_headered", lambda src, header: False)
+
+    with pytest.raises(SystemExit):
+        playstation.extract_ps3_iso(str(on_disk), key_file, extracted, exit_on_failure = True)
+
+    assert on_disk.exists()
+    assert not (on_disk.parent / "Game.dec.iso").exists()
+
+
+def test_the_decrypted_copy_is_extracted_without_the_extractor_deleting_it(decrypted, key_file, monkeypatch, tmp_path):
+    # Removal is left to extract_ps3_iso, which removes the copy exactly once.
+    seen = {}
+
+    def extract_iso(iso_file, extract_dir, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
+        seen["delete_original"] = delete_original
+        os.makedirs(extract_dir, exist_ok = True)
+        return True
+
     removed = []
+    monkeypatch.setattr(playstation.iso, "extract_iso", extract_iso)
     monkeypatch.setattr(playstation.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
 
-    playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted, delete_original = True)
+    playstation.extract_ps3_iso("/in/Game.iso", key_file, str(tmp_path / "out"), delete_original = True)
 
-    assert removed == [os.path.join("/in", "Game.dec.iso")]
-
-
-def test_extracting_keeps_the_decrypted_copy_by_default(decrypted, extracted, key_file, monkeypatch):
-    removed = []
-    monkeypatch.setattr(playstation.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
-
-    assert playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted) is True
-    assert removed == []
+    assert seen["delete_original"] is False
+    assert removed == [os.path.join("/in", "Game.dec.iso"), "/in/Game.iso"]
 
 
 ###########################################################

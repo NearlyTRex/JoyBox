@@ -107,8 +107,8 @@ def search_dictionary(data, search_value, search_keys = None):
 # Retry utilities
 ###########################################################
 
-# Retry function with exponential backoff and cleanup, retrying when it returns
-# None or raises one of the retry_on errors
+# Retry function with exponential backoff and cleanup, retrying when it raises one of the
+# retry_on errors or returns None after such a failure; a first-attempt None is the answer
 def retry_with_backoff(
     func,
     retry_on,

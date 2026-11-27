@@ -170,6 +170,12 @@ def test_comments_and_malformed_lines_are_skipped(os_release):
     assert platform_info.get_linux_distro_name() == "Debian GNU/Linux"
 
 
+def test_a_value_may_hold_an_equals_sign(os_release):
+    os_release('HOME_URL="https://example.org/?distro=debian"\n')
+
+    assert platform_info.get_linux_distro_value("HOME_URL") == "https://example.org/?distro=debian"
+
+
 def test_a_missing_release_file_yields_empty_fields(os_release):
     os_release(None)
 

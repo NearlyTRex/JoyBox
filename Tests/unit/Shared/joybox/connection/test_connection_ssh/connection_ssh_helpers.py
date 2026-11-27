@@ -15,7 +15,7 @@ def build(client = None, **flag_overrides):
         flags = flags,
         options = runoptions.RunOptions())
     if client is not None:
-        connection_ssh.ConnectionSSH.ssh_client = client
+        connection.ssh_client = client
     return connection
 
 

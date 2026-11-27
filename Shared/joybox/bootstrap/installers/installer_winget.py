@@ -60,9 +60,10 @@ class WinGet(installer.Installer):
                 return False
         return True
 
-    # Whether winget list --name matches the package; False on a nonzero exit
+    # Whether winget list finds the exact id, as install and uninstall match it;
+    # False on a nonzero exit
     def is_package_installed(self, package):
-        code = self.connection.run_blocking([self.winget_tool, "list", "--name", package])
+        code = self.connection.run_blocking([self.winget_tool, "list", "--id", package, "-e"])
         return code == 0
 
     # winget install one exact id silently, accepting the agreements; False on failure

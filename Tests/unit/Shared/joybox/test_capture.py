@@ -149,7 +149,7 @@ def scheduler(monkeypatch):
 
 def capture_while_running(output, run_func = None, **kwargs):
     return capture.capture_screenshot_while_running(
-        run_func = run_func or (lambda: None),
+        run_func = run_func or (lambda: True),
         output_file = str(output),
         time_duration = 30,
         time_interval = 1,
@@ -196,6 +196,13 @@ def test_a_screenshot_run_reports_whether_a_screenshot_exists(scheduler, tmp_pat
     assert capture_while_running(output) is False
     output.write_text("png")
     assert capture_while_running(output) is True
+
+
+def test_a_failed_game_fails_the_screenshot_run(scheduler, tmp_path):
+    output = tmp_path / "shot.png"
+    output.write_text("png")
+
+    assert capture_while_running(output, run_func = lambda: False) is False
 
 
 def test_a_pretend_screenshot_run_succeeds_without_a_screenshot(scheduler, grabber, tmp_path):
@@ -385,7 +392,7 @@ def recorder(monkeypatch, ffmpeg):
 
 def record_while_running(output, run_func = None, **kwargs):
     return capture.capture_video_while_running(
-        run_func = run_func or (lambda: None),
+        run_func = run_func or (lambda: True),
         output_file = str(output),
         capture_origin = (10, 20),
         capture_resolution = (640, 480),
@@ -446,6 +453,13 @@ def test_the_recording_has_finished_before_the_result_is_read(recorder, tmp_path
 
 def test_a_video_run_without_a_file_fails(recorder, tmp_path):
     assert record_while_running(tmp_path / "run.mp4") is False
+
+
+def test_a_failed_game_fails_the_video_run(recorder, tmp_path):
+    output = tmp_path / "run.mp4"
+    output.write_text("mp4")
+
+    assert record_while_running(output, run_func = lambda: False) is False
 
 
 def test_a_pretend_video_run_interrupts_nothing(recorder, tmp_path):

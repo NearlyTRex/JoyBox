@@ -16,3 +16,7 @@ package_name = "mutagen.id3"
 [config.MutagenMP4]
 package_dir = "Mutagen/lib"
 package_name = "mutagen.mp4"
+
+[config.MutagenAAC]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.aac"

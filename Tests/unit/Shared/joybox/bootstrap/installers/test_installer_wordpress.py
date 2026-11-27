@@ -18,9 +18,13 @@ APP_DIR = f"{REMOTE_HOME}/apps/wordpress"
 
 
 class UnwritableConnection(RecordingConnection):
+    def __init__(self, failing_path):
+        super().__init__(command_output = {"printf": REMOTE_HOME})
+        self.failing_path = failing_path
+
     def write_file(self, src, contents, sudo = False):
-        self._record("write_file", src, contents, sudo = sudo)
-        return False
+        super().write_file(src, contents, sudo = sudo)
+        return src != self.failing_path
 
 
 def make(connection = None, **kwargs):
@@ -41,11 +45,27 @@ def test_install_proxies_the_apex_and_redirects_www(isolated_settings):
     assert connection.ran(wordpress.nginx_manager_tool, "link_conf wordpress.conf")
 
 
-def test_an_unwritable_redirect_is_not_installed(isolated_settings):
-    wordpress, connection = make(UnwritableConnection(command_output = {"printf": REMOTE_HOME}))
+def test_an_unwritable_redirect_fails_the_nginx_config(isolated_settings):
+    wordpress, connection = make(UnwritableConnection("/tmp/wordpress.conf"))
 
-    assert wordpress.install_nginx_config()
+    assert wordpress.install_nginx_config() is False
     assert not connection.ran("install_conf")
+
+
+def test_an_unwritable_apex_snippet_fails_the_nginx_config(isolated_settings):
+    wordpress, connection = make(UnwritableConnection("/tmp/apex-root.conf"))
+
+    assert wordpress.install_nginx_config() is False
+    assert not connection.ran("install_snippet")
+    assert not connection.written("/tmp/wordpress.conf")
+
+
+def test_an_unwritable_static_snippet_fails_the_uninstall_but_drops_the_redirect(isolated_settings):
+    wordpress, connection = make(UnwritableConnection("/tmp/apex-root.conf"))
+
+    assert wordpress.uninstall_nginx_config() is False
+    assert not connection.ran("install_snippet")
+    assert connection.ran(wordpress.nginx_manager_tool, "remove_conf wordpress.conf")
 
 
 def test_uninstall_hands_the_apex_back_to_the_static_fallback(isolated_settings):

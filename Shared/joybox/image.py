@@ -48,7 +48,7 @@ def is_image_png(image_file):
         image_file = image_file,
         image_format = config.ImageFileType.PNG)
 
-# Save the first frame of an image as RGB in the given format, or the one its destination extension names; False on a pretend run or failure
+# Save the first frame of an image as RGB in the given format, or the one its destination extension names; True on a pretend run, False on failure
 def convert_image(
     image_src,
     image_dest,
@@ -60,24 +60,24 @@ def convert_image(
     try:
         if verbose:
             logger.log_info("Converting image %s to %s" % (image_src, image_dest))
-        if not pretend_run:
-            src_image = pil_image.open(image_src)
-            if getattr(src_image, "is_animated", False):
-                src_image.seek(0)
-            rgb_image = src_image.convert("RGB")
-            if not image_format:
-                image_ext = paths.get_filename_extension(image_dest).lower()
-                if image_ext in [".jpg", ".jpeg"]:
-                    image_format = config.ImageFileType.JPEG
-                elif image_ext in [".png"]:
-                    image_format = config.ImageFileType.PNG
-            if not image_format:
-                if exit_on_failure:
-                    logger.log_error("Unable to tell which image format to convert %s to" % image_dest)
-                return False
-            rgb_image.save(image_dest, image_format.val())
-            return paths.does_path_exist(image_dest)
-        return False
+        if pretend_run:
+            return True
+        src_image = pil_image.open(image_src)
+        if getattr(src_image, "is_animated", False):
+            src_image.seek(0)
+        rgb_image = src_image.convert("RGB")
+        if not image_format:
+            image_ext = paths.get_filename_extension(image_dest).lower()
+            if image_ext in [".jpg", ".jpeg"]:
+                image_format = config.ImageFileType.JPEG
+            elif image_ext in [".png"]:
+                image_format = config.ImageFileType.PNG
+        if not image_format:
+            if exit_on_failure:
+                logger.log_error("Unable to tell which image format to convert %s to" % image_dest)
+            return False
+        rgb_image.save(image_dest, image_format.val())
+        return paths.does_path_exist(image_dest)
     except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))

@@ -463,13 +463,16 @@ class ElementLocator:
     def get(self):
         return (self.by_type, self.by_value)
 
-# Wait up to wait_time seconds until every locator matches; the found elements, or None on timeout
+# Wait until every locator matches; the found elements, or None on timeout; the configured
+# element wait by default
 def wait_for_all_elements(
     driver,
     locators = None,
-    wait_time = 1000,
+    wait_time = None,
     verbose = False,
     exit_on_failure = False):
+    if wait_time is None:
+        wait_time = get_element_wait_seconds()
     try:
         support_ui = _get_selenium("webdriver.support.ui")
         expected_conditions = _get_selenium("webdriver.support.expected_conditions")
@@ -498,13 +501,16 @@ def wait_for_all_elements(
             runtime.quit_program()
     return None
 
-# Wait up to wait_time seconds until any locator matches; the first found, or None on timeout
+# Wait until any locator matches; the first found, or None on timeout; the configured
+# element wait by default
 def wait_for_any_element(
     driver,
     locators = None,
-    wait_time = 1000,
+    wait_time = None,
     verbose = False,
     exit_on_failure = False):
+    if wait_time is None:
+        wait_time = get_element_wait_seconds()
     try:
         support_ui = _get_selenium("webdriver.support.ui")
         expected_conditions = _get_selenium("webdriver.support.expected_conditions")

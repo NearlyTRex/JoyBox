@@ -62,7 +62,7 @@ class Nginx(installer.Installer):
         return self.connection.does_file_or_directory_exist("/usr/sbin/nginx")
 
     # apt-get install nginx, then have the nginx manager install the default entry,
-    # the apex-root snippet and fallback page, and restart it
+    # the apex-root snippet and fallback page, and restart it; False when one cannot be staged
     def install(self):
 
         # Install Nginx
@@ -73,20 +73,18 @@ class Nginx(installer.Installer):
 
         # Create default entry
         logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/default")
+        if not self.install_nginx_conf("default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Create apex root snippet
         logger.log_info("Creating apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", APEX_ROOT_SNIPPET_TEMPLATE)
+        if not self.install_nginx_snippet("apex-root.conf", APEX_ROOT_SNIPPET_TEMPLATE):
+            return False
 
         # Create default page
         logger.log_info("Creating default page")
-        if self.connection.write_file("/tmp/index.html", APEX_FALLBACK_PAGE):
-            self.connection.run_checked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/index.html")
+        if not self.run_nginx_manager_on_file("copy_html", "index.html", APEX_FALLBACK_PAGE):
+            return False
 
         # Restart Nginx
         logger.log_info("Restarting Nginx")

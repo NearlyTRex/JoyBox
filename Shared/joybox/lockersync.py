@@ -552,14 +552,17 @@ def get_sync_passphrase(primary_info, sec_info):
 
 # Update a secondary's cached hash map to reflect what was just moved, so a re-run within the
 # cache window does not re-detect the same files: uploaded files now match the primary, and
-# recycled ones are gone
+# recycled ones and renamed uploads, which match no primary entry of their name, are dropped
 def update_cached_secondary_hashes(secondary_hashes, primary_hashes, succeeded, approved_actions, cache_file, verbose = False):
     recycled_paths = set(
         a.get("path", "") for a in approved_actions
         if normalize_action_type(a) == config.SyncActionType.RECYCLE)
+    renamed_paths = set(
+        a.get("dest", "") for a in approved_actions
+        if a.get("dest", a.get("src", "")) != a.get("src", ""))
     updated = 0
     for rel in succeeded:
-        if rel in recycled_paths:
+        if rel in recycled_paths or rel in renamed_paths:
             if secondary_hashes.pop(rel, None) is not None:
                 updated += 1
         elif rel in primary_hashes:

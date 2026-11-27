@@ -40,11 +40,12 @@ def test_the_store_describes_itself(legacy_store, tmp_path):
     assert legacy_store.can_import_purchases() and legacy_store.can_download_purchases()
 
 
-def test_assets_use_the_page_metadata_the_name_and_everything_else_the_appid(legacy_store):
+def test_assets_use_the_page_metadata_and_page_search_the_name_and_everything_else_the_appid(legacy_store):
     keys = legacy_store.get_identifier_keys()
 
     assert keys.pop(config.StoreIdentifierType.ASSET) == config.JSON_KEY_STORE_APPURL
     assert keys.pop(config.StoreIdentifierType.METADATA) == config.JSON_KEY_STORE_NAME
+    assert keys.pop(config.StoreIdentifierType.PAGE) == config.JSON_KEY_STORE_NAME
     assert set(keys.values()) == {config.JSON_KEY_STORE_APPID}
 
 

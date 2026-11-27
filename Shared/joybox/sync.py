@@ -589,7 +589,7 @@ def merge_files_both_ways(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Copy file from one remote to another
+# Copy a file from one remote to another; verbose runs show rclone progress unless show_progress is off
 def copy_remote_to_remote(
     src_remote_name,
     src_remote_type,
@@ -597,6 +597,7 @@ def copy_remote_to_remote(
     dest_remote_name,
     dest_remote_type,
     dest_remote_path,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -607,6 +608,7 @@ def copy_remote_to_remote(
             get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
         ],
         remote_names = [src_remote_name, dest_remote_name],
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

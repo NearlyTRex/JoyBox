@@ -5,6 +5,7 @@ import os
 from joybox import bootstrap
 from joybox.bootstrap import constants
 from joybox import serialization
+from joybox import fileops
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
@@ -26,12 +27,9 @@ class Dotfiles(installer.Installer):
         super().__init__(connection, flags, options)
 
         # JoyBox paths
-        self.joybox_config_dir = os.path.expandvars("$HOME/.joybox")
         self.joybox_root = environment.get_repo_root()
 
         # Bash paths
-        self.bashrc_path = os.path.expandvars("$HOME/.bashrc")
-        self.bash_profile_path = os.path.expandvars("$HOME/.bash_profile")
         self.skel_bashrc_path = "/etc/skel/.bashrc"
 
         # Template + capture directories
@@ -54,6 +52,26 @@ class Dotfiles(installer.Installer):
             ".vimrc",
             ".inputrc",
         ]
+
+    # A path under the target's home, resolved through the connection when used
+    # since a remote home is only known once connected
+    def get_home_path(self, name):
+        return self.connection.resolve_home_path(f"~/{name}")
+
+    # The target's ~/.joybox, where the shell files go
+    @property
+    def joybox_config_dir(self):
+        return self.get_home_path(".joybox")
+
+    # The target's ~/.bashrc, which holds the managed block
+    @property
+    def bashrc_path(self):
+        return self.get_home_path(".bashrc")
+
+    # The target's ~/.bash_profile, whose managed block sources .bashrc
+    @property
+    def bash_profile_path(self):
+        return self.get_home_path(".bash_profile")
 
     # Local and remote Ubuntu
     def get_supported_environments(self):
@@ -83,20 +101,27 @@ class Dotfiles(installer.Installer):
     def get_repo_name(self, home_name):
         return home_name[1:] if home_name.startswith(".") else home_name
 
-    # Copy each captured dotfile over its home copy, saving the first original
-    # as .joybox.backup; dotfiles with no capture are skipped
+    # Write each captured dotfile from this checkout over its home copy on the
+    # target, saving the first original as .joybox.backup; dotfiles with no capture
+    # are skipped, and False, logged, when a write fails
     def deploy_managed_dotfiles(self):
         for home_name in self.managed_dotfiles:
             repo_path = os.path.join(self.captured_dir, self.get_repo_name(home_name))
-            home_path = os.path.expandvars(f"$HOME/{home_name}")
+            home_path = self.get_home_path(home_name)
             if not os.path.exists(repo_path):
+                continue
+            contents = serialization.read_text_file(repo_path)
+            if contents is None:
                 continue
             if self.connection.does_file_or_directory_exist(home_path):
                 backup_path = f"{home_path}.joybox.backup"
                 if not self.connection.does_file_or_directory_exist(backup_path):
                     self.connection.copy_file_or_directory(home_path, backup_path)
             logger.log_info(f"Deploying {home_name} from captured dotfiles")
-            self.connection.copy_file_or_directory(repo_path, home_path)
+            if not self.connection.write_file(home_path, contents):
+                logger.log_error(f"Unable to write {home_path}")
+                return False
+        return True
 
     # The text with the block between the begin and end markers removed; unchanged
     # when either marker is missing
@@ -124,6 +149,21 @@ class Dotfiles(installer.Installer):
         new_content = (base + "\n\n" + block + "\n") if base else (block + "\n")
         logger.log_info(f"Updating managed block in {path}")
         return self.connection.write_file(path, new_content)
+
+    # The .bashrc block body: JOYBOX_ROOT as this checkout on a local target
+    # (remote targets have no checkout, so none there), then the ~/.joybox sources
+    def build_bashrc_block(self):
+        lines = [] if self.is_remote_target() else [f'export JOYBOX_ROOT="{self.joybox_root}"']
+        return "\n".join(lines + [
+            "case $- in",
+            "    *i*)",
+            "        for __jb_f in shell aliases functions completions; do",
+            '            [ -f "$HOME/.joybox/$__jb_f.sh" ] && source "$HOME/.joybox/$__jb_f.sh"',
+            "        done",
+            "        unset __jb_f",
+            "        ;;",
+            "esac",
+        ])
 
     # Write the shell files to ~/.joybox, seed .bashrc from /etc/skel when absent,
     # inject the managed blocks, then deploy the captured dotfiles; False when a write fails
@@ -153,19 +193,8 @@ class Dotfiles(installer.Installer):
                 return False
 
         # Inject the managed block into .bashrc (sources ~/.joybox/*.sh when interactive)
-        bashrc_block = "\n".join([
-            f'export JOYBOX_ROOT="{self.joybox_root}"',
-            "case $- in",
-            "    *i*)",
-            "        for __jb_f in shell aliases functions completions; do",
-            '            [ -f "$HOME/.joybox/$__jb_f.sh" ] && source "$HOME/.joybox/$__jb_f.sh"',
-            "        done",
-            "        unset __jb_f",
-            "        ;;",
-            "esac",
-        ])
         if not self.inject_managed_block(
-                self.bashrc_path, bashrc_block, BLOCK_BEGIN, BLOCK_END, BLOCK_NOTE):
+                self.bashrc_path, self.build_bashrc_block(), BLOCK_BEGIN, BLOCK_END, BLOCK_NOTE):
             return False
 
         # Inject the managed block into .bash_profile (sources .bashrc)
@@ -175,7 +204,8 @@ class Dotfiles(installer.Installer):
             return False
 
         # Restore any captured top-level dotfiles (.gitconfig, .tmux.conf, ...)
-        self.deploy_managed_dotfiles()
+        if not self.deploy_managed_dotfiles():
+            return False
 
         # All done
         logger.log_info("Dotfiles installation complete")
@@ -200,7 +230,7 @@ class Dotfiles(installer.Installer):
 
         # Restore any managed-dotfile backups we created
         for home_name in self.managed_dotfiles:
-            home_path = os.path.expandvars(f"$HOME/{home_name}")
+            home_path = self.get_home_path(home_name)
             backup_path = f"{home_path}.joybox.backup"
             if self.connection.does_file_or_directory_exist(backup_path):
                 logger.log_info(f"Restoring {home_path} from backup")
@@ -214,19 +244,21 @@ class Dotfiles(installer.Installer):
         logger.log_info("Dotfile uninstallation complete")
         return True
 
-    # Copy the home copies of the managed dotfiles into the captured dir in the repo
+    # Read the target's home copies of the managed dotfiles into the captured dir
+    # in this checkout
     def backup(self, tag = ""):
         logger.log_info("Capturing dotfiles into the repo")
 
         # Make captures dir
-        self.connection.make_directory(self.captured_dir)
+        io_flags = {"verbose": self.flags.verbose, "pretend_run": self.flags.pretend_run}
+        fileops.make_directory(self.captured_dir, **io_flags)
 
         # Build capture list
         # Only the genuinely-custom dotfiles are captured. The shell files
         # (.bashrc/.bash_profile) are managed by the block + ~/.joybox/shell.sh
         # masters, so capturing whole copies would duplicate them.
         capture_list = [
-            (os.path.expandvars(f"$HOME/{home_name}"), self.get_repo_name(home_name))
+            (self.get_home_path(home_name), self.get_repo_name(home_name))
             for home_name in self.managed_dotfiles
         ]
 
@@ -235,10 +267,13 @@ class Dotfiles(installer.Installer):
         for src_path, repo_name in capture_list:
             if not self.connection.does_file_or_directory_exist(src_path):
                 continue
+            contents = self.connection.read_file(src_path)
+            if contents is None:
+                continue
             dest_path = os.path.join(self.captured_dir, repo_name)
             logger.log_info(f"Capturing {src_path} -> dotfiles/captured/{repo_name}")
-            self.connection.copy_file_or_directory(src_path, dest_path)
-            captured += 1
+            if serialization.write_text_file(dest_path, contents, **io_flags):
+                captured += 1
 
         # All done
         logger.log_info(f"Captured {captured} dotfile(s) into {self.captured_dir}")

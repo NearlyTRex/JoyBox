@@ -87,6 +87,24 @@ def test_a_plain_request_carries_its_params_and_a_timeout(fetches):
         "timeout": webfetch.REQUEST_TIMEOUT_SECONDS}]
 
 
+@pytest.mark.parametrize("url, params, expected", [
+    ("https://store.example", None, "https://store.example"),
+    ("https://store.example", {"page": 2, "tag": ["a", "b"]}, "https://store.example?page=2&tag=a&tag=b"),
+    ("https://store.example/list?sort=new", {"page": 2}, "https://store.example/list?sort=new&page=2"),
+    ("https://store.example", "page=2", "https://store.example?page=2"),
+])
+def test_the_driver_loads_the_url_with_its_params(fetches, monkeypatch, url, params, expected):
+    loaded = []
+
+    def get_page_source(driver, url = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        loaded.append(url)
+        return "<html>driver</html>"
+    monkeypatch.setattr(webpage, "get_page_source", get_page_source)
+
+    assert webfetch.get_website_text(url, params = params) == "<html>driver</html>"
+    assert loaded == [expected]
+
+
 def test_an_error_response_is_not_page_text(fetches):
     # A 404 body would otherwise be scraped as if it were the page.
     fetches["driver"] = None

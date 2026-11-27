@@ -94,10 +94,11 @@ def test_the_wine_public_profile_is_a_sibling_of_the_user_profile():
     assert path.endswith("drive_c/users/Public")
 
 
-def test_the_sandboxie_public_profile_is_under_the_c_drive():
+    # Windows keeps it at C:\\Users\\Public; C:\\Public is where the install image copies it.
+    # C:\\Users\\Public, not C:\\Public, which is where the install image copies it to.
     path = prefixlayout.get_public_profile_path(SANDBOXIE()).replace("\\", "/")
 
-    assert path.endswith("drive/C/Public")
+    assert path.endswith("drive/C/Users/Public")
 
 
 def test_a_non_prefix_has_no_public_profile():

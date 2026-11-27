@@ -663,3 +663,25 @@ def test_an_asset_is_looked_up_by_game_name_or_identifier(monkeypatch, game_name
     assert SampleStore().get_latest_asset_url("acme_id", "boxfront", game_name = game_name) == "url"
     assert calls[0]["game_name"] == expected
     assert calls[0]["asset_type"] == "boxfront"
+
+
+def test_a_save_path_with_a_folder_nested_in_its_namesake_is_kept(monkeypatch):
+    # Installs nest folders under the same name; the path is real, not a doubled join.
+    from joybox import jsondata
+
+    class Entry:
+        def get_paths(self, base_path):
+            return [base_path + "/Saves/Saves/slot1"]
+        def get_keys(self):
+            return []
+
+    class OneEntryManifest:
+        def find_entry_by_name(self, name):
+            return Entry()
+
+    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", OneEntryManifest)
+    data = jsondata.JsonData({config.JSON_KEY_STORE_PATHS: [], config.JSON_KEY_STORE_KEYS: []})
+
+    augmented = storebase.StoreBase().augment_jsondata(data, "A Game")
+
+    assert augmented.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/Saves/Saves/slot1"]

@@ -69,6 +69,40 @@ def launch_store_game(
 
 ###########################################################
 
+# Put the tokens back in the launcher's config file and replace its save-dir symlink with an empty directory
+def _revert_launcher_setup(
+    game_info,
+    game_launcher,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    game_launcher_config_file = game_launcher.get_config_file()
+    game_launcher_save_dir = game_launcher.get_save_dir(game_info.get_platform())
+    if paths.is_path_file(game_launcher_config_file):
+        fileedits.replace_strings_in_file(
+            src = game_launcher_config_file,
+            replacements = [
+                {"from": game_launcher.get_setup_dir(), "to": config.TOKEN_EMULATOR_SETUP_ROOT},
+                {"from": game_info.get_save_dir(), "to": config.TOKEN_GAME_SAVE_DIR}
+            ],
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if not paths.is_path_valid(game_launcher_save_dir):
+        return True
+    success = fileops.remove_object(
+        obj = game_launcher_save_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return fileops.make_directory(
+        src = game_launcher_save_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # Cache the game, import its save, point the emulator's save dir and config at it, launch, then revert them and export the save
 def launch_local_game(
     game_info,
@@ -138,45 +172,22 @@ def launch_local_game(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Launch game
-    success = game_launcher.launch(
+    # Launch game, then revert the launcher even when the launch failed
+    launched = game_launcher.launch(
         game_info = game_info,
         capture_type = capture_type,
         fullscreen = fullscreen,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not success:
+    reverted = _revert_launcher_setup(
+        game_info = game_info,
+        game_launcher = game_launcher,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not launched or not reverted:
         return False
-
-    # Revert launcher config file
-    if paths.is_path_file(game_launcher_config_file):
-        fileedits.replace_strings_in_file(
-            src = game_launcher_config_file,
-            replacements = [
-                {"from": game_launcher_setup_dir, "to": config.TOKEN_EMULATOR_SETUP_ROOT},
-                {"from": game_info.get_save_dir(), "to": config.TOKEN_GAME_SAVE_DIR}
-            ],
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Revert launcher save directory
-    if paths.is_path_valid(game_launcher_save_dir):
-        success = fileops.remove_object(
-            obj = game_launcher_save_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-        success = fileops.make_directory(
-            src = game_launcher_save_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
 
     # Export save
     success = export_local_game_save(

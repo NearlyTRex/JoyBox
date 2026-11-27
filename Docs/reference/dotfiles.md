@@ -18,6 +18,9 @@ The `dotfiles` component manages your shell config **non-destructively**:
   # <<< JOYBOX MANAGED BLOCK <<<
   ```
 
+  `JOYBOX_ROOT` points at this checkout and is only exported on a local target; a remote
+  server has no checkout, so its block leaves it out.
+
   The first time it touches an existing `~/.bashrc`/`~/.bash_profile` it keeps a one-shot
   copy at `*.joybox.backup`.
 

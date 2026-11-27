@@ -5,6 +5,7 @@ import os
 import joybox.bootstrap.constants as constants
 from joybox.bootstrap.installers import installer
 from joybox import runoptions
+from joybox.connection import ConnectionLocal, ConnectionSSH
 from fakes import RecordingConnection
 
 
@@ -71,11 +72,52 @@ def test_an_unsupported_environment_is_rejected():
 
 def test_a_snippet_is_staged_installed_and_cleaned_up():
     base, connection = build()
-    base.install_nginx_snippet("apex-root.conf", "location / { return 404; }")
+    assert base.install_nginx_snippet("apex-root.conf", "location / { return 404; }")
 
     assert connection.written("/tmp/apex-root.conf") == "location / { return 404; }"
     assert connection.ran("install_snippet", "/tmp/apex-root.conf")
     assert "/tmp/apex-root.conf" in connection.removed_paths
+
+
+def test_a_snippet_that_cannot_be_staged_fails():
+    base, connection = build()
+    connection.write_file = lambda src, contents, sudo = False: False
+
+    assert base.install_nginx_snippet("apex-root.conf", "location / { return 404; }") is False
+    assert not connection.ran("install_snippet")
+
+
+def test_a_site_config_is_staged_installed_and_linked():
+    base, connection = build()
+    assert base.install_nginx_conf("site.conf", "server {}")
+
+    assert connection.written("/tmp/site.conf") == "server {}"
+    assert connection.ran("install_conf", "/tmp/site.conf")
+    assert connection.ran("link_conf", "site.conf")
+    assert "/tmp/site.conf" in connection.removed_paths
+
+
+def test_a_site_config_that_cannot_be_staged_fails():
+    base, connection = build()
+    connection.write_file = lambda src, contents, sudo = False: False
+
+    assert base.install_nginx_conf("site.conf", "server {}") is False
+    assert not connection.ran("install_conf")
+    assert not connection.ran("link_conf")
+
+
+###########################################################
+# Target locality
+###########################################################
+
+def test_a_local_target_is_not_remote():
+    local = ConnectionLocal(flags = runoptions.RunFlags(verbose = False))
+    assert installer.Installer(local, runoptions.RunFlags(verbose = False)).is_remote_target() is False
+
+
+def test_an_ssh_target_is_remote():
+    ssh = ConnectionSSH(ssh_host = "server.example", flags = runoptions.RunFlags(verbose = False))
+    assert installer.Installer(ssh, runoptions.RunFlags(verbose = False)).is_remote_target() is True
 
 
 ###########################################################

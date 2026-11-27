@@ -65,3 +65,12 @@ def test_uninstall_removes_the_installed_files(isolated_settings):
     assert "/usr/local/include/SDL3" in connection.removed_paths
     assert "/usr/local/lib/pkgconfig/sdl3-ttf.pc" in connection.removed_paths
     assert connection.ran("ldconfig")
+
+
+def test_uninstall_matches_the_libraries_without_a_shell(isolated_settings):
+    sdl3, connection = make()
+
+    assert sdl3.uninstall()
+    assert not [path for path in connection.removed_paths if "*" in path]
+    assert ["find", "/usr/local/lib", "-maxdepth", "1", "-name", "libSDL3*", "-delete"] in [
+        call[1][0] for call in connection.called("run_checked") if call[2]["sudo"]]

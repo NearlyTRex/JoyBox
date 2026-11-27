@@ -46,10 +46,11 @@ def test_the_store_describes_itself(epic_store, tmp_path):
     assert epic_store.can_import_purchases() and epic_store.can_download_purchases()
 
 
-def test_metadata_is_found_by_page_and_everything_else_by_appname(epic_store):
+def test_metadata_is_found_by_page_the_page_by_name_and_everything_else_by_appname(epic_store):
     keys = epic_store.get_identifier_keys()
 
     assert keys.pop(config.StoreIdentifierType.METADATA) == config.JSON_KEY_STORE_APPURL
+    assert keys.pop(config.StoreIdentifierType.PAGE) == config.JSON_KEY_STORE_NAME
     assert set(keys.values()) == {config.JSON_KEY_STORE_APPNAME}
 
 

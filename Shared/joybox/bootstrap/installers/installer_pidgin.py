@@ -179,9 +179,11 @@ class Pidgin(installer.Installer):
         self.connection.copy_file_or_directory(
             os.path.join(source_root, "libpurple", "internal.h"),
             os.path.join(include_dir, "internal.h"))
-        self.connection.write_file(
-            os.path.join(include_dir, "config.h"),
-            OSCAR_CONFIG_HEADER.format(version = self.oscar_version))
+        config_header_path = os.path.join(include_dir, "config.h")
+        if not self.connection.write_file(config_header_path, OSCAR_CONFIG_HEADER.format(version = self.oscar_version)):
+            logger.log_error(f"Unable to write {config_header_path}")
+            self.clean_build()
+            return False
 
         # Build each protocol plugin
         cflags = self.connection.run_output(["pkg-config", "--cflags", "purple"]).split()

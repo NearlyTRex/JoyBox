@@ -1,4 +1,5 @@
 # Imports
+import time
 import types
 
 # Local imports
@@ -16,6 +17,9 @@ from joybox import metadataentry
 from joybox import paths
 from joybox import settings
 from joybox import runtime
+
+# Longest the my-purchases grid may keep loading before the scrape gives up, in seconds
+PURCHASES_LOAD_TIMEOUT_SECONDS = 300
 
 # Itchio store
 class Itchio(storebase.StoreBase):
@@ -193,6 +197,20 @@ class Itchio(storebase.StoreBase):
                 json_platform = self.get_platform()))
         return purchases
 
+    # Scroll to the end of the page until its grid loader is gone; False when it is still there at the deadline
+    def scroll_until_loaded(self, web_driver):
+        deadline = time.monotonic() + PURCHASES_LOAD_TIMEOUT_SECONDS
+        while True:
+            webpage.scroll_to_end_of_page(web_driver)
+            grid_loader = webpage.get_element(
+                parent = web_driver,
+                locator = webpage.ElementLocator({"class": "grid_loader"}))
+            if grid_loader is None:
+                return True
+            if time.monotonic() > deadline:
+                logger.log_error("itch.io purchases were still loading after %d seconds" % PURCHASES_LOAD_TIMEOUT_SECONDS)
+                return False
+
     # Read id, page and title from every cell of the cookie-authenticated my-purchases page; None when it fails to load
     def scrape_purchases(
         self,
@@ -213,13 +231,8 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Scroll to end of page until everything is loaded
-        while True:
-            webpage.scroll_to_end_of_page(web_driver)
-            grid_loader = webpage.get_element(
-                parent = web_driver,
-                locator = webpage.ElementLocator({"class": "grid_loader"}))
-            if grid_loader is None:
-                break
+        if not self.scroll_until_loaded(web_driver):
+            return None
 
         # Parse game cells
         purchases_data = []

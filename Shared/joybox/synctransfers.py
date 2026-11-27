@@ -34,6 +34,7 @@ def download_files_from_remote(
     excludes = None,
     files_from = None,
     interactive = False,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -45,6 +46,7 @@ def download_files_from_remote(
             subcommand = "copyto",
             transfer_paths = [remote_full, local_path],
             remote_names = [remote_name],
+            progress = show_progress,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -57,6 +59,7 @@ def download_files_from_remote(
         excludes = excludes,
         files_from = files_from,
         interactive = interactive,
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -74,6 +77,7 @@ def upload_files_to_remote(
     skip_existing = False,
     interactive = False,
     update_sidecar = True,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -87,6 +91,7 @@ def upload_files_to_remote(
         files_from = files_from,
         extra_flags = ["--ignore-existing"] if skip_existing else [],
         interactive = interactive,
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure):

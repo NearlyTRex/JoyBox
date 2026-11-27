@@ -161,7 +161,8 @@ class Certbot(installer.Installer):
         return True
 
     # apt-get install certbot and its nginx plugin, issue the cert per tls_mode
-    # (adding a renew cron for Let's Encrypt), write the default nginx entry, restart nginx
+    # (adding a renew cron for Let's Encrypt), write the default nginx entry, restart nginx;
+    # False when a step fails
     def install(self):
 
         # Install certbot
@@ -195,10 +196,8 @@ class Certbot(installer.Installer):
 
         # Update default entry
         logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/default")
+        if not self.install_nginx_conf("default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Restart nginx
         logger.log_info("Restarting nginx")

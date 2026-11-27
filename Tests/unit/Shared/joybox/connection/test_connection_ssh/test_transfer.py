@@ -1,7 +1,10 @@
 # Imports
+import ntpath
 import os
+import types
 
 # Local imports
+from joybox.connection import connection_ssh
 from fakes import FakeSSHClient, FakeSFTP
 from connection_ssh_helpers import build, logged
 
@@ -22,6 +25,23 @@ def test_every_file_in_a_tree_is_uploaded(tmp_path):
 
     uploaded = sorted(remote for _, remote in sftp.uploaded)
     assert uploaded == ["/opt/app/config/app.conf", "/opt/app/run.sh"]
+
+
+def test_remote_paths_use_forward_slashes_when_uploading_from_windows(monkeypatch):
+    def walk(src):
+        yield "C:\\app", ["config"], ["run.bat"]
+        yield "C:\\app\\config\\deep", [], ["app.conf"]
+    local_path = types.SimpleNamespace(isdir = lambda path: True, relpath = ntpath.relpath, join = ntpath.join)
+    monkeypatch.setattr(connection_ssh, "os", types.SimpleNamespace(sep = "\\", walk = walk, path = local_path))
+    sftp = FakeSFTP()
+    connection = build(FakeSSHClient(sftp = sftp))
+
+    assert connection.transfer_files("C:\\app", "/opt/app") is True
+
+    assert sorted(sftp.uploaded) == [
+        ("C:\\app\\config\\deep\\app.conf", "/opt/app/config/deep/app.conf"),
+        ("C:\\app\\run.bat", "/opt/app/run.bat")]
+    assert sftp.made_directories == ["/opt/app", "/opt/app/config/deep"]
 
 
 def test_a_missing_remote_directory_is_created_on_the_way(tmp_path):

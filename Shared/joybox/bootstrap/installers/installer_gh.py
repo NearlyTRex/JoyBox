@@ -50,10 +50,11 @@ class Gh(installer.Installer):
 
         # Add apt repository
         logger.log_info("Adding GitHub CLI apt repository")
-        self.connection.write_file(
-            f"/tmp/{self.sources_list}",
-            f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url} stable main\n"
-        )
+        if not self.connection.write_file(
+                f"/tmp/{self.sources_list}",
+                f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url} stable main\n"):
+            logger.log_error(f"Unable to write /tmp/{self.sources_list}")
+            return False
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo=True)
 
         # Update and install

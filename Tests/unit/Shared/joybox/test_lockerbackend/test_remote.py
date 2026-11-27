@@ -46,7 +46,6 @@ def test_a_listing_passes_its_excludes(remote):
 
 
 @pytest.mark.parametrize("method,call", [
-    ("file_exists", "does_path_exist"),
     ("path_exists", "does_path_exist"),
     ("path_contains_files", "does_path_contain_files"),
 ])
@@ -60,6 +59,65 @@ def test_a_missing_remote_path_is_reported_missing(remote):
     remote["exists"] = False
 
     assert backend().path_exists("Games/Game.zip") is False
+
+
+@pytest.fixture
+def stat(monkeypatch):
+    # Answers rclone lsjson --stat with the entry set for each remote path.
+    state = {"entries": {}, "queries": []}
+
+    def run_remote_query(remote_name, remote_type, remote_path, subcommand, verbose = False, pretend_run = False, exit_on_failure = False):
+        state["queries"].append({"remote_path": remote_path, "subcommand": subcommand})
+        if remote_path not in state["entries"]:
+            return ("", 3)
+        return (state["entries"][remote_path], 0)
+
+    monkeypatch.setattr(lockerbackend.sync, "run_remote_query", run_remote_query)
+    return state
+
+
+def test_a_stored_file_exists(stat):
+    stat["entries"][os.path.join(REMOTE_PATH, "Games/Game.zip")] = '{"Path": "Game.zip", "IsDir": false}'
+
+    assert backend().file_exists("Games/Game.zip") is True
+    assert stat["queries"][0]["subcommand"] == ["lsjson", "--stat"]
+
+
+def test_a_folder_is_not_a_file(stat):
+    stat["entries"][os.path.join(REMOTE_PATH, "Games")] = '{"Path": "Games", "IsDir": true}'
+
+    assert backend().file_exists("Games") is False
+
+
+@pytest.mark.parametrize("output", ["", "not json", "[]"])
+def test_an_unreadable_stat_is_not_a_file(stat, output):
+    stat["entries"][os.path.join(REMOTE_PATH, "Games/Game.zip")] = output
+
+    assert backend().file_exists("Games/Game.zip") is False
+
+
+def test_a_missing_file_does_not_exist(stat):
+    assert backend().file_exists("Games/Game.zip") is False
+
+
+def test_a_file_check_without_rclone_finds_nothing(monkeypatch):
+    def run_remote_query(remote_name, remote_type, remote_path, subcommand, verbose = False, pretend_run = False, exit_on_failure = False):
+        return None
+
+    monkeypatch.setattr(lockerbackend.sync, "run_remote_query", run_remote_query)
+    assert backend().file_exists("Games/Game.zip") is False
+
+
+def test_an_encrypted_locker_finds_a_file_by_its_stored_name(stat, cryption):
+    stat["entries"][os.path.join(REMOTE_PATH, "Games/Game.zip.enc")] = '{"Path": "Game.zip.enc", "IsDir": false}'
+
+    assert backend(encrypted = True).file_exists("Games/Game.zip") is True
+    assert backend(encrypted = True).path_exists("Games/Game.zip") is True
+
+
+def test_an_encrypted_locker_finds_a_folder_by_its_own_name(remote, stat, cryption):
+    assert backend(encrypted = True).path_exists("Games") is True
+    assert only(remote, "does_path_exist")["remote_path"] == os.path.join(REMOTE_PATH, "Games")
 
 
 ###########################################################

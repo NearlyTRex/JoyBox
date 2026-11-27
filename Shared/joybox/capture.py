@@ -62,7 +62,7 @@ def capture_screenshot(
     # Check result
     return os.path.exists(output_file)
 
-# Run a function while a background job re-grabs the screenshot every interval; True when the image exists
+# Run a function while a background job re-grabs the screenshot every interval; True when it succeeds and the image exists
 def capture_screenshot_while_running(
     run_func,
     output_file,
@@ -98,11 +98,13 @@ def capture_screenshot_while_running(
     # Run given function while capturing
     background_job.start()
     try:
-        run_func()
+        run_success = run_func()
     finally:
         background_job.stop()
 
     # Check result
+    if not run_success:
+        return False
     if pretend_run:
         return True
     return os.path.exists(output_file)
@@ -247,7 +249,7 @@ def capture_video_while_running(
     # Run given function while capturing
     background_thread.start()
     try:
-        run_func()
+        run_success = run_func()
     finally:
 
         # Stop capture
@@ -256,6 +258,8 @@ def capture_video_while_running(
         background_thread.join()
 
     # Check result
+    if not run_success:
+        return False
     if pretend_run:
         return True
     return os.path.exists(output_file)

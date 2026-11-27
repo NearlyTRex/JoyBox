@@ -286,6 +286,14 @@ def download_asmr_audio_files(channel_name = None, oldest_first = None, cookie_s
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Artist folder an album sits in, or None when it sits directly under its genre folder
+# (always the case without a genre, where albums are found one level under each genre)
+def detect_album_artist(album_dir, genre_type = None):
+    parent_name = paths.get_filename_file(paths.get_filename_directory(album_dir))
+    if genre_type is None or parent_name == genre_type.value:
+        return None
+    return parent_name
+
 # Read the tags of each selected album and write them to its JSON metadata file; False on the first failure
 def build_audio_metadata_files(
     genre_type = None,
@@ -312,11 +320,7 @@ def build_audio_metadata_files(
         album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
-        detected_artist_name = None
-        parent_dir = paths.get_filename_directory(album_dir)
-        parent_name = paths.get_filename_file(parent_dir)
-        if parent_name != genre_type.value:
-            detected_artist_name = parent_name
+        detected_artist_name = detect_album_artist(album_dir, genre_type)
         logger.log_info(f"Scanning album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
 
         # Extract album metadata
@@ -375,11 +379,7 @@ def clear_audio_metadata_tags(
         album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
-        detected_artist_name = None
-        parent_dir = paths.get_filename_directory(album_dir)
-        parent_name = paths.get_filename_file(parent_dir)
-        if parent_name != genre_type.value:
-            detected_artist_name = parent_name
+        detected_artist_name = detect_album_artist(album_dir, genre_type)
 
         # Clear album tags
         logger.log_info(f"Clearing tags from album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
@@ -418,11 +418,7 @@ def apply_audio_metadata_tags(
         album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
-        detected_artist_name = None
-        parent_dir = paths.get_filename_directory(album_dir)
-        parent_name = paths.get_filename_file(parent_dir)
-        if parent_name != genre_type.value:
-            detected_artist_name = parent_name
+        detected_artist_name = detect_album_artist(album_dir, genre_type)
 
         # Find metadata file
         json_file = environment.get_file_audio_metadata_file(

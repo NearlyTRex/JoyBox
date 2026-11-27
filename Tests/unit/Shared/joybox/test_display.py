@@ -57,3 +57,46 @@ def test_restoring_from_another_resolution_sets_the_default(default_resolution, 
     monkeypatch.setattr(display.gui, "get_current_screen_resolution", lambda: (1280, 720))
     assert display.restore_default_screen_resolution()
     assert nircmd_runs[0]["cmd"] == ["nircmd.exe", "setdisplay", str(DEFAULT_W), str(DEFAULT_H), str(DEFAULT_C)]
+
+
+@pytest.fixture
+def nircmd_exit(monkeypatch):
+    exit_code = {"code": 0}
+    errors = []
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: name == "NirCmd")
+    monkeypatch.setattr(programs, "get_tool_program", lambda name: "nircmd.exe")
+    monkeypatch.setattr(command, "run_returncode_command", lambda **kwargs: exit_code["code"])
+    monkeypatch.setattr(
+        display.logger, "log_error",
+        lambda message, quit_program = False: errors.append((message, quit_program)))
+    exit_code["errors"] = errors
+    return exit_code
+
+
+def test_a_nircmd_success_sets_the_resolution(nircmd_exit):
+    assert display.set_screen_resolution(1280, 720, 16) is True
+    assert nircmd_exit["errors"] == []
+
+
+def test_a_nircmd_failure_fails_quietly(nircmd_exit):
+    nircmd_exit["code"] = 1
+
+    assert display.set_screen_resolution(1280, 720, 16) is False
+    assert nircmd_exit["errors"] == []
+
+
+@pytest.mark.parametrize("verbose,exit_on_failure", [(True, False), (False, True)])
+def test_a_nircmd_failure_is_reported_when_asked(nircmd_exit, verbose, exit_on_failure):
+    nircmd_exit["code"] = 3
+
+    assert display.set_screen_resolution(1280, 720, 16, verbose = verbose, exit_on_failure = exit_on_failure) is False
+    message, quit_program = nircmd_exit["errors"][0]
+    assert "code 3" in message
+    assert quit_program is exit_on_failure
+
+
+def test_a_nircmd_failure_fails_the_restore(default_resolution, monkeypatch, nircmd_exit):
+    nircmd_exit["code"] = 1
+    monkeypatch.setattr(display.gui, "get_current_screen_resolution", lambda: (1280, 720))
+
+    assert display.restore_default_screen_resolution() is False

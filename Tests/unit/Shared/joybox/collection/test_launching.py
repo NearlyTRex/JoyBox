@@ -315,6 +315,19 @@ def test_a_failed_save_dir_link_stops_the_launch(steps, store, launcher, tmp_pat
     assert launcher.launches == []
 
 
+def test_a_failed_local_launch_still_reverts_the_launcher(steps, store, launcher, tmp_path):
+    config_file = tmp_path / "emulator.cfg"
+    config_file.write_text("setting")
+    launcher.config_file = str(config_file)
+    launcher.save_dir = str(tmp_path / "saves")
+    launcher.result = False
+
+    assert launching.launch_local_game(FakeGameInfo()) is False
+    assert steps.names().count("replace_strings_in_file") == 2
+    assert steps.kwargs("remove_object")["obj"] == launcher.save_dir
+    assert steps.kwargs("make_directory")["src"] == launcher.save_dir
+
+
 def test_a_failed_local_launch_exports_nothing(steps, store, launcher):
     launcher.result = False
 

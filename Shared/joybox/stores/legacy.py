@@ -39,7 +39,7 @@ class Legacy(storebase.StoreBase):
         config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
         config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
         config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
-        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME,
     })
 
     # Constructor

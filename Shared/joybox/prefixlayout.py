@@ -75,9 +75,9 @@ def get_user_profile_path(options):
 def get_wine_public_profile_path(options):
     return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive_c", "users", "Public"))
 
-# Host folder of the shared Public profile in a Sandboxie prefix, drive/C/Public
+# Host folder of the shared Public profile in a Sandboxie prefix, drive/C/Users/Public
 def get_sandboxie_public_profile_path(options):
-    return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive", "C", "Public"))
+    return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive", "C", "Users", "Public"))
 
 # Host folder of the Public profile in the Wine or Sandboxie prefix; None when neither
 def get_public_profile_path(options):

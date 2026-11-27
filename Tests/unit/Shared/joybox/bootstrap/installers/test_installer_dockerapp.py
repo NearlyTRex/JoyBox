@@ -549,6 +549,15 @@ def test_uninstall_keeps_data_and_closes_ports(isolated_settings):
     assert connection.ran("manager_nginx.sh", "systemctl", "restart")
 
 
+def test_a_failed_nginx_removal_fails_the_uninstall_after_cleanup(isolated_settings):
+    app = build_demo(uninstall_nginx_config = lambda: False)
+    connection = app.connection
+
+    assert app.uninstall() is False
+    assert connection.ran("manager_nginx.sh", "close_port", "9000")
+    assert connection.ran("manager_nginx.sh", "systemctl", "restart")
+
+
 def test_uninstall_without_ports_closes_none(isolated_settings):
     app = build_demo(nginx_ports = [])
     assert app.uninstall()

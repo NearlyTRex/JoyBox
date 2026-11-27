@@ -137,12 +137,15 @@ def test_a_download_clears_what_was_there_before(downloads):
 
 @pytest.fixture
 def all_downloads(monkeypatch):
-    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True}
+    state = {"names": ["Half-Life 2"], "platforms": {}, "downloaded": [], "ok": True}
 
     monkeypatch.setattr(
         purchase.gamecollection, "iterate_rom_game_infos",
         lambda verbose = False, pretend_run = False, exit_on_failure = False: (
-            FakeGameInfo(name = name) for name in state["names"]))
+            FakeGameInfo(name = name, platform = state["platforms"].get(name, "Computer"))
+            for name in state["names"]))
+    monkeypatch.setattr(
+        purchase.stores, "is_store_platform", lambda platform: platform == "Computer")
 
     def download_game_store_purchase(game_info, **kwargs):
         state["downloaded"].append(game_info.get_name())
@@ -163,4 +166,12 @@ def test_downloading_everything_stops_at_the_first_failure(all_downloads):
     all_downloads["ok"] = False
 
     assert purchase.download_all_game_store_purchases() is False
+    assert all_downloads["downloaded"] == ["Half-Life 2"]
+
+
+def test_games_on_platforms_without_a_store_are_skipped(all_downloads):
+    all_downloads["names"] = ["Chrono Trigger", "Half-Life 2"]
+    all_downloads["platforms"] = {"Chrono Trigger": "Nintendo SNES"}
+
+    assert purchase.download_all_game_store_purchases() is True
     assert all_downloads["downloaded"] == ["Half-Life 2"]

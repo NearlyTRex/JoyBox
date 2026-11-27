@@ -615,7 +615,7 @@ exit 1
         return self.connection.run_return_code(["sh", "-c", script]) == 0
 
     # Stop the project, retire its directory, remove the nginx config, close its
-    # firewall ports and restart nginx
+    # firewall ports and restart nginx; False when the nginx config step fails
     def uninstall(self):
 
         # Stop docker
@@ -628,7 +628,9 @@ exit 1
 
         # Remove Nginx entry
         logger.log_info("Removing Nginx entry")
-        self.uninstall_nginx_config()
+        nginx_removed = self.uninstall_nginx_config()
+        if not nginx_removed:
+            logger.log_error(f"Removing the nginx config for {self.app_name} failed")
 
         # Close firewall ports
         if self.nginx_ports:
@@ -639,4 +641,4 @@ exit 1
         # Restart Nginx
         logger.log_info("Restarting Nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-        return True
+        return nginx_removed

@@ -20,7 +20,7 @@ from joybox import strings
 from joybox import metadataentry
 from joybox import manifest
 from joybox import backup
-from joybox.stores import steamlookups
+from joybox import steamlookups
 
 # Get vdf, imported on first use
 def _get_vdf():
@@ -346,11 +346,7 @@ class Steam(storebase.StoreBase):
         if manifest_entry:
             base_path = None
             if json_data.has_key(config.JSON_KEY_STORE_INSTALLDIR):
-                base_path = paths.join_paths(
-                    config.TOKEN_STORE_INSTALL_DIR,
-                    "steamapps",
-                    "common",
-                    json_data.get_value(config.JSON_KEY_STORE_INSTALLDIR))
+                base_path = json_data.get_value(config.JSON_KEY_STORE_INSTALLDIR)
             manifest_paths = manifest_entry.get_paths(base_path)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
@@ -671,7 +667,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.is_valid_install_identifier(identifier):
+        if not self.is_valid_launch_identifier(identifier):
             logger.log_warning("Launch identifier '%s' was not valid" % identifier)
             return False
 

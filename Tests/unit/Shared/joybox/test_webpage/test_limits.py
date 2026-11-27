@@ -57,6 +57,22 @@ def test_a_wait_without_a_timeout_uses_the_configured_one(isolated_settings, wai
     assert waits["timeouts"] == [40]
 
 
+@pytest.mark.parametrize("waiter", [webpage.wait_for_all_elements, webpage.wait_for_any_element])
+def test_a_group_wait_without_a_timeout_uses_the_configured_one(isolated_settings, waits, waiter):
+    isolated_settings.set_value("UserData.Scraping", "element_wait_seconds", "40")
+
+    waiter(FakeDriver(), [webpage.ElementLocator({"id": "x"})])
+
+    assert waits["timeouts"] == [40]
+
+
+@pytest.mark.parametrize("waiter", [webpage.wait_for_all_elements, webpage.wait_for_any_element])
+def test_a_group_wait_keeps_a_given_timeout(isolated_settings, waits, waiter):
+    waiter(FakeDriver(), [webpage.ElementLocator({"id": "x"})], wait_time = 5)
+
+    assert waits["timeouts"] == [5]
+
+
 def test_a_scrape_is_retried_with_the_configured_attempts_and_delay(isolated_settings, monkeypatch):
     isolated_settings.set_value("UserData.Scraping", "fetch_retries", "5")
     isolated_settings.set_value("UserData.Scraping", "fetch_retry_delay_seconds", "9")

@@ -345,6 +345,31 @@ def copy_files(
             exit_on_failure = exit_on_failure)
     return False
 
+# The files 7-Zip wrote for an archive: the archive itself, else its .001, .002, ... volumes,
+# else the archive name alone so a move of it still reports the missing file
+def get_archive_volume_files(archive_file):
+    if paths.does_path_exist(archive_file):
+        return [archive_file]
+    volume_files = []
+    while paths.does_path_exist("%s.%03d" % (archive_file, len(volume_files) + 1)):
+        volume_files.append("%s.%03d" % (archive_file, len(volume_files) + 1))
+    return volume_files or [archive_file]
+
+# Move an archive, or each of its volumes, from the temporary directory into the output directory
+def move_archive_volumes(tmp_archive_file, output_dir, show_progress, skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
+    for volume_file in get_archive_volume_files(tmp_archive_file):
+        if not filebulk.smart_move(
+            src = volume_file,
+            dest = paths.join_paths(output_dir, paths.get_filename_file(volume_file)),
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
+    return True
+
 # Archive a folder in a temporary directory and move the archive into an output directory,
 # clearing that first when asked; failures are logged as backing up between the paths given
 def archive_folder_into(
@@ -367,15 +392,9 @@ def archive_folder_into(
             return False
         if clean_output:
             fileops.remove_directory_contents(src = output_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        if not filebulk.smart_move(
-            src = tmp_archive_file,
-            dest = paths.join_paths(output_dir, archive_file_name),
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure):
+        if not move_archive_volumes(
+            tmp_archive_file, output_dir, show_progress, skip_existing, skip_identical,
+            verbose, pretend_run, exit_on_failure):
             logger.log_error("Unable to move archived backup files from %s to %s" % failure_paths)
             return False
         return True
@@ -417,7 +436,8 @@ def archive_folder(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success and paths.does_path_exist(paths.join_paths(output_path, archive_file_name))
+    output_archive_file = paths.join_paths(output_path, archive_file_name)
+    return success and (paths.does_path_exist(output_archive_file) or paths.does_path_exist(output_archive_file + ".001"))
 
 # Pack each second-level folder into its own archive, kept under its top-level folder's name in the output
 def archive_sub_folders(
@@ -437,10 +457,11 @@ def archive_sub_folders(
     if not archive_type:
         archive_type = config.ArchiveFileType.SEVENZIP
 
-    # Archive each subdirectory of each non-excluded main directory
+    # Archive each subdirectory of each non-excluded main directory, emptying its output only before the first
     for base_obj in paths.get_directory_contents(input_base_path, excludes = exclude_paths):
         base_dir = paths.join_paths(input_base_path, base_obj)
         sub_objs = paths.get_directory_contents(base_dir) if paths.is_path_directory(base_dir) else []
+        clean_base_output = clean_output
         for sub_obj in sub_objs:
             sub_dir = paths.join_paths(base_dir, sub_obj)
             if not paths.is_path_directory(sub_dir):
@@ -449,7 +470,7 @@ def archive_sub_folders(
                 input_path = sub_dir,
                 output_dir = paths.join_paths(output_base_path, base_obj),
                 archive_file_name = sub_obj + archive_type.cval(),
-                clean_output = clean_output,
+                clean_output = clean_base_output,
                 show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
@@ -459,4 +480,5 @@ def archive_sub_folders(
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
+            clean_base_output = False
     return True

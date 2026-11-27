@@ -161,7 +161,7 @@ def update_game_metadata_entry(
     latest_metadata = None
     if store_obj:
         latest_metadata = store_obj.get_latest_metadata(
-            identifier = json_obj.get_subvalue(store_obj.get_key(), store_obj.get_metadata_identifier_key()),
+            identifier = json_obj.get_subvalue(store_obj.get_key(), store_obj.get_metadata_identifier_key()) if json_obj else None,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

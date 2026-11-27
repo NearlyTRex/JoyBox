@@ -3,6 +3,7 @@
 # Imports
 import importlib
 import re
+import urllib.parse
 
 # Local imports
 from joybox import logger
@@ -16,6 +17,15 @@ def _get_requests():
 
 # Seconds a plain request may take before it is abandoned
 REQUEST_TIMEOUT_SECONDS = 30
+
+# The url with params appended to its query string, encoded as requests encodes them
+def _get_url_with_params(url, params):
+    if not params:
+        return url
+    query = params if isinstance(params, str) else urllib.parse.urlencode(params, doseq = True)
+    parts = urllib.parse.urlsplit(url)
+    joined = "&".join(part for part in (parts.query, query) if part)
+    return urllib.parse.urlunsplit(parts._replace(query = joined))
 
 # Page source fetched with a headless web driver, else with requests; empty when both fail
 def get_website_text(
@@ -45,7 +55,7 @@ def get_website_text(
         try:
             page_text = webpage.get_page_source(
                 driver = driver,
-                url = url,
+                url = _get_url_with_params(url, params),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

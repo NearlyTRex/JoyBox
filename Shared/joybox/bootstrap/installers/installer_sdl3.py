@@ -91,10 +91,13 @@ class Sdl3(installer.Installer):
             "/usr/local/lib/cmake/SDL3_ttf",
             "/usr/local/include/SDL3",
             "/usr/local/lib/pkgconfig/sdl3.pc",
-            "/usr/local/lib/pkgconfig/sdl3-ttf.pc",
-            "/usr/local/lib/libSDL3*",
-            "/usr/local/lib/libSDL3_ttf*"]:
+            "/usr/local/lib/pkgconfig/sdl3-ttf.pc"]:
             self.connection.remove_file_or_directory(path, sudo = True)
+
+        # Remove the libSDL3 and libSDL3_ttf libraries and symlinks; commands run
+        # without a shell, so find matches the pattern
+        self.connection.run_checked([
+            "find", "/usr/local/lib", "-maxdepth", "1", "-name", "libSDL3*", "-delete"], sudo = True)
 
         # Refresh the shared library cache
         logger.log_info("Refreshing shared library cache")

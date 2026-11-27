@@ -5,8 +5,8 @@
 # day-0 scripts, the deploy, the sshd hardening and the verification. Each stage
 # checks what is already done, so a second run resumes rather than repeats.
 #
-# ConnectionSSH keeps one client per process, so root and the account are never
-# connected at the same time; each stage opens what it needs and closes it.
+# Each stage opens the connection it needs, as root or as the account, and
+# closes it before the next, so no stage leaves a session behind.
 
 # Imports
 import contextlib

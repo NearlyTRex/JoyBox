@@ -146,6 +146,75 @@ class Program(jsondata.JsonData):
     def is_scumm(self):
         return self.get_value(config.PROGRAM_KEY_IS_SCUMM, False)
 
+    # Opt a setup program into failing the install when it exits non-zero
+    def set_check_exit_code(self, value):
+        self.set_value(config.PROGRAM_KEY_CHECK_EXIT_CODE, value)
+    # Whether a setup run fails on a non-zero exit instead of warning; False by default, as many
+    # installers exit non-zero after installing correctly
+    def should_check_exit_code(self):
+        return self.get_value(config.PROGRAM_KEY_CHECK_EXIT_CODE, False)
+
+    # Resolve the executable's full path inside the prefix and whether it is a Windows program;
+    # None when the entry has no executable and no dos, win31 or scumm launch type
+    def resolve_launch_path(self, options, token_map):
+        program_exe = prefixlayout.resolve_path(self.get_exe() or "", token_map)
+        program_cwd = prefixlayout.resolve_path(self.get_cwd() or "", token_map)
+        is_emulated = self.is_dos() or self.is_win31() or self.is_scumm()
+        if not is_emulated and not program_exe:
+            logger.log_error("Unable to launch program, no executable and no dos, win31 or scumm launch type")
+            return None
+        if self.is_dos() or self.is_win31():
+            return paths.join_paths(options.get_prefix_dos_c_drive(), program_cwd, program_exe), False
+        if not is_emulated:
+            return paths.join_paths(options.get_prefix_c_drive_real(), program_cwd, program_exe), True
+        return paths.join_paths(program_cwd, program_exe), False
+
+    # Build the launch command and options for this program, with the path of a Windows executable;
+    # None when the entry names nothing to run
+    def build_launch(self, options, token_map, fullscreen = False):
+
+        # Get program info
+        resolved = self.resolve_launch_path(options, token_map)
+        if not resolved:
+            return None
+        program_path, program_is_windows = resolved
+        program_args = self.get_args()
+        program_is_dos = self.is_dos()
+        program_is_win31 = self.is_win31()
+        program_is_scumm = self.is_scumm()
+        program_drive = paths.get_filename_drive(program_path)
+        program_dir = paths.get_filename_directory(program_path)
+        program_file = paths.get_filename_file(program_path)
+        program_offset = paths.get_filename_drive_offset(program_dir)
+        program_options = options.copy()
+
+        # DOS and Win31 programs run under DOSBox-X
+        if program_is_dos or program_is_win31:
+            program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
+            get_launch_command = command.get_dos_launch_command if program_is_dos else command.get_win31_launch_command
+            program_cmd = get_launch_command(
+                options = program_options,
+                start_program = program_file,
+                start_args = program_args,
+                start_letter = program_drive,
+                start_offset = program_offset,
+                fullscreen = fullscreen)
+
+        # Scumm programs run under ScummVM
+        elif program_is_scumm:
+            program_cmd = command.get_scumm_launch_command(
+                options = program_options,
+                fullscreen = fullscreen)
+
+        # Windows programs run from the prefix drive
+        else:
+            program_options.set_force_prefix(True)
+            program_options.set_is_prefix_mapped_cwd(True)
+            program_options.set_cwd(os.path.expanduser("~"))
+            program_options.add_blocking_processes([program_path])
+            program_cmd = [program_path] + program_args
+        return program_cmd, program_options, (program_path if program_is_windows else None)
+
     # Run program
     def run(
         self,
@@ -158,87 +227,11 @@ class Program(jsondata.JsonData):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Get program info
-        program_exe = prefixlayout.resolve_path(self.get_exe() or "", token_map)
-        program_cwd = prefixlayout.resolve_path(self.get_cwd() or "", token_map)
-        program_args = self.get_args()
-        program_is_dos = self.is_dos()
-        program_is_win31 = self.is_win31()
-        program_is_scumm = self.is_scumm()
-        program_is_windows = program_exe and not program_is_dos and not program_is_win31 and not program_is_scumm
-
-        # An entry with no executable and no emulated launch type names nothing
-        # to run, and every branch below would be skipped
-        if not program_is_dos and not program_is_win31 and not program_is_scumm and not program_is_windows:
-            logger.log_error("Unable to launch program, no executable and no dos, win31 or scumm launch type")
+        # Get launch
+        launch = self.build_launch(options, token_map, fullscreen)
+        if not launch:
             return False
-        program_path = paths.join_paths(program_cwd, program_exe)
-        if program_is_dos or program_is_win31:
-            program_path = paths.join_paths(options.get_prefix_dos_c_drive(), program_cwd, program_exe)
-        if program_is_windows:
-            program_path = paths.join_paths(options.get_prefix_c_drive_real(), program_cwd, program_exe)
-        program_drive = paths.get_filename_drive(program_path)
-        program_dir = paths.get_filename_directory(program_path)
-        program_file = paths.get_filename_file(program_path)
-        program_offset = paths.get_filename_drive_offset(program_dir)
-        program_options = options.copy()
-
-        ##########################
-        # DOS program
-        ##########################
-        if program_is_dos:
-
-            # Update program options
-            program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
-
-            # Get program command
-            program_cmd = command.get_dos_launch_command(
-                options = program_options,
-                start_program = program_file,
-                start_args = program_args,
-                start_letter = program_drive,
-                start_offset = program_offset,
-                fullscreen = fullscreen)
-
-        ##########################
-        # Win31 programs
-        ##########################
-        elif program_is_win31:
-
-            # Update program options
-            program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
-
-            # Get program command
-            program_cmd = command.get_win31_launch_command(
-                options = program_options,
-                start_program = program_file,
-                start_letter = program_drive,
-                start_offset = program_offset,
-                fullscreen = fullscreen)
-
-        ##########################
-        # Scumm programs
-        ##########################
-        elif program_is_scumm:
-
-            # Get program command
-            program_cmd = command.get_scumm_launch_command(
-                options = program_options,
-                fullscreen = fullscreen)
-
-        ##########################
-        # Windows program
-        ##########################
-        else:
-
-            # Update program options
-            program_options.set_force_prefix(True)
-            program_options.set_is_prefix_mapped_cwd(True)
-            program_options.set_cwd(os.path.expanduser("~"))
-            program_options.add_blocking_processes([program_path])
-
-            # Get program command
-            program_cmd = [program_path] + program_args
+        program_cmd, program_options, _ = launch
 
         # Launch game
         success = capture.run_capture_command(
@@ -261,6 +254,38 @@ class Program(jsondata.JsonData):
             return False
 
         # Should be successful
+        return True
+
+    # Run as an installer; False when it cannot run or, with check_exit_code, exits non-zero.
+    # Other non-zero exits and an unrestored screen resolution only warn
+    def run_setup(self, options, token_map, verbose = False, pretend_run = False, exit_on_failure = False):
+
+        # Get launch
+        launch = self.build_launch(options, token_map)
+        if not launch:
+            return False
+        program_cmd, program_options, program_path = launch
+        if program_path and not pretend_run and not paths.does_path_exist(program_path, case_sensitive_paths = False):
+            logger.log_error("Setup program not found: %s" % program_path, quit_program = exit_on_failure)
+            return False
+
+        # Run installer
+        code = command.run_returncode_command(
+            cmd = program_cmd,
+            options = program_options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            message = "Setup program %s exited with code %s" % (program_cmd[0], code)
+            if self.should_check_exit_code():
+                logger.log_error(message, quit_program = exit_on_failure)
+                return False
+            logger.log_warning(message)
+
+        # Restore default screen resolution
+        if not display.restore_default_screen_resolution(verbose = verbose, pretend_run = pretend_run):
+            logger.log_warning("Unable to restore the default screen resolution after setup")
         return True
 
 # Program step
@@ -369,6 +394,13 @@ class ProgramStep(jsondata.JsonData):
 
         # Should be successful
         return True
+
+# Run copy, move, extract and lowercase setup steps in order; False at the first that fails
+def run_setup_steps(setup_steps, token_map, verbose = False, pretend_run = False, exit_on_failure = False):
+    for setup_step in setup_steps:
+        if not setup_step.run(token_map = token_map, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+            return False
+    return True
 
 # Install a computer game in a throwaway setup prefix from its source files and discs, running its store setup steps
 # and programs, then pack the prefix's C drive into the output install image
@@ -481,29 +513,23 @@ def setup_computer_game(
                 return False
 
     # Run pre-install steps
-    for setup_step in game_info.get_store_setup_preinstall_steps():
-        setup_step.run(
-            token_map = game_token_map,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    if not run_setup_steps(game_info.get_store_setup_preinstall_steps(), game_token_map, verbose, pretend_run, exit_on_failure):
+        return False
 
     # Run setup programs
     for setup_program in game_info.get_store_setup_install_programs():
-        setup_program.run(
+        success = setup_program.run_setup(
             options = game_setup_options,
             token_map = game_token_map,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Run post-install steps
-    for setup_step in game_info.get_store_setup_postinstall_steps():
-        setup_step.run(
-            token_map = game_token_map,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    if not run_setup_steps(game_info.get_store_setup_postinstall_steps(), game_token_map, verbose, pretend_run, exit_on_failure):
+        return False
 
     # Copy public files
     prefix_public_profile_path = prefixlayout.get_public_profile_path(game_setup_options)

@@ -439,6 +439,14 @@ def test_a_store_game_is_updated_from_its_store(metadata_root, scraping, monkeyp
     assert load(metadata_root).get_game(platform_of(), GAME).get_developer() == "Valve"
 
 
+def test_a_store_game_without_json_data_is_asked_without_an_identifier(metadata_root, scraping):
+    create(metadata_root)
+    scraping["store"] = FakeStore(None)
+
+    assert update(metadata_root) is True
+    assert scraping["store"].asked == [None]
+
+
 ###########################################################
 # Building entries
 ###########################################################

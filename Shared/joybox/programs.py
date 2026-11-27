@@ -40,16 +40,22 @@ def get_program(program_config, base_dir, program_name, program_platform = None)
 
 ###########################################################
 
-# Install folder of a tool or emulator under its root dir, by platform; None for an unknown program
+# Install folder of a tool or emulator under its root dir, by platform (the current one by default);
+# None for an unknown program
 def get_program_install_dir(program_name, program_platform = None):
+    if not program_platform:
+        program_platform = platform_info.get_current_platform()
     if is_program_name_tool(program_name, program_platform):
         return paths.join_paths(environment.get_tools_root_dir(), program_name, program_platform)
     if is_program_name_emulator(program_name, program_platform):
         return paths.join_paths(environment.get_emulators_root_dir(), program_name, program_platform)
     return None
 
-# Locker folder holding a tool's or emulator's backed-up binaries; None for an unknown program
+# Locker folder holding a tool's or emulator's backed-up binaries, by platform (the current one by
+# default); None for an unknown program
 def get_program_backup_dir(program_name, program_platform = None):
+    if not program_platform:
+        program_platform = platform_info.get_current_platform()
     if is_program_name_tool(program_name, program_platform):
         return environment.get_locker_program_tool_dir(program_name, program_platform)
     if is_program_name_emulator(program_name, program_platform):
@@ -123,13 +129,19 @@ def get_tool_program(tool_name, tool_platform = None):
 def get_emulator_program(emulator_name, emulator_platform = None):
     return get_program(get_emulator_config(), environment.get_emulators_root_dir(), emulator_name, emulator_platform)
 
-# Folder holding a tool's executable
-def get_tool_program_dir(tool_name, tool_platform = None):
-    return paths.get_filename_directory(get_tool_program(tool_name, tool_platform))
+# Folder holding a program's executable; None when it has none
+def _get_program_dir(program_path):
+    if program_path:
+        return paths.get_filename_directory(program_path)
+    return None
 
-# Folder holding an emulator's executable
+# Folder holding a tool's executable; None when it has none
+def get_tool_program_dir(tool_name, tool_platform = None):
+    return _get_program_dir(get_tool_program(tool_name, tool_platform))
+
+# Folder holding an emulator's executable; None when it has none
 def get_emulator_program_dir(emulator_name, emulator_platform = None):
-    return paths.get_filename_directory(get_emulator_program(emulator_name, emulator_platform))
+    return _get_program_dir(get_emulator_program(emulator_name, emulator_platform))
 
 # One key of a tool's catalog config, narrowed to the platform; None when unset
 def get_tool_config_value(tool_name, tool_key, tool_platform = None):

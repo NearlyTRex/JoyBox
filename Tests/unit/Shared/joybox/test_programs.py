@@ -403,6 +403,19 @@ def test_install_and_backup_dirs_follow_the_program_kind(monkeypatch, fake_regis
     assert programs.get_program_backup_dir("Unknown", "linux") is None
 
 
+def test_install_and_backup_dirs_default_to_the_current_platform(monkeypatch, fake_registry):
+    monkeypatch.setattr(
+        programs.environment, "get_locker_program_tool_dir",
+        lambda name, platform = None: "/locker/Tools/%s/%s" % (name, platform))
+    monkeypatch.setattr(
+        programs.environment, "get_locker_gaming_emulator_binaries_dir",
+        lambda name, platform = None: "/locker/Emulators/%s/%s" % (name, platform))
+
+    assert programs.get_program_install_dir("Packer") == fake_registry["tools_root"] + "/Packer/linux"
+    assert programs.get_program_install_dir("Retro") == fake_registry["emulators_root"] + "/Retro/linux"
+    assert programs.get_program_backup_dir("Retro") == "/locker/Emulators/Retro/linux"
+
+
 def test_a_platform_library_backup_dir_is_nested_by_platform(monkeypatch):
     monkeypatch.setattr(
         programs.environment, "get_locker_program_tool_dir", lambda name, platform = None: "/locker/" + name)
@@ -444,6 +457,11 @@ def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registr
 def test_program_dirs_are_the_program_parent(fake_registry):
     assert programs.get_tool_program_dir("Packer", "linux") == fake_registry["tools_root"] + "/Packer/linux"
     assert programs.get_emulator_program_dir("Retro", "linux") == fake_registry["emulators_root"] + "/Retro/linux"
+
+
+def test_a_program_without_a_path_has_no_program_dir(fake_registry):
+    assert programs.get_tool_program_dir("Unknown", "linux") is None
+    assert programs.get_emulator_program_dir("Unknown", "linux") is None
 
 
 def test_path_config_values_resolve_under_their_roots(fake_registry):

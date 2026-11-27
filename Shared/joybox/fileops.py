@@ -693,19 +693,21 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
 
 
 # Remove every path the shell glob in src matches, each by its type (file, symlink, or
-# directory tree)
+# directory tree); False when any match could not be removed
 def remove_file_or_directory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Removing %s" % src)
+        success = True
         if not pretend_run:
             for match in glob.glob(src):
-                remove_object(
+                removed = remove_object(
                     obj = match,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-        return True
+                success = removed and success
+        return success
     except OSError as e:
         return report_failure("Unable to remove %s" % src, e, exit_on_failure)
 

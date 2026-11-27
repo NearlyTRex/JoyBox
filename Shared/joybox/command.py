@@ -466,6 +466,16 @@ def get_installer_setup_command(
 
 ###########################################################
 
+# DOSBox-X imgmount arguments putting each disc image on its own drive from D on;
+# images beyond the last free drive letter are left unmounted with a warning
+def get_dos_disc_mount_args(disc_images):
+    mount_args = []
+    for drive_letter, disc_image in zip(config.drives_regular, disc_images, strict = False):
+        mount_args += ["-c", "imgmount %s \"%s\" -t iso" % (drive_letter, disc_image)]
+    for disc_image in disc_images[len(config.drives_regular):]:
+        logger.log_warning("No free drive letter to mount %s" % disc_image)
+    return mount_args
+
 # DOSBox-X arguments mounting the prefix's C drive and its CHD discs, then switching drive, folder and starting the program
 def get_dos_launch_command(
     options,
@@ -497,13 +507,7 @@ def get_dos_launch_command(
         ]
 
     # Add disc drive mounts
-    if len(disc_images):
-        disc_index = 0
-        for disc_image in disc_images:
-            launch_cmd += [
-                "-c", "imgmount %s \"%s\" -t iso" % (config.drives_regular[disc_index], disc_image),
-            ]
-            disc_index += 1
+    launch_cmd += get_dos_disc_mount_args(disc_images)
 
     # Add initial launch params
     launch_cmd += ["-c", "%s:" % start_letter]
@@ -553,13 +557,7 @@ def get_win31_launch_command(
         ]
 
     # Add disc drive mounts
-    if len(disc_images):
-        disc_index = 0
-        for disc_image in disc_images:
-            launch_cmd += [
-                "-c", "imgmount %s \"%s\" -t iso" % (config.drives_regular[disc_index], disc_image),
-            ]
-            disc_index += 1
+    launch_cmd += get_dos_disc_mount_args(disc_images)
 
     # Add initial launch params
     launch_cmd += ["-c", r"SET PATH=%PATH%;C:\WINDOWS;"]

@@ -1,5 +1,6 @@
 # Local imports
 from joybox import systemtools as tools
+from joybox.connection import ConnectionSSH
 from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
@@ -92,17 +93,34 @@ class Installer:
             return False
         return self.connection.write_file(path, contents)
 
-    # Hand a snippet to the nginx manager to install, by way of a file in /tmp
-    def install_nginx_snippet(self, snippet_name, contents):
-
-        # Snippets are included by server blocks owned by other components,
-        # so ownership of the included file can change hands without two
-        # server blocks ever claiming the same server_name.
-        snippet_tmp_path = f"/tmp/{snippet_name}"
-        if self.connection.write_file(snippet_tmp_path, contents):
-            self.connection.run_checked([self.nginx_manager_tool, "install_snippet", snippet_tmp_path], sudo = True)
-            self.connection.remove_file_or_directory(snippet_tmp_path)
+    # Write the contents to /tmp/<file_name>, run the nginx manager action on it
+    # and delete it; False, logged, when that file cannot be written
+    def run_nginx_manager_on_file(self, action, file_name, contents):
+        tmp_path = f"/tmp/{file_name}"
+        if not self.connection.write_file(tmp_path, contents):
+            logger.log_error(f"Unable to write {tmp_path} for the nginx manager")
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, action, tmp_path], sudo = True)
+        self.connection.remove_file_or_directory(tmp_path)
         return True
+
+    # Have the nginx manager install and enable a site config; False, logged,
+    # when its staging file cannot be written
+    def install_nginx_conf(self, conf_name, contents):
+        if not self.run_nginx_manager_on_file("install_conf", conf_name, contents):
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, "link_conf", conf_name], sudo = True)
+        return True
+
+    # Have the nginx manager install a snippet; False, logged, when its staging
+    # file cannot be written. Snippets are included by server blocks owned by
+    # other components, so ownership can move without a second server_name.
+    def install_nginx_snippet(self, snippet_name, contents):
+        return self.run_nginx_manager_on_file("install_snippet", snippet_name, contents)
+
+    # Whether the target is reached over SSH rather than being this machine
+    def is_remote_target(self):
+        return isinstance(self.connection, ConnectionSSH)
 
     # Whether the component is present on the target; the base says False
     def is_installed(self):

@@ -2,10 +2,11 @@
 from joybox import command
 from joybox import commandbase
 from joybox import gui
+from joybox import logger
 from joybox import programs
 from joybox import settings
 
-# Switch the display mode through NirCmd setdisplay; False only when NirCmd is missing
+# Switch the display mode through NirCmd setdisplay; False when NirCmd is missing or exits non-zero
 def set_screen_resolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
@@ -23,13 +24,17 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
     ]
 
     # Set resolution
-    command.run_returncode_command(
+    code = command.run_returncode_command(
         cmd = resolution_cmd,
         options = commandbase.create_command_options(
             is_shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        if verbose or exit_on_failure:
+            logger.log_error("Unable to set screen resolution to %sx%s, NirCmd exited with code %s" % (width, height, code), quit_program = exit_on_failure)
+        return False
     return True
 
 # Return to the resolution the UserData.Resolution settings name, unless the screen is already at it
