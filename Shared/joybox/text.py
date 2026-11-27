@@ -45,7 +45,7 @@ def wrap_text_to_lines(text, width = 80, spacer = "."):
     for index, line in enumerate(text_lines):
         for wrapped_line in textwrap.wrap(line.strip(), width=width):
             wrapped_lines.append(wrapped_line)
-        if index < len(text_lines) - 1 and len(spacer):
+        if index < len(text_lines) - 1 and spacer:
             wrapped_lines.append(spacer)
     return wrapped_lines
 

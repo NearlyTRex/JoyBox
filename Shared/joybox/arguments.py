@@ -61,6 +61,7 @@ class ArgumentParser:
             formatter_class = HelpFormatter)
         self._target = self.parser
         self._groups = []
+        self._added = []
         self._warned_unknown = set()
 
     #################################################
@@ -117,6 +118,7 @@ class ArgumentParser:
         action = self._target.add_argument(*self._expand_arg_aliases(declared), **kwargs)
         action.joybox_flags = declared
         action.joybox_description = description
+        self._added.append((action, self._target))
         return action
 
     #################################################
@@ -137,7 +139,7 @@ class ArgumentParser:
 
     # Check if the given name is a known argument
     def is_known_argument(self, name):
-        return any(action.dest == name for action in self.parser._actions)
+        return any(action.dest == name for action, _ in self._added)
 
     #################################################
 
@@ -160,18 +162,13 @@ class ArgumentParser:
                 "default": default,
                 "choices": getattr(action, "joybox_choices", None) or ([str(choice) for choice in action.choices] if action.choices else None),
             }
-        def is_documented(action):
-            return not isinstance(action, argparse._HelpAction)
-        groups = [{
-            "title": None,
-            "options": [describe_action(action) for action in self.parser._actions
-                if is_documented(action) and not any(action in group._group_actions for group in self._groups)],
-        }]
-        for group in self._groups:
-            groups.append({
-                "title": group.title,
-                "options": [describe_action(action) for action in group._group_actions if is_documented(action)],
-            })
+        def describe_target(title, target):
+            return {
+                "title": title,
+                "options": [describe_action(action) for action, added_to in self._added if added_to is target],
+            }
+        groups = [describe_target(None, self.parser)]
+        groups += [describe_target(group.title, group) for group in self._groups]
         return {
             "description": self.description,
             "details": self.details,
@@ -189,12 +186,9 @@ class ArgumentParser:
         if not self.is_known_argument(argname):
             return None
         args, _ = self.parse_known_args()
-        args_dict = vars(args)
-        if argname not in args_dict.keys():
+        virt_path = vars(args).get(argname)
+        if not virt_path:
             return None
-        if not args_dict[argname]:
-            return None
-        virt_path = args_dict[argname]
         real_path = os.path.realpath(virt_path)
         return real_path
 

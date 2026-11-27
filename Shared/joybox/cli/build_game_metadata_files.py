@@ -80,7 +80,7 @@ def main():
 
     # Show preview
     if not args.no_preview:
-        details = list(set([metadata_file for _, _, _, _, metadata_file in games_to_process]))
+        details = list({metadata_file for _, _, _, _, metadata_file in games_to_process})
         if not prompts.prompt_for_preview("Build game metadata files", details):
             logger.log_warning("Operation cancelled by user")
             return

@@ -168,7 +168,7 @@ def build_file_list(root, excludes = None, new_relative_path = "", use_relative_
                 if ignore_symlinks and os.path.islink(location):
                     continue
                 if use_relative_paths:
-                    if len(new_relative_path) and not new_relative_path.endswith(config.OS_PATHSEP):
+                    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
                         new_relative_path += config.OS_PATHSEP
                     files.append(new_relative_path + os.path.relpath(location, absolute_root))
                 else:
@@ -208,7 +208,7 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
             if ignore_symlinks and os.path.islink(location):
                 continue
             if use_relative_paths:
-                if len(new_relative_path) and not new_relative_path.endswith(config.OS_PATHSEP):
+                if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
                     new_relative_path += config.OS_PATHSEP
                 directories.append(new_relative_path + os.path.relpath(location, absolute_root))
             else:

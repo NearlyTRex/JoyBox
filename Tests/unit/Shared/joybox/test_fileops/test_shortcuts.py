@@ -21,7 +21,7 @@ def fake_pylnk(monkeypatch, work_dir = None, arguments = None, link_path = "C:\\
         def __init__(self, path):
             if raises:
                 raise FormatException("This is not a .lnk file.")
-            self._link_info = types.SimpleNamespace(path = link_path) if link_path else None
+            self.link_info = types.SimpleNamespace(path = link_path) if link_path else None
             self.link_flags = types.SimpleNamespace(
                 HasWorkingDir = work_dir is not None,
                 HasArguments = arguments is not None)

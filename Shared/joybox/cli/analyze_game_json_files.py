@@ -78,15 +78,15 @@ def main():
                         json_files_unplayable.append(game_info.get_json_file())
 
     # List games with no files
-    if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.MISSING_GAME_FILES:
-        if len(json_files_no_files):
+    if args.mode in (config.AnalyzeModeType.ALL, config.AnalyzeModeType.MISSING_GAME_FILES):
+        if json_files_no_files:
             logger.log_info("Games with no files:")
             for json_file in json_files_no_files:
                 logger.log_info(json_file)
 
     # List unplayable games
-    if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.UNPLAYABLE_GAMES:
-        if len(json_files_unplayable):
+    if args.mode in (config.AnalyzeModeType.ALL, config.AnalyzeModeType.UNPLAYABLE_GAMES):
+        if json_files_unplayable:
             logger.log_info("Games marked as unplayable:")
             for json_file in json_files_unplayable:
                 logger.log_info(json_file)

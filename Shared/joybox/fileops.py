@@ -256,7 +256,8 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, private
         if contents:
             write_file_contents(src, contents, contents_mode, encoding, private)
         else:
-            open(src, "a", encoding = "utf-8").close()
+            with open(src, "a", encoding = "utf-8"):
+                pass
         return True
     except (OSError, ValueError) as e:
         return report_failure("Unable to touch file %s" % src, e, exit_on_failure)
@@ -815,7 +816,7 @@ def empty_recycle_bin(
 
 # Get the target, working directory and arguments of a parsed link file with a full path, under a base path
 def get_parsed_link_info(lnk, lnk_base_path):
-    lnk_offset_path = paths.get_filename_drive_offset(paths.normalize_file_path(lnk._link_info.path))
+    lnk_offset_path = paths.get_filename_drive_offset(paths.normalize_file_path(lnk.link_info.path))
     lnk_working_dir = "."
     if lnk.link_flags.HasWorkingDir:
         lnk_working_dir = paths.normalize_file_path(lnk.work_dir)
@@ -841,7 +842,7 @@ def get_link_info(lnk_path, lnk_base_path):
         return info
     try:
         lnk = pylnk.Lnk(lnk_path)
-        if lnk._link_info:
+        if lnk.link_info:
             info = get_parsed_link_info(lnk, lnk_base_path)
     except (OSError, ValueError, KeyError, struct.error, pylnk.FormatException) as e:
         logger.log_error(e)

@@ -68,7 +68,7 @@ class EnumType(enum.Enum):
 
     @classmethod
     def members(cls):
-        return [member for member in cls.__members__.values()]
+        return list(cls.__members__.values())
 
     @classmethod
     def values(cls):

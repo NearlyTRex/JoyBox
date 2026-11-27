@@ -39,14 +39,12 @@ class BackgroundJob:
     # Start the job
     def start(self):
 
-        # Thread for running scheduler
-        class ScheduleThread(threading.Thread):
-            @classmethod
-            def run(cls):
-                while not self.should_stop.is_set():
-                    self.job_scheduler.run_pending()
-                    if isinstance(self.sleep_interval, int) and self.sleep_interval > 0:
-                        runtime.sleep_program(self.sleep_interval)
+        # Run the scheduler until stopped
+        def run_scheduler():
+            while not self.should_stop.is_set():
+                self.job_scheduler.run_pending()
+                if isinstance(self.sleep_interval, int) and self.sleep_interval > 0:
+                    runtime.sleep_program(self.sleep_interval)
 
         # Create scheduler
         schedule = _get_schedule()
@@ -55,7 +53,7 @@ class BackgroundJob:
         # Create job
         if isinstance(self.units_exact, int):
             self.job = self.job_scheduler.every(self.units_exact)
-        elif isinstance(self.units_range, tuple) or isinstance(self.units_range, list):
+        elif isinstance(self.units_range, (tuple, list)):
             if len(self.units_range) == 2:
                 self.job = self.job_scheduler.every(self.units_range[0]).to(self.units_range[1])
 
@@ -69,7 +67,7 @@ class BackgroundJob:
                 self.job.hours.do(self.job_func)
 
         # Start thread
-        self.thread = ScheduleThread()
+        self.thread = threading.Thread(target = run_scheduler)
         self.thread.start()
 
     # Stop the job, waiting for a run in progress to finish

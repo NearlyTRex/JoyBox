@@ -293,7 +293,7 @@ def get_prefix_path_info(
     info["letter"] = path_drive_letter
     info["base"] = paths.normalize_file_path(path_drive_base)
     info["offset"] = paths.normalize_file_path(path_drive_offset)
-    if len(path_drive_extra):
+    if path_drive_extra:
         info["extra"] = paths.normalize_file_path(path_drive_extra)
     else:
         info["extra"] = path_drive_extra

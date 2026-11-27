@@ -19,6 +19,16 @@ from joybox import xbox
 
 ###########################################################
 
+# Find the archive packed by hand next to a game's files, for stores like Steam
+# that only send raw files: a 7z, the first part of a split 7z, or a self-extracting exe
+def find_prepackaged_archive(source_file, game_name):
+    source_dir = paths.get_filename_directory(source_file)
+    for extension in (".7z", ".7z.001"):
+        candidate = paths.join_paths(source_dir, game_name + extension)
+        if os.path.exists(candidate):
+            return candidate
+    return paths.join_paths(source_dir, game_name + ".exe")
+
 # Transform computer programs
 def transform_computer_programs(
     game_info,
@@ -54,12 +64,7 @@ def transform_computer_programs(
         exit_on_failure = exit_on_failure)
 
     # Get pre-packaged archive
-    # TODO: This should be a separate function to get the prepackaged archive file (the one manually created because some platforms like steam only send you raw files)
-    prepackaged_archive = paths.join_paths(paths.get_filename_directory(source_file), game_name + ".7z")
-    if not os.path.exists(prepackaged_archive):
-        prepackaged_archive = paths.join_paths(paths.get_filename_directory(source_file), game_name + ".7z.001")
-        if not os.path.exists(prepackaged_archive):
-            prepackaged_archive = paths.join_paths(paths.get_filename_directory(source_file), game_name + ".exe")
+    prepackaged_archive = find_prepackaged_archive(source_file, game_name)
 
     # Pre-packaged archive
     if paths.is_path_file(prepackaged_archive):
@@ -145,9 +150,9 @@ def transform_disc_image(
 
     # Get disc images
     disc_image_files = []
-    if source_file.endswith(".chd"):
+    if chd.is_chd_file(source_file):
         disc_image_files = [paths.get_filename_file(source_file)]
-    if source_file.endswith(".m3u"):
+    if playlist.is_playlist_file(source_file):
         disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,
@@ -156,7 +161,7 @@ def transform_disc_image(
 
     # Extract disc images
     for disc_image_file in disc_image_files:
-        if disc_image_file.endswith(".chd"):
+        if chd.is_chd_file(disc_image_file):
             success = chd.extract_disc_chd(
                 chd_file = paths.join_paths(paths.get_filename_directory(source_file), disc_image_file),
                 binary_file = paths.join_paths(output_dir, paths.get_filename_basename(disc_image_file) + config.DiscImageFileType.ISO.cval()),
@@ -168,7 +173,7 @@ def transform_disc_image(
                 return (False, "Unable to extract disc images")
 
     # Write playlist
-    if source_file.endswith(".m3u"):
+    if playlist.is_playlist_file(source_file):
         playlist_contents = []
         for disc_image_file in disc_image_files:
             playlist_contents += [disc_image_file.replace(".chd", ".iso")]
@@ -182,10 +187,9 @@ def transform_disc_image(
             return (False, "Unable to write playlist")
 
     # Return output
-    # TODO: These kinds of functions would be better as a function (IsFileCHD, or something)
-    if source_file.endswith(".chd"):
+    if chd.is_chd_file(source_file):
         return (True, paths.join_paths(output_dir, paths.get_filename_basename(source_file) + config.DiscImageFileType.ISO.cval()))
-    if source_file.endswith(".m3u"):
+    if playlist.is_playlist_file(source_file):
         return (True, paths.join_paths(output_dir, paths.get_filename_basename(source_file) + ".m3u"))
 
     # No transformation was done
@@ -212,7 +216,7 @@ def transform_xbox_disc_image(
     disc_image_files = []
     if source_file.endswith(".iso"):
         disc_image_files = [paths.get_filename_file(source_file)]
-    if source_file.endswith(".m3u"):
+    if playlist.is_playlist_file(source_file):
         disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,
@@ -256,7 +260,7 @@ def transform_ps3_disc_image(
     disc_image_files = []
     if source_file.endswith(".iso"):
         disc_image_files = [paths.get_filename_file(source_file)]
-    if source_file.endswith(".m3u"):
+    if playlist.is_playlist_file(source_file):
         disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,

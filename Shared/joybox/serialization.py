@@ -284,7 +284,7 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
                     data = json_data,
                     search_value = search_value,
                     search_keys = search_keys)
-                if len(json_matches):
+                if json_matches:
                     found_files.append(json_file)
     return found_files
 
@@ -303,8 +303,8 @@ def read_yaml_file(src, verbose = False, exit_on_failure = False):
         yaml_data = {}
         with open(src, "r", encoding = "utf-8") as input_file:
             file_contents = input_file.read()
-            file_contents = file_contents.replace(u'\x81', "")
-            file_contents = file_contents.replace(u'\x82', "")
+            file_contents = file_contents.replace('\x81', "")
+            file_contents = file_contents.replace('\x82', "")
             yaml_data = yaml.safe_load(file_contents)
         return yaml_data
     except (OSError, yaml.YAMLError) as e:

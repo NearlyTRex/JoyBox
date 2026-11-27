@@ -32,16 +32,15 @@ def is_only_starter_command(cmd):
 # Check if command type is found
 def is_command_type_found(cmd, cmd_exts = (), search_start = 0, search_len = -1):
     cmd_list = cmdline.create_command_list(cmd)
-    for cmd_index in range(len(cmd_list)):
-        cmd_segment = cmd_list[cmd_index]
+    for cmd_index, cmd_segment in enumerate(cmd_list):
         is_found = False
         for ext in cmd_exts:
             if cmd_segment.lower().endswith(ext):
                 is_found = True
                 break
         is_in_range = True
-        if search_start >= 0 and search_start < len(cmd_list) and search_len > 0:
-            is_in_range = (cmd_index >= search_start) and (cmd_index < search_start + search_len)
+        if 0 <= search_start < len(cmd_list) and search_len > 0:
+            is_in_range = search_start <= cmd_index < search_start + search_len
         if is_found and is_in_range:
             return True
     return False

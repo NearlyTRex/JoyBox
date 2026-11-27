@@ -5,9 +5,6 @@ from joybox import jsondata
 # Search result
 class SearchResult(jsondata.JsonData):
 
-    # Constructor
-    def __init__(self, json_data = None, json_platform = None):
-        super().__init__(json_data, json_platform)
 
     # Id
     def set_id(self, value):
@@ -54,9 +51,6 @@ class SearchResult(jsondata.JsonData):
 # Asset search result
 class AssetSearchResult(SearchResult):
 
-    # Constructor
-    def __init__(self, json_data = None, json_platform = None):
-        super().__init__(json_data, json_platform)
 
     # Mime
     def set_mime(self, value):

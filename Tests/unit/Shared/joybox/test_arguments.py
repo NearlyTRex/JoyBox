@@ -701,8 +701,8 @@ def test_a_list_default_for_multiple_enums_is_kept(argv):
     assert parser.parse_args().locker_types == [config.LockerType.LOCAL, config.LockerType.GDRIVE]
 
 
-def test_an_argument_absent_from_the_namespace_has_no_path(argv):
-    # help is declared with a suppressed default, so it never lands in the namespace.
+def test_the_help_flag_has_no_path(argv):
+    # argparse adds help itself, so it is not one of the parser's own arguments.
     assert build().get_path("help") is None
 
 

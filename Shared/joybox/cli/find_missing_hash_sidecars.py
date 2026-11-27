@@ -117,7 +117,7 @@ def main():
 
     # Find missing - need to prefix remote_files paths with subpath for comparison
     missing = []
-    for rel_path in remote_files.keys():
+    for rel_path in remote_files:
         full_rel_path = paths.join_paths(subpath, rel_path).replace("\\", "/") if subpath else rel_path
         if full_rel_path not in sidecar_files:
             missing.append(rel_path)

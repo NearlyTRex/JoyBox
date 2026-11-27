@@ -8,6 +8,10 @@ from joybox import logger
 from joybox import paths
 from joybox import serialization
 
+# Check if a file is a playlist
+def is_playlist_file(path):
+    return path.endswith(".m3u")
+
 # Read playlist file
 def read_playlist(
     input_file,

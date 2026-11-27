@@ -305,8 +305,8 @@ class GameInfo:
         return None
 
     # Set metadata
-    def set_metadata(self, metadata):
-        return self.set_value(config.JSON_KEY_METADATA, metadata)
+    def set_metadata(self, metadata_value):
+        return self.set_value(config.JSON_KEY_METADATA, metadata_value)
 
     # Get metadata value
     def get_metadata_value(self, key):

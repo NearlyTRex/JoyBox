@@ -59,7 +59,7 @@ class Connection(ABC):
                 continue
             logger.log_output(text)
             for char in text:
-                if char == "\n" or char == "\r":
+                if char in ("\n", "\r"):
                     if line.strip():
                         logger.record_output(line.strip())
                     line = ""
@@ -102,8 +102,9 @@ class Connection(ABC):
     def run_checked(self, cmd, sudo = False, throw_exception = False):
         ...
 
+    @abstractmethod
     def get_home_directory(self):
-        return None
+        ...
 
     def get_path_separator(self):
         return "/"
@@ -129,8 +130,9 @@ class Connection(ABC):
             runtime.quit_program()
         return return_value
 
+    @abstractmethod
     def make_temporary_directory(self):
-        return None
+        ...
 
     @abstractmethod
     def make_directory(self, src, sudo = False):

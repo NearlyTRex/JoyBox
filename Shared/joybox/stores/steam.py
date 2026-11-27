@@ -828,10 +828,10 @@ class Steam(storebase.StoreBase):
         return translation_map
 
     # Get registered paths
-    def add_path_variants(self, paths = None):
+    def add_path_variants(self, path_list = None):
 
         # Add parent variants
-        paths = super().add_path_variants(paths)
+        path_list = super().add_path_variants(path_list)
 
         # Get user info
         userid_64 = self.get_user_id(config.SteamIDFormatType.STEAMID_64)
@@ -839,11 +839,11 @@ class Steam(storebase.StoreBase):
         userid_cs = self.get_user_id(config.SteamIDFormatType.STEAMID_CS)
 
         # Add user id variants
-        for path in list(paths):
+        for path in list(path_list):
             if config.TOKEN_STORE_USER_ID in path:
-                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_64))
-                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_3s))
-                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_cs))
-        return paths
+                path_list.append(path.replace(config.TOKEN_STORE_USER_ID, userid_64))
+                path_list.append(path.replace(config.TOKEN_STORE_USER_ID, userid_3s))
+                path_list.append(path.replace(config.TOKEN_STORE_USER_ID, userid_cs))
+        return path_list
 
     ############################################################

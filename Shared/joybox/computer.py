@@ -26,9 +26,6 @@ from joybox import platform_info
 # Program
 class Program(jsondata.JsonData):
 
-    # Constructor
-    def __init__(self, json_data = None, json_platform = None):
-        super().__init__(json_data, json_platform)
 
     # Executable
     def set_exe(self, value):
@@ -252,9 +249,6 @@ class Program(jsondata.JsonData):
 # Program step
 class ProgramStep(jsondata.JsonData):
 
-    # Constructor
-    def __init__(self, json_data = None, json_platform = None):
-        super().__init__(json_data, json_platform)
 
     # From
     def set_from(self, value):

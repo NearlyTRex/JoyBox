@@ -16,6 +16,10 @@ from joybox import iso
 from joybox import mds
 from joybox import archive
 
+# Check if a file is a chd disc image
+def is_chd_file(path):
+    return path.endswith(config.DiscImageFileType.CHD.cval())
+
 # Get disc iso
 def get_disc_iso(chd_file):
     return chd_file.replace(config.DiscImageFileType.CHD.cval(), config.DiscImageFileType.ISO.cval())

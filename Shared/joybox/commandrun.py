@@ -58,7 +58,7 @@ def run_streamed_command(
         stderr_target = stack.enter_context(open(stderr_path, "w", encoding = "utf-8")) if stderr_path else None
 
         # Open process
-        proc = subprocess.Popen(
+        proc = stack.enter_context(subprocess.Popen(
             cmd,
             shell = options.is_shell(),
             cwd = options.get_cwd(),
@@ -69,7 +69,7 @@ def run_streamed_command(
             stdin = subprocess.PIPE if stdin_input is not None else None,
             text = True,
             errors = "ignore",
-            bufsize = 1)
+            bufsize = 1))
 
         # readline() rather than "for line in pipe", which read-ahead-buffers
         # and defeats real-time streaming; an empty line is end of stream
@@ -104,6 +104,20 @@ def run_streamed_command(
         for t in threads:
             t.join()
     return (cmdline.clean_command_output("".join(output_lines).strip()), proc.returncode)
+
+# Launch a command detached from this one, in its own session, with no streams;
+# the caller gets the process and nothing waits for it
+def launch_daemon(cmd, options):
+    return subprocess.Popen(
+        cmd,
+        shell = options.is_shell(),
+        cwd = options.get_cwd(),
+        env = options.get_env(),
+        creationflags = options.get_creationflags() | getattr(subprocess, "DETACHED_PROCESS", 0),
+        stdout = subprocess.DEVNULL,
+        stderr = subprocess.DEVNULL,
+        stdin = subprocess.DEVNULL,
+        start_new_session = os.name != "nt")
 
 # Wait for the processes a command blocks on
 def wait_for_blocking_processes(options):
@@ -140,30 +154,21 @@ def run_prepared_command(
 
     # Daemon mode - detach and return without waiting or cleaning up after it
     if options.is_daemon():
-        subprocess.Popen(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env(),
-            creationflags = options.get_creationflags() | getattr(subprocess, "DETACHED_PROCESS", 0),
-            stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL,
-            stdin = subprocess.DEVNULL,
-            start_new_session = os.name != "nt")
+        launch_daemon(cmd, options)
         runtime.sleep_program(0.5)
         return ("", 0)
 
     # Suppressed output - discard streams, just wait
     if options.is_output_suppressed():
-        proc = subprocess.Popen(
+        with subprocess.Popen(
             cmd,
             shell = options.is_shell(),
             cwd = options.get_cwd(),
             env = options.get_env(),
             creationflags = options.get_creationflags(),
             stdout = subprocess.DEVNULL,
-            stderr = subprocess.DEVNULL)
-        wait_for_command(proc, options.get_timeout())
+            stderr = subprocess.DEVNULL) as proc:
+            wait_for_command(proc, options.get_timeout())
         wait_for_blocking_processes(options)
         return ("", proc.returncode)
 

@@ -335,12 +335,12 @@ def display_loading_window(
         # Task completed
         if event == "TASK_COMPLETE":
             if values[event]:
-                if len(completion_text):
+                if completion_text:
                     display_info_popup(
                         title_text = "Completed",
                         message_text = completion_text)
             else:
-                if len(failure_text):
+                if failure_text:
                     display_error_popup(
                         title_text = "Failure",
                         message_text = failure_text)

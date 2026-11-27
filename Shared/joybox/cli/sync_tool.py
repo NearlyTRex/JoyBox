@@ -163,7 +163,7 @@ def main():
             details.append("Mount: %s" % mount_path)
         if not prompts.prompt_for_preview("Sync %s (%s)" % (args.action, args.locker_type), details):
             logger.log_warning("Operation cancelled by user")
-            return
+            return None
 
     # Run the action; the outcome becomes the exit status
     if args.action == config.RemoteActionType.INIT:

@@ -148,6 +148,9 @@ class RecordingConnection(connection.Connection):
         self._record("make_temporary_directory")
         return "/tmp/joybox-test"
 
+    def get_home_directory(self):
+        return None
+
     def make_directory(self, src, sudo = False):
         self._record("make_directory", src, sudo = sudo)
         self.made_directories.append(src)
@@ -576,6 +579,12 @@ def write_param_sfo(path, values):
 ###########################################################
 
 class StubConnection(connection.Connection):
+    def get_home_directory(self):
+        return None
+
+    def make_temporary_directory(self):
+        return None
+
     def run_output(self, cmd, sudo = False):
         return ""
 

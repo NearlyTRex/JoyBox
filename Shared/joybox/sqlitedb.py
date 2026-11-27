@@ -207,9 +207,6 @@ class HashDatabase(Database):
         "updated_at": "REAL"
     })
 
-    # Constructor
-    def __init__(self, db_path, timeout = 30.0):
-        super().__init__(db_path, timeout)
 
     # Initialize the hash table
     def initialize(self):

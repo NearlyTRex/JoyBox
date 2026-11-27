@@ -25,7 +25,7 @@ class ManifestEntry:
                         when_os = when_info["os"] if "os" in when_info else ""
                         when_store = when_info["store"] if "store" in when_info else ""
                         is_windows_path = False
-                        if (when_os == "windows" or when_os == "dos") and (when_store == "steam" or when_store == ""):
+                        if when_os in ("windows", "dos") and when_store in ("steam", ""):
                             is_windows_path = True
                         elif when_os == "" and when_store == "steam":
                             is_windows_path = True

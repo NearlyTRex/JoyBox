@@ -77,7 +77,7 @@ def main():
     details = ["Remote: %s:%s" % (remote[1], remote[2]), "Client: %s" % client[0], "Folder: %s" % folder_id, "Store: %s" % reference]
     if not args.no_preview and not prompts.prompt_for_preview("Authorize %s" % args.locker_type, details):
         logger.log_warning("Operation cancelled by user")
-        return
+        return None
     if args.pretend_run:
         syncremotes.authorize_remote(remote[0], client[0], client[1], open_browser = not args.no_browser, pretend_run = True)
         return True

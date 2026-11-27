@@ -32,6 +32,9 @@ class ScriptedConnection(Connection):
     def make_temporary_directory(self):
         return self.staging
 
+    def get_home_directory(self):
+        return None
+
     def run_output(self, cmd, sudo = False):
         self.commands.append(("output", list(cmd)))
         return self.output

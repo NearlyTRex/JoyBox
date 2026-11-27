@@ -73,7 +73,7 @@ def main():
 
     # Find missing assets
     found_assets = set()
-    missing_assets = dict()
+    missing_assets = {}
     for filename in paths.build_file_list(metadata_dir):
         if environment.is_game_metadata_file(filename):
 

@@ -338,8 +338,7 @@ def download_video(
         concurrent_fragments = int(concurrent_fragments)
     except (TypeError, ValueError):
         concurrent_fragments = 1
-    if concurrent_fragments < 1:
-        concurrent_fragments = 1
+    concurrent_fragments = max(concurrent_fragments, 1)
     if concurrent_fragments > MAX_CONCURRENT_FRAGMENTS:
         logger.log_warning(f"Requested {concurrent_fragments} concurrent fragments; clamping to safe maximum of {MAX_CONCURRENT_FRAGMENTS}")
         concurrent_fragments = MAX_CONCURRENT_FRAGMENTS

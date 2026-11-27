@@ -315,29 +315,29 @@ def publish_game_metadata_entries(
             game_entry_id = 1
             for game_entry in metadata_obj.get_sorted_entries(game_platform):
 
-                    # Get entry info
-                    game_entry_name = game_entry.get_game()
-                    game_entry_natural_name = gamenaming.derive_regular_name_from_game_name(game_entry_name)
-                    game_entry_players = game_entry.get_players()
-                    game_entry_coop = game_entry.get_coop()
-                    game_entry_urlname = strings.encode_url_string(game_entry_natural_name, use_plus = True)
-                    game_entry_info = (
-                        game_entry_id,
-                        game_platform,
-                        game_entry_name,
-                        game_entry_players,
-                        game_entry_coop,
-                        game_entry_urlname,
-                        game_entry_urlname
-                    )
+                # Get entry info
+                game_entry_name = game_entry.get_game()
+                game_entry_natural_name = gamenaming.derive_regular_name_from_game_name(game_entry_name)
+                game_entry_players = game_entry.get_players()
+                game_entry_coop = game_entry.get_coop()
+                game_entry_urlname = strings.encode_url_string(game_entry_natural_name, use_plus = True)
+                game_entry_info = (
+                    game_entry_id,
+                    game_platform,
+                    game_entry_name,
+                    game_entry_players,
+                    game_entry_coop,
+                    game_entry_urlname,
+                    game_entry_urlname
+                )
 
-                    # Add entry (using odd/even templates)
-                    if (metadata_counter % 2) == 0:
-                        publish_contents += config.PUBLISH_HTML_ENTRY_EVEN % game_entry_info
-                    else:
-                        publish_contents += config.PUBLISH_HTML_ENTRY_ODD % game_entry_info
-                    metadata_counter += 1
-                    game_entry_id += 1
+                # Add entry (using odd/even templates)
+                if (metadata_counter % 2) == 0:
+                    publish_contents += config.PUBLISH_HTML_ENTRY_EVEN % game_entry_info
+                else:
+                    publish_contents += config.PUBLISH_HTML_ENTRY_ODD % game_entry_info
+                metadata_counter += 1
+                game_entry_id += 1
 
     # Add footer
     publish_contents += config.PUBLISH_HTML_FOOTER

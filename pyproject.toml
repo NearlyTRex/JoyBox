@@ -200,7 +200,7 @@ documented = 800
 doc-paraphrase = 1568
 long-functions = 528
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 83
+pylint-source = 0
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

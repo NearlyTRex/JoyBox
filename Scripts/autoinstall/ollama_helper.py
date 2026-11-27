@@ -70,7 +70,7 @@ def read_gpus(run = subprocess.run, sysfs_root = "/sys/bus/pci/devices"):
     try:
         result = run(
             ["nvidia-smi", "--query-gpu=%s" % ",".join(GPU_FIELDS), "--format=csv,noheader,nounits"],
-            capture_output = True, text = True, timeout = 30)
+            capture_output = True, text = True, timeout = 30, check = False)
     except (OSError, subprocess.SubprocessError):
         return []
     if result.returncode != 0:

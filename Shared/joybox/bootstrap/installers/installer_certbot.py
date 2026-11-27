@@ -6,7 +6,7 @@ import uuid
 from joybox.bootstrap import constants
 from joybox import settings
 from joybox import serverinfo
-from joybox import connection
+from joybox.connection import ConnectionLocal
 from joybox import runoptions
 from joybox import logger
 from . import installer
@@ -93,7 +93,7 @@ class Certbot(installer.Installer):
         # local CA that "mkcert -install" put in this machine's trust store, which
         # is what stops the browser warning. The target only receives the leaf.
         logger.log_info("Issuing a mkcert certificate on the local machine")
-        local_connection = connection.ConnectionLocal(self.flags, self.options)
+        local_connection = ConnectionLocal(self.flags, self.options)
         local_dir = local_connection.make_temporary_directory()
         if not local_dir:
             logger.log_error("Could not create a temporary directory for mkcert")

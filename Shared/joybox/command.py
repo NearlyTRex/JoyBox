@@ -32,6 +32,22 @@ def _get_pty():
 
 ###########################################################
 
+# Start a command on a pseudo-terminal, closing this side's copy of the
+# terminal once the child has it
+def spawn_on_terminal(cmd, options, terminal_fd):
+    try:
+        return subprocess.Popen(
+            cmd,
+            shell = options.is_shell(),
+            cwd = options.get_cwd(),
+            env = options.get_env(),
+            stdin = terminal_fd,
+            stdout = terminal_fd,
+            stderr = terminal_fd,
+            close_fds = True)
+    finally:
+        os.close(terminal_fd)
+
 # Check if prefix command
 def is_prefix_command(cmd):
     return (
@@ -348,51 +364,40 @@ def run_interactive_command(
 
                 # Open pseudo-terminal
                 master_fd, slave_fd = _get_pty().openpty()
-                try:
-                    proc = subprocess.Popen(
-                        cmd,
-                        shell = options.is_shell(),
-                        cwd = options.get_cwd(),
-                        env = options.get_env(),
-                        stdin = slave_fd,
-                        stdout = slave_fd,
-                        stderr = slave_fd,
-                        close_fds = True)
-                finally:
-                    os.close(slave_fd)
+                with spawn_on_terminal(cmd, options, slave_fd) as proc:
 
-                # Reads from pseudo-terminal and displays it in real-time
-                def read_output():
-                    while True:
-                        try:
-                            rlist, _, _ = select.select([master_fd], [], [], 0.1)
-                            if rlist and master_fd in rlist:
-                                output = os.read(master_fd, 1024).decode(errors = "ignore")
-                                if not output:
-                                    break
-                                sys.stdout.write(output)
-                                sys.stdout.flush()
-                        except (OSError, EOFError):
-                            break
+                    # Reads from pseudo-terminal and displays it in real-time
+                    def read_output():
+                        while True:
+                            try:
+                                rlist, _, _ = select.select([master_fd], [], [], 0.1)
+                                if rlist and master_fd in rlist:
+                                    output = os.read(master_fd, 1024).decode(errors = "ignore")
+                                    if not output:
+                                        break
+                                    sys.stdout.write(output)
+                                    sys.stdout.flush()
+                            except (OSError, EOFError):
+                                break
 
-                # Create thread to handle real-time I/O
-                output_thread = threading.Thread(target = read_output, daemon = True)
-                output_thread.start()
+                    # Create thread to handle real-time I/O
+                    output_thread = threading.Thread(target = read_output, daemon = True)
+                    output_thread.start()
 
-                # Wait for process to complete
-                try:
-                    while proc.poll() is None:
-                        rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
-                        if rlist and sys.stdin in rlist:
-                            user_input = sys.stdin.readline()
-                            if user_input:
-                                os.write(master_fd, user_input.encode())
-                except KeyboardInterrupt:
-                    proc.terminate()
-                    proc.wait()
-                output_thread.join()
-                os.close(master_fd)
-                returncode = proc.returncode
+                    # Wait for process to complete
+                    try:
+                        while proc.poll() is None:
+                            rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
+                            if rlist and sys.stdin in rlist:
+                                user_input = sys.stdin.readline()
+                                if user_input:
+                                    os.write(master_fd, user_input.encode())
+                    except KeyboardInterrupt:
+                        proc.terminate()
+                        proc.wait()
+                    output_thread.join()
+                    os.close(master_fd)
+                    returncode = proc.returncode
 
             # Wait for blocking processes, then post-process
             finish_command(

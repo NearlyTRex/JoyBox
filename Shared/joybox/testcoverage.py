@@ -178,7 +178,7 @@ def find_functions(source, executed_lines, missing_lines):
 
 # Check whether none of a function's statements ran
 def is_never_run(function):
-    return function["statements"] > 0 and len(function["missing_lines"]) == function["statements"]
+    return 0 < function["statements"] == len(function["missing_lines"])
 
 # Find the functions with untested lines in every file that has some
 def find_untested_functions(files, repo_dir):

@@ -53,6 +53,15 @@ class FakeProcess:
         self.poll_calls += 1
         return None if self.owner.never_exits else self.returncode
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        # The runner has already waited by now, so leaving only closes the pipes
+        for stream in (self.stdout, self.stderr, self.stdin):
+            if stream is not None:
+                stream.close()
+
 
 class FakeProcesses:
 

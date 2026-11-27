@@ -520,3 +520,8 @@ def test_a_dry_run_writes_no_disc_playlist(tmp_path):
 
     assert playlist.generate_disc_playlist(str(tmp_path), "Game", pretend_run = True) is True
     assert not (tmp_path / "Game.m3u").exists()
+
+
+@pytest.mark.parametrize("path, expected", [("/in/Game.m3u", True), ("/in/Game.chd", False), ("/in/Game.m3u.bak", False)])
+def test_a_playlist_is_told_by_its_extension(path, expected):
+    assert playlist.is_playlist_file(path) is expected

@@ -253,7 +253,7 @@ class StagingFails(RecordingConnection):
 
 def use_local(monkeypatch, local):
     from joybox.bootstrap.installers import installer_certbot
-    monkeypatch.setattr(installer_certbot.connection, "ConnectionLocal", lambda flags, options: local)
+    monkeypatch.setattr(installer_certbot, "ConnectionLocal", lambda flags, options: local)
 
 
 def mkcert_output(cert = "CERT", key = "KEY", **kwargs):

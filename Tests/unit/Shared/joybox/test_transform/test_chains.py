@@ -451,6 +451,19 @@ def test_a_split_prepackaged_archive_is_found(computer_tools, tmp_path):
     assert computer_tools["extracted"] == [first_part]
 
 
+def test_a_whole_prepackaged_archive_is_preferred_to_a_split_one(tmp_path):
+    whole = write(tmp_path / "A Game.7z")
+    write(tmp_path / "A Game.7z.001")
+
+    assert transform.find_prepackaged_archive(str(tmp_path / "setup.exe"), "A Game") == whole
+
+
+def test_a_self_extracting_archive_is_the_last_resort(tmp_path):
+    found = transform.find_prepackaged_archive(str(tmp_path / "setup.exe"), "A Game")
+
+    assert found == os.path.join(str(tmp_path), "A Game.exe")
+
+
 def test_an_installer_is_run_when_nothing_is_prepackaged(computer_tools, tmp_path):
     source = write(tmp_path / "source" / "setup.exe")
 

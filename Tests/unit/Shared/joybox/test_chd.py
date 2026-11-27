@@ -658,3 +658,8 @@ def test_pretending_a_conversion_passes_pretend_through(installed, recording_com
 
     assert converter["calls"][0][2] is True
     assert recording_command.calls[0]["kwargs"].get("pretend_run") is True
+
+
+@pytest.mark.parametrize("path, expected", [("/in/Game.chd", True), ("/in/Game.iso", False), ("/in/Game.chd.txt", False)])
+def test_a_chd_file_is_told_by_its_extension(path, expected):
+    assert chd.is_chd_file(path) is expected

@@ -380,7 +380,7 @@ def is_loaded_on_gpu(model_name):
     for entry in running.get("models", []):
         if entry.get("name") == model_name or entry.get("model") == model_name:
             size = entry.get("size", 0)
-            return size > 0 and entry.get("size_vram", 0) >= size
+            return 0 < size <= entry.get("size_vram", 0)
     return False
 
 # Prepare a named model for coding: pulled, its context built in, and on the GPUs

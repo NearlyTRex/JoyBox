@@ -76,6 +76,12 @@ class FakeChild:
         self.returncode = -15
         return self.returncode
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return None
+
 
 class ScriptedInput:
 
