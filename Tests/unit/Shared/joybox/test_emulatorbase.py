@@ -93,6 +93,10 @@ def test_the_base_emulator_installs_addons_successfully():
     assert Bare().install_addons() is True
 
 
+def test_the_base_emulator_installs_each_addon_dir_as_a_no_op():
+    assert Bare().install_addons(dlc_dirs = ["/dlc"], update_dirs = ["/update"]) is True
+
+
 ###########################################################
 # Path resolution
 ###########################################################
@@ -362,6 +366,54 @@ def test_a_failed_system_archive_extraction_fails(system_archive):
     system_archive["state"]["ok"] = False
 
     assert build({}).extract_system_archive("linux", "nand", config.SetupParams()) is False
+
+
+def test_system_archives_unzip_into_each_platform_in_turn(system_archive):
+    emulator = build({})
+    emulator.SYSTEM_ARCHIVES = ("nand", "sysdata")
+    for obj in emulator.SYSTEM_ARCHIVES:
+        (system_archive["root"] / (obj + ".zip")).write_text("zip")
+
+    assert emulator.extract_system_archives(config.SetupParams()) is True
+    assert [extract_dir for _, extract_dir, _ in system_archive["extracted"]] == [
+        "/emu/TestMulator/setup_dir/windows/nand", "/emu/TestMulator/setup_dir/windows/sysdata",
+        "/emu/TestMulator/setup_dir/linux/nand", "/emu/TestMulator/setup_dir/linux/sysdata"]
+
+
+def test_verified_system_files_are_unzipped_instead_of_copied_when_archives_are_named(system_archive, monkeypatch):
+    copied = []
+    monkeypatch.setattr(emulatorbase.filebulk, "smart_copy", lambda **kwargs: copied.append(kwargs) or True)
+    emulator = build({})
+    emulator.SYSTEM_ARCHIVES = ("nand",)
+    emulator.get_system_files = lambda: {}
+    (system_archive["root"] / "nand.zip").write_text("zip")
+
+    assert emulator.install_system_files(config.SetupParams()) is True
+    assert len(system_archive["extracted"]) == 2
+    assert copied == []
+
+
+def test_system_files_are_copied_into_each_platform_setup_dir(system_archive, monkeypatch):
+    copied = []
+    monkeypatch.setattr(emulatorbase.filebulk, "smart_copy", lambda src, dest, **kwargs: copied.append((src, dest)) or True)
+    emulator = build({})
+    emulator.get_system_files = lambda: {"bios.bin": "md5"}
+
+    assert emulator.copy_system_files(config.SetupParams()) is True
+    assert copied == [
+        (str(system_archive["root"] / "bios.bin"), "/emu/TestMulator/setup_dir/windows/bios.bin"),
+        (str(system_archive["root"] / "bios.bin"), "/emu/TestMulator/setup_dir/linux/bios.bin")]
+
+
+def test_a_failed_system_file_copy_stops_and_logs(system_archive, monkeypatch):
+    errors = []
+    monkeypatch.setattr(emulatorbase.filebulk, "smart_copy", lambda **kwargs: False)
+    monkeypatch.setattr(emulatorbase.logger, "log_error", errors.append)
+    emulator = build({})
+    emulator.get_system_files = lambda: {"bios.bin": "md5"}
+
+    assert emulator.copy_system_files(config.SetupParams()) is False
+    assert errors == ["Could not setup TestMulator system files"]
 
 
 

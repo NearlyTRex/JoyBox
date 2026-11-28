@@ -9,6 +9,7 @@ from joybox import serverinfo
 from joybox import runoptions
 from joybox import logger
 from . import installer_dockerapp
+from . import installer_nginx
 
 # Nginx config template
 #
@@ -30,18 +31,7 @@ server {{
         return 301 https://{subdomain}.{domain}$request_uri;
     }}
 }}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Include configurations
-    include /etc/nginx/snippets/ssl-params.conf;
-
+""" + installer_nginx.build_ssl_server_head("SSL Configuration", "Include configurations") + r"""
     location / {{
 
         # Opening a folder fetches a thumbnail per file; the rate stays the same

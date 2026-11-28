@@ -4,6 +4,7 @@ from joybox import serverinfo
 from joybox import runoptions
 from joybox import logger
 from . import installer_dockerapp
+from . import installer_nginx
 
 # Nginx stream config template
 #
@@ -33,27 +34,7 @@ server {{
 #
 # The management API is how screen names get created, so it is proxied over
 # https behind the shared htpasswd file rather than exposed directly.
-NGINX_CONFIG_TEMPLATE = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
 
         # HTTP Basic Authentication
@@ -67,7 +48,7 @@ server {{
         proxy_set_header X-Forwarded-Proto https;
     }}
 }}
-"""
+""")
 
 # Dockerfile template
 #

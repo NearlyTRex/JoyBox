@@ -10,6 +10,7 @@ from joybox import paths
 from joybox import locker
 from joybox import stores
 from joybox import metadataassetcollector
+from .selection import iterate_selected_json_games
 
 ############################################################
 
@@ -234,44 +235,6 @@ def download_game_assets(
             return False
     return True
 
-# Download assets for every json game in a category's chosen subcategories; stops at the first failure
-def _download_category_assets(
-    game_supercategory,
-    game_category,
-    selected_subcategories = None,
-    locker_type = None,
-    skip_existing = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    category_subcategories = config.subcategory_map[game_category]
-    if selected_subcategories:
-        category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-    for game_subcategory in category_subcategories:
-        game_names = gamecollection.find_json_game_names(
-            game_supercategory,
-            game_category,
-            game_subcategory,
-            locker_type)
-        for game_name in game_names:
-            game_info = gameinfo.GameInfo(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            success = download_game_assets(
-                game_info = game_info,
-                locker_type = locker_type,
-                skip_existing = skip_existing,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-    return True
-
 # Download every minimum asset type for each ROM game in the chosen categories and subcategories; stops at the first failure
 def download_all_metadata_assets(
     categories = None,
@@ -281,23 +244,24 @@ def download_all_metadata_assets(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
-    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in selected_categories:
-            success = _download_category_assets(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                selected_subcategories = selected_subcategories,
-                locker_type = locker_type,
-                skip_existing = skip_existing,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-    # Should be successful
+    for game_supercategory, game_category, game_subcategory, game_name in iterate_selected_json_games(
+        categories, subcategories, locker_type):
+        game_info = gameinfo.GameInfo(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        success = download_game_assets(
+            game_info = game_info,
+            locker_type = locker_type,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################

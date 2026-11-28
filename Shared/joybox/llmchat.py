@@ -633,6 +633,19 @@ def _converse(session, question, backend_kind, limit, window_override = 0):
         return _ask_in_terminal(session, piped) if piped else True
     return _chat_interactively(session, backend_kind, limit, window_override)
 
+# Connect to the backend, open a session seeded with the (system_file, system, attachments,
+# outlines) seed and converse in it; False when the connection or the seeding fails
+def _connect_and_converse(backend_kind, endpoint, api_key, model, num_ctx, temperature, max_tokens, seed, question):
+    connection = connect_backend(backend_kind, endpoint, api_key, model)
+    if not connection:
+        return False
+    backend, model = connection
+    limit = num_ctx or backend.context_limit(model)
+    session = _open_seeded_session(backend, model, limit, temperature, max_tokens, seed)
+    if not session:
+        return False
+    return _converse(session, question, backend_kind, limit, num_ctx)
+
 # Chat in the terminal with an Ollama, OpenAI-compatible or Claude backend, seeded with a prompt
 # and files, or answer one question; False, logged, when an argument or the connection fails
 def run_llm_chat(
@@ -661,15 +674,9 @@ def run_llm_chat(
         if not preset:
             return False
         model, num_ctx, system = preset
-    connection = connect_backend(backend_kind, endpoint, api_key, model)
-    if not connection:
-        return False
-    backend, model = connection
-    limit = num_ctx or backend.context_limit(model)
-    session = _open_seeded_session(backend, model, limit, temperature, max_tokens, (system_file, system, attachments, outlines))
-    if not session:
-        return False
-    return _converse(session, question, backend_kind, limit, num_ctx)
+    return _connect_and_converse(
+        backend_kind, endpoint, api_key, model, num_ctx, temperature, max_tokens,
+        (system_file, system, attachments, outlines), question)
 
 ###########################################################
 # Command options

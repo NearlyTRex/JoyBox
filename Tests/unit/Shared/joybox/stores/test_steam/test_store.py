@@ -188,7 +188,7 @@ def test_purchases_need_the_api(steam_store, owned, reachable):
 
 
 def test_a_failed_cache_write_still_returns_purchases(steam_store, owned, monkeypatch):
-    monkeypatch.setattr(storebase.serialization, "write_json_file", lambda **kwargs: False)
+    monkeypatch.setattr(storebase.store.serialization, "write_json_file", lambda **kwargs: False)
 
     assert len(steam_store.get_latest_purchases(verbose = True)) == 2
 

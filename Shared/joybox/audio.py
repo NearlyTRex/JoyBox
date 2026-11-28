@@ -102,16 +102,8 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
     # Upload the collected audio
     logger.log_info(f"Backing up {len(pending)} audio file(s) to {channel_music_dir}")
     dest_rel_path = locker.convert_to_relative_path(channel_music_dir)
-    backup_success = locker.backup(
-        src = audio_only_dir,
-        dest_rel_path = dest_rel_path,
-        locker_type = locker_type,
-        show_progress = True,
-        skip_existing = True,
-        skip_identical = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    backup_success = locker.backup_if_absent(
+        audio_only_dir, dest_rel_path, locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     if not backup_success:
         logger.log_error("Backup process failed")
         return False
@@ -215,6 +207,12 @@ def _build_batch_targets(channel_url, all_videos, new_videos):
         logger.log_info(f"Channel up to date ({len(all_videos)} videos already archived)")
     return batch_targets
 
+# The download targets for a channel's videos not yet in its archive file, in batches
+def _get_channel_batch_targets(channel_url, archive_file, oldest_first, cookie_source, verbose, pretend_run, exit_on_failure):
+    all_videos, new_videos = _get_new_channel_videos(
+        channel_url, archive_file, oldest_first, cookie_source, verbose, pretend_run, exit_on_failure)
+    return _build_batch_targets(channel_url, all_videos, new_videos)
+
 # Make the channel's persistent directory and upload any audio a previous interrupted run left there
 def _resume_persistent_dir(persistent_dir, channel_music_dir, locker_type, verbose, pretend_run, exit_on_failure):
     fileops.make_directory(src = persistent_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
@@ -271,9 +269,8 @@ def _download_channel_audio(channel, genre_type, oldest_first, cookie_source, lo
             return False
 
     # Enumerate channel videos and build batch targets
-    all_videos, new_videos = _get_new_channel_videos(
+    batch_targets = _get_channel_batch_targets(
         channel_url, channel_archive_file, oldest_first, cookie_source, verbose, pretend_run, exit_on_failure)
-    batch_targets = _build_batch_targets(channel_url, all_videos, new_videos)
 
     # Process each batch
     return _download_batches(

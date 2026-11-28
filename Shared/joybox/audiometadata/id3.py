@@ -2,8 +2,8 @@
 import base64
 
 # Local imports
+from joybox.audiometadata.audiofile import load_audio_file
 from joybox import config
-from joybox import logger
 from joybox import image
 from joybox import paths
 
@@ -201,20 +201,9 @@ class Id3TagsMixin:
     # The file opened for its ID3 tag, logging the action when verbose; None, after
     # logging the error, when the file is missing or unreadable
     def load_id3_file(self, audio_file, action_message, verbose, exit_on_failure):
-
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
-            return None
-
-        # Load audio file
-        if verbose:
-            logger.log_info(action_message)
-        try:
-            return self.open_id3_file(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
-            return None
+        return load_audio_file(
+            audio_file, self.open_id3_file, self.mutagen.MutagenError, "Failed to load MP3 file",
+            action_message, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # The file's audio and ID3 tag: an ADTS stream's standalone tag for a raw .aac, else the MP3 reader
     def open_id3_file(self, audio_file):

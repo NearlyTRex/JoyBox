@@ -59,7 +59,7 @@ def test_a_failed_sync_exits_with_an_error(tool, monkeypatch):
     monkeypatch.setattr(locker_sync_tool.lockersync, "sync_lockers", lambda **kwargs: False)
 
     assert tool.exit_code("--no-preview", "-s", "Gdrive") == 1
-    assert tool.errors == ["Locker sync failed"]
+    assert tool.errors == ["Locker sync failed", "Script completed with errors"]
 
 
 def test_run_goes_through_the_shared_error_handling(tool):

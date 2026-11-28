@@ -2,7 +2,6 @@
 from joybox import system
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import ollamaactions
 
 # Build the argument parser
@@ -29,15 +28,9 @@ def build_parser():
 # Run the chosen Ollama action: find, pull or manage models sized to this machine, or run a coding agent on one
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Run action
     return ollamaactions.run_action(

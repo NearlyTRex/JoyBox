@@ -276,6 +276,23 @@ def pull_missing_harness_model(model_name, installed_names):
         return False
     return chosen
 
+# The installed model to launch a harness with: the one named, pulled first when missing, or
+# else one the user picks; the result action_harness gives when there is none to launch
+def resolve_harness_model(model_name, models, harness_name):
+    if not model_name:
+        selected = prompts.prompt_for_selection(
+            "Select a model for %s:" % harness_name,
+            models,
+            display_func = ollamacatalog.format_installed_model_display
+        )
+        if selected is None:
+            return True
+        return selected["name"]
+    installed_names = {m["name"] for m in models}
+    if model_name not in installed_names:
+        return pull_missing_harness_model(model_name, installed_names)
+    return model_name
+
 # Launch a coding-agent harness with an Ollama model as the backend
 def action_harness(model_name = None, harness = None):
     if not ollama.ensure_running():
@@ -292,23 +309,10 @@ def action_harness(model_name = None, harness = None):
     if not models:
         logger.log_info("No models installed. Run 'ollama_tool available' to find models.")
         return False
-    installed_names = {m["name"] for m in models}
-    if not model_name:
-
-        # Let user select from installed models
-        selected = prompts.prompt_for_selection(
-            "Select a model for %s:" % harness_name,
-            models,
-            display_func = ollamacatalog.format_installed_model_display
-        )
-        if selected is None:
-            return True
-        model_name = selected["name"]
-    elif model_name not in installed_names:
-        pulled = pull_missing_harness_model(model_name, installed_names)
-        if isinstance(pulled, bool):
-            return pulled
-        model_name = pulled
+    resolved = resolve_harness_model(model_name, models, harness_name)
+    if isinstance(resolved, bool):
+        return resolved
+    model_name = resolved
 
     # Warn if the model's context window is too small for this harness
     if not ollamaagents.check_context_window(model_name, harness) and not prompts.prompt_for_confirmation("Launch anyway?", default_yes = False):

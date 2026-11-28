@@ -1,12 +1,7 @@
 # Local imports
 from joybox import config
-from joybox import environment
-from joybox import filebulk
-from joybox import logger
-from joybox import paths
 from joybox import programs
 from joybox import gui
-from joybox import emulatorcommon
 from joybox import emulatorbase
 
 
@@ -41,38 +36,10 @@ class Mame(emulatorbase.EmulatorBase):
 
     NAME = "Mame"
 
-    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
-    def configure(self, setup_params = None):
-
-        # Use default params if not provided
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Create config files
-        if not self.write_config_files(setup_params):
-            return False
-
-        # Verify system files
-        if not self.verify_system_files(self.get_system_files(), setup_params):
-            return False
-
-        # Copy system files
-        for filename in self.get_system_files().keys():
-            for platform in ["windows", "linux"]:
-                success = filebulk.smart_copy(
-                    src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mame"), filename),
-                    dest = paths.join_paths(programs.get_emulator_path_config_value("Mame", "setup_dir", platform), filename),
-                    verbose = setup_params.verbose,
-                    pretend_run = setup_params.pretend_run,
-                    exit_on_failure = setup_params.exit_on_failure)
-                if not success:
-                    logger.log_error("Could not setup Mame system files")
-                    return False
-        return True
-
     # The launch command: the program with its ini path, the rom path and launch file, and
     # -window unless fullscreen is asked; shows an error popup when the platform is not one Mame plays
-    def get_launch_cmd(self, game_platform, fullscreen):
+    def get_launch_command(self, game_info, fullscreen = False):
+        game_platform = game_info.get_platform()
 
         # Check if this platform is valid
         if game_platform not in self.get_platforms():
@@ -97,28 +64,3 @@ class Mame(emulatorbase.EmulatorBase):
                 "-window"
             ]
         return launch_cmd
-
-    # Run MAME with its ini path; arcade games load by set name from the game dir, other platforms
-    # through their system driver and media flag; windowed unless fullscreen is asked
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get launch command
-        launch_cmd = self.get_launch_cmd(game_info.get_platform(), fullscreen)
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)

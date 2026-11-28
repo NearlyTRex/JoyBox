@@ -56,7 +56,7 @@ def test_save_paths_come_from_the_manifest(legacy_store, tools, recording_comman
         def find_entry_by_name(self, name, **kwargs):
             return Entry() if name == "uuid-1" else None
 
-    monkeypatch.setattr(legacy.storebase.manifest, "get_manifest_instance", Manifest)
+    monkeypatch.setattr(legacy.storebase.store.manifest, "get_manifest_instance", Manifest)
 
     data = info(legacy_store, recording_command, json.dumps({"game_name": "Mystery Case Files"}))
 

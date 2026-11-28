@@ -144,6 +144,14 @@ def resolve_secret_reference(reference, verbose = False):
         return _resolved[reference]
     if _no_account["seen"]:
         return None
+    value = fetch_secret_reference(reference, verbose = verbose)
+    if value:
+        _resolved[reference] = value
+    return value
+
+# Ask the tool for one stripped reference, uncached; None, logged, when the tool is
+# missing, fails or gives back nothing
+def fetch_secret_reference(reference, verbose = False):
     tool = get_secret_tool()
     if not tool:
         logger.log_error(
@@ -162,7 +170,6 @@ def resolve_secret_reference(reference, verbose = False):
     if not value:
         logger.log_error("%s resolved to nothing" % reference)
         return None
-    _resolved[reference] = value
     return value
 
 # Resolve a configured value when it is a reference, and leave it alone

@@ -121,6 +121,11 @@ class FakeLocker:
             "locker_type": locker_type, "existed": os.path.exists(src), **kwargs})
         return self.result
 
+    def backup_if_absent(self, src, dest_rel_path, locker_type = None, **kwargs):
+        return self.backup(
+            src, dest_rel_path, locker_type,
+            show_progress = True, skip_existing = True, skip_identical = True, **kwargs)
+
 
 class FakeHashing:
 

@@ -246,6 +246,26 @@ def test_a_preview_with_no_details_still_asks(answers):
     assert prompts.prompt_for_preview("Upload") is False
 
 
+def test_no_preview_goes_ahead_without_asking(answers):
+    assert prompts.confirm_preview(True, "Upload", ["/a"]) is True
+    assert answers.prompts == []
+
+
+def test_a_confirmed_preview_goes_ahead(answers):
+    answers.queue.append("y")
+
+    assert prompts.confirm_preview(False, "Upload", ["/a"]) is True
+
+
+def test_a_declined_preview_is_logged_as_cancelled(answers, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(prompts.logger, "log_warning", warnings.append)
+    answers.queue.append("n")
+
+    assert prompts.confirm_preview(False, "Upload", ["/a"]) is False
+    assert warnings == ["Operation cancelled by user"]
+
+
 def test_a_long_preview_still_asks_once(answers):
     # The list is summarized for display; that must not add prompts.
     answers.queue.append("y")

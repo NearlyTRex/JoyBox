@@ -3,7 +3,6 @@ from joybox import system
 from joybox.tools import moonlight
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -19,15 +18,9 @@ def build_parser():
 # Start Moonlight streaming the configured or given host and app, or pair with the host
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Launch Moonlight
     moonlight.launch_moonlight(

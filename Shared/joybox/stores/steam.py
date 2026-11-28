@@ -107,9 +107,7 @@ class Steam(storebase.StoreBase):
             raise RuntimeError("Ini file does not have a valid web api key")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.Steam", "steam_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.Steam", "steam_install_dir")
 
     ############################################################
     # Store
@@ -204,19 +202,13 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.run_interactive_command(
-            cmd = login_cmd,
+        return self.run_login_command(
+            login_cmd = login_cmd,
             options = commandbase.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
-
-        # Should be successful
-        self.set_logged_in(True)
-        return True
 
     ############################################################
     # Page
@@ -324,53 +316,22 @@ class Steam(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Merge in manifest save paths and registry keys matched by appid, rooted at the game's install dir when known, then the base cleanup
-    def augment_jsondata(
-        self,
-        json_data,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
-        game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
-
-        # Augment by manifest
-        manifest_entry = manifest.get_manifest_instance().find_entry_by_steamid(
-            steamid = identifier)
-        if manifest_entry:
-            base_path = None
-            if json_data.has_key(config.JSON_KEY_STORE_INSTALLDIR):
-                base_path = json_data.get_value(config.JSON_KEY_STORE_INSTALLDIR)
-            manifest_paths = manifest_entry.get_paths(base_path)
-            game_paths = list(set(game_paths).union(manifest_paths))
-            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
-
-        # Apply base path cleaning logic
-        json_data.set_value(config.JSON_KEY_STORE_PATHS, game_paths)
-        json_data.set_value(config.JSON_KEY_STORE_KEYS, game_keys)
-        return super().augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # The manifest entry matched by appid, rooted at the game's install dir when known, then the base's
+    def get_manifest_matches(self, json_data, identifier):
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_steamid(steamid = identifier)
+        base_path = None
+        if json_data.has_key(config.JSON_KEY_STORE_INSTALLDIR):
+            base_path = json_data.get_value(config.JSON_KEY_STORE_INSTALLDIR)
+        return [(manifest_entry, base_path)] + super().get_manifest_matches(json_data, identifier)
 
     # Name, install dir, controller support and the branch's build id and date from SteamCMD's anonymous app_info_print
-    def get_latest_jsondata(
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
 
         # Get app info
         info_output = self._run_app_info_print(identifier, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
@@ -383,13 +344,7 @@ class Steam(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self._create_app_jsondata(identifier, branch, steam_json)
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return self._create_app_jsondata(identifier, branch, steam_json)
 
     # Store json for the appid on the branch (public by default) from its parsed app info, before augmenting
     def _create_app_jsondata(self, identifier, branch, steam_json):
@@ -465,16 +420,11 @@ class Steam(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_metadata_identifier(identifier):
-            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
-            return None
-
-        # Scrape the store page with retries
-        return self.scrape_with_retries(
+        del exit_on_failure
+        return self.scrape_latest_metadata(
+            identifier = identifier,
             scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
-            operation_name = "Steam metadata fetch for '%s'" % identifier,
+            store_label = "Steam",
             verbose = verbose,
             pretend_run = pretend_run)
 
@@ -482,11 +432,7 @@ class Steam(storebase.StoreBase):
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
 
         # Load url
-        success = webpage.load_url(web_driver, identifier)
-        if not success:
-            raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
-
-        # Create metadata entry
+        self.load_scrape_page(web_driver, identifier)
         metadata_entry = metadataentry.MetadataEntry()
 
         # Answer the age gate
@@ -511,19 +457,12 @@ class Steam(storebase.StoreBase):
 
     # Set the entry's description from the page's About This Game section, minus its heading
     def _read_page_description(self, web_driver, metadata_entry, verbose = False):
-        element_game_description = webpage.wait_for_element(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"id": "aboutThisGame"}),
-            verbose = verbose,
-            exit_on_failure = False)
-        if element_game_description:
-            raw_game_description = webpage.get_element_children_text(element_game_description)
-            if raw_game_description:
-                description_text = raw_game_description
-                description_text = strings.trim_substring_from_start(description_text, "About This Game")
-                description_text = strings.trim_substring_from_start(description_text, "About This Software")
-                description_text = strings.trim_substring_from_start(description_text, "About This Demo")
-                metadata_entry.set_description(description_text)
+        description_text = self.wait_for_page_text(web_driver, {"id": "aboutThisGame"}, verbose = verbose)
+        if description_text:
+            description_text = strings.trim_substring_from_start(description_text, "About This Game")
+            description_text = strings.trim_substring_from_start(description_text, "About This Software")
+            description_text = strings.trim_substring_from_start(description_text, "About This Demo")
+            metadata_entry.set_description(description_text)
 
     ############################################################
     # Assets

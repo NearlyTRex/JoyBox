@@ -1,8 +1,5 @@
-# Imports
-import os
-
 # Local imports
-from joybox import logger
+from joybox.audiometadata.audiofile import build_audio_file_info, load_audio_file
 from joybox import modules
 from joybox import paths
 from joybox import programs
@@ -77,28 +74,9 @@ class AdtsTagsMixin:
 
     # Path, size, bitrate, length, sample rate, channels and ID3 tag presence of an ADTS stream; None when unreadable
     def get_adts_file_info(self, audio_file, verbose = False, exit_on_failure = False):
-
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
+        audio = load_audio_file(
+            audio_file, self.open_adts_id3_file, self.mutagen.MutagenError, "Failed to get ADTS file info",
+            "Reading ADTS file info from %s" % audio_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        if audio is None:
             return None
-
-        # Log what is read
-        if verbose:
-            logger.log_info(f"Reading ADTS file info from {audio_file}")
-
-        # Get audio info
-        try:
-            audio = self.open_adts_id3_file(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to get ADTS file info: {e}", quit_program = exit_on_failure)
-            return None
-        return {
-            "path": audio_file,
-            "size": os.path.getsize(audio_file),
-            "bitrate": getattr(audio.info, "bitrate", 0),
-            "length": getattr(audio.info, "length", 0),
-            "sample_rate": getattr(audio.info, "sample_rate", 0),
-            "channels": getattr(audio.info, "channels", 0),
-            "has_tags": audio.tags is not None
-        }
+        return build_audio_file_info(audio_file, audio)

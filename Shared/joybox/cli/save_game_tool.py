@@ -4,7 +4,6 @@ from joybox import system
 from joybox import arguments
 from joybox.collection import saves
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -33,15 +32,9 @@ def build_parser():
 # After a preview, pack, unpack, import or export the save, or import the save paths, on each selected game with a JSON entry
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect games to process; games with nothing to pack or unpack are skipped
     games_to_process = saves.get_save_action_games(
@@ -51,11 +44,9 @@ def main():
         exit_on_failure = args.exit_on_failure)
 
     # Show preview
-    if not args.no_preview:
-        details = ["%s/%s/%s" % (g.get_category(), g.get_subcategory(), g.get_name()) for g in games_to_process]
-        if not prompts.prompt_for_preview("Save game %s" % args.action, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["%s/%s/%s" % (g.get_category(), g.get_subcategory(), g.get_name()) for g in games_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Save game %s" % args.action, details):
+        return
 
     # Process games
     saves.run_save_action(

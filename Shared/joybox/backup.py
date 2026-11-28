@@ -42,36 +42,43 @@ def resolve_path(
     # Return result
     return resolved_path
 
+# Copy one file across, stopping on its failure only when exit_on_failure is set and
+# skip_on_error is not; a failure under skip_on_error is reported to the error log
+def _copy_tree_file(
+    src_path, dest_path, show_progress, skip_existing, skip_identical,
+    skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure):
+    success = filebulk.smart_copy(
+        src = src_path,
+        dest = dest_path,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        skip_on_error = skip_on_error,
+        error_log_path = error_log_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure and not skip_on_error)
+    if not success and skip_on_error:
+        fileops.report_fileio_error(src_path, dest_path, error_log_path, verbose, pretend_run)
+    return success
+
 # Copy each non-excluded file to the same relative spot under the output; the number that failed
 # and were skipped, or None after logging the first failure when skip_on_error is off
 def _copy_tree_files(
     input_base_path, output_base_path, exclude_paths, show_progress, skip_existing, skip_identical,
     skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure):
-    per_file_exit = exit_on_failure and not skip_on_error
     failed_count = 0
     for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
         src_path = paths.join_paths(input_base_path, src_file)
-        dest_path = paths.join_paths(output_base_path, src_file)
-
-        # Copy file
-        success = filebulk.smart_copy(
-            src = src_path,
-            dest = dest_path,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            skip_on_error = skip_on_error,
-            error_log_path = error_log_path,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = per_file_exit)
-        if not success:
-            if skip_on_error:
-                failed_count += 1
-                fileops.report_fileio_error(src_path, dest_path, error_log_path, verbose, pretend_run)
-                continue
+        success = _copy_tree_file(
+            src_path, paths.join_paths(output_base_path, src_file), show_progress, skip_existing, skip_identical,
+            skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
+        if success:
+            continue
+        if not skip_on_error:
             logger.log_error("Unable to copy file '%s'" % src_path)
             return None
+        failed_count += 1
     return failed_count
 
 # Copy every non-excluded file under one folder to the same relative spot under another, without encryption;
@@ -162,33 +169,17 @@ def _is_encrypted_dest_current(dest_path, src_path, passphrase, skip_existing, s
             return True
     return False
 
-# Encrypt one file, given relative to the input, into the same spot under the output
-# under an encrypted name; False after logging a failed encryption
-def _encrypt_tree_file(
-    src_file, input_base_path, output_base_path, passphrase, delete_original,
-    skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
-    src_path = paths.join_paths(input_base_path, src_file)
-    src_dir = paths.get_filename_directory(src_file)
-    src_filename = paths.get_filename_file(src_file)
-    dest_dir = paths.join_paths(output_base_path, src_dir)
-
-    # Generate encrypted output path
-    encrypted_name = cryption.generate_encrypted_filename(src_filename)
-    dest_path = paths.join_paths(dest_dir, encrypted_name)
-    if _is_encrypted_dest_current(dest_path, src_path, passphrase, skip_existing, skip_identical, verbose, pretend_run):
-        return True
-
-    # Ensure destination directory exists
+# Make the destination's folder, then run crypt_function, cryption's encrypt_file or
+# decrypt_file, from src_path to dest_path; False after logging a failure
+def _crypt_into_place(crypt_function, action, src_path, dest_path, passphrase, delete_original, verbose, pretend_run, exit_on_failure):
     fileops.make_directory(
-        src = dest_dir,
+        src = paths.get_filename_directory(dest_path),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Encrypt the file
     if not pretend_run:
-        logger.log_info("Encrypting: '%s' -> '%s'" % (src_path, dest_path))
-    success = cryption.encrypt_file(
+        logger.log_info("%sing: '%s' -> '%s'" % (action.capitalize()[:-1], src_path, dest_path))
+    success = crypt_function(
         src = src_path,
         passphrase = passphrase,
         output_file = dest_path,
@@ -197,9 +188,24 @@ def _encrypt_tree_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        logger.log_error("Unable to encrypt file '%s'" % src_path)
+        logger.log_error("Unable to %s file '%s'" % (action, src_path))
         return False
     return True
+
+# Encrypt one file, given relative to the input, into the same spot under the output
+# under an encrypted name; False after logging a failed encryption
+def _encrypt_tree_file(
+    src_file, input_base_path, output_base_path, passphrase, delete_original,
+    skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
+    src_path = paths.join_paths(input_base_path, src_file)
+    dest_path = paths.join_paths(
+        output_base_path,
+        paths.get_filename_directory(src_file),
+        cryption.generate_encrypted_filename(paths.get_filename_file(src_file)))
+    if _is_encrypted_dest_current(dest_path, src_path, passphrase, skip_existing, skip_identical, verbose, pretend_run):
+        return True
+    return _crypt_into_place(
+        cryption.encrypt_file, "encrypt", src_path, dest_path, passphrase, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Check the passphrase, then run crypt_tree_file over each non-excluded file under the input; False at the first failure
 def _crypt_tree_files(
@@ -275,40 +281,15 @@ def _decrypt_tree_file(
     src_file, input_base_path, output_base_path, passphrase, delete_original,
     skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
     src_path = paths.join_paths(input_base_path, src_file)
-    src_dir = paths.get_filename_directory(src_file)
-    dest_dir = paths.join_paths(output_base_path, src_dir)
-
-    # Generate decrypted output path
     real_name = _get_decrypted_filename(src_path, passphrase, verbose, exit_on_failure)
     if not real_name:
         return False
-    dest_path = paths.join_paths(dest_dir, real_name)
+    dest_path = paths.join_paths(output_base_path, paths.get_filename_directory(src_file), real_name)
     if _is_decrypted_dest_handled(
         src_path, dest_path, passphrase, delete_original, skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
         return True
-
-    # Ensure destination directory exists
-    fileops.make_directory(
-        src = dest_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Decrypt the file
-    if not pretend_run:
-        logger.log_info("Decrypting: '%s' -> '%s'" % (src_path, dest_path))
-    success = cryption.decrypt_file(
-        src = src_path,
-        passphrase = passphrase,
-        output_file = dest_path,
-        delete_original = delete_original,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to decrypt file '%s'" % src_path)
-        return False
-    return True
+    return _crypt_into_place(
+        cryption.decrypt_file, "decrypt", src_path, dest_path, passphrase, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Decrypt every non-excluded file under one folder into the same relative spot under another, under its embedded real name
 def copy_and_decrypt_files(
@@ -477,20 +458,22 @@ def archive_folder(
     output_archive_file = paths.join_paths(output_path, archive_file_name)
     return success and (paths.does_path_exist(output_archive_file) or paths.does_path_exist(output_archive_file + ".001"))
 
+# The names of the folders directly inside base_dir; empty when it is not a folder
+def _get_sub_folder_names(base_dir):
+    if not paths.is_path_directory(base_dir):
+        return []
+    return [obj for obj in paths.get_directory_contents(base_dir) if paths.is_path_directory(paths.join_paths(base_dir, obj))]
+
 # Pack each subfolder of one top-level folder into its own archive under that folder's name
 # in the output, emptying the output only before the first; False on the first failure
 def _archive_base_folder(
     base_obj, input_base_path, output_base_path, archive_type, clean_output,
     show_progress, skip_existing, skip_identical, verbose, pretend_run, exit_on_failure):
     base_dir = paths.join_paths(input_base_path, base_obj)
-    sub_objs = paths.get_directory_contents(base_dir) if paths.is_path_directory(base_dir) else []
     clean_base_output = clean_output
-    for sub_obj in sub_objs:
-        sub_dir = paths.join_paths(base_dir, sub_obj)
-        if not paths.is_path_directory(sub_dir):
-            continue
+    for sub_obj in _get_sub_folder_names(base_dir):
         success = archive_folder_into(
-            input_path = sub_dir,
+            input_path = paths.join_paths(base_dir, sub_obj),
             output_dir = paths.join_paths(output_base_path, base_obj),
             archive_file_name = sub_obj + archive_type.cval(),
             clean_output = clean_base_output,
@@ -551,8 +534,26 @@ def _resolve_backup_destination(path, locker_type, base_path, game_path, verbose
             logger.log_error("Could not resolve destination path", quit_program = True)
     return dest_file_root
 
-# The (source, destination) roots for a backup; quits when either is unusable or they are the same
-def _resolve_backup_roots(input_path, output_path, source_locker, dest_locker, input_locker_base, output_locker_base, game_path, verbose, pretend_run):
+# The (source, destination) roots for a backup, each the given path or the game folders under its
+# locker base or locker; quits when either is unusable or they are the same
+def resolve_backup_roots(
+    input_path = None,
+    output_path = None,
+    source_locker = None,
+    dest_locker = None,
+    input_locker_base = None,
+    output_locker_base = None,
+    game_supercategory = None,
+    game_category = None,
+    game_subcategory = None,
+    game_offset = None,
+    verbose = False,
+    pretend_run = False):
+    game_path = {
+        "game_supercategory": game_supercategory,
+        "game_category": game_category,
+        "game_subcategory": game_subcategory,
+        "game_offset": game_offset}
     source_file_root = _resolve_backup_source(input_path, source_locker, input_locker_base, game_path)
     dest_file_root = _resolve_backup_destination(output_path, dest_locker, output_locker_base, game_path, verbose, pretend_run)
     if paths.are_paths_equal(source_file_root, dest_file_root):
@@ -624,20 +625,14 @@ def _transfer_backup_files(source_file_root, dest_file_root, backup_type, crypti
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Resolve the source and destination roots from the paths, locker bases or game folders, then,
-# after a preview, copy the source tree across or pack its second-level folders into 7z
-# archives; exclude_paths is a comma-separated list of relative path prefixes
+# After a preview, copy the source root's tree into the destination root or pack its second-level
+# folders into 7z archives; source_locker and dest_locker supply the passphrase when encrypting
+# or decrypting, and exclude_paths is a comma-separated list of relative path prefixes
 def backup_tree(
-    input_path = None,
-    output_path = None,
+    source_file_root,
+    dest_file_root,
     source_locker = None,
     dest_locker = None,
-    input_locker_base = None,
-    output_locker_base = None,
-    game_supercategory = None,
-    game_category = None,
-    game_subcategory = None,
-    game_offset = None,
     backup_type = config.BackupType.COPY,
     cryption_type = config.CryptionType.NONE,
     exclude_paths = "",
@@ -648,15 +643,6 @@ def backup_tree(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Resolve the roots
-    game_path = {
-        "game_supercategory": game_supercategory,
-        "game_category": game_category,
-        "game_subcategory": game_subcategory,
-        "game_offset": game_offset}
-    source_file_root, dest_file_root = _resolve_backup_roots(
-        input_path, output_path, source_locker, dest_locker, input_locker_base, output_locker_base, game_path, verbose, pretend_run)
 
     # Show preview
     if show_preview and not _confirm_backup_preview(source_file_root, dest_file_root, backup_type, cryption_type):

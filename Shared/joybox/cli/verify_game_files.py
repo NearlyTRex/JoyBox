@@ -4,7 +4,6 @@ from joybox import system
 from joybox import arguments
 from joybox.collection import scanning
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -16,26 +15,18 @@ def build_parser():
 # After a preview, cross-check the game JSON, Pegasus metadata and hash files against the local locker's Gaming folder
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
-            "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
-            "Hashes dir: %s" % environment.get_game_hashes_metadata_root_dir()
-        ]
-        if not prompts.prompt_for_preview("Verify game files (check JSON, metadata, and hash files)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
+        "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
+        "Hashes dir: %s" % environment.get_game_hashes_metadata_root_dir()
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Verify game files (check JSON, metadata, and hash files)", details):
+        return
 
     # Check the json, metadata and hash files against the locker
     scanning.verify_game_files(

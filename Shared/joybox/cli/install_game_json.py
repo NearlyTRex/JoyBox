@@ -4,7 +4,6 @@ from joybox import system
 from joybox import collection
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -28,15 +27,9 @@ def build_parser():
 # After a preview, install the game named by a JSON file or by category, subcategory and name into the local cache, then its addons
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Prefer input file if it was specified
     json_file = None

@@ -39,15 +39,9 @@ def build_parser():
 # After a preview, run the chosen rclone action between the local locker and the remote locker; its outcome is the exit status
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get the remote locker and the local paths the action works on
     target = locker.get_remote_action_target(args.action, args.locker_type, args.excludes)

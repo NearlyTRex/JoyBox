@@ -17,25 +17,17 @@ def build_parser():
 # After a preview, verify each CHD under the input against its SHA-1; stops at the first that fails
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
 
     # Show preview
-    if not args.no_preview:
-        details = ["Path: %s" % input_path]
-        if not prompts.prompt_for_preview("Verify CHD", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["Path: %s" % input_path]
+    if not prompts.confirm_preview(args.no_preview, "Verify CHD", details):
+        return
 
     # Convert disc image files
     for file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):

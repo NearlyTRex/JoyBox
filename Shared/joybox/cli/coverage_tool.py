@@ -3,7 +3,6 @@ from joybox import system
 from joybox import arguments
 from joybox import setup
 from joybox import testcoverage
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -34,15 +33,9 @@ def build_parser():
 # Run the unit tests under coverage and report, or report on the last measurement
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Run action
     return testcoverage.run_action(

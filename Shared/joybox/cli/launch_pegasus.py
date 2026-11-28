@@ -3,7 +3,6 @@ from joybox import system
 from joybox.tools import pegasus
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -14,15 +13,9 @@ def build_parser():
 # Run Pegasus from its tools folder with JOYBOX_LAUNCH_JSON set to the launcher command, and wait for it to exit
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Launch Pegasus
     pegasus.Pegasus().launch(verbose = args.verbose, pretend_run = args.pretend_run, exit_on_failure = args.exit_on_failure)

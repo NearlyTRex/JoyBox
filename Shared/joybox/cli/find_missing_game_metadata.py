@@ -5,7 +5,6 @@ from joybox import metadata
 from joybox import system
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -22,15 +21,9 @@ def build_parser():
 # After a preview, log and write per key the Pegasus metadata entries missing the chosen fields
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get metadata dir
     metadata_dir = environment.get_game_pegasus_metadata_root_dir()
@@ -39,14 +32,12 @@ def main():
     keys_to_check = metadata.get_metadata_keys_to_check(args.keys)
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Metadata dir: %s" % metadata_dir,
-            "Keys to check: %s" % ", ".join(keys_to_check)
-        ]
-        if not prompts.prompt_for_preview("Find missing game metadata", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Metadata dir: %s" % metadata_dir,
+        "Keys to check: %s" % ", ".join(keys_to_check)
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Find missing game metadata", details):
+        return
 
     # Report missing metadata
     metadata.report_missing_game_metadata(

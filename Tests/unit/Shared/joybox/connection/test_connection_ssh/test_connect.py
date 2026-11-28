@@ -302,7 +302,7 @@ def test_a_missing_ssh_directory_is_made_private(tmp_path):
 
 
 def test_a_key_that_cannot_be_remembered_is_refused(monkeypatch, tmp_path):
-    monkeypatch.setattr(connection_ssh.fileops, "touch_file", lambda *args, **kwargs: False)
+    monkeypatch.setattr(connection_ssh.knownhosts.fileops, "touch_file", lambda *args, **kwargs: False)
     client = HostKeyClient()
 
     with pytest.raises(OSError):

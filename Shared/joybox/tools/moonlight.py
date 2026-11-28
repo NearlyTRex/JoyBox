@@ -1,11 +1,7 @@
 # Local imports
 from joybox import config
 from joybox import logger
-from joybox import paths
-from joybox import environment
-from joybox import fileops
 from joybox import toolbase
-from joybox import desktopentry
 from joybox import settings
 
 
@@ -21,32 +17,17 @@ class Moonlight(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in self.get_config_files().items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight config files")
-                return False
+        if not self.write_config_files(setup_params):
+            return False
 
         # Put it in the app menu on a machine whose streaming role uses it
-        success = desktopentry.set_launcher(
+        return self.set_menu_launcher(
             enabled = settings.get_bool_value("Tools.Moonlight", "moonlight_client", False, throw_exception = False),
             filename = "joybox-moonlight.desktop",
-            name = "Moonlight",
             description = "Play games streamed from the Sunshine host",
-            command = "launch_moonlight",
+            command_name = "launch_moonlight",
             icon = "input-gaming",
-            verbose = setup_params.verbose,
-            pretend_run = setup_params.pretend_run,
-            exit_on_failure = setup_params.exit_on_failure)
-        if not success:
-            logger.log_error("Could not setup the Moonlight launcher")
-            return False
-        return True
+            setup_params = setup_params)
 
 
 ###########################################################

@@ -211,6 +211,17 @@ def _finish_gpg_output(src, output_file, action, delete_original, verbose, prete
     # Check result
     return os.path.exists(output_file)
 
+# Run the gpg command the builder makes for src and output, logging when it fails, then finish
+# the output as _finish_gpg_output does; False when gpg is missing or the run fails
+def _run_gpg_to_output(build_command, action, src, output_file, passphrase, delete_original, verbose, pretend_run, exit_on_failure):
+    gpg_tool = programs.find_tool_program("Gpg")
+    if not gpg_tool:
+        return False
+    if not _run_gpg_command(build_command(gpg_tool, src, output_file), passphrase, verbose, pretend_run, exit_on_failure):
+        logger.log_error("Unable to %s file '%s'" % (action, src))
+        return False
+    return _finish_gpg_output(src, output_file, action, delete_original, verbose, pretend_run, exit_on_failure)
+
 # The gpg command encrypting src with AES256 to the output, keeping its file name inside
 def _build_encrypt_command(gpg_tool, src, output_file):
     return [
@@ -269,16 +280,8 @@ def encrypt_file(
     if is_file_encrypted(src):
         return _copy_unchanged(src, output_file, verbose, pretend_run, exit_on_failure)
 
-    # Get tool
-    gpg_tool = programs.find_tool_program("Gpg")
-    if not gpg_tool:
-        return False
-
     # Run encrypt command
-    if not _run_gpg_command(_build_encrypt_command(gpg_tool, src, output_file), passphrase, verbose, pretend_run, exit_on_failure):
-        logger.log_error("Unable to encrypt file '%s'" % src)
-        return False
-    return _finish_gpg_output(src, output_file, "encrypt", delete_original, verbose, pretend_run, exit_on_failure)
+    return _run_gpg_to_output(_build_encrypt_command, "encrypt", src, output_file, passphrase, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Decrypt with gpg to the embedded name unless given an output; copies unencrypted files,
 # keeps an existing output, and can delete the original
@@ -310,16 +313,8 @@ def decrypt_file(
     if not is_file_encrypted(src):
         return _copy_unchanged(src, output_file, verbose, pretend_run, exit_on_failure)
 
-    # Get tool
-    gpg_tool = programs.find_tool_program("Gpg")
-    if not gpg_tool:
-        return False
-
     # Run decrypt command
-    if not _run_gpg_command(_build_decrypt_command(gpg_tool, src, output_file), passphrase, verbose, pretend_run, exit_on_failure):
-        logger.log_error("Unable to decrypt file '%s'" % src)
-        return False
-    return _finish_gpg_output(src, output_file, "decrypt", delete_original, verbose, pretend_run, exit_on_failure)
+    return _run_gpg_to_output(_build_decrypt_command, "decrypt", src, output_file, passphrase, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Encrypt every file under the source to its hashed .enc path; returns the outputs that succeeded
 def encrypt_files(

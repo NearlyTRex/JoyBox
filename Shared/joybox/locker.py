@@ -442,6 +442,20 @@ def _backup_to_locker(
         logger.log_info("Backup to %s completed" % locker)
     return success
 
+# Back src up to each locker in turn, stopping at the first failure when exit_on_failure is set
+def _backup_to_each_locker(
+    src, dest_rel_path, lockers, upload_encrypted, show_progress, skip_existing,
+    skip_identical, verbose, pretend_run, exit_on_failure):
+    all_success = True
+    for locker in lockers:
+        success = _backup_to_locker(
+            src, dest_rel_path, locker, upload_encrypted, show_progress, skip_existing,
+            skip_identical, verbose, pretend_run, exit_on_failure)
+        if not success and exit_on_failure:
+            return False
+        all_success = all_success and success
+    return all_success
+
 # Backup source to configured lockers
 def backup(
     src,
@@ -467,22 +481,30 @@ def backup(
         return True
 
     # Upload to each locker directly from source
-    all_success = True
-    for locker in lockers_to_upload:
-        success = _backup_to_locker(
-            src, dest_rel_path, locker, upload_encrypted, show_progress, skip_existing,
-            skip_identical, verbose, pretend_run, exit_on_failure)
-        if not success and exit_on_failure:
-            return False
-        all_success = all_success and success
+    all_success = _backup_to_each_locker(
+        src, dest_rel_path, lockers_to_upload, upload_encrypted, show_progress, skip_existing,
+        skip_identical, verbose, pretend_run, exit_on_failure)
+    if not all_success:
+        return False
 
     # Delete source afterwards if requested
-    if delete_afterwards and all_success:
+    if delete_afterwards:
         fileops.remove_file_or_directory(src, verbose = verbose, pretend_run = pretend_run)
-
-    # Should be successful
     logger.log_info("Backup completed successfully")
-    return all_success
+    return True
+
+# Back src up to the locker path dest_rel_path with progress, skipping an existing or identical copy
+def backup_if_absent(src, dest_rel_path, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    return backup(
+        src = src,
+        dest_rel_path = dest_rel_path,
+        locker_type = locker_type,
+        show_progress = True,
+        skip_existing = True,
+        skip_identical = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
 # Remote actions (the local locker against a remote locker)
@@ -586,16 +608,12 @@ def _run_diff_action(remote, target, diff_paths, quick, recycle_folder, flags):
 # Sync the differences between the target's local path and its remote, from the diff files
 # in diff_dir or a fresh diff; remote-only files are recycled when recycle_missing is set
 def _run_diffsync_action(remote, target, diff_dir, diff_paths, recycle_missing, recycle_folder, quick, interactive, flags):
-    combined_path, intersected_path, missing_src_path, missing_dest_path, _ = diff_paths
     return syncdiff.diff_sync_files(
         **remote,
         local_path = target["local_path"],
         excludes = _get_diff_excludes(target["excludes"], recycle_folder),
         diff_dir = diff_dir,
-        diff_combined_file = combined_path,
-        diff_intersected_file = intersected_path,
-        diff_missing_src_file = missing_src_path,
-        diff_missing_dest_file = missing_dest_path,
+        diff_file_names = tuple(diff_paths[:4]),
         recycle_missing = recycle_missing,
         recycle_folder = recycle_folder,
         quick = quick,
@@ -614,6 +632,14 @@ def _run_mount_action(remote, target, flags):
         no_seek = "no_seek" in mount_flags,
         read_only = "read_only" in mount_flags,
         **flags)
+
+# Run an action that touches only the remote: empty its recycle bin, list it, or else mount it
+def _run_remote_only_action(action, remote, target, recycle_folder, flags):
+    if action == config.RemoteActionType.EMPTYRECYCLE:
+        return sync.empty_recycle_bin(**remote, recycle_folder = recycle_folder, **flags)
+    if action == config.RemoteActionType.LIST:
+        return synclisting.list_files(**remote, recursive = True, only_directories = False, **flags)
+    return _run_mount_action(remote, target, flags)
 
 # Run a remote action on a target from get_remote_action_target, returning whether it
 # succeeded; diff_paths holds the combined, intersected, missing-on-source,
@@ -643,8 +669,4 @@ def run_remote_action(
     if action == config.RemoteActionType.DIFFSYNC:
         return _run_diffsync_action(
             remote, target, diff_dir, diff_paths, recycle_missing, recycle_folder, quick, interactive, flags)
-    if action == config.RemoteActionType.EMPTYRECYCLE:
-        return sync.empty_recycle_bin(**remote, recycle_folder = recycle_folder, **flags)
-    if action == config.RemoteActionType.LIST:
-        return synclisting.list_files(**remote, recursive = True, only_directories = False, **flags)
-    return _run_mount_action(remote, target, flags)
+    return _run_remote_only_action(action, remote, target, recycle_folder, flags)

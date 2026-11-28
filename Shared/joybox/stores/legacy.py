@@ -10,11 +10,8 @@ from joybox import serialization
 from joybox import settings
 from joybox import jsondata
 from joybox import webpage
-from joybox import webfetch
 from joybox import storebase
 from joybox import strings
-from joybox import metadataassetcollector
-from joybox import paths
 
 # Get stripped string value from heirloom json, empty when missing or not a string
 def get_json_string(json_object, key):
@@ -32,6 +29,8 @@ class Legacy(storebase.StoreBase):
     CATEGORY = config.Category.COMPUTER
     SUBCATEGORY = config.Subcategory.COMPUTER_LEGACY_GAMES
     KEY = config.JSON_KEY_LEGACY
+    PAGE_VIDEO_BASE_URL = "https://www.bigfishgames.com"
+    PAGE_VIDEO_ENDS_WITH = "enablejsapi=1"
     IDENTIFIER_KEYS = types.MappingProxyType({
         config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
         config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
@@ -52,9 +51,7 @@ class Legacy(storebase.StoreBase):
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.Legacy", "legacy_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.Legacy", "legacy_install_dir")
 
     ############################################################
     # Store
@@ -296,8 +293,8 @@ class Legacy(storebase.StoreBase):
     # Json
     ############################################################
 
-    # The game name from Heirloom's info for an installer uuid, plus manifest save paths; None when unknown
-    def get_latest_jsondata(
+    # The game name from Heirloom's info for an installer uuid; None when unknown
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -305,12 +302,8 @@ class Legacy(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get script command
+        del branch, pretend_run
         script_cmd = programs.get_python_script_command("Heirloom")
         if not script_cmd:
             return None
@@ -328,12 +321,7 @@ class Legacy(storebase.StoreBase):
         json_data = self.create_default_jsondata()
         json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
         json_data.set_value(config.JSON_KEY_STORE_NAME, get_json_string(legacy_json, "game_name"))
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return json_data
 
     # Heirloom's info for an installer uuid as a dict; None (after logging) when unknown or unparsable
     def _fetch_game_info(
@@ -366,51 +354,5 @@ class Legacy(storebase.StoreBase):
             logger.log_error("Received output:\n%s" % info_output)
             return None
         return legacy_json
-
-    ############################################################
-    # Assets
-    ############################################################
-
-    # A box front from the metadata asset collectors, or the YouTube embed on the game page; None for other types
-    def get_latest_asset_url(
-        self,
-        identifier,
-        asset_type,
-        game_name = None,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_asset_identifier(identifier):
-            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
-            return None
-
-        # Latest asset url
-        latest_asset_url = None
-
-        # BoxFront
-        if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = metadataassetcollector.find_metadata_asset(
-                game_platform = self.get_platform(),
-                game_name = game_name if game_name else identifier,
-                asset_type = asset_type,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Video
-        elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webfetch.get_matching_url(
-                url = identifier,
-                base_url = "https://www.bigfishgames.com",
-                starts_with = "https://www.youtube.com/embed",
-                ends_with = "enablejsapi=1",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Return latest asset url
-        return latest_asset_url
 
     ############################################################

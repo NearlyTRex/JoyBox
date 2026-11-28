@@ -4,7 +4,6 @@ from joybox import system
 from joybox import arguments
 from joybox.collection import uploading
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -22,11 +21,7 @@ def build_parser():
         arg_type = config.LockerType,
         default = config.LockerType.LOCAL,
         description = "Locker whose game folders are selected and encrypted")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "`Standard` finds games in the source locker; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
+    parser.add_generation_mode_argument(description = "`Standard` finds games in the source locker; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
     parser.add_enum_argument(
         args = ("-d", "--dest_locker"),
         arg_type = config.LockerType,
@@ -37,15 +32,9 @@ def build_parser():
 # After a preview, encrypt each selected game's folder in place, hash it and upload it to the remote locker
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get custom input path if provided
     custom_input_path = parser.get_path("input_path")
@@ -60,11 +49,9 @@ def main():
         exit_on_failure = args.exit_on_failure)
 
     # Show preview
-    if not args.no_preview:
-        details = [game_root for _, game_root in games_to_process]
-        if not prompts.prompt_for_preview("Upload game files (encrypt and upload to %s)" % args.dest_locker, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [game_root for _, game_root in games_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Upload game files (encrypt and upload to %s)" % args.dest_locker, details):
+        return
 
     # Upload game files
     uploading.upload_game_roots(

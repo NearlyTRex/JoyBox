@@ -7,12 +7,10 @@ from joybox import config
 from joybox import logger
 from joybox import webpage
 from joybox import webcookies
-from joybox import webfetch
 from joybox import storebase
 from joybox import strings
 from joybox import metadataentry
 from joybox import paths
-from joybox import settings
 from joybox import runtime
 
 # Longest the my-purchases grid may keep loading before the scrape gives up, in seconds
@@ -36,6 +34,7 @@ class Itchio(storebase.StoreBase):
     CATEGORY = config.Category.COMPUTER
     SUBCATEGORY = config.Subcategory.COMPUTER_ITCHIO
     KEY = config.JSON_KEY_ITCHIO
+    PAGE_VIDEO_BASE_URL = storebase.YOUTUBE_EMBED_URL
     IDENTIFIER_KEYS = types.MappingProxyType({
         config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPURL,
         config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPURL,
@@ -51,9 +50,7 @@ class Itchio(storebase.StoreBase):
         super().__init__()
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.Itchio", "itchio_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.Itchio", "itchio_install_dir")
 
     ############################################################
     # Store
@@ -238,16 +235,11 @@ class Itchio(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_metadata_identifier(identifier):
-            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
-            return None
-
-        # Scrape the game page with retries
-        return self.scrape_with_retries(
+        del exit_on_failure
+        return self.scrape_latest_metadata(
+            identifier = identifier,
             scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose, pretend_run = pretend_run),
-            operation_name = "Itch.io metadata fetch for '%s'" % identifier,
+            store_label = "Itch.io",
             verbose = verbose,
             pretend_run = pretend_run)
 
@@ -339,53 +331,15 @@ class Itchio(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # A box front found through the itch.io search, or the YouTube embed on the game page; None for other types
-    def get_latest_asset_url(
+    # Box front found by search_cover in a headless browser; None when it cannot connect or disconnect
+    def find_boxfront_url(
         self,
         identifier,
-        asset_type,
         game_name = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_asset_identifier(identifier):
-            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
-            return None
-
-        # Latest asset url
-        latest_asset_url = None
-
-        # BoxFront
-        if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = self._search_cover_headless(
-                identifier = identifier,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Video
-        elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webfetch.get_matching_url(
-                url = identifier,
-                base_url = "https://www.youtube.com/embed",
-                starts_with = "https://www.youtube.com/embed",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Return latest asset url
-        return latest_asset_url
-
-    # Cover found by search_cover in a headless browser; None when it cannot connect or disconnect
-    def _search_cover_headless(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
+        del game_name
         return self.run_with_web_driver(
             func = lambda web_driver: self.search_cover(
                 web_driver = web_driver,

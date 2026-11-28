@@ -145,6 +145,8 @@ sealed_programs = [
 pylint_rcfile = "Tests/pylintrc"
 signature_packages = ["joybox"]
 library_targets = ["Shared", "Scripts"]
+# pylint over library_targets: the shared library rcfile with its size and duplication rules on
+pylint_source_rcfile = "Shared/pylintrc"
 # A comment above every public definition, saying more than its name, in at most three lines
 doc_style = "comment"
 doc_max_lines = 3

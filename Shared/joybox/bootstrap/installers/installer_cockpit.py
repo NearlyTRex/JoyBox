@@ -5,29 +5,15 @@ from joybox import serverinfo
 from joybox import runoptions
 from joybox import logger
 from . import installer
+from . import installer_nginx
 
 # Nginx config template
-NGINX_CONFIG_TEMPLATE = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy, security headers and rate limiting. Cockpit is the
-    # server management UI, so it wants these at least as much as the apps do.
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_CONFIG_TEMPLATE = installer_nginx.build_https_site_template(
+    cert_comment = "",
+    params_comment = (
+        "Shared TLS policy, security headers and rate limiting. Cockpit is the\n"
+        "server management UI, so it wants these at least as much as the apps do."),
+    locations = """
     location / {{
         proxy_pass https://127.0.0.1:{port_http};
         proxy_ssl_verify off;
@@ -39,7 +25,7 @@ server {{
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }}
 }}
-"""
+""")
 
 # Installs the Cockpit web console through its manager script, served behind nginx on its subdomain
 class Cockpit(installer.Installer):

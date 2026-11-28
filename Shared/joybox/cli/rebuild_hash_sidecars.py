@@ -4,7 +4,6 @@ from joybox import system
 from joybox import synctransfers
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -46,30 +45,22 @@ def build_parser():
 # After a preview, rebuild the remote locker's hash sidecar database from the local content, first clearing the old entries under the path when asked
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get the source, destination and excludes
     target = synctransfers.get_sidecar_rebuild_target(args.source_locker, args.dest_locker, args.path)
 
     # Show preview
-    if not args.no_preview:
-        details = synctransfers.get_sidecar_rebuild_preview(
-            target,
-            parallel_dirs = args.parallel_dirs,
-            parallel_files = args.parallel_files,
-            clear = args.clear,
-            skip_existing = args.skip_existing)
-        if not prompts.prompt_for_preview("Rebuild hash sidecars", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = synctransfers.get_sidecar_rebuild_preview(
+        target,
+        parallel_dirs = args.parallel_dirs,
+        parallel_files = args.parallel_files,
+        clear = args.clear,
+        skip_existing = args.skip_existing)
+    if not prompts.confirm_preview(args.no_preview, "Rebuild hash sidecars", details):
+        return
 
     # Rebuild, clearing the existing sidecar entries under the path first if requested
     synctransfers.rebuild_hash_sidecars(

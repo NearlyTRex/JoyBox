@@ -24,15 +24,15 @@ from joybox import logger
 from joybox import platform_info
 
 # The DOSBox-X command starting a DOS or Win31 program, which blocks on DOSBox-X
-def _build_dosbox_command(program_options, program_is_dos, program_file, program_args, program_drive, program_offset, fullscreen):
+def _build_dosbox_command(program_options, program_is_dos, program_path, program_args, fullscreen):
     program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
     get_launch_command = command.get_dos_launch_command if program_is_dos else command.get_win31_launch_command
     return get_launch_command(
         options = program_options,
-        start_program = program_file,
+        start_program = paths.get_filename_file(program_path),
         start_args = program_args,
-        start_letter = program_drive,
-        start_offset = program_offset,
+        start_letter = paths.get_filename_drive(program_path),
+        start_offset = paths.get_filename_drive_offset(paths.get_filename_directory(program_path)),
         fullscreen = fullscreen)
 
 # Run a Windows program through the prefix from its mapped working directory, blocking on the program
@@ -222,16 +222,11 @@ class Program(jsondata.JsonData):
         program_is_dos = self.is_dos()
         program_is_win31 = self.is_win31()
         program_is_scumm = self.is_scumm()
-        program_drive = paths.get_filename_drive(program_path)
-        program_dir = paths.get_filename_directory(program_path)
-        program_file = paths.get_filename_file(program_path)
-        program_offset = paths.get_filename_drive_offset(program_dir)
         program_options = options.copy()
 
         # DOS and Win31 programs run under DOSBox-X
         if program_is_dos or program_is_win31:
-            program_cmd = _build_dosbox_command(
-                program_options, program_is_dos, program_file, program_args, program_drive, program_offset, fullscreen)
+            program_cmd = _build_dosbox_command(program_options, program_is_dos, program_path, program_args, fullscreen)
 
         # Scumm programs run under ScummVM
         elif program_is_scumm:

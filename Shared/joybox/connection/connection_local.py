@@ -176,6 +176,10 @@ class ConnectionLocal(connection.Connection):
                 excludes = excludes,
                 skip_existing = self.flags.skip_existing,
                 **self._io_flags())
+        return self._transfer_files_as_root(src, dest, excludes)
+
+    # Copy a file, or stage and copy a tree, into dest as root; existing dest is kept when skipping
+    def _transfer_files_as_root(self, src, dest, excludes):
         try:
             if self.flags.verbose:
                 logger.log_info("Transferring files from %s to %s" % (src, dest))

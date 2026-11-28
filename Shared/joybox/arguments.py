@@ -401,6 +401,16 @@ class ArgumentParser:
             args = args,
             description = description)
 
+    # Declare -m/--generation_mode, defaulting to walking the selected categories
+    def add_generation_mode_argument(
+        self,
+        description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory"):
+        self.add_enum_argument(
+            args = ("-m", "--generation_mode"),
+            arg_type = config.GenerationModeType,
+            default = config.GenerationModeType.STANDARD,
+            description = description)
+
     # The one supercategory passed on the command line, or every supercategory when none was
     def get_selected_supercategories(self, argname = "game_supercategory"):
         args, _ = self.parse_known_args()
@@ -443,6 +453,62 @@ class ArgumentParser:
         return subcategory_map
 
     #################################################
+
+    # Declare a package setup command's "Selection" options, worded for its kind of package and
+    # the root dir they install under, then its "Backup" options for downloaded releases
+    def add_package_setup_arguments(self, package_word, root_name, example):
+        self.add_group("Selection")
+        self.add_boolean_argument(args = ("-e", "--offline"), description = "Install from the copies backed up in the locker instead of downloading")
+        self.add_boolean_argument(args = ("-c", "--configure"), description = "Run each %s's configuration step after installing it" % package_word)
+        self.add_boolean_argument(args = ("--clean",), description = "Remove the entire %s directory before installing anything" % root_name)
+        self.add_boolean_argument(args = ("-f", "--force"), description = "Remove each selected %s's install directory and reinstall it, even if already installed" % package_word)
+        self.add_string_argument(
+            args = ("-k", "--packages"),
+            description = "Comma-separated %s names to install, e.g. `\"%s\"`; all %ss when omitted" % (package_word, example, package_word))
+        self.add_group("Backup")
+        self.add_enum_argument(
+            args = ("-l", "--locker_type"),
+            arg_type = config.LockerType,
+            default = config.LockerType.ALL,
+            description = "Locker to back downloaded release files up to")
+        self.add_boolean_argument(args = ("-s", "--skip_autobackup"), description = "Do not back downloaded release files up to the locker")
+
+    # The names given by --packages, or None for every package; quits naming any that is not
+    # among the known names
+    def get_selected_packages(self, known_packages, package_type, argname = "packages"):
+        args, _ = self.parse_known_args()
+        packages_arg = getattr(args, argname, None)
+        if not packages_arg:
+            return None
+        packages = [p.strip() for p in packages_arg.split(",") if p.strip()]
+        unknown_packages = [package for package in packages if package not in known_packages]
+        if unknown_packages:
+            logger.log_error("Unknown %s packages: %s" % (package_type, ", ".join(unknown_packages)), quit_program = True)
+        return packages
+
+    # Declare the archive format, password, volume size and delete-originals options of a command
+    # that creates archives, describing what -d deletes
+    def add_archive_creation_arguments(self, delete_description):
+        self.add_enum_argument(
+            args = ("-a", "--archive_type"),
+            arg_type = config.ArchiveFileType,
+            default = config.ArchiveFileType.ZIP,
+            description = "Archive format to create; only `ZIP` and `7Z` are supported")
+        self.add_string_argument(args = ("-w", "--password"), description = "Password to encrypt the archives with; none when omitted")
+        self.add_string_argument(
+            args = ("-s", "--volume_size"),
+            description = "Split archives into volumes of this size, in 7-Zip's `-v` format such as `100m` or `4g`; not split when omitted")
+        self.add_boolean_argument(args = ("-d", "--delete_originals"), description = delete_description)
+
+    # The archive format, password, volume size and delete-originals choice given, as keyword
+    # arguments for the archive functions
+    def get_archive_creation_options(self):
+        args, _ = self.parse_known_args()
+        return {
+            "archive_type": args.archive_type,
+            "password": args.password,
+            "volume_size": args.volume_size,
+            "delete_originals": args.delete_originals}
 
     # Declare the verbose, pretend-run, exit-on-failure and no-preview flags in a "Common options" group
     def add_common_arguments(self):

@@ -1,11 +1,12 @@
 # Imports
+import inspect
 import os
 
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import syncremotes
+from joybox import syncdiff, syncremotes
 from joybox import config, cryption, hashutil, locker
 
 
@@ -548,6 +549,16 @@ def test_a_failed_backup_stops_early_when_asked(backends, monkeypatch, tmp_path)
     assert local_backend(backends).copied == []
 
 
+@pytest.mark.parametrize("option", ["skip_existing", "skip_identical", "show_progress"])
+def test_a_backup_if_absent_skips_copies_already_there(backends, tmp_path, option):
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+
+    assert locker.backup_if_absent(str(source), "Games/Game.zip", REMOTE) is True
+    assert remote_backend(backends).copied[0]["dest"] == "Games/Game.zip"
+    assert remote_backend(backends).copied[0]["options"][option] is True
+
+
 ###########################################################
 # Naming the locker explicitly
 ###########################################################
@@ -735,3 +746,25 @@ def test_an_unset_mount_leaves_a_disk_locker_unconfigured(configured, lockers):
     lockers.set_value("UserData.Share", "locker_local_mount_path", "")
 
     assert locker.get_configured_lockers() == []
+
+
+###########################################################
+# Remote actions
+###########################################################
+
+@pytest.mark.parametrize("action,name", [
+    (config.RemoteActionType.DIFF, "diff_files"),
+    (config.RemoteActionType.DIFFSYNC, "diff_sync_files"),
+])
+def test_a_diff_action_calls_its_handler_with_arguments_it_takes(monkeypatch, action, name):
+    real = getattr(syncdiff, name)
+    seen = []
+    monkeypatch.setattr(syncdiff, name, lambda **kwargs: seen.append(kwargs) or True)
+    target = {
+        "remote_name": "hetzner", "remote_type": "sftp", "remote_path": "/Locker",
+        "local_path": "/locker", "excludes": []}
+    diff_paths = ("combined", "intersected", "missing_src", "missing_dest", "error")
+
+    assert locker.run_remote_action(action, target, diff_paths) is True
+    inspect.signature(real).bind(**seen[0])
+    assert "combined" in seen[0].get("diff_file_names", (seen[0].get("diff_combined_path"),))

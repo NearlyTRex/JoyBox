@@ -268,7 +268,7 @@ def launcher(monkeypatch, tmp_path):
         lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
     monkeypatch.setattr(cemu.programs, "get_emulator_program", lambda name: "/bin/cemu")
     monkeypatch.setattr(cemu.wiiu, "update_wiiu_keys", update_keys)
-    monkeypatch.setattr(cemu.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(cemu.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "keys": keys, "cache": tmp_path, "state": state}
 
 

@@ -111,6 +111,11 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         if not self.wait_for_service_health("fitlog"):
             logger.log_error("FitLog did not start, so the login was not created")
             return False
+        return self._create_login()
+
+    # Run the app's user-create CLI with the configured login and report the
+    # outcome; an existing login is kept
+    def _create_login(self):
 
         # The CLI reads the password and its confirmation from stdin
         logger.log_info(f"Creating the FitLog login for {self.login_user}")

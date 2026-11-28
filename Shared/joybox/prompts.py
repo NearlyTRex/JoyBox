@@ -95,6 +95,14 @@ def prompt_for_preview(operation, details = None, default_yes = True, max_detail
     logger.log_info("=" * 60)
     return prompt_for_confirmation("Proceed?", default_yes = default_yes)
 
+# Whether to go ahead: at once when no preview is wanted, else once the preview is confirmed;
+# a refusal is logged
+def confirm_preview(no_preview, operation, details = None):
+    if no_preview or prompt_for_preview(operation, details):
+        return True
+    logger.log_warning("Operation cancelled by user")
+    return False
+
 # Prompt for selection from a numbered list
 def prompt_for_selection(description, options, display_func = None, allow_cancel = True):
     if not options:

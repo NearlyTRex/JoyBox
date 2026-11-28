@@ -39,6 +39,41 @@ server {{
 }}
 """
 
+# Port 80 server for {subdomain}.{domain} that redirects every request to https,
+# as a str.format template like the site templates built on it
+NGINX_HTTPS_REDIRECT_SERVER = """
+server {{
+    listen 80;
+    server_name {subdomain}.{domain};
+
+    location / {{
+        return 301 https://{subdomain}.{domain}$request_uri;
+    }}
+}}
+"""
+
+# Opening of the port 443 server for {subdomain}.{domain}: the Let's Encrypt
+# certificate and the shared ssl-params snippet, each after its comment lines
+# (an empty comment adds none)
+def build_ssl_server_head(cert_comment, params_comment):
+    lines = ["", "server {{", "    listen 443 ssl;", "    server_name {subdomain}.{domain};", ""]
+    lines += ["    # %s" % line for line in cert_comment.splitlines()]
+    lines += [
+        "    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;",
+        "    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;",
+        ""]
+    lines += ["    # %s" % line for line in params_comment.splitlines()]
+    lines += ["    include /etc/nginx/snippets/ssl-params.conf;", ""]
+    return "\n".join(lines)
+
+# A site on {subdomain}.{domain}: the https redirect server, then the ssl server
+# opened by build_ssl_server_head and finished by the given locations
+def build_https_site_template(
+    locations,
+    cert_comment = "SSL configuration",
+    params_comment = "Shared TLS policy and security headers"):
+    return NGINX_HTTPS_REDIRECT_SERVER + build_ssl_server_head(cert_comment, params_comment) + locations
+
 # Installs nginx with the default server entry, the apex fallback snippet and page
 class Nginx(installer.Installer):
     def __init__(

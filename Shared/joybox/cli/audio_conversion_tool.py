@@ -4,7 +4,6 @@ from joybox import system
 from joybox import audible
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -37,15 +36,9 @@ def build_parser():
 # Strip the DRM from an Audible AAX/AA file, or every one in a directory, into M4A with FFmpeg, copying the streams unchanged
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Convert a directory or a single file; AaxToM4a is the only action
     return audible.decrypt_aax_path(

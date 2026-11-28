@@ -3,7 +3,6 @@ from joybox import system
 from joybox import archive
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -16,25 +15,17 @@ def build_parser():
 # After a preview, rebuild each zip under the input in place with fixed, reproducible 7-Zip settings
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
 
     # Show preview
-    if not args.no_preview:
-        details = ["Path: %s" % input_path]
-        if not prompts.prompt_for_preview("Rezip files deterministically", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["Path: %s" % input_path]
+    if not prompts.confirm_preview(args.no_preview, "Rezip files deterministically", details):
+        return
 
     # Rezip zip files
     archive.rezip_archives(

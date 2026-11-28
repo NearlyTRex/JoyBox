@@ -27,7 +27,6 @@ from joybox import environment
 
 # File operations every locker supports, addressed by paths relative to the locker root
 class LockerBackend(ABC):
-    """Abstract interface for locker file operations"""
     def __init__(self, locker_info):
         self.locker_info = locker_info
 
@@ -44,11 +43,7 @@ class LockerBackend(ABC):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        """
-        List all files with their hashes.
-        Returns dict keyed by relative path: {filename, dir, hash, size, mtime},
-        or None when the listing failed
-        """
+        """List all files with their hashes, or None when the listing failed"""
 
     # Move a file into the locker's recycle folder rather than deleting it
     @abstractmethod
@@ -107,7 +102,6 @@ class LockerBackend(ABC):
 
     # Path relative to the locker root; empty for the root itself, unchanged when outside it
     def get_relative_path(self, full_path):
-        """Convert a full path to a relative path within this locker"""
         root = self.get_root_path()
         if not root:
             return full_path
@@ -144,10 +138,7 @@ class LockerBackend(ABC):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            if ok:
-                succeeded.append(dest_rel)
-            else:
-                failed.append(dest_rel)
+            (succeeded if ok else failed).append(dest_rel)
         return (succeeded, failed)
 
     # No-op for lockers without a hash sidecar; always True
@@ -249,6 +240,33 @@ def _download_from_remote_locker(src_backend, src_rel_path, dest_full_path, cryp
         if temp_file is None:
             return False
         return _convert_file(cryption_type, temp_file, dest_full_path, passphrase, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+
+# Most source bytes staged for one encrypted batch upload, about 4 GiB
+ENCRYPTED_BATCH_MAX_BYTES = 4 * 1024 * 1024 * 1024
+
+# Log each action's destination as one a pretend run would encrypt and upload, returning them all
+def preview_encrypted_uploads(actions):
+    dests = [a.get("dest", a.get("src", "")) for a in actions]
+    for dest in dests:
+        logger.log_info("Would encrypt and upload: %s" % dest)
+    return dests
+
+# Split actions into those keeping their source's relative path and those renaming it
+def split_renamed_actions(actions):
+    same_name, renamed = [], []
+    for action in actions:
+        (same_name if action.get("dest", action.get("src", "")) == action.get("src", "") else renamed).append(action)
+    return same_name, renamed
+
+# A local copy of a locker's file to convert: the file itself in a local locker, else downloaded
+# from the remote into temp_dir, by its encrypted name when decrypting; None on failure
+def get_local_source_file(src_backend, src_rel_path, cryption_type, temp_dir, show_progress = True, verbose = False, pretend_run = False, exit_on_failure = False):
+    if isinstance(src_backend, LocalBackend):
+        return paths.join_paths(src_backend.get_root_path(), src_rel_path)
+    download_dir = paths.join_paths(temp_dir, "download")
+    return _download_stored_file(
+        src_backend, src_rel_path, cryption_type, download_dir, download_dir + os.sep,
+        show_progress = show_progress, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
 # Batches of actions holding at most max_batch_bytes of source files each, and the destinations whose source is missing
 def _group_actions_by_size(actions, src_root, max_batch_bytes):
@@ -424,7 +442,6 @@ class LocalBackend(LockerBackend):
         file_list = paths.build_file_list(full_path)
         return len(file_list) > 0
 
-
 ###########################################################
 # Remote Backend (rclone-based remotes: gdrive, hetzner, etc.)
 ###########################################################
@@ -446,7 +463,6 @@ class RemoteBackend(LockerBackend):
 
     # The relative path a file is stored under: its encrypted name on an encrypted locker
     def get_stored_rel_path(self, rel_path):
-        """The relative path a file is stored under, which is its encrypted name on an encrypted locker"""
         if not self.locker_info.is_encrypted():
             return rel_path
         dir_rel = paths.get_filename_directory(rel_path)
@@ -572,14 +588,7 @@ class RemoteBackend(LockerBackend):
 
     # Upload same-named files in one --files-from copy (it keeps source paths) and renamed ones singly; (succeeded, failed)
     def upload_plain_batch(self, src_backend, actions, passphrase = None, show_progress = False, verbose = False, pretend_run = False, exit_on_failure = False):
-        same_name = []
-        renamed = []
-        for action in actions:
-            src_rel = action.get("src", "")
-            if action.get("dest", src_rel) == src_rel:
-                same_name.append(action)
-            else:
-                renamed.append(action)
+        same_name, renamed = split_renamed_actions(actions)
         succeeded, failed = super().sync_batch_from(
             src_backend = src_backend,
             actions = renamed,
@@ -630,15 +639,12 @@ class RemoteBackend(LockerBackend):
     def upload_encrypted_batches(self, src_root, actions, passphrase, show_progress = False, verbose = False, pretend_run = False, exit_on_failure = False):
         logger.log_info("Encrypting and uploading %d files to %s (batched)..." % (len(actions), self.remote_name))
         if pretend_run:
-            for action in actions:
-                logger.log_info("Would encrypt and upload: %s" % action.get("dest", action.get("src", "")))
-            return ([a.get("dest", a.get("src", "")) for a in actions], [])
+            return (preview_encrypted_uploads(actions), [])
         stage_parent = environment.get_cache_root_dir()
-        max_batch_bytes = 4 * 1024 * 1024 * 1024  # ~4 GiB of staged files per upload
 
         # Group actions into size-bounded batches by source file size
         succeeded = []
-        batches, failed = _group_actions_by_size(actions, src_root, max_batch_bytes)
+        batches, failed = _group_actions_by_size(actions, src_root, ENCRYPTED_BATCH_MAX_BYTES)
 
         # Stage, encrypt and upload each batch in turn
         for batch in batches:
@@ -795,7 +801,6 @@ class RemoteBackend(LockerBackend):
 
     # Encrypt or decrypt a local or downloaded copy into a staged file under the destination name, encrypted when encrypting, and upload it
     def upload_converted_from(self, src_backend, src_rel_path, dest_rel_path, cryption_type, passphrase, show_progress = True, verbose = False, pretend_run = False, exit_on_failure = False):
-        dest_remote_path = paths.join_paths(self.remote_path, dest_rel_path)
         dest_name = paths.get_filename_file(dest_rel_path)
         if cryption_type == config.CryptionType.ENCRYPT:
             dest_name = cryption.generate_encrypted_filename(dest_name)
@@ -808,15 +813,11 @@ class RemoteBackend(LockerBackend):
             fileops.make_directory(src = staged_dir, verbose = verbose, pretend_run = pretend_run)
 
             # Get a local copy of the source
-            if isinstance(src_backend, LocalBackend):
-                source_file = paths.join_paths(src_backend.get_root_path(), src_rel_path)
-            else:
-                download_dir = paths.join_paths(temp_dir, "download")
-                source_file = _download_stored_file(
-                    src_backend, src_rel_path, cryption_type, download_dir, download_dir + os.sep,
-                    show_progress = show_progress, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-                if source_file is None:
-                    return False
+            source_file = get_local_source_file(
+                src_backend, src_rel_path, cryption_type, temp_dir,
+                show_progress = show_progress, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+            if source_file is None:
+                return False
 
             # Stage it under the destination name, converting it on the way
             if not _convert_file(cryption_type, source_file, staged_file, passphrase, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
@@ -826,7 +827,7 @@ class RemoteBackend(LockerBackend):
             return synctransfers.upload_files_to_remote(
                 remote_name = self.remote_name,
                 remote_type = self.remote_type,
-                remote_path = paths.get_filename_directory(dest_remote_path),
+                remote_path = paths.get_filename_directory(paths.join_paths(self.remote_path, dest_rel_path)),
                 local_path = staged_file,
                 local_root = self.remote_path,
                 show_progress = show_progress,

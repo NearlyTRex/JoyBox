@@ -138,14 +138,18 @@ def build_from_source(
     if not found:
         return None
 
-    # Create temporary directory
+    # Build in a temporary directory
+    return _build_in_temporary_directory(
+        release_url, release_branch, build_cmd, build_dir, source_patches, verbose, pretend_run, exit_on_failure)
+
+# Fetch and build the source in a new temp dir, kept only when the build succeeds
+def _build_in_temporary_directory(release_url, release_branch, build_cmd, build_dir, source_patches, verbose, pretend_run, exit_on_failure):
     tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         logger.log_error("Unable to create temporary directory")
         return None
-
     build_info = None
     try:
         build_info = _fetch_and_build_source(
@@ -318,22 +322,6 @@ def _patch_and_build(tmp_dir, source_dir, source_build_dir, build_cmd, source_pa
         return False
     return True
 
-# Run build_from_source for an installing builder, which passes these settings through unchanged
-def _build_release(release_url, release_branch, webpage_url, webpage_base_url, starts_with, ends_with, build_cmd, build_dir, source_patches, verbose, pretend_run, exit_on_failure):
-    return build_from_source(
-        release_url = release_url,
-        release_branch = release_branch,
-        webpage_url = webpage_url,
-        webpage_base_url = webpage_base_url,
-        starts_with = starts_with,
-        ends_with = ends_with,
-        build_cmd = build_cmd,
-        build_dir = build_dir,
-        source_patches = source_patches,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
 # The last file under search_dir ending in output_file, or its expected path in a pretend run
 # Logs and returns None when nothing was built
 def _find_built_file(search_dir, output_file, pretend_run):
@@ -370,48 +358,31 @@ def _backup_built_file(built_file, backups_dir, final_file, locker_type, skip_au
     if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, final_file)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
-        success = locker.backup(
-            src = built_file,
-            dest_rel_path = dest_rel_path,
-            locker_type = locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        success = locker.backup_if_absent(
+            built_file, dest_rel_path, locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         if not success:
             release.note_failed_backup(backup_dest)
 
 # Build from source, then install the built file (extracting it if an archive) and extra copies into install_dir
-# Backs up to the locker unless skipped; False on failure
+# Backs up to the locker unless skipped; False on failure; build_options are build_from_source's
 def build_binary_from_source(
-    release_url = "",
-    release_branch = "",
-    webpage_url = "",
-    webpage_base_url = "",
-    starts_with = "",
-    ends_with = "",
     output_file = "",
     output_dir = "",
     search_file = "",
     install_name = "",
     install_dir = "",
     backups_dir = "",
-    build_cmd = "",
-    build_dir = "",
     external_copies = (),
-    source_patches = None,
     locker_type = None,
     skip_autobackup = False,
     verbose = False,
     pretend_run = False,
-    exit_on_failure = False):
+    exit_on_failure = False,
+    **build_options):
 
     # Build from source
-    build_info = _build_release(
-        release_url, release_branch, webpage_url, webpage_base_url, starts_with, ends_with,
-        build_cmd, build_dir, source_patches, verbose, pretend_run, exit_on_failure)
+    build_info = build_from_source(
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure, **build_options)
     if not build_info:
         return False
 
@@ -425,35 +396,17 @@ def build_binary_from_source(
 
 # Install the built binary, extra copies and backup from a finished build; whether install_dir has files
 def _install_built_binary(build_info, output_file, output_dir, search_file, install_name, install_dir, backups_dir, external_copies, locker_type, skip_autobackup, verbose, pretend_run, exit_on_failure):
-    tmp_dir = build_info["tmp_dir"]
-    source_dir = build_info["source_dir"]
-
-    # Make install folder
-    success = fileops.make_directory(
-        src = install_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to make install folder '%s'" % install_dir)
-        return False
-
-    # Determine search directory for built files
-    search_dir = tmp_dir
-    if output_dir:
-        search_dir = paths.join_paths(source_dir, output_dir)
 
     # Find built release file
-    built_file = _find_built_file(search_dir, output_file, pretend_run)
+    built_file = _find_built_binary(build_info, output_file, output_dir, install_dir, verbose, pretend_run, exit_on_failure)
     if not built_file:
         return False
 
     # Install release and other objects
     final_file = _get_final_binary_name(install_name, output_file)
-    success = _install_binary_file(built_file, tmp_dir, install_dir, final_file, search_file, verbose, pretend_run, exit_on_failure)
-    if not success:
+    if not _install_binary_file(built_file, build_info["tmp_dir"], install_dir, final_file, search_file, verbose, pretend_run, exit_on_failure):
         return False
-    if not _copy_external_objects(tmp_dir, install_dir, external_copies, verbose, pretend_run, exit_on_failure):
+    if not _copy_external_objects(build_info["tmp_dir"], install_dir, external_copies, verbose, pretend_run, exit_on_failure):
         return False
 
     # Backup files
@@ -463,6 +416,20 @@ def _install_built_binary(build_info, output_file, output_dir, search_file, inst
     if pretend_run:
         return True
     return paths.does_directory_contain_files(install_dir)
+
+# Make install_dir, then find the built binary under output_dir of the source, or the temp dir when none; None on failure
+def _find_built_binary(build_info, output_file, output_dir, install_dir, verbose, pretend_run, exit_on_failure):
+    if not fileops.make_directory(
+        src = install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        logger.log_error("Unable to make install folder '%s'" % install_dir)
+        return None
+    search_dir = build_info["tmp_dir"]
+    if output_dir:
+        search_dir = paths.join_paths(build_info["source_dir"], output_dir)
+    return _find_built_file(search_dir, output_file, pretend_run)
 
 # Install name with the output file's extension, or with output_file itself when it is a bare extension
 def _get_final_binary_name(install_name, output_file):
@@ -529,34 +496,25 @@ def _install_archive_contents(built_file, tmp_dir, install_dir, search_file, ver
     return True
 
 # Build from source, assemble and package an AppImage, then install it and extra copies into install_dir
-# Backs up to the locker unless skipped; False on failure
+# Backs up to the locker unless skipped; False on failure; build_options are build_from_source's
 def build_appimage_from_source(
-    release_url = "",
-    release_branch = "",
-    webpage_url = "",
-    webpage_base_url = "",
-    starts_with = "",
-    ends_with = "",
     output_file = "",
     install_name = "",
     install_dir = "",
     backups_dir = "",
-    build_cmd = "",
-    build_dir = "",
     internal_copies = (),
     internal_symlinks = (),
     external_copies = (),
-    source_patches = None,
     locker_type = None,
     skip_autobackup = False,
     verbose = False,
     pretend_run = False,
-    exit_on_failure = False):
+    exit_on_failure = False,
+    **build_options):
 
     # Build from source
-    build_info = _build_release(
-        release_url, release_branch, webpage_url, webpage_base_url, starts_with, ends_with,
-        build_cmd, build_dir, source_patches, verbose, pretend_run, exit_on_failure)
+    build_info = build_from_source(
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure, **build_options)
     if not build_info:
         return False
 
@@ -570,19 +528,9 @@ def build_appimage_from_source(
 
 # Package the build in tmp_dir as an AppImage and install it, extra copies and backup; whether it was installed
 def _install_built_appimage(tmp_dir, output_file, install_name, install_dir, backups_dir, internal_copies, internal_symlinks, external_copies, locker_type, skip_autobackup, verbose, pretend_run, exit_on_failure):
-    appimage_dir = paths.join_paths(tmp_dir, "AppImage")
 
-    # Make folders
-    if not _make_folders([install_dir, appimage_dir], verbose, pretend_run, exit_on_failure):
-        return False
-
-    # Assemble and build AppImage
-    success = _package_appimage(tmp_dir, appimage_dir, internal_copies, internal_symlinks, verbose, pretend_run, exit_on_failure)
-    if not success:
-        return False
-
-    # Find built release file
-    built_file = _find_built_file(tmp_dir, output_file, pretend_run)
+    # Assemble, build and find the AppImage
+    built_file = _build_appimage_file(tmp_dir, output_file, install_dir, internal_copies, internal_symlinks, verbose, pretend_run, exit_on_failure)
     if not built_file:
         return False
 
@@ -604,6 +552,15 @@ def _install_built_appimage(tmp_dir, output_file, install_name, install_dir, bac
     if pretend_run:
         return True
     return os.path.exists(paths.join_paths(install_dir, final_file))
+
+# Make install_dir and the AppImage dir, package the build in tmp_dir and find the AppImage; None on failure
+def _build_appimage_file(tmp_dir, output_file, install_dir, internal_copies, internal_symlinks, verbose, pretend_run, exit_on_failure):
+    appimage_dir = paths.join_paths(tmp_dir, "AppImage")
+    if not _make_folders([install_dir, appimage_dir], verbose, pretend_run, exit_on_failure):
+        return None
+    if not _package_appimage(tmp_dir, appimage_dir, internal_copies, internal_symlinks, verbose, pretend_run, exit_on_failure):
+        return None
+    return _find_built_file(tmp_dir, output_file, pretend_run)
 
 # Copy and symlink the AppImage objects into place, then run AppImageTool on appimage_dir
 def _package_appimage(tmp_dir, appimage_dir, internal_copies, internal_symlinks, verbose, pretend_run, exit_on_failure):

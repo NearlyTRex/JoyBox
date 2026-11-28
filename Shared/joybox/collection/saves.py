@@ -140,16 +140,8 @@ def get_save_locker_types(locker_type):
 # Back up a save archive to each locker given
 def backup_save_archive(game_info, archive_file, dest_rel_path, locker_types, verbose = False, pretend_run = False, exit_on_failure = False):
     for locker_type in locker_types:
-        success = locker.backup(
-            src = archive_file,
-            dest_rel_path = dest_rel_path,
-            locker_type = locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        success = locker.backup_if_absent(
+            archive_file, dest_rel_path, locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         if not success:
             gamecollection.log_game_error(game_info, "Unable to backup save")
             return False

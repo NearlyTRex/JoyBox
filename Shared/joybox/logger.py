@@ -1,4 +1,5 @@
 # Imports
+import enum
 import functools
 import os
 import sys
@@ -10,7 +11,7 @@ from datetime import datetime
 from joybox import runtime, terminal
 
 # ANSI color codes for terminal output
-class Colors:
+class Colors(enum.StrEnum):
     RESET = "\033[0m"
     BOLD = "\033[1m"
     DIM = "\033[2m"

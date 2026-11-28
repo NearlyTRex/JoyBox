@@ -22,7 +22,6 @@ def build(autoremove = False, aptget_results = None, installed = False):
     environment.connection = RecordingConnection()
     aptget = RecordingAptGet("aptget", installed = installed, results = aptget_results)
     environment.available_components = {"aptget": aptget}
-    environment.installer_aptget = aptget
     return environment, aptget
 
 

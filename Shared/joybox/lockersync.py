@@ -421,18 +421,9 @@ def group_actions_by_cryption(actions):
             groups[cryption_type].append(action)
     return groups
 
-# One batched transfer per cryption type, then recycles one by one; returns whether all succeeded and the paths that did
-def execute_sync_actions_batched(
-    actions,
-    primary_backend,
-    secondary_backend,
-    passphrase = None,
-    show_progress = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Run each cryption type's transfers as a single batched transfer
+# Run each cryption type's transfer actions as one batched transfer onto the secondary,
+# returning the paths that succeeded and those that failed
+def execute_batched_transfers(actions, primary_backend, secondary_backend, passphrase, show_progress, verbose, pretend_run, exit_on_failure):
     succeeded_paths = []
     failed_paths = []
     for cryption_type, group in group_actions_by_cryption(actions).items():
@@ -449,6 +440,20 @@ def execute_sync_actions_batched(
             exit_on_failure = exit_on_failure)
         succeeded_paths.extend(ok_paths)
         failed_paths.extend(fail_paths)
+    return succeeded_paths, failed_paths
+
+# One batched transfer per cryption type, then recycles one by one; returns whether all succeeded and the paths that did
+def execute_sync_actions_batched(
+    actions,
+    primary_backend,
+    secondary_backend,
+    passphrase = None,
+    show_progress = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    succeeded_paths, failed_paths = execute_batched_transfers(
+        actions, primary_backend, secondary_backend, passphrase, show_progress, verbose, pretend_run, exit_on_failure)
 
     # Handle recycle actions individually (rare; additive backups skip these)
     for action in actions:
@@ -591,8 +596,10 @@ def refresh_secondary_sidecar(primary_backend, sec_backend, sec_name, excludes, 
     logger.log_error("Failed to refresh hash sidecar for %s" % sec_name)
     return False
 
-# Plan a sync onto a secondary: the actions its hash map differs from the primary's by, as approved
-def plan_secondary_sync(primary_info, primary_hashes, sec_info, secondary_hashes, interactive = True, recycle_orphans = False, verbose = False, pretend_run = False, exit_on_failure = False):
+# Plan a sync onto a secondary: the actions its hash map differs from the primary's by, as approved;
+# primary is the primary's (info, backend, hash map)
+def plan_secondary_sync(primary, sec_info, secondary_hashes, interactive = True, recycle_orphans = False, verbose = False, pretend_run = False, exit_on_failure = False):
+    primary_info, _, primary_hashes = primary
     sec_name = sec_info.get_locker_name()
     actions = build_sync_actions(
         primary_hashes = primary_hashes,
@@ -606,23 +613,15 @@ def plan_secondary_sync(primary_info, primary_hashes, sec_info, secondary_hashes
     logger.log_info("Found %d sync actions for %s" % (len(actions), sec_name))
     return approve_sync_actions(actions, sec_name, interactive, recycle_orphans, verbose, pretend_run, exit_on_failure)
 
-# Sync the primary onto one secondary, returning whether every step held. A failed transfer
-# leaves the sidecar alone, so the next run re-detects and retries the missing files.
-def sync_secondary(primary, sec_info, sec_backend, skip_cache = False, interactive = True, recycle_orphans = False, rebuild_sidecars = True, verbose = False, pretend_run = False, exit_on_failure = False):
+# A secondary's excluded dirs plus its recycle folder, which syncs and its hash map leave out
+def get_secondary_sync_excludes(sec_info):
+    return sec_info.get_excluded_dirs() + [RECYCLE_FOLDER + "/**"]
+
+# Run the approved actions onto a secondary in batches, then update its cached hash map and,
+# when asked and every action held, its sidecar; whether every step held
+def apply_secondary_sync(primary, sec_info, sec_backend, secondary_hashes, approved_actions, rebuild_sidecars = True, verbose = False, pretend_run = False, exit_on_failure = False):
     primary_info, primary_backend, primary_hashes = primary
     sec_name = sec_info.get_locker_name()
-    exclude_patterns = sec_info.get_excluded_dirs()
-    sec_excludes = exclude_patterns + [RECYCLE_FOLDER + "/**"]
-    logger.log_info("Processing secondary: %s (excludes=%d patterns)" % (sec_name, len(exclude_patterns)))
-    secondary_hashes = build_secondary_hash_map(sec_name, sec_backend, sec_excludes, skip_cache, verbose, pretend_run, exit_on_failure)
-    if secondary_hashes is None:
-        return False
-    approved_actions = plan_secondary_sync(
-        primary_info, primary_hashes, sec_info, secondary_hashes, interactive, recycle_orphans, verbose, pretend_run, exit_on_failure)
-    if not approved_actions:
-        return True
-
-    # Execute approved actions (batched - one transfer per cryption group)
     logger.log_info("Executing %d approved actions for %s" % (len(approved_actions), sec_name))
     success, succeeded = execute_sync_actions_batched(
         actions = approved_actions,
@@ -639,10 +638,41 @@ def sync_secondary(primary, sec_info, sec_backend, skip_cache = False, interacti
             return False
     if succeeded and not pretend_run:
         update_cached_secondary_hashes(
-            secondary_hashes, primary_hashes, succeeded, approved_actions, get_cache_file(sec_name, sec_excludes), verbose)
+            secondary_hashes, primary_hashes, succeeded, approved_actions,
+            get_cache_file(sec_name, get_secondary_sync_excludes(sec_info)), verbose)
     if rebuild_sidecars and success:
-        return refresh_secondary_sidecar(primary_backend, sec_backend, sec_name, exclude_patterns, verbose, pretend_run, exit_on_failure)
+        return refresh_secondary_sidecar(
+            primary_backend, sec_backend, sec_name, sec_info.get_excluded_dirs(), verbose, pretend_run, exit_on_failure)
     return success
+
+# Sync the primary onto one secondary, returning whether every step held. A failed transfer
+# leaves the sidecar alone, so the next run re-detects and retries the missing files.
+def sync_secondary(primary, sec_info, sec_backend, skip_cache = False, interactive = True, recycle_orphans = False, rebuild_sidecars = True, verbose = False, pretend_run = False, exit_on_failure = False):
+    sec_name = sec_info.get_locker_name()
+    sec_excludes = get_secondary_sync_excludes(sec_info)
+    logger.log_info("Processing secondary: %s (excludes=%d patterns)" % (sec_name, len(sec_info.get_excluded_dirs())))
+    secondary_hashes = build_secondary_hash_map(sec_name, sec_backend, sec_excludes, skip_cache, verbose, pretend_run, exit_on_failure)
+    if secondary_hashes is None:
+        return False
+    approved_actions = plan_secondary_sync(
+        primary, sec_info, secondary_hashes, interactive, recycle_orphans, verbose, pretend_run, exit_on_failure)
+    if not approved_actions:
+        return True
+    return apply_secondary_sync(
+        primary, sec_info, sec_backend, secondary_hashes, approved_actions, rebuild_sidecars, verbose, pretend_run, exit_on_failure)
+
+# Sync the primary, as (info, backend, hash map), onto each secondary in turn, stopping at the
+# first failure when exit_on_failure; True when every secondary synced
+def sync_secondaries(primary, secondary_infos, secondary_backends, skip_cache, interactive, recycle_orphans, rebuild_sidecars, verbose, pretend_run, exit_on_failure):
+    all_success = True
+    for sec_info, sec_backend in zip(secondary_infos, secondary_backends, strict = True):
+        if not sync_secondary(
+            primary, sec_info, sec_backend,
+            skip_cache, interactive, recycle_orphans, rebuild_sidecars, verbose, pretend_run, exit_on_failure):
+            all_success = False
+            if exit_on_failure:
+                return False
+    return all_success
 
 # Sync a primary locker onto each secondary by hash comparison, with editor approval when interactive; True when every secondary synced
 def sync_lockers(
@@ -666,17 +696,9 @@ def sync_lockers(
     primary_hashes = build_primary_hash_map(primary_info, primary_backend, skip_cache, verbose, pretend_run, exit_on_failure)
     if not primary_hashes:
         return False
-
-    # Sync onto each secondary, stopping at the first failure when told to
-    all_success = True
-    for sec_info, sec_backend in zip(secondary_infos, secondary_backends, strict = True):
-        if not sync_secondary(
-            (primary_info, primary_backend, primary_hashes), sec_info, sec_backend,
-            skip_cache, interactive, recycle_orphans, rebuild_sidecars, verbose, pretend_run, exit_on_failure):
-            all_success = False
-            if exit_on_failure:
-                return False
-    return all_success
+    return sync_secondaries(
+        (primary_info, primary_backend, primary_hashes), secondary_infos, secondary_backends,
+        skip_cache, interactive, recycle_orphans, rebuild_sidecars, verbose, pretend_run, exit_on_failure)
 
 ###########################################################
 

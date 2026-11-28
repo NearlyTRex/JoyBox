@@ -79,6 +79,24 @@ def _write_stdin_input(proc, stdin_input):
     except BrokenPipeError:
         logger.log_warning("The command exited before reading all of its input")
 
+# Open a file to write streamed output into, when path is valid; None otherwise
+def _open_output_target(stack, path):
+    if not paths.is_path_valid(path):
+        return None
+    return stack.enter_context(open(path, "w", encoding = "utf-8"))
+
+# Pump each (stream, capture, log, target) in its own thread while feeding stdin and waiting
+# for the process; the captured lines once every stream has ended
+def _pump_command_output(proc, pumps, stdin_input, timeout):
+    output_lines = []
+    threads = _start_pump_threads(pumps, output_lines)
+    if stdin_input is not None:
+        _write_stdin_input(proc, stdin_input)
+    wait_for_command(proc, timeout)
+    for t in threads:
+        t.join()
+    return output_lines
+
 # Run a command, pumping its output streams in real time
 def run_streamed_command(
     cmd,
@@ -86,36 +104,22 @@ def run_streamed_command(
     capture_output = True,
     log_stdout = False,
     log_stderr = False):
-
-    # Determine output file handling
-    stdout_path = options.get_stdout() if paths.is_path_valid(options.get_stdout()) else None
-    stderr_path = options.get_stderr() if paths.is_path_valid(options.get_stderr()) else None
     stdin_input = options.get_stdin_input()
-
-    # Determine stderr disposition
-    pipe_stderr = log_stderr or stderr_path is not None
-    capture_stderr = options.include_stderr() and capture_output
-    stderr_arg = _get_stderr_arg(options, pipe_stderr)
-
-    # Get context stack
     with contextlib.ExitStack() as stack:
-        stdout_target = stack.enter_context(open(stdout_path, "w", encoding = "utf-8")) if stdout_path else None
-        stderr_target = stack.enter_context(open(stderr_path, "w", encoding = "utf-8")) if stderr_path else None
 
-        # Open process
-        proc = stack.enter_context(_open_streamed_process(cmd, options, stderr_arg, stdin_input))
+        # Open output files
+        stdout_target = _open_output_target(stack, options.get_stdout())
+        stderr_target = _open_output_target(stack, options.get_stderr())
 
-        # Run real-time I/O threads
-        output_lines = []
+        # Open process, piping stderr when it is logged or written to a file
+        pipe_stderr = log_stderr or stderr_target is not None
+        proc = stack.enter_context(_open_streamed_process(cmd, options, _get_stderr_arg(options, pipe_stderr), stdin_input))
+
+        # Pump its streams in real time
         pumps = [(proc.stdout, capture_output, log_stdout, stdout_target)]
         if pipe_stderr:
-            pumps.append((proc.stderr, capture_stderr, log_stderr, stderr_target))
-        threads = _start_pump_threads(pumps, output_lines)
-        if stdin_input is not None:
-            _write_stdin_input(proc, stdin_input)
-        wait_for_command(proc, options.get_timeout())
-        for t in threads:
-            t.join()
+            pumps.append((proc.stderr, options.include_stderr() and capture_output, log_stderr, stderr_target))
+        output_lines = _pump_command_output(proc, pumps, stdin_input, options.get_timeout())
     return (cmdline.clean_command_output("".join(output_lines).strip()), proc.returncode)
 
 # Launch a command detached from this one, in its own session, with no streams;

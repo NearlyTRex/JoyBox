@@ -16,11 +16,9 @@ from joybox import paths
 from joybox import settings
 from joybox import jsondata
 from joybox import webpage
-from joybox import webfetch
 from joybox import storebase
 from joybox import strings
 from joybox import metadataentry
-from joybox import metadataassetcollector
 from joybox import manifest
 
 # GOG platform names as gogdl spells them
@@ -116,6 +114,8 @@ class GOG(storebase.StoreBase):
     CATEGORY = config.Category.COMPUTER
     SUBCATEGORY = config.Subcategory.COMPUTER_GOG
     KEY = config.JSON_KEY_GOG
+    PAGE_VIDEO_BASE_URL = storebase.YOUTUBE_EMBED_URL
+    PAGE_VIDEO_ENDS_WITH = "enablejsapi=1"
     IDENTIFIER_KEYS = types.MappingProxyType({
         config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
         config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
@@ -152,9 +152,7 @@ class GOG(storebase.StoreBase):
         self.excludes = settings.get_value("UserData.GOG", "gog_excludes")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.GOG", "gog_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.GOG", "gog_install_dir")
 
     ############################################################
     # Store
@@ -403,39 +401,13 @@ class GOG(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Merge in manifest save paths and registry keys matched by GOG product id, then apply the base path cleanup
-    def augment_jsondata(
-        self,
-        json_data,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
-        game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
-
-        # Augment by manifest
-        manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(
-            gogid = identifier)
-        if manifest_entry:
-            manifest_paths = manifest_entry.get_paths(config.TOKEN_GAME_INSTALL_DIR)
-            game_paths = list(set(game_paths).union(manifest_paths))
-            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
-
-        # Apply base path cleaning logic
-        json_data.set_value(config.JSON_KEY_STORE_PATHS, game_paths)
-        json_data.set_value(config.JSON_KEY_STORE_KEYS, game_keys)
-        return super().augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # The manifest entry matched by GOG product id, rooted at the game install dir, then the base's
+    def get_manifest_matches(self, json_data, identifier):
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(gogid = identifier)
+        return [(manifest_entry, config.TOKEN_GAME_INSTALL_DIR)] + super().get_manifest_matches(json_data, identifier)
 
     # Slug, title, page and the preferred-OS installer version from the GOG products API; None when unreachable
-    def get_latest_jsondata(
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -443,12 +415,8 @@ class GOG(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get gog url
+        del branch, pretend_run
         gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
         if not network.is_url_reachable(gog_url):
             return None
@@ -469,12 +437,7 @@ class GOG(storebase.StoreBase):
         json_data.set_value(config.JSON_KEY_STORE_NAME, str(gog_json.get("title", "")).strip())
         self._set_installer_buildid(json_data, gog_json)
         self._set_product_url(json_data, gog_json)
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return json_data
 
     # Set the build id from the first installer for the preferred OS, the default when its version is empty
     def _set_installer_buildid(self, json_data, gog_json):
@@ -506,16 +469,11 @@ class GOG(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_metadata_identifier(identifier):
-            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
-            return None
-
-        # Scrape the game page with retries
-        return self.scrape_with_retries(
+        del exit_on_failure
+        return self.scrape_latest_metadata(
+            identifier = identifier,
             scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
-            operation_name = "GOG metadata fetch for '%s'" % identifier,
+            store_label = "GOG",
             verbose = verbose,
             pretend_run = pretend_run)
 
@@ -523,25 +481,15 @@ class GOG(storebase.StoreBase):
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
 
         # Load url
-        success = webpage.load_url(web_driver, identifier)
-        if not success:
-            raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
-
-        # Create metadata entry
+        self.load_scrape_page(web_driver, identifier)
         metadata_entry = metadataentry.MetadataEntry()
 
-        # Look for game description (now with improved error handling in webpage module)
-        element_game_description = webpage.wait_for_element(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"class": "description"}),
-            verbose = verbose,
-            exit_on_failure = False)
-        if element_game_description:
-            raw_game_description = webpage.get_element_children_text(element_game_description)
-            if raw_game_description:
-                metadata_entry.set_description(raw_game_description)
+        # Look for game description
+        game_description = self.wait_for_page_text(web_driver, {"class": "description"}, verbose = verbose)
+        if game_description:
+            metadata_entry.set_description(game_description)
 
-        # Look for game details (now with improved error handling in webpage module)
+        # Look for game details
         elements_details = webpage.get_element(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "details__row"}),
@@ -553,52 +501,6 @@ class GOG(storebase.StoreBase):
             if element_detail_text:
                 _read_detail_row(element_detail_text.strip(), metadata_entry)
         return metadata_entry
-
-    ############################################################
-    # Assets
-    ############################################################
-
-    # A box front from the metadata asset collectors, or the YouTube embed found on the game page; None for other types
-    def get_latest_asset_url(
-        self,
-        identifier,
-        asset_type,
-        game_name = None,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_asset_identifier(identifier):
-            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
-            return None
-
-        # Latest asset url
-        latest_asset_url = None
-
-        # BoxFront
-        if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = metadataassetcollector.find_metadata_asset(
-                game_platform = self.get_platform(),
-                game_name = game_name if game_name else identifier,
-                asset_type = asset_type,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Video
-        elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webfetch.get_matching_url(
-                url = identifier,
-                base_url = "https://www.youtube.com/embed",
-                starts_with = "https://www.youtube.com/embed",
-                ends_with = "enablejsapi=1",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Return latest asset url
-        return latest_asset_url
 
     ############################################################
     # Install

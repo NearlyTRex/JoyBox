@@ -5,7 +5,6 @@ from joybox import audio
 from joybox import audiometadata
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -38,15 +37,9 @@ def build_parser():
 # Tag each genre's albums to JSON with its fixed defaults, then write the tags back into the audio files unless told not to
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Resolve extra forced tag overrides
     extra_force_tags = audiometadata.parse_force_tags(args.set)

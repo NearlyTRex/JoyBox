@@ -396,3 +396,21 @@ def test_a_sync_shows_progress_by_default(remote, cryption, tmp_path, transfer, 
     transfer(tmp_path)
 
     assert [only(remote, name)["show_progress"] for name in names] == [True] * len(names)
+
+
+###########################################################
+# Batch planning
+###########################################################
+
+def test_renamed_actions_are_split_from_those_keeping_their_path():
+    same = {"src": "a.zip"}
+    kept = {"src": "b.zip", "dest": "b.zip"}
+    renamed = {"src": "c.zip", "dest": "d.zip"}
+
+    assert lockerbackend.split_renamed_actions([same, renamed, kept]) == ([same, kept], [renamed])
+
+
+def test_a_pretend_encrypted_upload_previews_each_destination():
+    actions = [{"src": "a.zip"}, {"src": "b.zip", "dest": "c.zip"}]
+
+    assert lockerbackend.preview_encrypted_uploads(actions) == ["a.zip", "c.zip"]

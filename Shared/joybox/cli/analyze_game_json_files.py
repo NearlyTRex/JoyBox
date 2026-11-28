@@ -4,7 +4,6 @@ from joybox import collection
 from joybox import system
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -20,15 +19,9 @@ def build_parser():
 # Log the games whose JSON file lists no files and those not marked playable, across every category; changes nothing
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Analyze json files
     collection.jsondata.analyze_game_json_files(

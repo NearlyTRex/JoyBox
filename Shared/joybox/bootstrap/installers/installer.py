@@ -26,6 +26,14 @@ def get_package_info(pkg):
         "category": pkg.get("category", "")
     }
 
+# The display names of a package list split by whether is_installed(pkg) holds,
+# as the {"installed": [...], "missing": [...]} status an installer reports
+def split_package_status(pkgs, is_installed):
+    status = {"installed": [], "missing": []}
+    for pkg in pkgs:
+        status["installed" if is_installed(pkg) else "missing"].append(get_package_info(pkg)["name"])
+    return status
+
 # Base for a bootstrap component: holds the connection and tool paths and
 # defines the install, uninstall and status contract subclasses override
 class Installer:

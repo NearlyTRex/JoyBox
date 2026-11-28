@@ -13,7 +13,6 @@ from io import StringIO
 from joybox import runtime, cmdline
 from joybox import logger, runoptions
 from joybox import paths
-from joybox import fileops
 from joybox import knownhosts
 from . import connection
 
@@ -50,15 +49,15 @@ class RememberNewHostKeyPolicy:
     def __init__(self, known_hosts_path):
         self.known_hosts_path = known_hosts_path
 
-    # Append the unseen key to known_hosts, creating its directory mode 700, and accept it for this session
-    def missing_host_key(self, client, hostname, key):
-        known_hosts_dir = os.path.dirname(self.known_hosts_path)
-        if not paths.does_path_exist(known_hosts_dir):
-            fileops.make_directory(known_hosts_dir)
-            fileops.chmod_file_or_directory(known_hosts_dir, "700")
-        line = "%s %s %s\n" % (hostname, key.get_name(), key.get_base64())
-        if not fileops.touch_file(self.known_hosts_path, contents = line, contents_mode = "a"):
+    # Append the host's key to known_hosts; OSError when it cannot be written
+    def remember_key(self, hostname, key):
+        line = "%s %s %s" % (hostname, key.get_name(), key.get_base64())
+        if not knownhosts.append_known_hosts_lines([line], known_hosts_path = self.known_hosts_path):
             raise OSError("Unable to remember the host key of %s in %s" % (hostname, self.known_hosts_path))
+
+    # Paramiko's hook for an unseen key: remember it and accept it for this session
+    def missing_host_key(self, client, hostname, key):
+        self.remember_key(hostname, key)
         client.get_host_keys().add(hostname, key.get_name(), key)
         logger.log_info("Trusting the %s host key of %s, seen for the first time" % (key.get_name(), hostname))
 

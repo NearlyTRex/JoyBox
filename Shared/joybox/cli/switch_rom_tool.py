@@ -3,7 +3,6 @@ from joybox import system
 from joybox.nintendo import switch
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -19,15 +18,9 @@ def build_parser():
 # After a preview, trim or untrim each Switch XCI under the input with XCI Trimmer into a new file beside it
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -36,15 +29,13 @@ def main():
     action = "Trim" if args.trim else "Untrim" if args.untrim else None
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action,
-            "Delete originals: %s" % args.delete_originals
-        ]
-        if not prompts.prompt_for_preview("Switch ROM tool", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Action: %s" % action,
+        "Delete originals: %s" % args.delete_originals
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Switch ROM tool", details):
+        return
 
     # Trim or untrim the xci files
     switch.process_switch_xcis(

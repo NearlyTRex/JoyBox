@@ -1,5 +1,4 @@
 # Imports
-from joybox import config
 from joybox import system
 from joybox import gamecollection
 from joybox import collection
@@ -13,26 +12,16 @@ def build_parser():
     parser.add_game_supercategory_argument(description = "Supercategory of the stores")
     parser.add_game_category_argument(description = "Category of the stores to log in to; all categories when omitted")
     parser.add_game_subcategory_argument(description = "Store subcategory, such as `Steam` or `GOG`; every subcategory of the selected categories when omitted")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
+    parser.add_generation_mode_argument()
     parser.add_common_arguments()
     return parser
 
 # Log in to the store of each selected category and subcategory through its own command-line login
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Login game stores
     for game_supercategory, game_category, game_subcategory in gamecollection.iterate_selected_game_categories(

@@ -1,11 +1,9 @@
 # Imports
-from joybox import config
 from joybox import system
 from joybox import gamecollection
 from joybox import collection
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -15,26 +13,16 @@ def build_parser():
     parser.add_game_category_argument(description = "Category of the games to build; all categories when omitted")
     parser.add_game_subcategory_argument(description = "Subcategory (platform) of the games to build; every subcategory of the selected categories when omitted")
     parser.add_game_name_argument(description = "Build only the game with this exact name; every game with a JSON file when omitted")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
+    parser.add_generation_mode_argument()
     parser.add_common_arguments()
     return parser
 
 # After a preview, add each selected game with a JSON file to its Pegasus metadata file and fetch its missing details
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect games to process
     games_to_process = collection.metadata.get_metadata_games(
@@ -44,11 +32,9 @@ def main():
         game_name = args.game_name)
 
     # Show preview
-    if not args.no_preview:
-        details = list({metadata_file for _, _, _, _, metadata_file in games_to_process})
-        if not prompts.prompt_for_preview("Build game metadata files", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = list({metadata_file for _, _, _, _, metadata_file in games_to_process})
+    if not prompts.confirm_preview(args.no_preview, "Build game metadata files", details):
+        return
 
     # Build metadata files
     collection.metadata.build_metadata_entries_for_games(

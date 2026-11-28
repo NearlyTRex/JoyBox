@@ -4,7 +4,6 @@ from joybox import system
 from joybox import masterbackup
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -34,29 +33,21 @@ def build_parser():
 # After one confirmation, push new and changed files from the source locker to each destination locker unattended
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Parse remote locker types
     remote_locker_types = masterbackup.parse_remote_locker_types(args.remote_lockers)
 
     # Show preview
-    if not args.no_preview:
-        details = masterbackup.get_master_backup_preview(
-            local_locker_type = args.local_locker,
-            remote_locker_types = remote_locker_types,
-            recycle_orphans = args.recycle_orphans,
-            rebuild_sidecars = not args.no_rebuild_sidecars)
-        if not prompts.prompt_for_preview("Master backup", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = masterbackup.get_master_backup_preview(
+        local_locker_type = args.local_locker,
+        remote_locker_types = remote_locker_types,
+        recycle_orphans = args.recycle_orphans,
+        rebuild_sidecars = not args.no_rebuild_sidecars)
+    if not prompts.confirm_preview(args.no_preview, "Master backup", details):
+        return
 
     # Run backup
     masterbackup.run_master_backup_or_quit(

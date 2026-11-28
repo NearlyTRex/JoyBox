@@ -1,7 +1,6 @@
 # Imports
 from joybox import autoinstall
 from joybox import arguments
-from joybox import logger
 from joybox import setup
 from joybox import system
 
@@ -50,15 +49,9 @@ def build_parser():
 # Build a self-installing Ubuntu Server image from the ini's autoinstall profile and command-line overrides, or only show the config it produces
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get the profile, with anything given on the command line taking over
     profile = autoinstall.get_install_profile_with_overrides(

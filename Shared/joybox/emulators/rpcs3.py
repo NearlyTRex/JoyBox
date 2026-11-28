@@ -21,26 +21,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
     NAME = "RPCS3"
 
-    # Write its config files, verify the locker system files, then unzip the dev_flash archive
-    # into each platform's setup dir, keeping files already there
-    def configure(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Create config files
-        if not self.write_config_files(setup_params):
-            return False
-
-        # Verify system files
-        if not self.verify_system_files(self.get_system_files(), setup_params):
-            return False
-
-        # Extract system files
-        for platform in ["windows", "linux"]:
-            for obj in ["dev_flash"]:
-                if not self.extract_system_archive(platform, obj, setup_params):
-                    return False
-        return True
+    SYSTEM_ARCHIVES = ("dev_flash",)
 
     # Copy a PSN game's .rap and .edat files into its save dir before RPCS3 runs; a failed copy
     # doesn't stop the launch

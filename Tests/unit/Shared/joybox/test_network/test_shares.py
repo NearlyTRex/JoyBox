@@ -315,6 +315,13 @@ def test_a_windows_mapping_hands_the_password_to_the_api(monkeypatch):
     assert seen == [("z:", "\\\\server\\share", 1, SHARE_SECRET, "testuser", 0)]
 
 
+def test_a_disk_resource_names_its_drive_and_share():
+    resource = network.NetResource.disk("z:", "\\\\server\\share")
+
+    assert (resource.dwType, resource.lpLocalName, resource.lpRemoteName) == (1, "z:", "\\\\server\\share")
+    assert resource.lpProvider is None
+
+
 def test_an_unknown_platform_mounts_nothing(monkeypatch, recording_command):
     monkeypatch.setattr(network.platform_info, "is_windows_platform", lambda: False)
     monkeypatch.setattr(network.platform_info, "is_linux_platform", lambda: False)

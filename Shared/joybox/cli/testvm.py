@@ -1,6 +1,5 @@
 # Imports
 from joybox import arguments
-from joybox import logger
 from joybox import setup
 from joybox import system
 from joybox import virtualmachine
@@ -32,15 +31,9 @@ def build_parser():
 # Create, destroy, snapshot, restore, inspect or attach to the local KVM test guest, or point the test domain at it
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Run the action
     virtualmachine.run_vm_action(

@@ -255,3 +255,22 @@ def test_an_unhashable_file_in_a_large_directory_stops_the_update_when_asked(tre
     assert upload(tree, exit_on_failure = True) is False
     assert remote.uploads == []
     assert not os.path.exists(temp_dirs[0])
+
+
+###########################################################
+# Sidecar entry selection
+###########################################################
+
+def test_only_hashed_files_the_database_lacks_become_entries():
+    hash_data = {"a.zip": {"hash": "aa"}, "b.zip": {"hash": "bb"}}
+
+    entries = synctransfers.get_new_sidecar_entries(hash_data, "Games", {"Games/a.zip"})
+
+    assert entries == [{"hash": "bb", "file_path": "Games/b.zip"}]
+
+
+@pytest.mark.parametrize("subpath, expected", [("", ["b.zip"]), ("Games", ["a.zip"])])
+def test_files_missing_from_the_sidecar_are_matched_under_the_subpath(subpath, expected):
+    sidecar_files = {"a.zip": {}, "Games/b.zip": {}}
+
+    assert synctransfers.get_files_missing_from_sidecar(["a.zip", "b.zip"], sidecar_files, subpath) == expected

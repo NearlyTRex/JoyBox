@@ -14,6 +14,7 @@ from joybox import strings
 from joybox import jsondata
 from joybox import lockerinfo
 from joybox import playlist
+from .selection import iterate_selected_locker_games
 
 ############################################################
 
@@ -531,40 +532,6 @@ def build_game_json_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build the JSON of every locker game in one category's chosen subcategories; stops at the first failure
-def _build_category_json_files(
-    game_supercategory,
-    game_category,
-    selected_subcategories = None,
-    locker_type = None,
-    create_disc_playlists = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    category_subcategories = config.subcategory_map[game_category]
-    if selected_subcategories:
-        category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-    for game_subcategory in category_subcategories:
-        game_names = gamecollection.find_locker_game_names(
-            game_supercategory,
-            game_category,
-            game_subcategory,
-            locker_type)
-        for game_name in game_names:
-            success = build_game_json_file(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
-                locker_type = locker_type,
-                create_disc_playlists = create_disc_playlists,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-    return True
-
 # Build the JSON of every locker ROM game in the chosen categories and subcategories; stops at the first failure
 def build_all_game_json_files(
     locker_type = None,
@@ -574,23 +541,20 @@ def build_all_game_json_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
-    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in selected_categories:
-            success = _build_category_json_files(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                selected_subcategories = selected_subcategories,
-                locker_type = locker_type,
-                create_disc_playlists = create_disc_playlists,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-    # Should be successful
+    for game_supercategory, game_category, game_subcategory, game_name in iterate_selected_locker_games(
+        categories, subcategories, locker_type):
+        success = build_game_json_file(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            locker_type = locker_type,
+            create_disc_playlists = create_disc_playlists,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################

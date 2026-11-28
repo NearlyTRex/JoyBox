@@ -624,7 +624,7 @@ def _seed_image_tree(iso_dir, profile, overlay, user_data, verbose, pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Unpack, seed and repack the stock image in a disposable directory, still BIOS and EFI bootable
-def _repack_image(stock_image, output_file, version, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+def _repack_image(stock_image, output_file, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
     with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as work_dir:
         if not work_dir:
             logger.log_error("Unable to create temporary directory")
@@ -641,7 +641,7 @@ def _repack_image(stock_image, output_file, version, profile, overlay, user_data
         return iso.create_bootable_iso(
             iso_file = output_file,
             source_dir = iso_dir,
-            volume_name = ubunturelease.get_volume_name(version),
+            volume_name = ubunturelease.get_volume_name(profile.get("version")),
             bios_boot_image = BIOS_BOOT_IMAGE,
             efi_boot_image = iso.get_iso_efi_boot_image(work_dir),
             mbr_image = iso.get_iso_mbr_image(work_dir),
@@ -664,8 +664,12 @@ def _make_output_directory(output_file, verbose, pretend_run, exit_on_failure):
         return None
     return output_dir
 
-# The given or downloaded stock image; the download goes to download_file, by default beside the output
-def _get_stock_image(output_dir, download_file, version, source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure):
+# The given or downloaded stock image once the output's directory is made; the download goes
+# to download_file, by default beside the output; None when either step fails
+def _get_stock_image(output_file, download_file, version, source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure):
+    output_dir = _make_output_directory(output_file, verbose, pretend_run, exit_on_failure)
+    if output_dir is None:
+        return None
     if not download_file:
         download_file = paths.join_paths(output_dir, "ubuntu-server-%s.iso" % version)
     return obtain_source_image(
@@ -700,20 +704,14 @@ def build_autoinstall_image(
     if not ok:
         return False
 
-    # Make sure there is somewhere to write to
-    output_dir = _make_output_directory(output_file, verbose, pretend_run, exit_on_failure)
-    if output_dir is None:
-        return False
-
-    # Get the stock image
-    version = profile.get("version")
+    # Get the stock image, beside the output unless told otherwise
     stock_image = _get_stock_image(
-        output_dir, download_file, version, source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure)
+        output_file, download_file, profile.get("version"), source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure)
     if not stock_image:
         return False
 
     # Work somewhere disposable
-    if not _repack_image(stock_image, output_file, version, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+    if not _repack_image(stock_image, output_file, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
         return False
     logger.log_info("Built autoinstall image: %s" % output_file)
     return True

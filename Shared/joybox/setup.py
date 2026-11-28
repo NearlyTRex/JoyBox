@@ -13,6 +13,13 @@ from joybox import release
 from joybox import settings
 from joybox import platform_info, runtime
 
+# Parse a command's arguments, check requirements and set up logging, returning the parsed arguments
+def start_command(parser):
+    args, _ = parser.parse_known_args()
+    check_requirements()
+    logger.setup_logging()
+    return args
+
 # Quit unless Python meets the minimum version, the OS is Windows or Linux, symlinks work and the ini exists
 def check_requirements():
 

@@ -110,3 +110,19 @@ def test_a_new_server_is_added_after_the_ones_already_known(ssh):
     assert knownhosts.remember_host("storage.example", 23)
 
     assert ssh["path"].read_text().startswith("old.example ssh-ed25519 AAAAexisting\n[storage.example]:23 ")
+
+
+def test_lines_are_appended_to_a_given_file(tmp_path):
+    known_hosts = tmp_path / "known_hosts"
+    known_hosts.write_text("old.test ssh-ed25519 AAAAexisting\n")
+
+    assert knownhosts.append_known_hosts_lines(["new.test ssh-ed25519 AAAAnew"], known_hosts_path = str(known_hosts))
+
+    assert known_hosts.read_text() == "old.test ssh-ed25519 AAAAexisting\nnew.test ssh-ed25519 AAAAnew\n"
+
+
+def test_lines_go_to_the_users_own_file_by_default(ssh):
+    assert knownhosts.append_known_hosts_lines(["a.test ssh-ed25519 AAAAa", "b.test ssh-ed25519 AAAAb"])
+
+    assert ssh["path"].read_text() == "a.test ssh-ed25519 AAAAa\nb.test ssh-ed25519 AAAAb\n"
+    assert oct(ssh["path"].parent.stat().st_mode & 0o777) == "0o700"

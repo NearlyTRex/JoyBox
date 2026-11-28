@@ -4,7 +4,6 @@ from joybox import system
 from joybox import syncremotes
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 from joybox import lockerauth
 
@@ -21,15 +20,9 @@ def build_parser():
 # Sign the locker in and store its options
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get the remote, where its options are kept, and what to sign in with
     remote = lockerauth.get_locker_remote(args.locker_type)
@@ -44,8 +37,7 @@ def main():
 
     # Show preview
     details = ["Remote: %s:%s" % (remote[1], remote[2]), "Client: %s" % client[0], "Folder: %s" % folder_id, "Store: %s" % reference]
-    if not args.no_preview and not prompts.prompt_for_preview("Authorize %s" % args.locker_type, details):
-        logger.log_warning("Operation cancelled by user")
+    if not prompts.confirm_preview(args.no_preview, "Authorize %s" % args.locker_type, details):
         return None
     if args.pretend_run:
         syncremotes.authorize_remote(remote[0], client[0], client[1], open_browser = not args.no_browser, pretend_run = True)

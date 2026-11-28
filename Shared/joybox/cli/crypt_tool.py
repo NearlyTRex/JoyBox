@@ -24,15 +24,9 @@ def build_parser():
 # After a preview, GPG-encrypt or decrypt the input file or tree in place with the passphrase from the config
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -46,11 +40,9 @@ def main():
     passphrase = cryption.get_configured_passphrase(args.passphrase_type)
 
     # Show preview
-    if not args.no_preview:
-        details = ["Path: %s" % input_path, "Action: %s" % action, "Keep originals: %s" % args.keep_originals]
-        if not prompts.prompt_for_preview("%s files" % action, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["Path: %s" % input_path, "Action: %s" % action, "Keep originals: %s" % args.keep_originals]
+    if not prompts.confirm_preview(args.no_preview, "%s files" % action, details):
+        return
 
     # Encrypt or decrypt files
     cryption.crypt_files_in_place(

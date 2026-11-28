@@ -24,28 +24,20 @@ def build_parser():
 # After a preview, test each archive of the chosen types under the input with 7-Zip; stops at the first that fails
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Archive types: %s" % [t.cval() for t in args.archive_types]
-        ]
-        if not prompts.prompt_for_preview("Verify archives", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Archive types: %s" % [t.cval() for t in args.archive_types]
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Verify archives", details):
+        return
 
     # Verify archives
     archive_extensions = [archive_type.cval() for archive_type in args.archive_types]

@@ -113,7 +113,3 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup Ryujinx")
                 return False
         return True
-
-    # Write its config files under the emulators root
-    def configure(self, setup_params = None):
-        return self.write_config_files(setup_params)

@@ -13,7 +13,6 @@ from joybox import serialization
 from joybox import jsondata
 from joybox import storebase
 from joybox import strings
-from joybox import settings
 
 # Nile library list line: optional installed marker, title, id, optional genres
 nile_library_line = re.compile(r"^(?:\(INSTALLED\) )?(?P<title>.*) ID: (?P<appid>\S+)(?: GENRES: .*)?$")
@@ -42,9 +41,7 @@ class Amazon(storebase.StoreBase):
         super().__init__()
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.Amazon", "amazon_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.Amazon", "amazon_install_dir")
 
     ############################################################
     # Store
@@ -232,8 +229,8 @@ class Amazon(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Appid, version and title from Nile's details output, plus manifest save paths; None when Nile gives nothing usable
-    def get_latest_jsondata(
+    # Appid, version and title from Nile's details output; None when Nile gives nothing usable
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -241,12 +238,8 @@ class Amazon(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get script command
+        del branch
         script_cmd = programs.get_python_script_command("Nile")
         if not script_cmd:
             return None
@@ -262,13 +255,7 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self._build_details_jsondata(identifier, amazon_json)
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return self._build_details_jsondata(identifier, amazon_json)
 
     # Default store json filled with the appid, version (default build id when blank) and title from Nile's details
     def _build_details_jsondata(self, identifier, amazon_json):
@@ -329,68 +316,18 @@ class Amazon(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Fetch the game with Nile into a temp dir and archive it into output_dir; True when output_dir ends up with files
-    def download(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        show_progress = False,
-        skip_existing = False,
-        skip_identical = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # Nile's command prefix, the tool download fetches games with; None when Nile is missing
+    def get_download_tool_cmd(self):
+        return programs.get_python_script_command("Nile")
 
-        # Check identifier
-        if not self.is_valid_download_identifier(identifier):
-            logger.log_warning("Download identifier '%s' was not valid" % identifier)
-            return False
-
-        # Get script command
-        script_cmd = programs.get_python_script_command("Nile")
-        if not script_cmd:
-            return False
-
-        # Download and archive
-        return self.download_and_archive(
-            fetch_func = lambda download_dir: self._run_download_command(
-                script_cmd, identifier, download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure),
-            output_dir = output_dir,
-            output_name = output_name,
-            clean_output = clean_output,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Fetch the game into download_dir with Nile's verify; True when Nile exits cleanly
-    def _run_download_command(
-        self,
-        script_cmd,
-        identifier,
-        download_dir,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # Nile's verify command line, which fetches the game into download_dir
+    def build_download_cmd(self, tool_cmd, identifier, download_dir):
 
         # Get download command
-        download_cmd = script_cmd + [
+        return tool_cmd + [
                             "verify",
             "--path", download_dir,
             identifier
         ]
-
-        # Run download command
-        code = command.run_returncode_command(
-            cmd = download_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return code == 0
 
     ############################################################

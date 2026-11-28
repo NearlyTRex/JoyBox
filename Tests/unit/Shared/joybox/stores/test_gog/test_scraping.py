@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config
+from joybox import config, storebase
 from joybox.stores import gog
 
 
@@ -178,8 +178,8 @@ def finders(monkeypatch):
         calls.append(("video", url, base_url, starts_with, ends_with))
         return "https://www.youtube.com/embed/abc?enablejsapi=1"
 
-    monkeypatch.setattr(gog.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
-    monkeypatch.setattr(gog.webfetch, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(storebase.store.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
+    monkeypatch.setattr(storebase.store.webfetch, "get_matching_url", get_matching_url)
     return calls
 
 

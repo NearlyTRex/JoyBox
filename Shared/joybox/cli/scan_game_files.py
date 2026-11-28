@@ -5,7 +5,6 @@ from joybox import environment
 from joybox import arguments
 from joybox.collection import scanning
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -30,30 +29,22 @@ def build_parser():
 # After a preview, import store purchases, then build JSON files and metadata, optionally download assets, and publish the HTML pages
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Reject unknown filter values, then log the filters
     scanning.check_scan_filters(args.categories, args.subcategories)
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
-            "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
-            "Published dir: %s" % environment.get_game_published_metadata_root_dir(),
-            "Store purchases: %s" % ("skipped" if args.skip_purchases else "imported and refreshed")
-        ]
-        if not prompts.prompt_for_preview("Scan game files (build store purchases, JSON, metadata, publish)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
+        "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
+        "Published dir: %s" % environment.get_game_published_metadata_root_dir(),
+        "Store purchases: %s" % ("skipped" if args.skip_purchases else "imported and refreshed")
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Scan game files (build store purchases, JSON, metadata, publish)", details):
+        return
 
     # Build, then publish, the game files
     scanning.scan_game_files(

@@ -1,0 +1,34 @@
+# Pylint for Shared and Scripts; the meta suite runs it over library_targets and
+# holds the messages to the pylint-source baseline.
+#
+# pytest-testrex's library rcfile, with its size and duplication rules enforced.
+# Documentation is the documented rule's, line length the formatter's, string
+# formatting style the repository's own, function and module length the
+# long-functions and long-modules standards', and argument counts follow the
+# shared verbose, pretend_run and exit_on_failure parameters.
+
+[MAIN]
+jobs = 0
+
+[MESSAGES CONTROL]
+disable =
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    line-too-long,
+    consider-using-f-string,
+    too-many-arguments,
+    too-many-positional-arguments,
+    too-many-statements,
+    too-many-nested-blocks,
+    too-many-lines,
+
+[SIMILARITIES]
+# A copied block this long is a helper to share; shorter matches are the shared
+# keyword arguments every call passes on and the shape every command takes
+min-similarity-lines = 7
+
+[DESIGN]
+# Option, info and interface classes hold one accessor per value they carry
+max-public-methods = 113
+max-attributes = 21

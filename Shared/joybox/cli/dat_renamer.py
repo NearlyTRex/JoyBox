@@ -3,7 +3,6 @@ from joybox import system
 from joybox import dat
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -19,15 +18,9 @@ def build_parser():
 # After a preview, rename each file under the input to the ROM name its MD5 matches in the DAT files or DAT cache
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -37,15 +30,13 @@ def main():
     dat_cachefile = parser.get_path("dat_cachefile") or ""
 
     # Show preview
-    if not args.no_preview:
-        details = ["Input path: %s" % input_path]
-        if dat_directory:
-            details.append("DAT directory: %s" % dat_directory)
-        if dat_cachefile:
-            details.append("DAT cachefile: %s" % dat_cachefile)
-        if not prompts.prompt_for_preview("Rename files using DAT", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["Input path: %s" % input_path]
+    if dat_directory:
+        details.append("DAT directory: %s" % dat_directory)
+    if dat_cachefile:
+        details.append("DAT cachefile: %s" % dat_cachefile)
+    if not prompts.confirm_preview(args.no_preview, "Rename files using DAT", details):
+        return
 
     # Rename files
     dat.rename_files_using_dat(

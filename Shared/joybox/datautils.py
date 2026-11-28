@@ -15,29 +15,29 @@ def _get_mergedeep():
 # Data structure utilities
 ###########################################################
 
+# Name of the mergedeep strategy each merge type uses; mergedeep's own default is REPLACE
+merge_strategy_names = {
+    config.MergeType.REPLACE: "REPLACE",
+    config.MergeType.ADDITIVE: "ADDITIVE",
+    config.MergeType.SAFE_REPLACE: "TYPESAFE_REPLACE",
+    config.MergeType.SAFE_ADDITIVE: "TYPESAFE_ADDITIVE"
+}
+
 # Deep-merge dict2 into dict1 with the mergedeep strategy the merge type picks; whichever
 # side is a dict when only one is, dict1 unchanged on a type clash, None when neither is
 def merge_dictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
         mergedeep = _get_mergedeep()
+        strategy = getattr(mergedeep.Strategy, merge_strategy_names.get(merge_type, "REPLACE"))
         try:
-            if merge_type == config.MergeType.REPLACE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
-            if merge_type == config.MergeType.ADDITIVE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
-            if merge_type == config.MergeType.SAFE_REPLACE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
-            if merge_type == config.MergeType.SAFE_ADDITIVE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
-            return mergedeep.merge(dict1, dict2)
+            return mergedeep.merge(dict1, dict2, strategy = strategy)
         except TypeError:
             return dict1
-    elif isinstance(dict1, dict) and not isinstance(dict2, dict):
+    if isinstance(dict1, dict):
         return dict1
-    elif not isinstance(dict1, dict) and isinstance(dict2, dict):
+    if isinstance(dict2, dict):
         return dict2
-    else:
-        return None
+    return None
 
 # The sorted union of both lists without duplicates; whichever is a list when only one is
 def merge_lists(list1, list2):

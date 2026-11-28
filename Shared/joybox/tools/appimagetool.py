@@ -33,14 +33,5 @@ class AppImageTool(toolbase.ToolBase):
 
         # Create config files
         if platform_info.is_linux_platform():
-            for config_filename, config_contents in self.get_config_files().items():
-                success = fileops.touch_file(
-                    src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                    contents = config_contents.strip(),
-                    verbose = setup_params.verbose,
-                    pretend_run = setup_params.pretend_run,
-                    exit_on_failure = setup_params.exit_on_failure)
-                if not success:
-                    logger.log_error("Could not create AppImageTool config files")
-                    return False
+            return self.write_config_files(setup_params)
         return True

@@ -3,7 +3,6 @@ from joybox import system
 from joybox import arguments
 from joybox import setup
 from joybox import claude
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -37,15 +36,9 @@ def build_parser():
 # After a preview, send each matching file in the input tree to Claude through the prompt template and write the replies to a mirrored output tree
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input/output paths
     input_path = parser.get_input_path()
@@ -56,11 +49,9 @@ def main():
     extensions = claude.parse_extensions(args.extensions)
 
     # Show preview
-    if not args.no_preview:
-        details = claude.get_process_preview_details(input_path, output_path, args.prompt_file, args.model, extensions)
-        if not prompts.prompt_for_preview("Process files with Claude", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = claude.get_process_preview_details(input_path, output_path, args.prompt_file, args.model, extensions)
+    if not prompts.confirm_preview(args.no_preview, "Process files with Claude", details):
+        return
 
     # Process files
     claude.process_files_with_summary(

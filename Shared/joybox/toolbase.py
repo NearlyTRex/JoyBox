@@ -5,7 +5,10 @@ import re
 # Local imports
 from joybox import command
 from joybox import commandbase
+from joybox import config
+from joybox import desktopentry
 from joybox import environment
+from joybox import fileops
 from joybox import logger
 from joybox import paths
 from joybox import programcatalog
@@ -44,6 +47,43 @@ class ToolBase:
     # Write the tool's config files after install; succeeds in the base
     def configure(self, setup_params = None):
         del setup_params
+        return True
+
+    # Write each config file, its own by default, under the tools root; False, after logging,
+    # at the first that fails
+    def write_config_files(self, setup_params = None, config_files = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+        if config_files is None:
+            config_files = self.get_config_files()
+        for config_filename, config_contents in config_files.items():
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup %s config files" % self.get_name())
+                return False
+        return True
+
+    # Add the tool's app menu entry, named after it, or remove it when not enabled; False,
+    # after logging, when that fails
+    def set_menu_launcher(self, enabled, filename, description, command_name, icon, setup_params):
+        success = desktopentry.set_launcher(
+            enabled = enabled,
+            filename = filename,
+            name = self.get_name(),
+            description = description,
+            command = command_name,
+            icon = icon,
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup the %s launcher" % self.get_name())
+            return False
         return True
 
     # The installed tool program; quits with an error when the tool is not installed

@@ -57,6 +57,8 @@ from joybox.bootstrap.installers.installer_llvm import (
 from joybox.bootstrap.installers.installer_navidrome import (
     Navidrome)
 from joybox.bootstrap.installers.installer_nginx import (
+    build_https_site_template,
+    build_ssl_server_head,
     Nginx)
 from joybox.bootstrap.installers.installer_node import (
     get_node_package_id,
@@ -122,7 +124,8 @@ from joybox.bootstrap.installers.installer_zram import (
 from joybox.bootstrap.installers.installer import (
     get_package_id,
     get_package_info,
-    Installer)
+    Installer,
+    split_package_status)
 
 # The names this package re-exports
 __all__ = [
@@ -157,6 +160,8 @@ __all__ = [
     "Llvm",
     "Navidrome",
     "Nginx",
+    "build_https_site_template",
+    "build_ssl_server_head",
     "get_node_package_id",
     "get_node_package_info",
     "Node",
@@ -195,4 +200,5 @@ __all__ = [
     "get_package_id",
     "get_package_info",
     "Installer",
+    "split_package_status",
 ]

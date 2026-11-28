@@ -6,7 +6,6 @@ from joybox import collection
 from joybox import gamecollection
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -22,11 +21,7 @@ def build_parser():
         arg_type = config.AssetType,
         required = True,
         description = "Kind of asset to download")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category, subcategory and name")
+    parser.add_generation_mode_argument(description = "How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category, subcategory and name")
     parser.add_group("Behavior")
     parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip games that already have this asset, and do not overwrite files already in the destination locker")
     parser.add_enum_argument(
@@ -40,15 +35,9 @@ def build_parser():
 # After a preview, download the chosen asset type for each selected game and back it up to the lockers
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect games to process
     games_to_process = []
@@ -60,11 +49,9 @@ def main():
         games_to_process.append(game_info)
 
     # Show preview
-    if not args.no_preview:
-        details = [environment.get_locker_gaming_assets_root_dir()]
-        if not prompts.prompt_for_preview("Download metadata assets (%s)" % args.asset_type, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [environment.get_locker_gaming_assets_root_dir()]
+    if not prompts.confirm_preview(args.no_preview, "Download metadata assets (%s)" % args.asset_type, details):
+        return
 
     # Download metadata assets
     collection.asset.download_metadata_asset_for_games(

@@ -12,6 +12,7 @@ from joybox import metadatacollector
 from joybox import stores
 from joybox import strings
 from .jsondata import read_game_json_data
+from .selection import iterate_selected_json_games
 
 ############################################################
 
@@ -211,9 +212,29 @@ def update_game_metadata_entry(
     if not found:
         return True
     metadata_file_path, metadata_obj, json_obj, game_entry = found
-    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
+    _refresh_game_metadata_entry(
+        metadata_file_path, metadata_obj, json_obj, game_entry, game_subcategory, game_name,
+        stats = stats,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return True
+
+# Merge the latest store or collector metadata into the game entry and rewrite its metadata file
+def _refresh_game_metadata_entry(
+    metadata_file_path,
+    metadata_obj,
+    json_obj,
+    game_entry,
+    game_subcategory,
+    game_name,
+    stats = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Merge latest data
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     latest_metadata = fetch_latest_game_metadata(json_obj, game_platform, game_name, stats, verbose, pretend_run, exit_on_failure)
     if latest_metadata:
         game_entry.merge(latest_metadata)
@@ -229,7 +250,6 @@ def update_game_metadata_entry(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return True
 
 ############################################################
 
@@ -252,10 +272,7 @@ def build_game_metadata_entry(
 
     # Create metadata entry
     success = create_game_metadata_entry(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name,
+        game_supercategory, game_category, game_subcategory, game_name,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -304,19 +321,6 @@ def build_all_game_metadata_entries(
             break
     stats.log_summary()
     return success
-
-# Every json game in the selected categories, as (supercategory, category, subcategory, name)
-def iterate_selected_json_games(categories, subcategories, locker_type):
-    game_supercategory = config.Supercategory.ROMS
-    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
-    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
-    for game_category in selected_categories:
-        category_subcategories = config.subcategory_map[game_category]
-        if selected_subcategories:
-            category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-        for game_subcategory in category_subcategories:
-            for game_name in gamecollection.find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type):
-                yield game_supercategory, game_category, game_subcategory, game_name
 
 ############################################################
 

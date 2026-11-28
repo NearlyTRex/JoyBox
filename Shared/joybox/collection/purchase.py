@@ -13,6 +13,7 @@ from joybox import gamenaming
 from joybox import storebase
 from joybox import stores
 from .metadata import create_game_metadata_entry
+from .selection import iterate_selected_subcategories
 from .metadata import update_game_metadata_entry
 from .jsondata import get_game_json_ignore_entries
 from .jsondata import add_game_json_ignore_entry
@@ -514,21 +515,17 @@ def build_game_store_purchases(
         return False
     return update_game_store_purchases(keys = keys, force = force, **selection)
 
-# Build store purchases for one category's chosen subcategories; stops at the first failure
-def _build_category_store_purchases(
-    game_supercategory,
-    game_category,
-    selected_subcategories = None,
+# Build store purchases for the chosen ROM categories, then warn which stores were skipped
+def build_all_game_store_purchases(
     keys = None,
+    categories = None,
+    subcategories = None,
     force = False,
-    skipped_stores = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    category_subcategories = config.subcategory_map[game_category]
-    if selected_subcategories:
-        category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-    for game_subcategory in category_subcategories:
+    skipped_stores = []
+    for game_supercategory, game_category, game_subcategory in iterate_selected_subcategories(categories, subcategories):
         success = build_game_store_purchases(
             game_supercategory = game_supercategory,
             game_category = game_category,
@@ -541,34 +538,6 @@ def _build_category_store_purchases(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-    return True
-
-# Build store purchases for the chosen ROM categories, then warn which stores were skipped
-def build_all_game_store_purchases(
-    keys = None,
-    categories = None,
-    subcategories = None,
-    force = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
-    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
-    skipped_stores = []
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in selected_categories:
-            success = _build_category_store_purchases(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                selected_subcategories = selected_subcategories,
-                keys = keys,
-                force = force,
-                skipped_stores = skipped_stores,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
 
     # List the stores that were left out
     if skipped_stores:

@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config
+from joybox import config, storebase
 from joybox.stores import legacy
 from legacy_helpers import GAME_URL, SEARCH_URL, result_cell
 
@@ -181,8 +181,8 @@ def asset_lookups(monkeypatch):
         calls.append(("page", kwargs))
         return "https://www.youtube.com/embed/abc?enablejsapi=1"
 
-    monkeypatch.setattr(legacy.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
-    monkeypatch.setattr(legacy.webfetch, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(storebase.store.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
+    monkeypatch.setattr(storebase.store.webfetch, "get_matching_url", get_matching_url)
     return calls
 
 

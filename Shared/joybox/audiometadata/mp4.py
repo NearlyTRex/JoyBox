@@ -1,8 +1,8 @@
 # Imports
-import os
 import base64
 
 # Local imports
+from joybox.audiometadata.audiofile import build_audio_file_info, load_audio_file
 from joybox import logger
 from joybox import paths
 
@@ -182,20 +182,9 @@ class Mp4TagsMixin:
     # The MP4 file opened, logging the action when verbose; None, after logging the
     # error, when the file is missing or unreadable
     def load_mp4_file(self, audio_file, action_message, verbose, exit_on_failure):
-
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
-            return None
-
-        # Load audio file
-        if verbose:
-            logger.log_info(action_message)
-        try:
-            return self.mp4_class(audio_file)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
-            return None
+        return load_audio_file(
+            audio_file, self.mp4_class, self.mutagen.MutagenError, "Failed to load MP4 file",
+            action_message, verbose = verbose, exit_on_failure = exit_on_failure)
 
     # Whether the file has at least one MP4 tag atom; False when missing or unreadable
     def has_mp4_tags(self, audio_file):
@@ -211,32 +200,13 @@ class Mp4TagsMixin:
         except self.mutagen.MutagenError:
             return False
 
-    # Path, size, bitrate, length, sample rate, channels, codec and tag presence; None when unreadable
+    # Path, size, bitrate, length, sample rate, channels, tag presence and codec; None when unreadable
     def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):
-
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
+        audio = load_audio_file(
+            audio_file, self.mp4_class, self.mutagen.MutagenError, "Failed to get MP4 file info",
+            "Reading MP4 file info from %s" % audio_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        if audio is None:
             return None
-
-        # Log what is read
-        if verbose:
-            logger.log_info(f"Reading MP4 file info from {audio_file}")
-
-        # Get audio info
-        try:
-            audio = self.mp4_class(audio_file)
-            file_info = {
-                "path": audio_file,
-                "size": os.path.getsize(audio_file),
-                "bitrate": getattr(audio.info, "bitrate", 0),
-                "length": getattr(audio.info, "length", 0),
-                "sample_rate": getattr(audio.info, "sample_rate", 0),
-                "channels": getattr(audio.info, "channels", 0),
-                "has_tags": audio.tags is not None,
-                "codec": getattr(audio.info, "codec", None)
-            }
-            return file_info
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to get MP4 file info: {e}", quit_program = exit_on_failure)
-            return None
+        file_info = build_audio_file_info(audio_file, audio)
+        file_info["codec"] = getattr(audio.info, "codec", None)
+        return file_info

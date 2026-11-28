@@ -5,7 +5,6 @@ from joybox import collection
 from joybox import gamecollection
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -16,11 +15,7 @@ def build_parser():
     parser.add_game_category_argument(description = "Category of the games to back up; all categories when omitted in `Standard` mode")
     parser.add_game_subcategory_argument(description = "Subcategory (platform or store) of the games to back up; all of the category's subcategories when omitted in `Standard` mode")
     parser.add_game_name_argument(description = "Exact name of the game to back up; every game found when omitted in `Standard` mode")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "`Standard` finds games in the JSON metadata; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
+    parser.add_generation_mode_argument(description = "`Standard` finds games in the JSON metadata; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
     parser.add_group("Output")
     parser.add_enum_argument(
         args = ("-l", "--locker_type"),
@@ -32,15 +27,9 @@ def build_parser():
 # After a preview, download each selected store game whose build has changed and upload it, encrypted, to the locker
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect games to process
     games_to_process = list(gamecollection.iterate_selected_game_infos(
@@ -50,11 +39,9 @@ def main():
         exit_on_failure = args.exit_on_failure))
 
     # Show preview
-    if not args.no_preview:
-        details = [game_info.get_name() for game_info in games_to_process]
-        if not prompts.prompt_for_preview("Backup game files (store -> %s)" % args.locker_type, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [game_info.get_name() for game_info in games_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Backup game files (store -> %s)" % args.locker_type, details):
+        return
 
     # Backup game files
     collection.backup.backup_game_infos(

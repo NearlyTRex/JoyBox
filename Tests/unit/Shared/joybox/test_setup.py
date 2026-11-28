@@ -50,6 +50,21 @@ def test_an_old_python_exits(host, monkeypatch):
         setup.check_requirements()
 
 
+def test_starting_a_command_parses_checks_and_sets_up_logging(monkeypatch):
+    steps = []
+
+    class Parser:
+        def parse_known_args(self):
+            steps.append("parse")
+            return "parsed", ["--unknown"]
+
+    monkeypatch.setattr(setup, "check_requirements", lambda: steps.append("check"))
+    monkeypatch.setattr(setup.logger, "setup_logging", lambda: steps.append("logging"))
+
+    assert setup.start_command(Parser()) == "parsed"
+    assert steps == ["parse", "check", "logging"]
+
+
 @pytest.mark.parametrize("change", [
     {"linux": False},
     {"symlinks": False},

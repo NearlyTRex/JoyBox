@@ -1,7 +1,5 @@
-# Imports
-import os
-
 # Local imports
+from joybox.audiometadata.audiofile import build_audio_file_info, load_audio_file
 from joybox import logger
 from joybox import hashutil
 from joybox import paths
@@ -113,38 +111,53 @@ def build_track_write_tags(track, album_artwork):
         track_tags["artwork"] = [album_artwork]
     return track_tags
 
+# Each (track number, file, tags) as track info, the album info from the first of them, and
+# the album artwork from the first track that has any
+def assemble_album_tracks(
+    tagged_tracks,
+    default_album,
+    genre_type,
+    store_individual_artwork = False,
+    use_index_for_track_number = False,
+    force_tags = None):
+    tracks = []
+    album_info = {}
+    album_artwork = None
+    album_artwork_hash = None
+    for track_index, audio_file, tags in tagged_tracks:
+
+        # Handle artwork
+        track_artwork, album_artwork, album_artwork_hash = split_track_artwork(
+            tags,
+            album_artwork,
+            album_artwork_hash,
+            store_individual_artwork)
+
+        # Store track info
+        track_tags = build_track_tags(tags, track_index, default_album, use_index_for_track_number, force_tags)
+        tracks.append(build_track_info(audio_file, track_tags, track_artwork))
+
+        # Collect album-level info from first track
+        if not album_info:
+            album_info = build_album_info(tags, default_album, genre_type, force_tags)
+    return tracks, album_info, album_artwork
+
 # AudioMetadata's methods for a whole album directory: reading, setting and clearing
 # the tags its tracks share
 class AlbumTagsMixin:
 
     # Path, size, bitrate, length, sample rate, channels and tag presence, read as an MP3; None when unreadable
     def get_audio_file_info(self, audio_file, verbose = False, exit_on_failure = False):
-
-        # Check file exists
-        if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
+        audio = load_audio_file(
+            audio_file, self.open_mp3_file, self.mutagen.MutagenError, "Failed to get MP3 file info",
+            "Reading MP3 file info from %s" % audio_file, verbose = verbose, exit_on_failure = exit_on_failure)
+        if audio is None:
             return None
+        return build_audio_file_info(audio_file, audio)
 
-        # Log what is read
-        if verbose:
-            logger.log_info(f"Reading MP3 file info from {audio_file}")
-
-        # Get audio info
-        try:
-            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        except self.mutagen.MutagenError as e:
-            logger.log_error(f"Failed to get MP3 file info: {e}", quit_program = exit_on_failure)
-            return None
-        file_info = {
-            "path": audio_file,
-            "size": os.path.getsize(audio_file),
-            "bitrate": getattr(audio.info, "bitrate", 0),
-            "length": getattr(audio.info, "length", 0),
-            "sample_rate": getattr(audio.info, "sample_rate", 0),
-            "channels": getattr(audio.info, "channels", 0),
-            "has_tags": audio.tags is not None
-        }
-        return file_info
+    # The file read as an MP3 with its ID3 tag
+    def open_mp3_file(self, audio_file):
+        return self.mp3_class(audio_file, ID3 = self.id3_class)
 
     # Album info, per-track tags and shared artwork for every audio file in the folder, sorted by name; None when there are none
     def get_album_tags(
@@ -199,10 +212,22 @@ class AlbumTagsMixin:
         force_tags = None,
         verbose = False,
         exit_on_failure = False):
-        tracks = []
-        album_info = {}
-        album_artwork = None
-        album_artwork_hash = None
+        tagged_tracks = self.read_track_tags(
+            audio_files,
+            exclude_comments = exclude_comments,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        return assemble_album_tracks(
+            tagged_tracks,
+            default_album,
+            genre_type,
+            store_individual_artwork = store_individual_artwork,
+            use_index_for_track_number = use_index_for_track_number,
+            force_tags = force_tags)
+
+    # (track number by position, file, tags with artwork) for each file whose tags can be read
+    def read_track_tags(self, audio_files, exclude_comments = False, verbose = False, exit_on_failure = False):
+        tagged_tracks = []
         for track_index, audio_file in enumerate(audio_files, 1):
             tags = self.get_tags(
                 audio_file,
@@ -210,24 +235,9 @@ class AlbumTagsMixin:
                 exclude_comments = exclude_comments,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-            if tags is None:
-                continue
-
-            # Handle artwork
-            track_artwork, album_artwork, album_artwork_hash = split_track_artwork(
-                tags,
-                album_artwork,
-                album_artwork_hash,
-                store_individual_artwork)
-
-            # Store track info
-            track_tags = build_track_tags(tags, track_index, default_album, use_index_for_track_number, force_tags)
-            tracks.append(build_track_info(audio_file, track_tags, track_artwork))
-
-            # Collect album-level info from first track
-            if not album_info:
-                album_info = build_album_info(tags, default_album, genre_type, force_tags)
-        return tracks, album_info, album_artwork
+            if tags is not None:
+                tagged_tracks.append((track_index, audio_file, tags))
+        return tagged_tracks
 
     # Write each track's tags and its own or the album artwork back to the files; False at the first missing or failed track
     def set_album_tags(

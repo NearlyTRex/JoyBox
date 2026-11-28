@@ -96,9 +96,7 @@ class Epic(storebase.StoreBase):
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.Epic", "epic_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.Epic", "epic_install_dir")
 
     ############################################################
     # Store
@@ -155,17 +153,11 @@ class Epic(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.run_interactive_command(
-            cmd = login_cmd,
+        return self.run_login_command(
+            login_cmd = login_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
-
-        # Should be successful
-        self.set_logged_in(True)
-        return True
 
     ############################################################
     # Page
@@ -338,8 +330,8 @@ class Epic(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Appname, title, version and cloud save folder from Legendary's info, plus manifest save paths; None when unknown
-    def get_latest_jsondata(
+    # Appname, title, version and cloud save folder from Legendary's info; None when unknown
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -347,12 +339,8 @@ class Epic(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get game info
+        del branch, pretend_run
         game_info = self._get_legendary_game_info(identifier, verbose = verbose, exit_on_failure = exit_on_failure)
         if game_info is None:
             return None
@@ -367,12 +355,7 @@ class Epic(storebase.StoreBase):
             json_data.set_value(config.JSON_KEY_STORE_PATHS, [
                 storepaths.create_tokenized_path(cloud_save_folder.strip())
             ])
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return json_data
 
     # The "game" section of Legendary's info json for the appname; None, logged, when unavailable
     def _get_legendary_game_info(self, identifier, verbose = False, exit_on_failure = False):
@@ -417,16 +400,11 @@ class Epic(storebase.StoreBase):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_metadata_identifier(identifier):
-            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
-            return None
-
-        # Scrape the store page with retries
-        return self.scrape_with_retries(
+        del exit_on_failure
+        return self.scrape_latest_metadata(
+            identifier = identifier,
             scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
-            operation_name = "Epic metadata fetch for '%s'" % identifier,
+            store_label = "Epic",
             verbose = verbose,
             pretend_run = pretend_run)
 
@@ -434,23 +412,13 @@ class Epic(storebase.StoreBase):
     def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
 
         # Load url
-        success = webpage.load_url(web_driver, identifier)
-        if not success:
-            raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
-
-        # Create metadata entry
+        self.load_scrape_page(web_driver, identifier)
         metadata_entry = metadataentry.MetadataEntry()
 
         # Look for game description
-        element_game_description = webpage.wait_for_element(
-            driver = web_driver,
-            locator = webpage.ElementLocator({"id": "about-long-description"}),
-            verbose = verbose,
-            exit_on_failure = False)
-        if element_game_description:
-            raw_game_description = webpage.get_element_children_text(element_game_description)
-            if raw_game_description:
-                metadata_entry.set_description(raw_game_description)
+        game_description = self.wait_for_page_text(web_driver, {"id": "about-long-description"}, verbose = verbose)
+        if game_description:
+            metadata_entry.set_description(game_description)
 
         # Look for game genres
         self._read_page_genres(web_driver, metadata_entry, verbose = verbose)

@@ -495,28 +495,6 @@ def test_the_base_declares_no_identifier_keys():
 
 
 ###########################################################
-# Cookie files
-###########################################################
-
-def test_a_cookie_file_is_named_after_the_store(monkeypatch):
-    monkeypatch.setattr(
-        storebase.webpage.runtime, "get_cookie_directory", lambda: "/cookies")
-
-    assert "samplestore" in SampleStore().get_cookie_file()
-
-
-def test_two_stores_get_distinct_cookie_files(monkeypatch):
-    monkeypatch.setattr(
-        storebase.webpage.runtime, "get_cookie_directory", lambda: "/cookies")
-
-    class OtherStore(SampleStore):
-        def get_name(self):
-            return "OtherStore"
-
-    assert SampleStore().get_cookie_file() != OtherStore().get_cookie_file()
-
-
-###########################################################
 # Path translation
 ###########################################################
 
@@ -591,7 +569,7 @@ def test_the_base_store_has_no_purchases():
 
 def test_the_purchases_cache_dir_is_created(monkeypatch, tmp_path):
     cache_dir = str(tmp_path / "Purchases")
-    monkeypatch.setattr(storebase.environment, "get_cache_purchases_dir", lambda: cache_dir)
+    monkeypatch.setattr(storebase.store.environment, "get_cache_purchases_dir", lambda: cache_dir)
 
     assert SampleStore().get_purchases_cache_dir() == cache_dir
     assert os.path.isdir(cache_dir)
@@ -645,7 +623,7 @@ def test_written_purchases_are_read_back(tmp_path):
 
 
 def test_a_failed_cache_write_is_survived(tmp_path, monkeypatch):
-    monkeypatch.setattr(storebase.serialization, "write_json_file", lambda **kwargs: False)
+    monkeypatch.setattr(storebase.store.serialization, "write_json_file", lambda **kwargs: False)
 
     SampleStore().write_purchases_cache(str(tmp_path), str(tmp_path / "cache.json"), [], "Sample", verbose = True)
 
@@ -659,119 +637,6 @@ def test_purchases_are_wrapped_for_the_store_platform():
 
     assert [purchase.get_value(config.JSON_KEY_STORE_APPID) for purchase in purchases] == ["1"]
     assert purchases[0].get_platform() == store.get_platform()
-
-
-###########################################################
-# Web driver
-###########################################################
-
-def test_web_connect_creates_a_driver(monkeypatch):
-    calls = []
-    monkeypatch.setattr(storebase.webpage, "create_web_driver", lambda **kwargs: calls.append(kwargs) or "driver")
-
-    assert SampleStore().web_connect(headless = True) == "driver"
-    assert calls[0]["make_headless"] is True
-
-
-def test_web_disconnect_destroys_the_driver(monkeypatch):
-    calls = []
-    monkeypatch.setattr(storebase.webpage, "destroy_web_driver", lambda **kwargs: calls.append(kwargs) or True)
-
-    assert SampleStore().web_disconnect("driver") is True
-    assert calls[0]["driver"] == "driver"
-
-
-@pytest.fixture
-def drivers(monkeypatch):
-    state = {"connect_ok": True, "disconnect_ok": True, "connects": [], "disconnected": []}
-
-    def web_connect(store, headless = False, **kwargs):
-        state["connects"].append(headless)
-        return "driver-%d" % len(state["connects"]) if state["connect_ok"] else None
-
-    def web_disconnect(store, web_driver, **kwargs):
-        state["disconnected"].append(web_driver)
-        return state["disconnect_ok"]
-
-    monkeypatch.setattr(SampleStore, "web_connect", web_connect)
-    monkeypatch.setattr(SampleStore, "web_disconnect", web_disconnect)
-    monkeypatch.setattr(storebase.webpage.datautils.time, "sleep", lambda seconds: None)
-    return state
-
-
-def test_a_driver_run_returns_the_result_and_disconnects(drivers):
-    assert SampleStore().run_with_web_driver(lambda driver: driver + " ok", headless = True) == "driver-1 ok"
-    assert drivers["connects"] == [True]
-    assert drivers["disconnected"] == ["driver-1"]
-
-
-def test_a_driver_run_that_cannot_connect_runs_nothing(drivers):
-    drivers["connect_ok"] = False
-    ran = []
-
-    assert SampleStore().run_with_web_driver(ran.append) is None
-    assert ran == []
-
-
-def test_a_driver_run_that_cannot_disconnect_returns_nothing(drivers):
-    drivers["disconnect_ok"] = False
-
-    assert SampleStore().run_with_web_driver(lambda driver: "result") is None
-
-
-def test_a_driver_run_disconnects_even_when_it_raises(drivers):
-    def fail(driver):
-        raise RuntimeError("boom")
-
-    with pytest.raises(RuntimeError):
-        SampleStore().run_with_web_driver(fail)
-    assert drivers["disconnected"] == ["driver-1"]
-
-
-def test_a_scrape_driver_is_headless(drivers):
-    assert SampleStore().connect_scrape_driver() == "driver-1"
-    assert drivers["connects"] == [True]
-
-
-def test_a_scrape_driver_that_cannot_start_fails_the_attempt(drivers):
-    drivers["connect_ok"] = False
-
-    with pytest.raises(storebase.webpage.ScrapeFailed):
-        SampleStore().connect_scrape_driver()
-
-
-def test_a_pretend_scrape_driver_that_cannot_start_is_nothing(drivers):
-    drivers["connect_ok"] = False
-
-    assert SampleStore().connect_scrape_driver(pretend_run = True) is None
-
-
-def test_a_scrape_returns_its_result_and_disconnects(drivers):
-    assert SampleStore().scrape_with_retries(lambda driver: "page of " + driver, "scrape") == "page of driver-1"
-    assert drivers["disconnected"] == ["driver-1"]
-
-
-def test_a_failed_scrape_attempt_is_retried_on_a_fresh_driver(drivers):
-    attempts = []
-
-    def scrape(driver):
-        attempts.append(driver)
-        if len(attempts) == 1:
-            raise storebase.webpage.ScrapeFailed("not yet")
-        return "page"
-
-    assert SampleStore().scrape_with_retries(scrape, "scrape") == "page"
-    assert attempts == ["driver-1", "driver-2"]
-    assert drivers["disconnected"] == ["driver-1", "driver-2"]
-
-
-def test_a_pretend_scrape_without_a_driver_scrapes_nothing(drivers):
-    drivers["connect_ok"] = False
-    scraped = []
-
-    assert SampleStore().scrape_with_retries(scraped.append, "scrape", pretend_run = True) is None
-    assert scraped == []
-    assert drivers["disconnected"] == []
 
 
 ###########################################################
@@ -789,7 +654,7 @@ def archiving(monkeypatch, tmp_path):
             (state["output"] / "game.7z").write_text("x")
         return state["archive_ok"]
 
-    monkeypatch.setattr(storebase.backup, "archive_folder", archive_folder)
+    monkeypatch.setattr(storebase.store.backup, "archive_folder", archive_folder)
     return state
 
 
@@ -814,11 +679,75 @@ def test_a_failed_archive_fails_the_download(archiving):
 
 
 def test_a_download_without_a_temporary_directory_fetches_nothing(archiving, monkeypatch):
-    monkeypatch.setattr(storebase.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
+    monkeypatch.setattr(storebase.store.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
     fetched = []
 
     assert SampleStore().download_and_archive(fetched.append, str(archiving["output"])) is False
     assert fetched == []
+
+
+class ToolStore(SampleStore):
+
+    def get_download_tool_cmd(self):
+        return ["tool"]
+
+    def build_download_cmd(self, tool_cmd, identifier, download_dir):
+        return tool_cmd + ["--get", identifier, "--path", download_dir]
+
+
+@pytest.fixture
+def tool_runs(monkeypatch):
+    state = {"cmds": [], "code": 0}
+
+    def run_returncode_command(cmd, **kwargs):
+        state["cmds"].append(cmd)
+        return state["code"]
+
+    monkeypatch.setattr(storebase.store.command, "run_returncode_command", run_returncode_command)
+    return state
+
+
+def test_a_tool_download_fetches_with_the_built_command_and_archives(archiving, tool_runs):
+    assert ToolStore().download("download_id", str(archiving["output"]), output_name = "Game") is True
+    assert tool_runs["cmds"][0][:3] == ["tool", "--get", "download_id"]
+    assert archiving["archived"][0]["input_path"] == tool_runs["cmds"][0][-1]
+    assert archiving["archived"][0]["output_name"] == "Game"
+
+
+def test_a_failed_tool_download_archives_nothing(archiving, tool_runs):
+    tool_runs["code"] = 1
+
+    assert ToolStore().download("download_id", str(archiving["output"])) is False
+    assert archiving["archived"] == []
+
+
+@pytest.mark.parametrize("identifier", ["", None])
+def test_an_invalid_download_identifier_runs_no_tool(archiving, tool_runs, monkeypatch, identifier):
+    monkeypatch.setattr(storebase.store.logger, "log_warning", lambda message: None)
+
+    assert ToolStore().download(identifier, str(archiving["output"])) is False
+    assert tool_runs["cmds"] == []
+
+
+def test_a_store_without_a_download_tool_runs_nothing(archiving, tool_runs):
+    assert SampleStore().download("download_id", str(archiving["output"])) is False
+    assert tool_runs["cmds"] == []
+    assert SampleStore().build_download_cmd(["tool"], "download_id", "/tmp") is None
+
+
+###########################################################
+# Interactive sign-in
+###########################################################
+
+@pytest.mark.parametrize("code,logged_in", [(0, True), (1, False)])
+def test_a_sign_in_is_recorded_only_when_the_command_exits_cleanly(monkeypatch, code, logged_in):
+    calls = []
+    monkeypatch.setattr(storebase.store.command, "run_interactive_command", lambda cmd, options = None, **kwargs: calls.append((cmd, options)) or code)
+    store = SampleStore()
+
+    assert store.run_login_command(["tool", "login"], options = "opts") is logged_in
+    assert store.is_logged_in() is logged_in
+    assert calls == [(["tool", "login"], "opts")]
 
 
 ###########################################################
@@ -835,7 +764,7 @@ def test_an_invalid_info_identifier_has_no_jsondata():
 
 
 def test_a_valid_info_identifier_gets_default_jsondata(monkeypatch):
-    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", NoManifest)
+    monkeypatch.setattr(storebase.store.manifest, "get_manifest_instance", NoManifest)
     json_data = SampleStore().get_latest_jsondata("Acme")
 
     assert json_data.get_value(config.JSON_KEY_STORE_PATHS) == []
@@ -885,9 +814,76 @@ def test_a_save_path_with_a_folder_nested_in_its_namesake_is_kept(monkeypatch):
         def find_entry_by_name(self, name):
             return Entry()
 
-    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", OneEntryManifest)
+    monkeypatch.setattr(storebase.store.manifest, "get_manifest_instance", OneEntryManifest)
     data = jsondata.JsonData({config.JSON_KEY_STORE_PATHS: [], config.JSON_KEY_STORE_KEYS: []})
 
     augmented = storebase.StoreBase().augment_jsondata(data, "A Game")
 
     assert augmented.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/Saves/Saves/slot1"]
+
+
+def test_a_failed_store_lookup_has_no_jsondata(monkeypatch):
+    monkeypatch.setattr(SampleStore, "fetch_latest_jsondata", lambda store, identifier, **kwargs: None)
+
+    assert SampleStore().get_latest_jsondata("Acme") is None
+
+
+def test_each_manifest_match_adds_its_paths_from_its_own_base(monkeypatch):
+    from joybox import jsondata
+
+    class Entry:
+        def __init__(self, folder):
+            self.folder = folder
+        def get_paths(self, base_path):
+            return ["%s/%s" % (base_path, self.folder)]
+        def get_keys(self):
+            return ["HKEY_" + self.folder]
+
+    class MatchingStore(SampleStore):
+        def get_manifest_matches(self, json_data, identifier):
+            return [(Entry("ById"), "/by/id"), (None, "/unused"), (Entry("ByName"), "/by/name")]
+
+    data = jsondata.JsonData({config.JSON_KEY_STORE_PATHS: [], config.JSON_KEY_STORE_KEYS: []})
+
+    augmented = MatchingStore().augment_jsondata(data, "A Game")
+
+    assert augmented.get_value(config.JSON_KEY_STORE_PATHS) == ["/by/id/ById", "/by/name/ByName"]
+    assert augmented.get_value(config.JSON_KEY_STORE_KEYS) == ["HKEY_ById", "HKEY_ByName"]
+
+
+class PageVideoStore(SampleStore):
+    PAGE_VIDEO_BASE_URL = "https://store.example.com"
+    PAGE_VIDEO_ENDS_WITH = "api=1"
+
+
+@pytest.fixture
+def asset_finders(monkeypatch):
+    calls = []
+    monkeypatch.setattr(storebase.store.metadataassetcollector, "find_metadata_asset", lambda **kwargs: calls.append(("collector", kwargs)) or "cover")
+    monkeypatch.setattr(storebase.store.webfetch, "get_matching_url", lambda **kwargs: calls.append(("page", kwargs)) or "video")
+    return calls
+
+
+def test_a_page_video_store_takes_box_fronts_from_the_collectors(asset_finders):
+    assert PageVideoStore().get_latest_asset_url("page_url", config.AssetType.BOXFRONT, game_name = "Acme") == "cover"
+    assert asset_finders[0][0] == "collector"
+    assert asset_finders[0][1]["game_name"] == "Acme"
+
+
+def test_a_page_video_store_takes_videos_from_the_game_page(asset_finders):
+    assert PageVideoStore().get_latest_asset_url("page_url", config.AssetType.VIDEO) == "video"
+    assert asset_finders[0][0] == "page"
+    assert asset_finders[0][1]["url"] == "page_url"
+    assert asset_finders[0][1]["base_url"] == "https://store.example.com"
+    assert asset_finders[0][1]["starts_with"] == storebase.YOUTUBE_EMBED_URL
+    assert asset_finders[0][1]["ends_with"] == "api=1"
+
+
+def test_a_page_video_store_looks_up_no_other_asset_types(asset_finders):
+    assert PageVideoStore().get_latest_asset_url("page_url", config.AssetType.LABEL) is None
+    assert asset_finders == []
+
+
+def test_name_identified_stores_use_the_name_for_every_lookup():
+    assert set(storebase.NAME_IDENTIFIER_KEYS) == set(config.StoreIdentifierType.members())
+    assert set(storebase.NAME_IDENTIFIER_KEYS.values()) == {config.JSON_KEY_STORE_NAME}

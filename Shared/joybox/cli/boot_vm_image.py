@@ -47,15 +47,9 @@ def build_parser():
 # Boot an installer image, or the disk it installed, in a throwaway UEFI qemu machine, then say what to do next
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Boot it
     success = imageboot.boot_vm_image(

@@ -186,7 +186,7 @@ def launcher(monkeypatch):
         lambda name, key, platform = None: "/emu/%s" % key)
     monkeypatch.setattr(mame.programs, "get_emulator_program", lambda name: "/bin/mame")
     monkeypatch.setattr(mame.gui, "display_error_popup", popup)
-    monkeypatch.setattr(mame.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(mame.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "popups": popups}
 
 

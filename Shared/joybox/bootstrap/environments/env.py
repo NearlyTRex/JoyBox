@@ -117,6 +117,21 @@ class Environment:
                 })
         return results
 
+    # Refresh the apt package lists when aptget is selected, ahead of any install
+    def refresh_package_lists(self):
+        if self.should_process_component("aptget"):
+            logger.log_info("Updating package lists for AptGet")
+            self.available_components["aptget"].update_package_lists()
+
+    # After a clean pass with aptget selected, autoremove unused packages when
+    # --autoremove asks for it; the pass's result, False when autoremove fails
+    def finish_with_autoremove(self, success):
+        if self.flags.autoremove and self.should_process_component("aptget") and success:
+            logger.log_info("Auto-removing unused packages")
+            if not self.available_components["aptget"].auto_remove_packages():
+                return False
+        return success
+
     # Install the components; the base does nothing and returns False
     def setup(self):
         return False

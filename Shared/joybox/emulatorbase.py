@@ -6,6 +6,7 @@ from abc import ABC
 from joybox import archive
 from joybox import config
 from joybox import emulatorcommon
+from joybox import filebulk
 from joybox import gui
 from joybox import fileops
 from joybox import programcatalog
@@ -32,6 +33,10 @@ class EmulatorBase(ABC):
 
     # The name the emulator is registered under, which also files its program data
     NAME = ""
+
+    # Folders whose locker zip archives configure unzips into each platform's setup dir;
+    # when empty, configure copies the system files in as they are
+    SYSTEM_ARCHIVES = ()
 
     # The emulator's registered name
     def get_name(self):
@@ -118,10 +123,20 @@ class EmulatorBase(ABC):
                 return paths.join_paths(saves_base_dir, save_sub_dirs[game_platform])
         return saves_dir
 
-    # Install add-ons
-    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
-        del dlc_dirs, update_dirs, verbose, pretend_run, exit_on_failure
+    # Install the packages in one DLC or update dir; the base has none to install
+    def install_package_dir(self, package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+        del package_dir, verbose, pretend_run, exit_on_failure
         return True
+
+    # Install each DLC dir, then each update dir, by install_package_dir; False at the first failure
+    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        return emulatorcommon.install_package_dirs(
+            self.install_package_dir,
+            dlc_dirs = dlc_dirs,
+            update_dirs = update_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Download the emulator's releases for each platform it installs on, keeping backups,
     # by the [[setup]] steps in its program data
@@ -133,9 +148,45 @@ class EmulatorBase(ABC):
     def setup_offline(self, setup_params = None):
         return programsetup.run_setup_steps(programcatalog.FAMILY_EMULATORS, self.get_name(), offline = True, setup_params = setup_params)
 
-    # Write the config files and copy in verified system files after install; the base does nothing
+    # Write its config files, then verify the locker system files and copy or unzip them
+    # into each platform's setup dir
     def configure(self, setup_params = None):
-        del setup_params
+        if not setup_params:
+            setup_params = config.SetupParams()
+        if not self.write_config_files(setup_params):
+            return False
+        return self.install_system_files(setup_params)
+
+    # Verify the locker system files, then unzip the SYSTEM_ARCHIVES into each platform's
+    # setup dir, or copy the files there when it names none
+    def install_system_files(self, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
+            return False
+        if self.SYSTEM_ARCHIVES:
+            return self.extract_system_archives(setup_params)
+        return self.copy_system_files(setup_params)
+
+    # Copy each locker system file into each platform's setup dir; False at the first failure
+    def copy_system_files(self, setup_params):
+        for filename in self.get_system_files().keys():
+            for platform in ["windows", "linux"]:
+                success = filebulk.smart_copy(
+                    src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir(self.get_name()), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value(self.get_name(), "setup_dir", platform), filename),
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
+                if not success:
+                    logger.log_error("Could not setup %s system files" % self.get_name())
+                    return False
+        return True
+
+    # Unzip each of the SYSTEM_ARCHIVES into each platform's setup dir; False at the first failure
+    def extract_system_archives(self, setup_params):
+        for platform in ["windows", "linux"]:
+            for obj in self.SYSTEM_ARCHIVES:
+                if not self.extract_system_archive(platform, obj, setup_params):
+                    return False
         return True
 
     # Write each config file the emulator lists under the emulators root, logging the

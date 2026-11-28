@@ -254,6 +254,15 @@ def move_split_tracks(chd_file, tracks_dir, iso_file, verbose = False, exit_on_f
             return False
     return True
 
+# Split an unpacked cue/bin through a tracks directory under tmp_dir into the iso, or
+# numbered tracks beside it; False when bchunk cannot split it or writes nothing
+def split_cue_bin_to_iso(bchunk_tool, chd_file, bin_file, cue_file, tmp_dir, iso_file, verbose = False, exit_on_failure = False):
+    tracks_dir = paths.join_paths(tmp_dir, "tracks")
+    fileops.make_directory(src = tracks_dir, verbose = verbose)
+    if not split_cue_bin_tracks(bchunk_tool, chd_file, bin_file, cue_file, tracks_dir, iso_file, verbose, exit_on_failure):
+        return False
+    return move_split_tracks(chd_file, tracks_dir, iso_file, verbose, exit_on_failure)
+
 # Unpack a chd to cue/bin and split it into an iso, or numbered tracks beside it for multi-track discs, with bchunk
 def extract_disc_chd_to_iso(
     chd_file,
@@ -285,11 +294,7 @@ def extract_disc_chd_to_iso(
         # A pretend run has no cue to read
         if pretend_run:
             return True
-        tracks_dir = paths.join_paths(tmp_dir, "tracks")
-        fileops.make_directory(src = tracks_dir, verbose = verbose)
-        if not split_cue_bin_tracks(bchunk_tool, chd_file, tmp_bin, tmp_cue, tracks_dir, iso_file, verbose, exit_on_failure):
-            return False
-        if not move_split_tracks(chd_file, tracks_dir, iso_file, verbose, exit_on_failure):
+        if not split_cue_bin_to_iso(bchunk_tool, chd_file, tmp_bin, tmp_cue, tmp_dir, iso_file, verbose, exit_on_failure):
             return False
     if delete_original:
         fileops.remove_file(src = chd_file, verbose = verbose, exit_on_failure = exit_on_failure)

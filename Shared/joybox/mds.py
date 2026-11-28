@@ -142,19 +142,34 @@ def get_mds_track_length(data, point, extra_offset, data_file, start_offset, sec
         raise MdsError("track %d is empty" % point)
     return pregap, length
 
-# Parse a track block, or None for a block that describes the lead-in
-def parse_mds_track(data, block_offset, mds_file, is_dvd):
-    fields = mds_track_block.unpack_from(data, block_offset)
-    mode, subchannel, point = fields[0], fields[1], fields[4]
-    extra_offset, sector_size, _, start_offset, number_of_files, footer_offset = fields[12:18]
-    if not 1 <= point <= 99:
-        return None
-    track_mode, cue_type, main_size, subchannel_size = get_mds_track_layout(point, mode, subchannel, sector_size, is_dvd)
+# The data file holding a track's sectors, named in its footer block; a track split over
+# several files is refused
+def get_mds_track_data_file(data, mds_file, point, number_of_files, footer_offset):
     if number_of_files != 1:
         raise MdsError("track %d is split over %d data files, which is not supported" % (point, number_of_files))
     filename_offset, widechar, _, _ = mds_footer_block.unpack_from(data, footer_offset)
-    data_file = resolve_mdf_file(mds_file, read_mds_filename(data, filename_offset, widechar))
+    return resolve_mdf_file(mds_file, read_mds_filename(data, filename_offset, widechar))
+
+# Where a track's sectors are, from the block's (extra, sector size, -, start, file count,
+# footer) fields: its start offset, length, pregap and data file
+def locate_mds_track_data(data, mds_file, point, location_fields, is_dvd):
+    extra_offset, sector_size, _, start_offset, number_of_files, footer_offset = location_fields
+    data_file = get_mds_track_data_file(data, mds_file, point, number_of_files, footer_offset)
     pregap, length = get_mds_track_length(data, point, extra_offset, data_file, start_offset, sector_size, is_dvd)
+    return {
+        "start_offset": start_offset,
+        "length": length,
+        "pregap": pregap,
+        "data_file": data_file,
+    }
+
+# Parse a track block, or None for a block that describes the lead-in
+def parse_mds_track(data, block_offset, mds_file, is_dvd):
+    fields = mds_track_block.unpack_from(data, block_offset)
+    mode, subchannel, point, sector_size = fields[0], fields[1], fields[4], fields[13]
+    if not 1 <= point <= 99:
+        return None
+    track_mode, cue_type, main_size, subchannel_size = get_mds_track_layout(point, mode, subchannel, sector_size, is_dvd)
     return {
         "number": point,
         "mode": track_mode,
@@ -162,10 +177,7 @@ def parse_mds_track(data, block_offset, mds_file, is_dvd):
         "sector_size": sector_size,
         "main_size": main_size,
         "subchannel_size": subchannel_size,
-        "start_offset": start_offset,
-        "length": length,
-        "pregap": pregap,
-        "data_file": data_file,
+        **locate_mds_track_data(data, mds_file, point, fields[12:18], is_dvd),
     }
 
 # Parse a descriptor into its medium and tracks

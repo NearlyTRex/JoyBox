@@ -57,9 +57,7 @@ class HumbleBundle(storebase.StoreBase):
             raise RuntimeError("Ini file does not have a valid auth token")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.HumbleBundle", "humblebundle_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.HumbleBundle", "humblebundle_install_dir")
 
     ############################################################
     # Store
@@ -131,7 +129,7 @@ class HumbleBundle(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not info_output:
-            logger.log_error(f"Unable to describe humble purchase {appname}")
+            logger.log_error("Unable to describe humble purchase %s" % appname)
             return None
 
         # Get humble json
@@ -331,7 +329,7 @@ class HumbleBundle(storebase.StoreBase):
     ############################################################
 
     # Appname, name and build from HumbleBundleManager's details, with a fresh random appid each call; None when unknown
-    def get_latest_jsondata(
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -339,12 +337,8 @@ class HumbleBundle(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get manager
+        del branch
         manager_cmd = self.get_manager_cmd()
         if not manager_cmd:
             return None
@@ -365,78 +359,23 @@ class HumbleBundle(storebase.StoreBase):
         json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
         json_data.set_value(config.JSON_KEY_STORE_NAME, self.get_purchase_name(humble_json))
         json_data.set_value(config.JSON_KEY_STORE_BUILDID, self.get_purchase_buildid(humble_json))
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        return json_data
 
     ############################################################
     # Download
     ############################################################
 
-    # Fetch the game for the preferred platform with HumbleBundleManager into a temp dir and archive it into output_dir
-    def download(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        show_progress = False,
-        skip_existing = False,
-        skip_identical = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # HumbleBundleManager's command prefix, the tool download fetches games with; None when it is missing
+    def get_download_tool_cmd(self):
+        return self.get_manager_cmd()
 
-        # Check identifier
-        if not self.is_valid_download_identifier(identifier):
-            logger.log_warning("Download identifier '%s' was not valid" % identifier)
-            return False
-
-        # Get manager
-        manager_cmd = self.get_manager_cmd()
-        if not manager_cmd:
-            return False
-
-        # Download and archive
-        return self.download_and_archive(
-            fetch_func = lambda download_dir: self._run_download_command(
-                manager_cmd, identifier, download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure),
-            output_dir = output_dir,
-            output_name = output_name,
-            clean_output = clean_output,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Download the preferred platform's build into download_dir; True when the manager exits cleanly
-    def _run_download_command(
-        self,
-        manager_cmd,
-        identifier,
-        download_dir,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # The manager command line that fetches the preferred platform's build into download_dir
+    def build_download_cmd(self, tool_cmd, identifier, download_dir):
 
         # Get download command
-        download_cmd = manager_cmd + [
+        return tool_cmd + [
             "--download", identifier,
             "--platform", self.get_preferred_platform(),
             "--path", download_dir,
             "--quiet"
         ]
-
-        # Run download command
-        code = command.run_returncode_command(
-            cmd = download_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return code == 0

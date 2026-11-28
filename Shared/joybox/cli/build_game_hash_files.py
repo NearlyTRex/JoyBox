@@ -5,7 +5,6 @@ from joybox import collection
 from joybox import gamecollection
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import paths
 
 # Build the argument parser
@@ -21,11 +20,7 @@ def build_parser():
         args = ("-l", "--locker_type"),
         arg_type = config.LockerType,
         description = "Locker whose gaming folder holds the files and whose passphrase is used for the encrypted fields; Local when omitted. When given, games are listed from this locker")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
+    parser.add_generation_mode_argument(description = "How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
     parser.add_string_argument(
         args = ("-b", "--locker_base_dir"),
         default = None,
@@ -40,15 +35,9 @@ def build_parser():
 # After a preview, hash each selected game's files into its subcategory hash file, then drop entries whose files are gone
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get locker base dir
     locker_base_dir = paths.expand_path(args.locker_base_dir) if args.locker_base_dir else None

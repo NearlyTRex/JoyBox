@@ -11,29 +11,10 @@ from joybox import serialization
 from joybox import runoptions
 from joybox import logger
 from . import installer
+from . import installer_nginx
 
 # Nginx http config template
-NGINX_HTTP_CONFIG_TEMPLATE = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_HTTP_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
@@ -42,30 +23,10 @@ server {{
         proxy_set_header Cookie $http_cookie;
     }}
 }}
-"""
+""")
 
 # Nginx http websocket config template
-NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
         proxy_pass http://localhost:{port_http};
         proxy_http_version 1.1;
@@ -77,7 +38,7 @@ server {{
         proxy_set_header Cookie $http_cookie;
     }}
 }}
-"""
+""")
 
 # Shell function restore scripts stream each archive through, decrypting .age siblings
 _ARCHIVE_STREAM_FUNCTION = """archive_stream() {

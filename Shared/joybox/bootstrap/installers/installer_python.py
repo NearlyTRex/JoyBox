@@ -189,17 +189,9 @@ class Python(installer.Installer):
 
     # The listed packages split into installed and missing display names
     def get_package_status(self):
-        installed = []
-        missing = []
-        for pkg in self.get_packages():
-            pkg_id = installer.get_package_id(pkg)
-            pkg_info = installer.get_package_info(pkg)
-            display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
-            if self.is_package_installed(pkg_id, self.get_pip_tool(pkg)):
-                installed.append(display_name)
-            else:
-                missing.append(display_name)
-        return {"installed": installed, "missing": missing}
+        return installer.split_package_status(
+            self.get_packages(),
+            lambda pkg: self.is_package_installed(installer.get_package_id(pkg), self.get_pip_tool(pkg)))
 
     # Create the main venv when absent, install joybox into it, then each listed
     # package, isolated ones in their own venv; False at the first failure

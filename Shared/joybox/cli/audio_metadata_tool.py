@@ -4,7 +4,6 @@ from joybox import system
 from joybox import audio
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -48,15 +47,9 @@ def build_parser():
 # Run the chosen tag action (extract to JSON, clear or apply) on the albums of one genre in the local locker's music tree, or of every genre
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Run the action on one genre, or on every genre when it is omitted
     return audio.run_metadata_action_for_genres(

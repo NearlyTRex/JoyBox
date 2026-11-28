@@ -16,22 +16,14 @@ def build_parser():
 # After a preview, rewrite every game hash file with its entries sorted
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show preview
-    if not args.no_preview:
-        details = [environment.get_game_hashes_metadata_root_dir()]
-        if not prompts.prompt_for_preview("Clean game hash files (sort entries)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [environment.get_game_hashes_metadata_root_dir()]
+    if not prompts.confirm_preview(args.no_preview, "Clean game hash files (sort entries)", details):
+        return
 
     # Sort hash files
     success = collection.sort_all_hash_files(

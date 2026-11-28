@@ -1,4 +1,5 @@
 # Imports
+import contextlib
 import os
 import os.path
 
@@ -34,7 +35,8 @@ def remove_temporary_directory(tmp_dir, verbose = False, pretend_run = False):
 
 # Archive picked from those found in archive_dir: the first whose name contains preferred_archive, else the first or last
 # None with an error when there are none or the pick does not exist
-def select_stored_archive(archive_dir, potential_archives, preferred_archive, use_first_found, use_last_found):
+def select_stored_archive(archive_dir, preferred_archive, use_first_found, use_last_found):
+    potential_archives = paths.build_file_list(archive_dir)
     if len(potential_archives) == 0:
         logger.log_error("No available archives found in '%s'" % archive_dir)
         return None
@@ -71,24 +73,42 @@ def setup_stored_release(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get list of potential archives
-    potential_archives = paths.build_file_list(archive_dir)
-
     # Optionally skip when no usable archive is present (e.g. locker not downloaded).
     # This treats a missing directory, an empty directory, or a directory holding
     # only non-archive files all as "nothing to install" so setup can continue.
-    if skip_if_missing and not any(archiveinfo.is_archive(potential_archive) for potential_archive in potential_archives):
+    if skip_if_missing and not has_stored_archive(archive_dir):
         logger.log_warning("Skipping %s: no stored archives available in '%s' (locker not downloaded?)" % (install_name, archive_dir))
         return True
 
-    # Select archive file
-    selected_archive = select_stored_archive(archive_dir, potential_archives, preferred_archive, use_first_found, use_last_found)
-    if selected_archive is None:
-        return False
+    # Select archive file and set it up
+    return setup_selected_release(
+        select_stored_archive(archive_dir, preferred_archive, use_first_found, use_last_found),
+        install_name, install_dir,
+        search_file = search_file, install_files = install_files, chmod_files = chmod_files,
+        rename_files = rename_files, release_type = release_type,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
-    # Setup selected archive
+# Whether archive_dir holds any archive; False for a missing directory
+def has_stored_archive(archive_dir):
+    return any(archiveinfo.is_archive(potential_archive) for potential_archive in paths.build_file_list(archive_dir))
+
+# Install archive_file as setup_general_release does, without a backup; False when no archive was selected
+def setup_selected_release(
+    archive_file,
+    install_name,
+    install_dir,
+    search_file = None,
+    install_files = None,
+    chmod_files = None,
+    rename_files = None,
+    release_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if archive_file is None:
+        return False
     return setup_general_release(
-        archive_file = selected_archive, install_name = install_name, install_dir = install_dir,
+        archive_file = archive_file, install_name = install_name, install_dir = install_dir,
         search_file = search_file, install_files = install_files, chmod_files = chmod_files,
         rename_files = rename_files, release_type = release_type,
         verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
@@ -317,16 +337,8 @@ def backup_release_archive(
     exit_on_failure = False):
     backup_dest = paths.join_paths(backups_dir, paths.get_filename_file(archive_file))
     dest_rel_path = locker.convert_to_relative_path(backup_dest)
-    success = locker.backup(
-        src = archive_file,
-        dest_rel_path = dest_rel_path,
-        locker_type = locker_type,
-        show_progress = True,
-        skip_existing = True,
-        skip_identical = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    success = locker.backup_if_absent(
+        archive_file, dest_rel_path, locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     if not success:
         note_failed_backup(backup_dest)
 
@@ -346,12 +358,11 @@ def unpack_release(
     exit_on_failure = False):
 
     # Create install dir if necessary
-    success = fileops.make_directory(
+    if not fileops.make_directory(
         src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
+        exit_on_failure = exit_on_failure):
         logger.log_error("Unable to create install directory %s" % install_dir)
         return False
 
@@ -390,12 +401,11 @@ def install_general_release(
     exit_on_failure = False):
 
     # Unpack and install release files
-    success = unpack_release(
+    if not unpack_release(
         archive_file, install_name, install_dir, tmp_dir_result,
         search_file = search_file, install_files = install_files, chmod_files = chmod_files,
         rename_files = rename_files, release_type = release_type,
-        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-    if not success:
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
 
     # Backup files
@@ -448,6 +458,18 @@ def setup_general_release(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+# Download archive_url into a temporary directory kept for the block; yields its path, or None with an error on failure
+@contextlib.contextmanager
+def downloaded_release_archive(archive_url, verbose = False, pretend_run = False, exit_on_failure = False):
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            logger.log_error("Unable to create temporary directory")
+            yield None
+            return
+        yield download_release_archive(
+            archive_url, tmp_dir_result,
+            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+
 # Download the archive at archive_url into tmp_dir_result under its own name; its path, or None with an error on failure
 def download_release_archive(archive_url, tmp_dir_result, verbose = False, pretend_run = False, exit_on_failure = False):
     archive_file = paths.join_paths(tmp_dir_result, paths.get_filename_file(archive_url))
@@ -480,15 +502,8 @@ def download_general_release(
     exit_on_failure = False):
 
     # Download release into a temporary directory and set it up from there
-    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
-        if not tmp_dir_result:
-            logger.log_error("Unable to create temporary directory")
-            return False
-
-        # Download release
-        archive_file = download_release_archive(
-            archive_url, tmp_dir_result,
-            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    with downloaded_release_archive(
+        archive_url, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure) as archive_file:
         if not archive_file:
             return False
 
@@ -556,25 +571,17 @@ def find_github_release_url(
     return archive_url
 
 # Install the first GitHub release asset whose name has the given prefix and suffix, from all releases or only the latest
+# release_options are download_general_release's install options
 def download_github_release(
     github_user,
     github_repo,
     starts_with,
     ends_with,
-    install_name,
-    install_dir,
-    search_file = None,
-    backups_dir = None,
-    install_files = None,
-    chmod_files = None,
-    rename_files = None,
-    release_type = None,
     get_latest = False,
-    locker_type = None,
-    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
-    exit_on_failure = False):
+    exit_on_failure = False,
+    **release_options):
 
     # Find matching archive url
     archive_url = find_github_release_url(
@@ -585,32 +592,21 @@ def download_github_release(
 
     # Download release
     return download_general_release(
-        archive_url = archive_url, install_name = install_name, install_dir = install_dir,
-        search_file = search_file, backups_dir = backups_dir, install_files = install_files,
-        chmod_files = chmod_files, rename_files = rename_files, release_type = release_type,
-        locker_type = locker_type, skip_autobackup = skip_autobackup,
-        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        archive_url = archive_url,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure, **release_options)
 
 # Install the release a web page links to, the link chosen by its prefix and suffix
+# release_options are download_general_release's install options
 def download_webpage_release(
     webpage_url,
     webpage_base_url,
     starts_with,
     ends_with,
-    install_name,
-    install_dir,
-    search_file = None,
-    backups_dir = None,
-    install_files = None,
-    chmod_files = None,
-    rename_files = None,
-    release_type = None,
     get_latest = False,
-    locker_type = None,
-    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
-    exit_on_failure = False):
+    exit_on_failure = False,
+    **release_options):
 
     # Get archive url
     archive_url = webfetch.get_matching_url(
@@ -623,8 +619,5 @@ def download_webpage_release(
 
     # Download release
     return download_general_release(
-        archive_url = archive_url, install_name = install_name, install_dir = install_dir,
-        search_file = search_file, backups_dir = backups_dir, install_files = install_files,
-        chmod_files = chmod_files, rename_files = rename_files, release_type = release_type,
-        locker_type = locker_type, skip_autobackup = skip_autobackup,
-        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        archive_url = archive_url,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure, **release_options)

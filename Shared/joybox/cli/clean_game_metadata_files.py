@@ -18,15 +18,9 @@ def build_parser():
 # After a preview, rewrite the Pegasus metadata file of each known category and subcategory in sorted order
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect metadata files to process
     metadata_files_to_process = []
@@ -40,11 +34,9 @@ def main():
             metadata_files_to_process.append((game_category, game_subcategory, metadata_file))
 
     # Show preview
-    if not args.no_preview:
-        details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
-        if not prompts.prompt_for_preview("Clean game metadata files (sort entries)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Clean game metadata files (sort entries)", details):
+        return
 
     # Sort metadata files
     for game_category, game_subcategory, metadata_file in metadata_files_to_process:

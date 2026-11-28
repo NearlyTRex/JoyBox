@@ -75,7 +75,7 @@ def test_manifest_paths_join_the_game_info(epic_store, tools, recording_command,
         def find_entry_by_name(self, name, **kwargs):
             return Entry() if name == "Sugar" else None
 
-    monkeypatch.setattr(epic.storebase.manifest, "get_manifest_instance", OneEntryManifest)
+    monkeypatch.setattr(epic.storebase.store.manifest, "get_manifest_instance", OneEntryManifest)
     data = info(epic_store, recording_command, legendary_info(title = "Hades", version = "1"))
 
     assert data.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/Saves"]

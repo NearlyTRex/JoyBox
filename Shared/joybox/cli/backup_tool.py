@@ -4,7 +4,6 @@ from joybox import system
 from joybox import backup
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -50,18 +49,12 @@ def build_parser():
 # After a preview, copy the source tree into the destination, encrypting or decrypting each file, or pack its second-level folders into split 7z archives
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
+    args = setup.start_command(parser)
 
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
-
-    # Back up the source tree into the destination, after a preview
-    backup.backup_tree(
+    # Resolve the source and destination roots
+    source_file_root, dest_file_root = backup.resolve_backup_roots(
         input_path = args.input_path,
         output_path = args.output_path,
         source_locker = args.source_locker,
@@ -72,6 +65,15 @@ def main():
         game_category = args.game_category,
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run)
+
+    # Back up the source tree into the destination, after a preview
+    backup.backup_tree(
+        source_file_root = source_file_root,
+        dest_file_root = dest_file_root,
+        source_locker = args.source_locker,
+        dest_locker = args.dest_locker,
         backup_type = args.backup_type,
         cryption_type = args.cryption_type,
         exclude_paths = args.exclude_paths,

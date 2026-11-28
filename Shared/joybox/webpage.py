@@ -1,5 +1,6 @@
 # Imports
 import atexit
+import collections
 import os
 import signal
 import subprocess
@@ -460,19 +461,20 @@ LOCATOR_BY_ATTRIBUTES = {
     "partial_link_text": "PARTIAL_LINK_TEXT",
 }
 
-# Element locator
-class ElementLocator:
-    def __init__(self, info):
-        by = _get_selenium("webdriver.common.by").By
-        self.by_type = None
-        self.by_value = None
+# Selenium (By type, value) pair built from a one-key locator dict such as {"id": "main"}
+class ElementLocator(collections.namedtuple("ElementLocator", ["by_type", "by_value"])):
+    __slots__ = ()
+
+    # Resolve the dict's single key to its Selenium By attribute; ValueError on any other shape or key
+    def __new__(cls, info):
         if not isinstance(info, dict) or len(info) != 1:
             raise ValueError("Locator dictionary should contain exactly one key-value pair.")
-        for key, value in info.items():
-            if key not in LOCATOR_BY_ATTRIBUTES:
-                raise ValueError("Unsupported locator type: %s" % key)
-            self.by_type = getattr(by, LOCATOR_BY_ATTRIBUTES[key])
-            self.by_value = value
+        key, value = next(iter(info.items()))
+        if key not in LOCATOR_BY_ATTRIBUTES:
+            raise ValueError("Unsupported locator type: %s" % key)
+        by = _get_selenium("webdriver.common.by").By
+        return super().__new__(cls, getattr(by, LOCATOR_BY_ATTRIBUTES[key]), value)
+
     # The (By type, value) pair Selenium's find calls take
     def get(self):
         return (self.by_type, self.by_value)

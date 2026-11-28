@@ -6,7 +6,7 @@ import sys
 import pytest
 
 # Local imports
-from joybox import llmchat
+from joybox import llmchat, logger
 from joybox.cli import llm_chat
 
 
@@ -54,9 +54,8 @@ def tool(monkeypatch):
     state = {"backend": FakeBackend(), "errors": [], "made": [], "lines": [],
              "commands": []}
     monkeypatch.setattr(llm_chat.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(llm_chat.logger, "setup_logging", lambda: None)
-    monkeypatch.setattr(llm_chat.logger, "log_error", state["errors"].append)
-    monkeypatch.setattr(llmchat.logger, "log_error", state["errors"].append)
+    monkeypatch.setattr(logger, "setup_logging", lambda: None)
+    monkeypatch.setattr(logger, "log_error", state["errors"].append)
     monkeypatch.setattr(sys, "stdin", FakeStdin(tty = True))
 
     def make_backend(kind, endpoint, api_key, model):

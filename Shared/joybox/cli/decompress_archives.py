@@ -4,7 +4,6 @@ from joybox import system
 from joybox import archive
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -25,30 +24,22 @@ def build_parser():
 # After a preview, extract each archive of the chosen types under the input into a folder beside it, or into its own dir
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Archive types: %s" % [t.cval() for t in args.archive_types],
-            "Same dir: %s" % args.same_dir,
-            "Delete originals: %s" % args.delete_originals
-        ]
-        if not prompts.prompt_for_preview("Decompress archives", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Archive types: %s" % [t.cval() for t in args.archive_types],
+        "Same dir: %s" % args.same_dir,
+        "Delete originals: %s" % args.delete_originals
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Decompress archives", details):
+        return
 
     # Decompress archives
     archive.extract_archives_by_type(

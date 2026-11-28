@@ -17,15 +17,9 @@ def build_parser():
 # Fail at the first .exe under the input larger than the 4092 MB archive volume size
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    _, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()

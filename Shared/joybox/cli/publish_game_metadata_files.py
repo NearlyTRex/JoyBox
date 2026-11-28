@@ -16,15 +16,9 @@ def build_parser():
 # After a preview, render the Pegasus metadata of every ROM category as an HTML table page
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show preview
     if not args.no_preview:

@@ -1,11 +1,9 @@
 # Imports
-import sys
 from joybox import config
 from joybox import system
 from joybox import lockersync
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 
 # Build the argument parser
 def build_parser():
@@ -31,18 +29,12 @@ def build_parser():
 # Sync the primary locker to each secondary, reviewing the planned changes in an editor before applying them
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Run sync
-    success = lockersync.run_locker_sync(
+    return lockersync.run_locker_sync(
         primary_locker_type = args.primary_locker,
         secondary_locker_names = args.secondary_lockers,
         skip_cache = args.skip_cache,
@@ -50,8 +42,6 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
-    if not success:
-        sys.exit(1)
 
 # Run through the shared error handling
 def run():

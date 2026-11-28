@@ -78,7 +78,6 @@ from joybox.collection.metadata import (
     update_game_metadata_entry,
     build_game_metadata_entry,
     build_all_game_metadata_entries,
-    iterate_selected_json_games,
     publish_game_metadata_entries,
     publish_all_game_metadata_entries,
     get_metadata_games,
@@ -136,6 +135,10 @@ from joybox.collection.uploading import (
     upload_all_game_files,
     get_upload_game_roots,
     upload_game_roots)
+from joybox.collection.selection import (
+    iterate_selected_subcategories,
+    iterate_selected_json_games,
+    iterate_selected_locker_games)
 from joybox.collection.scanning import (
     check_scan_filters,
     scan_game_files,
@@ -199,7 +202,9 @@ __all__ = [
     "update_game_metadata_entry",
     "build_game_metadata_entry",
     "build_all_game_metadata_entries",
+    "iterate_selected_subcategories",
     "iterate_selected_json_games",
+    "iterate_selected_locker_games",
     "publish_game_metadata_entries",
     "publish_all_game_metadata_entries",
     "login_game_store",

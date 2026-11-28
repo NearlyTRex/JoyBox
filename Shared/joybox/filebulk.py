@@ -48,74 +48,49 @@ def _globbed_transfers(glob_pattern, dest_dir):
         dest_path = os.path.join(dest_dir, glob_file)
         yield src_path, dest_path, os.path.join(dest_dir, paths.get_filename_directory(glob_file))
 
-# Create one file's output directory and transfer it; on failure with skip_on_error the
-# failure is reported to the error log
-def _transfer_listed_file(
-    input_file,
-    output_file,
-    output_dir,
-    delete_afterwards,
-    show_progress,
-    skip_existing,
-    skip_identical,
-    skip_on_error,
-    error_log_path,
-    case_sensitive_paths,
-    verbose,
-    pretend_run,
-    per_file_exit):
+# Create one file's output directory and transfer it with the bulk options, quitting on
+# failure only when per_file_exit; with skip_on_error the failure goes to the error log
+def _transfer_listed_file(input_file, output_file, output_dir, delete_afterwards, options, per_file_exit):
+    verbose = options["verbose"]
+    pretend_run = options["pretend_run"]
     success = fileops.make_directory(
         src = output_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = per_file_exit)
     if not success:
-        if skip_on_error:
-            fileops.report_fileio_error(input_file, None, error_log_path, verbose, pretend_run)
+        if options["skip_on_error"]:
+            fileops.report_fileio_error(input_file, None, options["error_log_path"], verbose, pretend_run)
         return False
     success = fileops.transfer_file(
         src = input_file,
         dest = output_file,
         delete_afterwards = delete_afterwards,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        case_sensitive_paths = case_sensitive_paths,
+        show_progress = options["show_progress"],
+        skip_existing = options["skip_existing"],
+        skip_identical = options["skip_identical"],
+        case_sensitive_paths = options["case_sensitive_paths"],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = per_file_exit)
-    if not success and skip_on_error:
-        fileops.report_fileio_error(input_file, output_file, error_log_path, verbose, pretend_run)
+    if not success and options["skip_on_error"]:
+        fileops.report_fileio_error(input_file, output_file, options["error_log_path"], verbose, pretend_run)
     return success
 
-# Transfer each (input, output, output directory); with skip_on_error, count failures and warn
-# about them under the operation's name, else stop with False at the first
-def _transfer_file_list(
-    operation,
-    transfers,
-    delete_afterwards,
-    show_progress,
-    skip_existing,
-    skip_identical,
-    skip_on_error,
-    error_log_path,
-    case_sensitive_paths,
-    verbose,
-    pretend_run,
-    exit_on_failure):
-    per_file_exit = exit_on_failure and not skip_on_error
+# Transfer each (input, output, output directory) with the bulk options; with skip_on_error,
+# count failures and warn about them under the operation's name, else stop with False at the first
+def _transfer_file_list(operation, transfers, delete_afterwards, options):
+    skip_on_error = options["skip_on_error"]
+    per_file_exit = options["exit_on_failure"] and not skip_on_error
     failed_count = 0
     for input_file, output_file, output_dir in transfers:
-        success = _transfer_listed_file(
-            input_file, output_file, output_dir, delete_afterwards,
-            show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
-            case_sensitive_paths, verbose, pretend_run, per_file_exit)
-        if success:
+        if _transfer_listed_file(input_file, output_file, output_dir, delete_afterwards, options, per_file_exit):
             continue
         if not skip_on_error:
             return False
         failed_count += 1
     if skip_on_error and failed_count > 0:
+        error_log_path = options["error_log_path"]
         logger.log_warning("%s: %d file(s) skipped due to errors%s" % (
             operation,
             failed_count,
@@ -144,15 +119,9 @@ def copy_contents(
         operation = "copy_contents",
         transfers = _content_transfers(src, dest, ignore_symlinks, follow_symlink_dirs),
         delete_afterwards = False,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        skip_on_error = skip_on_error,
-        error_log_path = error_log_path,
-        case_sensitive_paths = case_sensitive_paths,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        options = _bulk_options(
+            show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
+            case_sensitive_paths, verbose, pretend_run, exit_on_failure))
 
 # Move every file under src into dest keeping relative paths, leaving src's folders behind;
 # with skip_on_error, log failures and carry on; False when src is missing or a file fails
@@ -176,15 +145,9 @@ def move_contents(
         operation = "move_contents",
         transfers = _content_transfers(src, dest, ignore_symlinks, follow_symlink_dirs),
         delete_afterwards = True,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        skip_on_error = skip_on_error,
-        error_log_path = error_log_path,
-        case_sensitive_paths = case_sensitive_paths,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        options = _bulk_options(
+            show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
+            case_sensitive_paths, verbose, pretend_run, exit_on_failure))
 
 # Copy each file the glob matches into dest_dir, keeping its path relative to the glob's folder
 def copy_globbed_files(
@@ -203,15 +166,9 @@ def copy_globbed_files(
         operation = "copy_globbed_files",
         transfers = _globbed_transfers(glob_pattern, dest_dir),
         delete_afterwards = False,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        skip_on_error = skip_on_error,
-        error_log_path = error_log_path,
-        case_sensitive_paths = case_sensitive_paths,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        options = _bulk_options(
+            show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
+            case_sensitive_paths, verbose, pretend_run, exit_on_failure))
 
 # Move each file the glob matches into dest_dir, keeping its path relative to the glob's folder
 def move_globbed_files(
@@ -230,15 +187,9 @@ def move_globbed_files(
         operation = "move_globbed_files",
         transfers = _globbed_transfers(glob_pattern, dest_dir),
         delete_afterwards = True,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        skip_on_error = skip_on_error,
-        error_log_path = error_log_path,
-        case_sensitive_paths = case_sensitive_paths,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        options = _bulk_options(
+            show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
+            case_sensitive_paths, verbose, pretend_run, exit_on_failure))
 
 ###########################################################
 # Smart copy/move utilities
@@ -278,17 +229,17 @@ def _smart_transfer_by_kind(src, dest, delete_afterwards, ignore_symlinks, follo
     if not success:
         return False
     if config.TOKEN_GLOB in paths.get_filename_basename(src):
-        if delete_afterwards:
-            return move_globbed_files(glob_pattern = src, dest_dir = dest, **options)
-        return copy_globbed_files(glob_pattern = src, dest_dir = dest, **options)
+        transfer_globbed = move_globbed_files if delete_afterwards else copy_globbed_files
+        return transfer_globbed(glob_pattern = src, dest_dir = dest, **options)
     if os.path.isdir(src):
-        symlink_options = {"ignore_symlinks": ignore_symlinks, "follow_symlink_dirs": follow_symlink_dirs}
-        if delete_afterwards:
-            return move_contents(src = src, dest = dest, **symlink_options, **options)
-        return copy_contents(src = src, dest = dest, **symlink_options, **options)
-    if delete_afterwards:
-        return fileops.transfer_file(src = src, dest = dest, delete_afterwards = True, **options)
-    return fileops.transfer_file(src = src, dest = dest, **options)
+        transfer_contents = move_contents if delete_afterwards else copy_contents
+        return transfer_contents(
+            src = src,
+            dest = dest,
+            ignore_symlinks = ignore_symlinks,
+            follow_symlink_dirs = follow_symlink_dirs,
+            **options)
+    return fileops.transfer_file(src = src, dest = dest, delete_afterwards = delete_afterwards, **options)
 
 # Copy a glob's matches, a directory's contents or one file to dest, picking by what src names
 def smart_copy(
@@ -349,10 +300,7 @@ def smart_transfer(
     options = _bulk_options(
         show_progress, skip_existing, skip_identical, skip_on_error, error_log_path,
         case_sensitive_paths, verbose, pretend_run, exit_on_failure)
-    symlink_options = {"ignore_symlinks": ignore_symlinks, "follow_symlink_dirs": follow_symlink_dirs}
-    if delete_afterwards:
-        return smart_move(src = src, dest = dest, **symlink_options, **options)
-    return smart_copy(src = src, dest = dest, **symlink_options, **options)
+    return _smart_transfer_by_kind(src, dest, delete_afterwards, ignore_symlinks, follow_symlink_dirs, options)
 
 ###########################################################
 # Sync utilities

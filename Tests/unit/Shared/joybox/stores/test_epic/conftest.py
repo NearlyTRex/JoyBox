@@ -37,4 +37,4 @@ def no_manifest(monkeypatch):
     class EmptyManifest:
         def find_entry_by_name(self, **kwargs):
             return None
-    monkeypatch.setattr(epic.storebase.manifest, "get_manifest_instance", EmptyManifest)
+    monkeypatch.setattr(epic.storebase.store.manifest, "get_manifest_instance", EmptyManifest)

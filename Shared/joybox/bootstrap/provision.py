@@ -327,19 +327,25 @@ class Provisioner:
             if not connection:
                 logger.log_error("Neither %s nor root can log in with %s" % (user, self.server.get_key_filepath()))
                 return False
-            if not self.run_step(connection, "account creation", build_create_user_command(user)):
+            if not self._create_account(connection, user):
                 return False
-            password = self.server.get_password()
-            if password:
-                secret_path = "/root/.joybox-account-%s" % uuid.uuid4().hex[:8]
-                if not self.put_secret(connection, secret_path, "%s:%s\n" % (user, password)):
-                    return False
-                if not self.run_step(connection, "account password", build_set_password_command(secret_path)):
-                    return False
         if not self.can_log_in(user):
             logger.log_error("%s still cannot log in after being created" % user)
             return False
         return True
+
+    # Create the account over a root connection and set its password when one
+    # is configured
+    def _create_account(self, connection, user):
+        if not self.run_step(connection, "account creation", build_create_user_command(user)):
+            return False
+        password = self.server.get_password()
+        if not password:
+            return True
+        secret_path = "/root/.joybox-account-%s" % uuid.uuid4().hex[:8]
+        if not self.put_secret(connection, secret_path, "%s:%s\n" % (user, password)):
+            return False
+        return self.run_step(connection, "account password", build_set_password_command(secret_path))
 
     # The day-0 scripts, run as root; once hardening has closed root login they
     # are done and are skipped
@@ -422,6 +428,12 @@ class Provisioner:
         if self.server.is_local_vm():
             virtualmachine.delete_snapshot(name, SNAPSHOT_PRE_SSHD, verbose = self.flags.verbose)
             virtualmachine.snapshot_vm(name, SNAPSHOT_PRE_SSHD, verbose = self.flags.verbose)
+        if not self._run_sshd_hardening(user):
+            return False
+        return self._check_sshd_hardened(user, name)
+
+    # Push the day-0 scripts as root and run the sshd hardening script
+    def _run_sshd_hardening(self, user):
         with self.session("root") as connection:
             if not connection:
                 return False
@@ -429,12 +441,14 @@ class Provisioner:
             if not remote_dir:
                 return False
             try:
-                success = self.run_step(connection, "sshd hardening", [
+                return self.run_step(connection, "sshd hardening", [
                     remote_dir + "/scripts/init_sshd.sh", "--user", user])
             finally:
                 self.remove_day0_scripts(connection, remote_dir)
-            if not success:
-                return False
+
+    # After hardening the account must still log in and root must not; a test
+    # guest that lost the account's login is reverted to its pre-sshd snapshot
+    def _check_sshd_hardened(self, user, name):
         if not self.can_log_in(user):
             if self.server.is_local_vm():
                 logger.log_error("%s lost its key login; reverting to %s" % (user, SNAPSHOT_PRE_SSHD))

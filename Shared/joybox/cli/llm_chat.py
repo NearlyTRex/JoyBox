@@ -1,7 +1,6 @@
 # Imports
 from joybox import arguments
 from joybox import llmchat
-from joybox import logger
 from joybox import setup
 from joybox import system
 
@@ -21,15 +20,9 @@ def build_parser():
 # Chat in the terminal with an Ollama, OpenAI-compatible or Claude backend, seeded with a prompt and files, or answer one question and exit
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show the chunker registry and leave
     if args.list_chunkers:

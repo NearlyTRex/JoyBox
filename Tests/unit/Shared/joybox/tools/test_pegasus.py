@@ -193,7 +193,7 @@ def test_configure_without_metadata_writes_empty_game_dirs(tools_root):
 
 def test_configure_stops_when_a_file_cannot_be_written(monkeypatch, tools_root):
     touched = Recorder([False])
-    monkeypatch.setattr(pegasus.fileops, "touch_file", touched)
+    monkeypatch.setattr(pegasus.toolbase.fileops, "touch_file", touched)
 
     assert not pegasus.Pegasus().configure()
     assert len(touched.calls) == 1
@@ -201,7 +201,7 @@ def test_configure_stops_when_a_file_cannot_be_written(monkeypatch, tools_root):
 
 def test_configure_puts_pegasus_in_the_menu(monkeypatch, tools_root):
     launchers = Recorder([True])
-    monkeypatch.setattr(pegasus.desktopentry, "set_launcher", launchers)
+    monkeypatch.setattr(pegasus.toolbase.desktopentry, "set_launcher", launchers)
 
     assert pegasus.Pegasus().configure()
 
@@ -210,6 +210,6 @@ def test_configure_puts_pegasus_in_the_menu(monkeypatch, tools_root):
 
 
 def test_a_failed_pegasus_launcher_fails_the_configure(monkeypatch, tools_root):
-    monkeypatch.setattr(pegasus.desktopentry, "set_launcher", Recorder([False]))
+    monkeypatch.setattr(pegasus.toolbase.desktopentry, "set_launcher", Recorder([False]))
 
     assert not pegasus.Pegasus().configure()

@@ -1,4 +1,5 @@
 # Imports
+import dataclasses
 import importlib
 import os
 import os.path
@@ -72,63 +73,57 @@ def _get_popup_extra_option_names(message_type):
             return option_names
     return ("non_blocking", "line_width")
 
+# How a popup looks and behaves; the file, folder, auto-close and line width options
+# reach only the message types whose popups take them
+@dataclasses.dataclass
+class PopupStyle:
+    button_color: object = None
+    background_color: object = None
+    text_color: object = None
+    font: object = ("Times", 14)
+    line_width: object = None
+    icon_file: object = None
+    image_file: object = None
+    no_window: bool = False
+    save_as: bool = False
+    file_types: object = None
+    initial_folder: object = None
+    default_path: object = None
+    auto_close_duration: int = 5
+    non_blocking: bool = False
+    no_titlebar: bool = False
+    grab_anywhere: bool = False
+    keep_on_top: object = None
+    modal: bool = True
+
 # Keyword options for the message type's popup: the common appearance options plus the
 # extras that type takes
-def _get_popup_options(
-    message_type, title_text, button_color, background_color, text_color, font, line_width,
-    icon_file, image_file, no_window, save_as, file_types, initial_folder, default_path,
-    auto_close_duration, non_blocking, no_titlebar, grab_anywhere, keep_on_top, modal):
+def _get_popup_options(message_type, title_text, style):
     options = {
         "title": title_text,
-        "button_color": button_color,
-        "background_color": background_color,
-        "text_color": text_color,
-        "icon": icon_file,
-        "font": font,
-        "no_titlebar": no_titlebar,
-        "grab_anywhere": grab_anywhere,
-        "keep_on_top": keep_on_top,
-        "image": image_file,
-        "modal": modal
-    }
-    extra_options = {
-        "line_width": line_width,
-        "no_window": no_window,
-        "save_as": save_as,
-        "file_types": file_types,
-        "initial_folder": initial_folder,
-        "default_path": default_path,
-        "auto_close_duration": auto_close_duration,
-        "non_blocking": non_blocking
+        "button_color": style.button_color,
+        "background_color": style.background_color,
+        "text_color": style.text_color,
+        "icon": style.icon_file,
+        "font": style.font,
+        "no_titlebar": style.no_titlebar,
+        "grab_anywhere": style.grab_anywhere,
+        "keep_on_top": style.keep_on_top,
+        "image": style.image_file,
+        "modal": style.modal
     }
     for option_name in _get_popup_extra_option_names(message_type):
-        options[option_name] = extra_options[option_name]
+        options[option_name] = getattr(style, option_name)
     return options
 
-# Show a PySimpleGUI popup of the given message type and return its answer (button text, entered text or chosen path)
+# Show a PySimpleGUI popup of the given message type in the given style (the default
+# PopupStyle when None) and return its answer (button text, entered text or chosen path)
 def display_popup(
     title_text,
     message_text,
     message_type = None,
-    button_color = None,
-    background_color = None,
     theme = "DarkAmber",
-    text_color = None,
-    font = ("Times", 14),
-    line_width = None,
-    icon_file = None,
-    image_file = None,
-    no_window = False,
-    save_as = False,
-    file_types = None,
-    initial_folder = None,
-    default_path = None,
-    auto_close_duration = 5,
-    non_blocking = False,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = None,
-    modal = True):
+    style = None):
 
     # Import PySimpleGUI
     psg = _import_pysimplegui()
@@ -141,10 +136,7 @@ def display_popup(
     psg.theme(theme)
 
     # Display popup (and return result)
-    popup_options = _get_popup_options(
-        message_type, title_text, button_color, background_color, text_color, font, line_width,
-        icon_file, image_file, no_window, save_as, file_types, initial_folder, default_path,
-        auto_close_duration, non_blocking, no_titlebar, grab_anywhere, keep_on_top, modal)
+    popup_options = _get_popup_options(message_type, title_text, style or PopupStyle())
     return _get_popup_func(psg, message_type)(message_text, **popup_options)
 
 # Show an OK popup kept on top
@@ -153,7 +145,7 @@ def display_info_popup(title_text, message_text):
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.OK,
-        keep_on_top = True)
+        style = PopupStyle(keep_on_top = True))
 
 # Show a yes/no popup kept on top; answering No quits the program
 def display_warning_popup(title_text, message_text):
@@ -161,7 +153,7 @@ def display_warning_popup(title_text, message_text):
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.YES_NO,
-        keep_on_top = True)
+        style = PopupStyle(keep_on_top = True))
     if response == "No":
         runtime.quit_program()
 
@@ -171,7 +163,7 @@ def display_error_popup(title_text, message_text):
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.ERROR,
-        keep_on_top = True)
+        style = PopupStyle(keep_on_top = True))
     runtime.quit_program()
 
 # Prompt for text in a popup; returns the entered text, or None when cancelled

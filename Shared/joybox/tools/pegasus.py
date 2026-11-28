@@ -1,11 +1,8 @@
 # Local imports
 from joybox import config
-from joybox import logger
 from joybox import paths
 from joybox import environment
-from joybox import fileops
 from joybox import toolbase
-from joybox import desktopentry
 
 # Every dir under the Pegasus metadata root that holds a metadata.pegasus.txt
 def get_game_dirs():
@@ -35,29 +32,14 @@ class Pegasus(toolbase.ToolBase):
         config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = "\n".join(game_dirs)
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Pegasus config files")
-                return False
+        if not self.write_config_files(setup_params, config_files):
+            return False
 
         # Put it in the app menu
-        success = desktopentry.set_launcher(
+        return self.set_menu_launcher(
             enabled = True,
             filename = "joybox-pegasus.desktop",
-            name = "Pegasus",
             description = "Browse and launch the game collection",
-            command = "launch_pegasus",
+            command_name = "launch_pegasus",
             icon = "applications-games",
-            verbose = setup_params.verbose,
-            pretend_run = setup_params.pretend_run,
-            exit_on_failure = setup_params.exit_on_failure)
-        if not success:
-            logger.log_error("Could not setup the Pegasus launcher")
-            return False
-        return True
+            setup_params = setup_params)

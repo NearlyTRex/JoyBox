@@ -184,46 +184,26 @@ def sort_hash_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Hash entry fields that default to an empty string, and those held as ints
+HASH_ENTRY_STRING_FIELDS = ["dir", "filename", "filename_enc", "hash", "hash_enc"]
+HASH_ENTRY_INT_FIELDS = ["size", "size_enc", "mtime"]
+
+# A hash entry's int field as an int: a string is parsed, falling back to 0, and anything else is kept
+def _coerce_hash_entry_int(value):
+    if not isinstance(value, str):
+        return value
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
 # Normalize hash entry to ensure all fields exist with correct types
 def normalize_hash_entry(data):
     normalized = dict(data)
-
-    # Ensure string fields exist
-    if "dir" not in normalized:
-        normalized["dir"] = ""
-    if "filename" not in normalized:
-        normalized["filename"] = ""
-    if "filename_enc" not in normalized:
-        normalized["filename_enc"] = ""
-    if "hash" not in normalized:
-        normalized["hash"] = ""
-    if "hash_enc" not in normalized:
-        normalized["hash_enc"] = ""
-
-    # Ensure size fields are int
-    if "size" not in normalized:
-        normalized["size"] = 0
-    elif isinstance(normalized["size"], str):
-        try:
-            normalized["size"] = int(normalized["size"])
-        except ValueError:
-            normalized["size"] = 0
-    if "size_enc" not in normalized:
-        normalized["size_enc"] = 0
-    elif isinstance(normalized["size_enc"], str):
-        try:
-            normalized["size_enc"] = int(normalized["size_enc"])
-        except ValueError:
-            normalized["size_enc"] = 0
-
-    # Ensure mtime is int
-    if "mtime" not in normalized:
-        normalized["mtime"] = 0
-    elif isinstance(normalized["mtime"], str):
-        try:
-            normalized["mtime"] = int(normalized["mtime"])
-        except ValueError:
-            normalized["mtime"] = 0
+    for field in HASH_ENTRY_STRING_FIELDS:
+        normalized.setdefault(field, "")
+    for field in HASH_ENTRY_INT_FIELDS:
+        normalized[field] = _coerce_hash_entry_int(normalized.get(field, 0))
     return normalized
 
 # Normalize all entries in a hash contents dictionary
@@ -475,6 +455,15 @@ def _prepare_hash_output_file(read_func, output_file, verbose, pretend_run, exit
             exit_on_failure = exit_on_failure)
     return hash_contents
 
+# Run _hash_listed_file over each file in file_list, updating hash_contents
+def _hash_listed_files(
+    file_list, output_file, hash_contents, base_path, offset, passphrase,
+    include_enc_fields, verbose, pretend_run, exit_on_failure):
+    for file_path in file_list:
+        _hash_listed_file(
+            file_path, output_file, hash_contents, base_path, offset, passphrase,
+            include_enc_fields, verbose, pretend_run, exit_on_failure)
+
 # Hash files in a directory and write to output file
 def hash_files(
     src,
@@ -499,10 +488,9 @@ def hash_files(
     hash_contents = _prepare_hash_output_file(read_func, output_file, verbose, pretend_run, exit_on_failure)
 
     # Hash each file
-    for file_path in file_list:
-        _hash_listed_file(
-            file_path, output_file, hash_contents, base_path, offset, passphrase,
-            include_enc_fields, verbose, pretend_run, exit_on_failure)
+    _hash_listed_files(
+        file_list, output_file, hash_contents, base_path, offset, passphrase,
+        include_enc_fields, verbose, pretend_run, exit_on_failure)
 
     # Write hash file
     if not pretend_run and hash_contents:
@@ -719,6 +707,14 @@ def _clean_locker_hash_files(hash_file_list, base_dir, verbose = False, pretend_
             failed_hash_files.append(hash_file)
     return failed_hash_files
 
+# The relative file paths grouped under the locker hash file each belongs to at depth
+def _group_files_by_hash_file(file_list, depth):
+    files_by_hash_file = {}
+    for file_path in file_list:
+        hash_file = environment.get_file_locker_hashes_file(file_path, depth = depth)
+        files_by_hash_file.setdefault(hash_file, []).append(file_path)
+    return files_by_hash_file
+
 # Write the XXH3 hash, size and mtime of each filtered file in the locker directory to CSVs
 # grouped by its leading folders, quitting on a bad depth or directory; False, logged, when any
 # hash file could not be written or cleaned
@@ -732,18 +728,14 @@ def hash_locker_files(locker_base_directory, include_filter = None, exclude_filt
     exclude_patterns = _split_filter_patterns(exclude_filter)
     _log_locker_hash_sources(base_dir, include_patterns, exclude_patterns)
 
-    # Gather the filtered files, grouped by their hash file
+    # Gather the filtered files
     logger.log_info("Scanning files...")
     file_list = paths.build_file_list(base_dir, use_relative_paths = True)
     file_list = filter_locker_files(file_list, include_patterns, exclude_patterns, include_hidden = include_hidden)
     logger.log_info("Found %d files" % len(file_list))
-    files_by_hash_file = {}
-    for file_path in file_list:
-        hash_file = environment.get_file_locker_hashes_file(file_path, depth = depth)
-        files_by_hash_file.setdefault(hash_file, []).append(file_path)
 
     # Write and clean the hash files
-    hash_files_processed, failed_hash_files = _write_locker_hash_groups(files_by_hash_file, base_dir, verbose = verbose, pretend_run = pretend_run)
+    hash_files_processed, failed_hash_files = _write_locker_hash_groups(_group_files_by_hash_file(file_list, depth), base_dir, verbose = verbose, pretend_run = pretend_run)
     failed_hash_files += _clean_locker_hash_files(hash_files_processed, base_dir, verbose = verbose, pretend_run = pretend_run)
     if failed_hash_files:
         logger.log_error("%d hash files could not be written" % len(failed_hash_files))

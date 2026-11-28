@@ -15,7 +15,7 @@ def no_manifest(monkeypatch):
     class EmptyManifest:
         def find_entry_by_name(self, **kwargs):
             return None
-    monkeypatch.setattr(amazon.storebase.manifest, "get_manifest_instance", EmptyManifest)
+    monkeypatch.setattr(amazon.storebase.store.manifest, "get_manifest_instance", EmptyManifest)
 
 
 def details(amazon_store, recording_command, output):
@@ -88,7 +88,7 @@ def test_manifest_paths_join_the_details(amazon_store, tools, recording_command,
         def find_entry_by_name(self, name, **kwargs):
             return Entry() if name == APPID else None
 
-    monkeypatch.setattr(amazon.storebase.manifest, "get_manifest_instance", OneEntryManifest)
+    monkeypatch.setattr(amazon.storebase.store.manifest, "get_manifest_instance", OneEntryManifest)
     data = details(amazon_store, recording_command, {"product": {"title": "Tomb Raider"}})
 
     assert data.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/saves"]

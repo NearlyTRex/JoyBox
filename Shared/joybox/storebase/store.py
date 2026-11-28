@@ -5,19 +5,35 @@ import os.path
 
 # Local imports
 from joybox import config
+from joybox import command
 from joybox import logger
 from joybox import backup
 from joybox import jsondata
-from joybox import webpage
-from joybox import webcookies
+from joybox.storebase import web
 from joybox import paths
 from joybox import strings
 from joybox import manifest
 from joybox import environment
 from joybox import fileops
 from joybox import serialization
+from joybox import settings
+from joybox import webfetch
 from joybox import metadataassetcollector
 from joybox import metadatacollector
+
+# Where store pages embed their YouTube videos
+YOUTUBE_EMBED_URL = "https://www.youtube.com/embed"
+
+# Identifier keys of a store that knows its games only by name
+NAME_IDENTIFIER_KEYS = types.MappingProxyType({
+    config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+    config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME,
+})
 
 # Replace the general save folders, store install dir and user id in a path with their tokens
 def convert_to_tokenized_path(
@@ -67,7 +83,7 @@ def get_appdata_path_variants(path):
     return variants
 
 # Base store
-class StoreBase:
+class StoreBase(web.StoreWebMixin):
 
     # What each store sets to say which store it is and where its games are filed
     TYPE = None
@@ -77,6 +93,11 @@ class StoreBase:
     SUBCATEGORY = ""
     KEY = ""
     IDENTIFIER_KEYS = types.MappingProxyType({})
+
+    # A store that sets this takes videos from the YouTube embed on the game page, found
+    # from this base url, and looks up only box fronts and videos
+    PAGE_VIDEO_BASE_URL = None
+    PAGE_VIDEO_ENDS_WITH = ""
 
     # Constructor
     def __init__(self):
@@ -142,6 +163,12 @@ class StoreBase:
     # Where the store installs games, from the settings; None when it has none
     def get_install_dir(self):
         return self.install_dir
+
+    # Read the install dir from the settings field; RuntimeError when it is not a valid path
+    def load_install_dir(self, section, field):
+        self.install_dir = settings.get_path_value(section, field)
+        if not paths.is_path_valid(self.install_dir):
+            raise RuntimeError("Ini file does not have a valid install dir")
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -264,121 +291,24 @@ class StoreBase:
         del verbose, pretend_run, exit_on_failure
         return False
 
-    # Start a Selenium web driver for scraping the store, headless when asked
-    def web_connect(
+    # Run an interactive sign-in command and record the sign-in when it exits cleanly
+    def run_login_command(
         self,
-        headless = False,
+        login_cmd,
+        options = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-
-        # Create web driver
-        return webpage.create_web_driver(
-            make_headless = headless,
+        code = command.run_interactive_command(
+            cmd = login_cmd,
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Shut down a web driver from web_connect
-    def web_disconnect(
-        self,
-        web_driver,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Destroy web driver
-        return webpage.destroy_web_driver(
-            driver = web_driver,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Run func(web_driver) on a driver from web_connect and disconnect it afterwards;
-    # func's result, or None when connecting or disconnecting fails
-    def run_with_web_driver(
-        self,
-        func,
-        headless = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Connect to web
-        web_driver = self.web_connect(
-            headless = headless,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not web_driver:
-            return None
-
-        # Run, then disconnect whatever the outcome
-        result = None
-        try:
-            result = func(web_driver)
-        finally:
-            disconnected = self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        if not disconnected:
-            return None
-        return result
-
-    # A headless web driver for one scrape attempt; None in a pretend run that got none, else ScrapeFailed without one
-    def connect_scrape_driver(self, verbose = False, pretend_run = False):
-        web_driver = self.web_connect(
-            headless = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not web_driver:
-            if pretend_run:
-                return None
-            raise webpage.ScrapeFailed("Failed to connect to web driver")
-        return web_driver
-
-    # Run scrape_func(web_driver) on a fresh headless driver per attempt with retries,
-    # disconnecting the driver between attempts and at the end; the scrape's result
-    def scrape_with_retries(self, scrape_func, operation_name, verbose = False, pretend_run = False):
-
-        # Store web driver for cleanup
-        web_driver = None
-
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            if web_driver:
-                self.web_disconnect(
-                    web_driver = web_driver,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                web_driver = None
-
-        # Scrape function
-        def attempt_scrape():
-            nonlocal web_driver
-            web_driver = self.connect_scrape_driver(verbose = verbose, pretend_run = pretend_run)
-            if not web_driver:
-                return None
-            return scrape_func(web_driver)
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_scrape,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = operation_name)
-        finally:
-            cleanup_driver()
-
-    # Saved browser cookie file named after the store
-    def get_cookie_file(self):
-        return webcookies.get_cookie_file(self.get_name().lower())
+        if code != 0:
+            return False
+        self.set_logged_in(True)
+        return True
 
     ############################################################
     # Versions
@@ -502,7 +432,14 @@ class StoreBase:
         json_data.set_value(config.JSON_KEY_STORE_BUILDID, config.DEFAULT_BUILDID)
         return json_data
 
-    # Merge Ludusavi manifest save paths and keys into the json and drop C:, store install
+    # Ludusavi manifest entries for the game, each with the base path its save paths are rooted at;
+    # the entry named by the identifier in the base, None when there is none
+    def get_manifest_matches(self, json_data, identifier):
+        del json_data
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_name(name = identifier)
+        return [(manifest_entry, config.TOKEN_GAME_INSTALL_DIR)]
+
+    # Merge the manifest matches' save paths and keys into the json and drop C:, store install
     # dir and store user id paths; returns the json sorted
     def augment_jsondata(
         self,
@@ -518,13 +455,10 @@ class StoreBase:
         game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
 
         # Augment by manifest
-        manifest_entry = manifest.get_manifest_instance().find_entry_by_name(
-            name = identifier)
-        if manifest_entry:
-            base_path = config.TOKEN_GAME_INSTALL_DIR
-            manifest_paths = manifest_entry.get_paths(base_path)
-            game_paths = list(set(game_paths).union(manifest_paths))
-            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
+        for manifest_entry, base_path in self.get_manifest_matches(json_data, identifier):
+            if manifest_entry:
+                game_paths = list(set(game_paths).union(manifest_entry.get_paths(base_path)))
+                game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
 
         # Remove invalid paths
         game_paths = [item for item in game_paths if not item.startswith("C:")]
@@ -539,7 +473,20 @@ class StoreBase:
         json_data.set_value(config.JSON_KEY_STORE_KEYS, strings.sort_strings(game_keys))
         return json_data
 
-    # Default store json augmented from the manifest; None for an invalid info identifier
+    # Store json from the store's own lookup, before augmenting; None when the store cannot
+    # describe the game. The default json in the base
+    def fetch_latest_jsondata(
+        self,
+        identifier,
+        branch = None,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        del identifier, branch, verbose, pretend_run, exit_on_failure
+        return self.create_default_jsondata()
+
+    # Store json from fetch_latest_jsondata, augmented from the manifest; None for an invalid
+    # info identifier or when the fetch fails
     def get_latest_jsondata(
         self,
         identifier,
@@ -549,14 +496,23 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        del branch
         if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
-        # Build jsondata
+        # Fetch jsondata
+        json_data = self.fetch_latest_jsondata(
+            identifier = identifier,
+            branch = branch,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if json_data is None:
+            return None
+
+        # Augment jsondata
         return self.augment_jsondata(
-            json_data = self.create_default_jsondata(),
+            json_data = json_data,
             identifier = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -592,7 +548,9 @@ class StoreBase:
     # Assets
     ############################################################
 
-    # Url of an artwork asset found by the asset collectors; None for an invalid identifier
+    # Url of an artwork asset; None for an invalid identifier. Stores with a PAGE_VIDEO_BASE_URL
+    # take box fronts from find_boxfront_url and videos from the game page, and look up nothing
+    # else; the rest ask the asset collectors for any type
     def get_latest_asset_url(
         self,
         identifier,
@@ -608,10 +566,53 @@ class StoreBase:
             return None
 
         # Collect asset url
+        if not self.PAGE_VIDEO_BASE_URL:
+            return self.find_collected_asset_url(identifier, asset_type, game_name, verbose, pretend_run, exit_on_failure)
+        if asset_type == config.AssetType.BOXFRONT:
+            return self.find_boxfront_url(identifier, game_name, verbose, pretend_run, exit_on_failure)
+        if asset_type == config.AssetType.VIDEO:
+            return self.find_page_video_url(identifier, verbose, pretend_run, exit_on_failure)
+        return None
+
+    # Url of an artwork asset found by the asset collectors, searched by game name or else the identifier
+    def find_collected_asset_url(
+        self,
+        identifier,
+        asset_type,
+        game_name = None,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         return metadataassetcollector.find_metadata_asset(
             game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,
             asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Box front url for a store with a PAGE_VIDEO_BASE_URL; the asset collectors' in the base
+    def find_boxfront_url(
+        self,
+        identifier,
+        game_name = None,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return self.find_collected_asset_url(identifier, config.AssetType.BOXFRONT, game_name, verbose, pretend_run, exit_on_failure)
+
+    # The YouTube embed url on the game page, matched from PAGE_VIDEO_BASE_URL; None when there is none
+    def find_page_video_url(
+        self,
+        page_url,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return webfetch.get_matching_url(
+            url = page_url,
+            base_url = self.PAGE_VIDEO_BASE_URL,
+            starts_with = YOUTUBE_EMBED_URL,
+            ends_with = self.PAGE_VIDEO_ENDS_WITH,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -668,7 +669,32 @@ class StoreBase:
     # Download
     ############################################################
 
-    # Download a game's files into output_dir; False in the base
+    # Command prefix of the tool download fetches games with; empty in the base, which has none
+    def get_download_tool_cmd(self):
+        return []
+
+    # The download tool command line that fetches the game into download_dir; None in the base
+    def build_download_cmd(self, tool_cmd, identifier, download_dir):
+        del tool_cmd, identifier, download_dir
+
+    # Run the download command line built for download_dir; True when it exits cleanly
+    def run_download_command(
+        self,
+        tool_cmd,
+        identifier,
+        download_dir,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        code = command.run_returncode_command(
+            cmd = self.build_download_cmd(tool_cmd, identifier, download_dir),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
+
+    # Fetch the game with the download tool into a temp dir and archive it into output_dir; True
+    # when output_dir ends up with files. False without a download tool or a valid identifier
     def download(
         self,
         identifier,
@@ -682,9 +708,31 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        del (identifier, output_dir, output_name, branch, clean_output, show_progress,
-            skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
-        return False
+        del branch
+
+        # Check identifier
+        if not self.is_valid_download_identifier(identifier):
+            logger.log_warning("Download identifier '%s' was not valid" % identifier)
+            return False
+
+        # Get download tool
+        tool_cmd = self.get_download_tool_cmd()
+        if not tool_cmd:
+            return False
+
+        # Download and archive
+        return self.download_and_archive(
+            fetch_func = lambda download_dir: self.run_download_command(
+                tool_cmd, identifier, download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure),
+            output_dir = output_dir,
+            output_name = output_name,
+            clean_output = clean_output,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Run fetch_func(download_dir) in a temporary directory and archive what it fetched
     # into output_dir; True when the fetch succeeds and output_dir ends up with files

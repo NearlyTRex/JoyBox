@@ -3,7 +3,6 @@ from joybox import system
 from joybox.nintendo import threeds
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -23,15 +22,9 @@ def build_parser():
 # After a preview, convert, trim, untrim, extract or inspect each 3DS CIA and CCI file under the input
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -41,14 +34,12 @@ def main():
         args.cia_to_cci, args.cci_to_cia, args.trim_cci, args.untrim_cci, args.extract_cia, args.info)
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action
-        ]
-        if not prompts.prompt_for_preview("3DS ROM tool", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Action: %s" % action
+    ]
+    if not prompts.confirm_preview(args.no_preview, "3DS ROM tool", details):
+        return
 
     # Run the chosen actions on the roms
     threeds.process_3ds_roms(

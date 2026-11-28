@@ -3,7 +3,6 @@ from joybox import system
 from joybox import playstation
 from joybox import arguments
 from joybox import setup
-from joybox import logger
 from joybox import prompts
 
 # Build the argument parser
@@ -24,15 +23,9 @@ def build_parser():
 # After a preview, strip, unstrip, trim, untrim or verify each Vita cartridge dump under the input
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, _ = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -41,16 +34,14 @@ def main():
     action = playstation.get_psv_action_name(args.strip, args.unstrip, args.trim, args.untrim, args.verify)
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action
-        ]
-        if args.delete_originals:
-            details.append("Delete originals: %s" % args.delete_originals)
-        if not prompts.prompt_for_preview("PSV ROM tool", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Action: %s" % action
+    ]
+    if args.delete_originals:
+        details.append("Delete originals: %s" % args.delete_originals)
+    if not prompts.confirm_preview(args.no_preview, "PSV ROM tool", details):
+        return
 
     # Run the action on the psv files
     playstation.process_psv_files(

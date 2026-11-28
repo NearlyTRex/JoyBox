@@ -180,6 +180,11 @@ def fill_value(value, asked, unknown_when_unset = False):
         return None
     if not isinstance(value, str) or not PLACEHOLDER.search(value):
         return value
+    return fill_string_value(value, asked, unknown_when_unset)
+
+# Fill in a string holding placeholders: a lone placeholder is its value as is, otherwise each
+# "/" part is filled and the parts joined as a path; None when unknown_when_unset and a part is empty
+def fill_string_value(value, asked, unknown_when_unset = False):
     whole = PLACEHOLDER.fullmatch(value)
     if whole:
         return fill_placeholder(whole.group(1), asked)

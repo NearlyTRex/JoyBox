@@ -403,25 +403,36 @@ def create_vm(
     if not can_create_vm(vm_name, verbose, pretend_run):
         return False
 
-    # Read what the guest will trust
-    ssh_public_key, console_password_hash = _read_guest_credentials(ssh_key_file, console_password, verbose, exit_on_failure)
-    if not ssh_public_key:
-        return False
-
-    # Create the guest's own disk on top of the backing image
-    connection, disk_image = _create_vm_disk(vm_name, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure)
-    if not disk_image:
-        return False
-
-    # Build the cloud-init seed
-    seed_image = _build_seed_image(
-        connection, vm_name, image_dir, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure)
+    # Create the guest's disk and cloud-init seed
+    disk_image, seed_image = _create_vm_images(
+        vm_name, ssh_key_file, console_password, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure)
     if not seed_image:
         return False
 
     # Bring up the network, pin the guest's address, and install
     return _install_vm(
         vm_name, address, network, disk_image, seed_image, memory, vcpus, verbose, pretend_run, exit_on_failure)
+
+# Read what the guest will trust, then create its disk on top of the backing image and its
+# cloud-init seed; (disk image, seed image), or (None, None) when a step fails
+def _create_vm_images(vm_name, ssh_key_file, console_password, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure):
+
+    # Read what the guest will trust
+    ssh_public_key, console_password_hash = _read_guest_credentials(ssh_key_file, console_password, verbose, exit_on_failure)
+    if not ssh_public_key:
+        return None, None
+
+    # Create the guest's own disk on top of the backing image
+    connection, disk_image = _create_vm_disk(vm_name, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure)
+    if not disk_image:
+        return None, None
+
+    # Build the cloud-init seed
+    seed_image = _build_seed_image(
+        connection, vm_name, image_dir, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure)
+    if not seed_image:
+        return None, None
+    return disk_image, seed_image
 
 # Fetch the release's backing image and create the guest's disk on top of it
 # Returns the local connection and the disk image, or (None, None) on failure
@@ -486,28 +497,36 @@ def _read_guest_credentials(ssh_key_file, console_password, verbose, exit_on_fai
         return None, None
     return ssh_public_key, console_password_hash
 
+# Write the cloud-init user-data and meta-data into seed_dir; their paths, or None when one cannot be written
+def _write_seed_files(seed_dir, vm_name, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure):
+    seed_files = []
+    for name, contents in [
+        ("user-data", build_user_data(vm_name, ssh_public_key, console_password_hash)),
+        ("meta-data", build_meta_data(vm_name))]:
+        seed_file = paths.join_paths(seed_dir, name)
+        success = fileops.touch_file(
+            src = seed_file,
+            contents = contents,
+            private = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+        seed_files.append(seed_file)
+    return seed_files
+
 # Write the cloud-init user and meta data and pack them into the guest's seed image; its path, or None
 def _build_seed_image(connection, vm_name, image_dir, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure):
     seed_image = get_seed_image(vm_name, image_dir)
     with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as seed_dir:
         if not seed_dir:
             return None
-        user_data = paths.join_paths(seed_dir, "user-data")
-        meta_data = paths.join_paths(seed_dir, "meta-data")
-        for seed_file, contents in [
-            (user_data, build_user_data(vm_name, ssh_public_key, console_password_hash)),
-            (meta_data, build_meta_data(vm_name))]:
-            success = fileops.touch_file(
-                src = seed_file,
-                contents = contents,
-                private = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return None
+        seed_files = _write_seed_files(seed_dir, vm_name, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure)
+        if not seed_files:
+            return None
         code = connection.run_return_code(
-            cmd = ["cloud-localds", seed_image, user_data, meta_data],
+            cmd = ["cloud-localds", seed_image, *seed_files],
             sudo = True)
         if code != 0:
             return None
@@ -722,6 +741,14 @@ def _update_test_hosts(vm_name, domain, remove, verbose, pretend_run, exit_on_fa
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Call the handler for action from handlers; quits when there is none
+def _dispatch_vm_action(action, handlers):
+    handler = handlers.get(action)
+    if handler:
+        handler()
+    else:
+        logger.log_error("Unknown action '%s'" % action, quit_program = True)
+
 # Run a testvm action on a guest: create, destroy, snapshot, revert, snapshots (logged one
 # per line), ip (written to stdout), console or hosts; quits on any other action
 def run_vm_action(
@@ -740,7 +767,7 @@ def run_vm_action(
     pretend_run = False,
     exit_on_failure = False):
     flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
-    handlers = {
+    _dispatch_vm_action(action, {
         "create": lambda: _create_test_vm(vm_name, ssh_key_file, address, memory, vcpus, disk_size, release, flags),
         "destroy": lambda: destroy_vm(vm_name = vm_name, **flags),
         "snapshot": lambda: snapshot_vm(vm_name = vm_name, snapshot_name = snapshot_name, **flags),
@@ -749,9 +776,4 @@ def run_vm_action(
         "ip": lambda: logger.log_output("%s\n" % _get_test_vm_address(vm_name, verbose)),
         "console": lambda: command.run_interactive_command(cmd = get_console_command(vm_name), **flags),
         "hosts": lambda: _update_test_hosts(vm_name, domain, remove_hosts, verbose, pretend_run, exit_on_failure),
-    }
-    handler = handlers.get(action)
-    if handler:
-        handler()
-    else:
-        logger.log_error("Unknown action '%s'" % action, quit_program = True)
+    })

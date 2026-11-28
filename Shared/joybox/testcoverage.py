@@ -262,6 +262,21 @@ def render_report(results, untested, ci_floor = None, limit = 20, tests_passed =
     lines += _render_nothing_run_lines(nothing_run, limit)
     return "\n".join(lines) + "\n"
 
+# The report's title, then when it was measured if the results say
+def _render_title_lines(results):
+    lines = ["# Test coverage of %s" % LIBRARY_PREFIX.rstrip("/"), ""]
+    timestamp = results.get("meta", {}).get("timestamp")
+    if timestamp:
+        lines.append("Measured %s." % timestamp.split(".")[0].replace("T", " "))
+        lines.append("")
+    return lines
+
+# The summary bullet for how far the overall percent clears or falls short of the CI floor
+def _render_ci_floor_line(percent, ci_floor):
+    margin = percent - ci_floor
+    verdict = "clears it by %.1f points" % margin if margin >= 0 else "**falls %.1f points short**" % -margin
+    return "- **CI floor: %s**; this %s." % (format_percent(ci_floor), verdict)
+
 # The report's title, measurement time and summary bullets for overall cover, the CI floor, tests, files and functions
 def _render_summary_lines(results, ci_floor, tests_passed, nothing_run, functions, never_run):
     files = results["files"]
@@ -273,19 +288,13 @@ def _render_summary_lines(results, ci_floor, tests_passed, nothing_run, function
     below_half = sum(1 for e in files.values() if get_percent(e["summary"]) < 50)
 
     # Summary
-    lines = ["# Test coverage of %s" % LIBRARY_PREFIX.rstrip("/"), ""]
-    timestamp = results.get("meta", {}).get("timestamp")
-    if timestamp:
-        lines.append("Measured %s." % timestamp.split(".")[0].replace("T", " "))
-        lines.append("")
+    lines = _render_title_lines(results)
     lines.append("- **Overall: %s.** %s of %s statements are never run, and %s of %s branch outcomes never taken." % (
         format_percent(percent),
         format_count(totals["missing_lines"]), format_count(totals["num_statements"]),
         format_count(missed_branches), format_count(totals.get("num_branches", 0))))
     if ci_floor is not None:
-        margin = percent - ci_floor
-        verdict = "clears it by %.1f points" % margin if margin >= 0 else "**falls %.1f points short**" % -margin
-        lines.append("- **CI floor: %s**; this %s." % (format_percent(ci_floor), verdict))
+        lines.append(_render_ci_floor_line(percent, ci_floor))
     if tests_passed is not None:
         lines.append("- **Tests:** %s." % ("all passed" if tests_passed else "**some failed**, so these numbers reflect a broken run"))
     lines.append("- **Files:** %d measured, %d fully covered, %d below 50%%, %d with nothing run." % (
@@ -425,15 +434,17 @@ def run_action(
     if not results:
         return False
 
-    # Render
+    # Render and output
+    if not _report_results(results, repo_dir, module, limit, show_source, tests_passed, output_file, verbose):
+        return False
+    return tests_passed is not False
+
+# Render the report on the results and write or print it; False when either fails
+def _report_results(results, repo_dir, module, limit, show_source, tests_passed, output_file, verbose):
     report = _render_action_report(results, repo_dir, module, limit, show_source, tests_passed)
     if report is None:
         return False
-
-    # Output
-    if not _output_report(report, output_file, verbose):
-        return False
-    return tests_passed is not False
+    return _output_report(report, output_file, verbose)
 
 # The checkout to measure, or None after logging an unknown action or a missing checkout
 def _get_checked_repo_dir(action):

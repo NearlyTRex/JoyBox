@@ -179,7 +179,7 @@ def test_a_popup_applies_its_theme(psg):
 def test_an_auto_close_popup_carries_its_duration(psg):
     gui.display_popup(
         "Title", "Message", config.MessageType.AUTO_CLOSE,
-        auto_close_duration = 9, non_blocking = True)
+        style = gui.PopupStyle(auto_close_duration = 9, non_blocking = True))
     kwargs = psg.popups[0][2]
 
     assert kwargs["auto_close_duration"] == 9
@@ -195,8 +195,9 @@ def test_a_text_prompt_takes_no_line_width(psg):
 def test_a_file_chooser_carries_its_file_options(psg):
     gui.display_popup(
         "Title", "Message", config.MessageType.GET_FILE,
-        save_as = True, file_types = (("Text", "*.txt"),),
-        initial_folder = "/start", default_path = "/start/file.txt")
+        style = gui.PopupStyle(
+            save_as = True, file_types = (("Text", "*.txt"),),
+            initial_folder = "/start", default_path = "/start/file.txt"))
     kwargs = psg.popups[0][2]
 
     assert kwargs["save_as"] is True
@@ -207,7 +208,7 @@ def test_a_file_chooser_carries_its_file_options(psg):
 
 def test_a_folder_chooser_has_no_save_mode(psg):
     gui.display_popup(
-        "Title", "Message", config.MessageType.GET_FOLDER, initial_folder = "/start")
+        "Title", "Message", config.MessageType.GET_FOLDER, style = gui.PopupStyle(initial_folder = "/start"))
     kwargs = psg.popups[0][2]
 
     assert kwargs["initial_folder"] == "/start"
@@ -216,8 +217,9 @@ def test_a_folder_chooser_has_no_save_mode(psg):
 
 def test_a_plain_popup_carries_its_appearance(psg):
     gui.display_popup(
-        "Title", "Message", button_color = "red", line_width = 40,
-        icon_file = "icon.png", image_file = "image.png", keep_on_top = True)
+        "Title", "Message", style = gui.PopupStyle(
+            button_color = "red", line_width = 40,
+            icon_file = "icon.png", image_file = "image.png", keep_on_top = True))
     kwargs = psg.popups[0][2]
 
     assert kwargs["button_color"] == "red"

@@ -292,6 +292,25 @@ def _prepare_boot_files(
         return None
     return disk_image, firmware_vars
 
+# (disk, firmware code, firmware variables) for the machine once the workstation has what
+# booting needs and the disk and variables are prepared; None when either step fails
+def _prepare_boot(vm_name, iso_file, boot_dir, disk_size, reset, verbose, pretend_run, exit_on_failure):
+
+    # Check what this workstation is missing before anything is made
+    firmware = _check_boot_requirements(iso_file)
+    if not firmware:
+        return None
+    firmware_code, firmware_template = firmware
+
+    # A disk to install onto and firmware variables of its own, started over when asked
+    boot_files = _prepare_boot_files(
+        vm_name, boot_dir, disk_size, firmware_template, iso_file, reset,
+        verbose, pretend_run, exit_on_failure)
+    if not boot_files:
+        return None
+    disk_image, firmware_vars = boot_files
+    return disk_image, firmware_code, firmware_vars
+
 # Log the boot plan, since an install is a long wait at a window, then run qemu
 # interactively, accelerated when /dev/kvm is usable; True when it exits cleanly
 def _run_boot(
@@ -352,21 +371,12 @@ def boot_vm_image(
     vcpus = get_boot_setting("vm_vcpus", DEFAULT_BOOT_VCPUS, vcpus)
     ssh_port = get_boot_setting("vm_ssh_port", DEFAULT_SSH_PORT, ssh_port)
 
-    # Check what this workstation is missing before anything is made
-    firmware = _check_boot_requirements(iso_file)
-    if not firmware:
-        return False
-    firmware_code, firmware_template = firmware
-
-    # A disk to install onto and firmware variables of its own, started over when asked
-    boot_files = _prepare_boot_files(
-        vm_name, boot_dir, disk_size, firmware_template, iso_file, reset,
-        verbose, pretend_run, exit_on_failure)
+    # Check the workstation, then make the disk and firmware variables
+    boot_files = _prepare_boot(vm_name, iso_file, boot_dir, disk_size, reset, verbose, pretend_run, exit_on_failure)
     if not boot_files:
         return False
-    disk_image, firmware_vars = boot_files
 
     # Say what will happen, then run it
     return _run_boot(
-        disk_image, firmware_code, firmware_vars, iso_file, memory, vcpus, ssh_port,
+        *boot_files, iso_file, memory, vcpus, ssh_port,
         headless, serial_file, verbose, pretend_run, exit_on_failure)

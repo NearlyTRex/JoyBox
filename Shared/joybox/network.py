@@ -347,25 +347,34 @@ def is_network_share_mounted(mount_dir, base_location, network_share):
     # Network share was not mounted
     return False
 
+# Win32 NETRESOURCEW struct describing a network resource for WNetAddConnection2W
+class NetResource(ctypes.Structure):
+    _fields_ = [
+        ("dwScope", wintypes.DWORD),
+        ("dwType", wintypes.DWORD),
+        ("dwDisplayType", wintypes.DWORD),
+        ("dwUsage", wintypes.DWORD),
+        ("lpLocalName", wintypes.LPWSTR),
+        ("lpRemoteName", wintypes.LPWSTR),
+        ("lpComment", wintypes.LPWSTR),
+        ("lpProvider", wintypes.LPWSTR),
+    ]
+
+    # A disk resource mapping local drive to remote share
+    @classmethod
+    def disk(cls, drive, remote):
+        return cls(
+            dwType = 1,  # RESOURCETYPE_DISK
+            lpLocalName = drive,
+            lpRemoteName = remote)
+
+    # Connect this resource with the credentials; the Win32 error code, 0 on success
+    def add_connection(self, username, password):
+        return ctypes.windll.mpr.WNetAddConnection2W(ctypes.byref(self), password, username, 0)
+
 # Map a windows drive to a share, passing the password in-process rather than on a command line
 def map_windows_drive(drive, remote, username, password):
-    class NETRESOURCE(ctypes.Structure):
-        _fields_ = [
-            ("dwScope", wintypes.DWORD),
-            ("dwType", wintypes.DWORD),
-            ("dwDisplayType", wintypes.DWORD),
-            ("dwUsage", wintypes.DWORD),
-            ("lpLocalName", wintypes.LPWSTR),
-            ("lpRemoteName", wintypes.LPWSTR),
-            ("lpComment", wintypes.LPWSTR),
-            ("lpProvider", wintypes.LPWSTR),
-        ]
-
-    resource = NETRESOURCE(
-        dwType = 1,  # RESOURCETYPE_DISK
-        lpLocalName = drive,
-        lpRemoteName = remote)
-    return ctypes.windll.mpr.WNetAddConnection2W(ctypes.byref(resource), password, username, 0)
+    return NetResource.disk(drive, remote).add_connection(username, password)
 
 # Directory for mount.cifs credentials; a comma would split the -o option string
 def get_cifs_credentials_dir():
@@ -716,16 +725,8 @@ def backup_github_repository_archive(
     pretend_run = False,
     exit_on_failure = False):
     dest_rel_path = locker.convert_to_relative_path(out_file_archive)
-    success = locker.backup(
-        src = tmp_file_archive,
-        dest_rel_path = dest_rel_path,
-        locker_type = locker_type,
-        show_progress = True,
-        skip_existing = True,
-        skip_identical = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    success = locker.backup_if_absent(
+        tmp_file_archive, dest_rel_path, locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     if not success:
         logger.log_error("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
@@ -793,6 +794,10 @@ def zip_github_repository_download(
         return False
     return True
 
+# Timestamped zip path under output_dir for a snapshot of github_repo
+def get_github_repository_archive_path(output_dir, github_repo):
+    return paths.join_paths(output_dir, github_repo + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
+
 # Archive github repository via a temporary directory
 def archive_github_repository_via(
     tmp_dir,
@@ -812,25 +817,22 @@ def archive_github_repository_via(
     tmp_dir_download = paths.join_paths(tmp_dir, "download")
     tmp_dir_archive = paths.join_paths(tmp_dir, "archive")
     tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
-    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
     make_github_archive_dirs(tmp_dir_download, tmp_dir_archive, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Download repository
-    success = download_github_repository_snapshot(
+    if not download_github_repository_snapshot(
         tmp_dir_download, github_user, github_repo,
         github_token = github_token, github_branch = github_branch, recursive = recursive, clean = clean,
-        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-    if not success:
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
 
     # Archive repository
-    success = zip_github_repository_download(
+    if not zip_github_repository_download(
         tmp_file_archive, tmp_dir_download, github_user, github_repo,
-        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-    if not success:
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
 
     # Backup archive
     return backup_github_repository_archive(
-        tmp_file_archive, out_file_archive, locker_type, github_user, github_repo,
+        tmp_file_archive, get_github_repository_archive_path(output_dir, github_repo), locker_type, github_user, github_repo,
         verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)

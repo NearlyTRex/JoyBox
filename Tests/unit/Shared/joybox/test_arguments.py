@@ -478,6 +478,89 @@ def test_every_category_is_mapped_when_none_is_given(argv):
     assert set(selected) == set(config.Category.members())
 
 
+def test_the_generation_mode_defaults_to_standard(argv):
+    parser = build()
+    parser.add_generation_mode_argument()
+
+    assert parser.parse_args().generation_mode == config.GenerationModeType.STANDARD
+
+
+def test_the_generation_mode_takes_its_own_description():
+    parser = build()
+    parser.add_generation_mode_argument(description = "Own words")
+
+    assert describe_options(parser)["generation_mode"]["description"] == "Own words"
+
+
+###########################################################
+# Package setup arguments
+#
+# setup_tools and setup_game_emulators share their selection and backup
+# options, worded for their kind of package.
+###########################################################
+
+def package_parser():
+    parser = build()
+    parser.add_package_setup_arguments("emulator", "emulators", "Dolphin,PCSX2")
+    return parser
+
+
+def test_package_setup_options_default_to_every_package_backed_up_everywhere(argv):
+    args = package_parser().parse_args()
+
+    assert (args.offline, args.configure, args.clean, args.force, args.packages) == (False, False, False, False, None)
+    assert (args.locker_type, args.skip_autobackup) == (config.LockerType.ALL, False)
+
+
+def test_package_setup_options_are_worded_for_the_package_kind():
+    options = describe_options(package_parser())
+
+    assert options["clean"]["description"] == "Remove the entire emulators directory before installing anything"
+    assert options["packages"]["description"] == (
+        "Comma-separated emulator names to install, e.g. `\"Dolphin,PCSX2\"`; all emulators when omitted")
+
+
+def test_no_packages_selects_every_package(argv):
+    assert package_parser().get_selected_packages(["Dolphin"], "emulator") is None
+
+
+def test_the_named_packages_are_selected_without_blanks(argv):
+    argv("-k", " Dolphin, ,PCSX2 ")
+
+    assert package_parser().get_selected_packages(["Dolphin", "PCSX2"], "emulator") == ["Dolphin", "PCSX2"]
+
+
+def test_an_unknown_package_quits_naming_it(argv, monkeypatch):
+    errors = []
+    monkeypatch.setattr(arguments.logger, "log_error", lambda message, quit_program = False: errors.append((message, quit_program)))
+    argv("-k", "Dolphin,Dolfin")
+
+    package_parser().get_selected_packages(["Dolphin"], "emulator")
+
+    assert errors == [("Unknown emulator packages: Dolfin", True)]
+
+
+###########################################################
+# Archive creation arguments
+###########################################################
+
+def test_archive_creation_options_default_to_an_unsplit_unencrypted_zip_keeping_originals(argv):
+    parser = build()
+    parser.add_archive_creation_arguments(delete_description = "Delete each file")
+
+    assert parser.get_archive_creation_options() == {
+        "archive_type": config.ArchiveFileType.ZIP, "password": None, "volume_size": None, "delete_originals": False}
+
+
+def test_archive_creation_options_carry_what_was_given(argv):
+    argv("-a", "7Z", "-w", "secret", "-s", "100m", "-d")
+    parser = build()
+    parser.add_archive_creation_arguments(delete_description = "Delete each file")
+
+    assert parser.get_archive_creation_options() == {
+        "archive_type": config.ArchiveFileType.SEVENZIP, "password": "secret", "volume_size": "100m", "delete_originals": True}
+
+
 ###########################################################
 # Common arguments
 ###########################################################

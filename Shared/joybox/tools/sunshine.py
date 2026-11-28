@@ -13,7 +13,6 @@ from joybox import environment
 from joybox import fileops
 from joybox import serialization
 from joybox import toolbase
-from joybox import desktopentry
 from joybox import settings
 
 
@@ -117,33 +116,18 @@ class Sunshine(toolbase.ToolBase):
         config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = build_apps("linux")
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine config files")
-                return False
+        if not self.write_config_files(setup_params, config_files):
+            return False
 
         # Write the web page login, so the page never asks for one
         if not write_logins(setup_params):
             return False
 
         # Put it in the app menu on a machine whose streaming role uses it
-        success = desktopentry.set_launcher(
+        return self.set_menu_launcher(
             enabled = settings.get_bool_value("Tools.Sunshine", "sunshine_streaming_host", False, throw_exception = False),
             filename = "joybox-sunshine.desktop",
-            name = "Sunshine",
             description = "Stream this machine's games to Moonlight clients",
-            command = "launch_sunshine",
+            command_name = "launch_sunshine",
             icon = "video-display",
-            verbose = setup_params.verbose,
-            pretend_run = setup_params.pretend_run,
-            exit_on_failure = setup_params.exit_on_failure)
-        if not success:
-            logger.log_error("Could not setup the Sunshine launcher")
-            return False
-        return True
+            setup_params = setup_params)

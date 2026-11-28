@@ -492,8 +492,8 @@ def test_latest_metadata_without_a_store_is_collected(scraping):
 def building(monkeypatch):
     state = {"created": [], "updated": [], "create_ok": True, "update_ok": True}
 
-    def create_game_metadata_entry(**kwargs):
-        state["created"].append(kwargs["game_name"])
+    def create_game_metadata_entry(game_supercategory, game_category, game_subcategory, game_name, **kwargs):
+        state["created"].append(game_name)
         return state["create_ok"]
 
     def update_game_metadata_entry(**kwargs):
