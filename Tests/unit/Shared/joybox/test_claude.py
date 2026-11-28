@@ -11,7 +11,7 @@ import pytest
 from joybox import claude
 
 anthropic = pytest.importorskip("anthropic")
-httpx = pytest.importorskip("httpx")
+httpx2 = pytest.importorskip("httpx2")
 
 FAKE_API_KEY = "configured-for-tests"
 
@@ -157,7 +157,7 @@ def test_an_empty_reply_is_none(client):
 def test_an_api_error_becomes_a_warning(client, monkeypatch, error, expected):
     warnings = []
     monkeypatch.setattr(claude.logger, "log_warning", warnings.append)
-    client.error = anthropic.APIError(error, httpx.Request("POST", "https://api.anthropic.com/v1/messages"), body = None)
+    client.error = anthropic.APIError(error, httpx2.Request("POST", "https://api.anthropic.com/v1/messages"), body = None)
 
     assert claude.send_message("hello") is None
     assert len(warnings) == 1
