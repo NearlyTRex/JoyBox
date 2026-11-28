@@ -103,7 +103,7 @@ dev = [
     "coverage",
     "pytest",
     "pytest-xdist",
-    "pytest-testrex[shell,lua]>=0.1.9",
+    "pytest-testrex[shell,lua]>=0.1.10",
     "pylint",
 ]
 
@@ -153,7 +153,7 @@ command_paths = ["Shared/joybox/cli", "Scripts", "Shared/joybox/runtime.py", "Sh
 standards = [
     "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
     "no-narration", "commented-out-code", "long-functions", "long-modules",
-    "silent-except", "blanket-suppression",
+    "silent-except", "blanket-suppression", "import-cycles",
 ]
 # The helpers carry verbose logging, pretend_run and exit_on_failure, which raw calls skip
 wrapper_modules = [
