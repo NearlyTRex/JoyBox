@@ -224,6 +224,40 @@ def test_sync_data_of_a_glob(tmp_path):
     assert tree(tmp_path / "dest") == {"a.sav"}
 
 
+def test_sync_data_of_a_glob_into_a_directory(tmp_path):
+    write(tmp_path / "src" / "a.sav", "a")
+    write(tmp_path / "src" / "b.sav", "b")
+    write(tmp_path / "src" / "c.txt", "c")
+    (tmp_path / "dest").mkdir()
+    assert filebulk.sync_data(str(tmp_path / "src" / "*.sav"), str(tmp_path / "dest"), verbose = True)
+    assert tree(tmp_path / "dest") == {"a.sav", "b.sav"}
+    assert read(tmp_path / "dest" / "b.sav") == "b"
+
+
+def test_sync_data_of_a_glob_creates_the_directory(tmp_path):
+    write(tmp_path / "src" / "a.sav", "a")
+    assert filebulk.sync_data(str(tmp_path / "src" / "*.sav"), str(tmp_path / "out" / "dest"))
+    assert tree(tmp_path / "out" / "dest") == {"a.sav"}
+
+
+def test_sync_data_of_a_glob_without_matches_succeeds(tmp_path):
+    (tmp_path / "src").mkdir()
+    assert filebulk.sync_data(str(tmp_path / "src" / "*.sav"), str(tmp_path / "dest"))
+    assert tree(tmp_path / "dest") == set()
+
+
+def test_sync_data_of_a_glob_in_a_pretend_run_copies_nothing(tmp_path):
+    write(tmp_path / "src" / "a.sav", "a")
+    assert filebulk.sync_data(str(tmp_path / "src" / "*.sav"), str(tmp_path / "dest"), pretend_run = True)
+    assert not (tmp_path / "dest").exists()
+
+
+def test_sync_data_of_a_glob_fails_when_the_directory_cannot_be_made(tmp_path, monkeypatch):
+    write(tmp_path / "src" / "a.sav", "a")
+    monkeypatch.setattr(fileops, "make_directory", lambda src, verbose = False, pretend_run = False, exit_on_failure = False: False)
+    assert not filebulk.sync_data(str(tmp_path / "src" / "*.sav"), str(tmp_path / "dest"))
+
+
 def test_sync_data_of_a_missing_source(tmp_path):
     src = str(tmp_path / "missing")
     assert not filebulk.sync_data(src, str(tmp_path / "dest"))

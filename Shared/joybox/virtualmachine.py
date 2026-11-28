@@ -9,15 +9,17 @@
 # Imports
 import hashlib
 import os
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 
 # Local imports
-import joybox.command as command
-import joybox.runoptions as runoptions
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import command
+from joybox import commandbase
+from joybox import runoptions
+from joybox import fileops
+from joybox import hostsfile
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 from joybox.connection import ConnectionLocal
 
 # Tools this needs on the workstation
@@ -53,7 +55,7 @@ SSH_KEY_NAMES = ["id_ed25519.pub", "id_rsa.pub"]
 # Get the tools that are missing from this workstation
 def get_missing_tools():
     return [tool for tool in REQUIRED_TOOLS
-            if not command.is_runnable_command(tool)]
+            if not paths.is_runnable_command(tool)]
 
 # Check the workstation can manage a virtual machine
 def are_tools_installed():
@@ -149,7 +151,7 @@ def build_user_data(vm_name, ssh_public_key, console_password_hash):
 def hash_console_password(console_password, verbose = False, exit_on_failure = False):
     output = command.run_output_command(
         cmd = ["openssl", "passwd", "-6", "-stdin"],
-        options = command.create_command_options(stdin_input = console_password + "\n"),
+        options = commandbase.create_command_options(stdin_input = console_password + "\n"),
         verbose = verbose,
         pretend_run = False,
         exit_on_failure = exit_on_failure)
@@ -175,7 +177,7 @@ def build_meta_data(vm_name):
 def does_vm_exist(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     code = command.run_returncode_command(
         cmd = get_virsh_command(["dominfo", vm_name]),
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
     return code == 0
@@ -377,7 +379,7 @@ def reserve_address(
 def forget_host_key(address, verbose = False, pretend_run = False):
     command.run_returncode_command(
         cmd = ["ssh-keygen", "-R", address],
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
 
@@ -398,6 +400,68 @@ def create_vm(
     exit_on_failure = False):
 
     # Check prerequisites
+    if not can_create_vm(vm_name, verbose, pretend_run):
+        return False
+
+    # Create the guest's disk and cloud-init seed
+    disk_image, seed_image = _create_vm_images(
+        vm_name, ssh_key_file, console_password, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure)
+    if not seed_image:
+        return False
+
+    # Bring up the network, pin the guest's address, and install
+    return _install_vm(
+        vm_name, address, network, disk_image, seed_image, memory, vcpus, verbose, pretend_run, exit_on_failure)
+
+# Read what the guest will trust, then create its disk on top of the backing image and its
+# cloud-init seed; (disk image, seed image), or (None, None) when a step fails
+def _create_vm_images(vm_name, ssh_key_file, console_password, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure):
+
+    # Read what the guest will trust
+    ssh_public_key, console_password_hash = _read_guest_credentials(ssh_key_file, console_password, verbose, exit_on_failure)
+    if not ssh_public_key:
+        return None, None
+
+    # Create the guest's own disk on top of the backing image
+    connection, disk_image = _create_vm_disk(vm_name, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure)
+    if not disk_image:
+        return None, None
+
+    # Build the cloud-init seed
+    seed_image = _build_seed_image(
+        connection, vm_name, image_dir, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure)
+    if not seed_image:
+        return None, None
+    return disk_image, seed_image
+
+# Fetch the release's backing image and create the guest's disk on top of it
+# Returns the local connection and the disk image, or (None, None) on failure
+def _create_vm_disk(vm_name, release, image_dir, disk_size, verbose, pretend_run, exit_on_failure):
+
+    # Get the backing image
+    base_image = fetch_base_image(
+        release = release,
+        image_dir = image_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not base_image:
+        return None, None
+
+    # Create the guest's own disk on top of it
+    connection = get_local_connection(verbose, pretend_run, exit_on_failure)
+    disk_image = get_disk_image(vm_name, image_dir)
+    code = connection.run_return_code(
+        cmd = get_create_disk_command(base_image, disk_image, disk_size),
+        sudo = True)
+    if code != 0:
+        return None, None
+    return connection, disk_image
+
+# Whether the host has every tool and no guest is already named vm_name, logging what is wrong
+def can_create_vm(vm_name, verbose = False, pretend_run = False):
+
+    # Check prerequisites
     missing = get_missing_tools()
     if missing:
         logger.log_error("Missing tools: %s" % ", ".join(missing))
@@ -410,77 +474,66 @@ def create_vm(
     if does_vm_exist(vm_name, verbose = verbose, pretend_run = pretend_run):
         logger.log_error("A virtual machine named '%s' already exists" % vm_name)
         return False
+    return True
+
+# The SSH public key to authorise and the console password hash; (None, None) when either is unavailable
+def _read_guest_credentials(ssh_key_file, console_password, verbose, exit_on_failure):
 
     # Find the key to authorise
     ssh_public_key_file = resolve_ssh_public_key(ssh_key_file)
     if not ssh_public_key_file:
         logger.log_error("No SSH public key found")
         logger.log_error("Generate one with: ssh-keygen -t ed25519")
-        return False
+        return None, None
     ssh_public_key = serialization.read_text_file(
         src = ssh_public_key_file,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
     if not ssh_public_key:
-        return False
+        return None, None
     ssh_public_key = ssh_public_key.strip()
     console_password_hash = hash_console_password(console_password, verbose = verbose, exit_on_failure = exit_on_failure)
     if not console_password_hash:
-        return False
+        return None, None
+    return ssh_public_key, console_password_hash
 
-    # Get the backing image
-    base_image = fetch_base_image(
-        release = release,
-        image_dir = image_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not base_image:
-        return False
+# Write the cloud-init user-data and meta-data into seed_dir; their paths, or None when one cannot be written
+def _write_seed_files(seed_dir, vm_name, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure):
+    seed_files = []
+    for name, contents in [
+        ("user-data", build_user_data(vm_name, ssh_public_key, console_password_hash)),
+        ("meta-data", build_meta_data(vm_name))]:
+        seed_file = paths.join_paths(seed_dir, name)
+        success = fileops.touch_file(
+            src = seed_file,
+            contents = contents,
+            private = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+        seed_files.append(seed_file)
+    return seed_files
 
-    # Create the guest's own disk on top of it
-    connection = get_local_connection(verbose, pretend_run, exit_on_failure)
-    disk_image = get_disk_image(vm_name, image_dir)
-    code = connection.run_return_code(
-        cmd = get_create_disk_command(base_image, disk_image, disk_size),
-        sudo = True)
-    if code != 0:
-        return False
-
-    # Build the cloud-init seed
-    seed_success, seed_dir = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not seed_success:
-        return False
+# Write the cloud-init user and meta data and pack them into the guest's seed image; its path, or None
+def _build_seed_image(connection, vm_name, image_dir, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure):
     seed_image = get_seed_image(vm_name, image_dir)
-    try:
-        user_data = paths.join_paths(seed_dir, "user-data")
-        meta_data = paths.join_paths(seed_dir, "meta-data")
-        for seed_file, contents in [
-            (user_data, build_user_data(vm_name, ssh_public_key, console_password_hash)),
-            (meta_data, build_meta_data(vm_name))]:
-            success = fileops.touch_file(
-                src = seed_file,
-                contents = contents,
-                private = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as seed_dir:
+        if not seed_dir:
+            return None
+        seed_files = _write_seed_files(seed_dir, vm_name, ssh_public_key, console_password_hash, verbose, pretend_run, exit_on_failure)
+        if not seed_files:
+            return None
         code = connection.run_return_code(
-            cmd = ["cloud-localds", seed_image, user_data, meta_data],
+            cmd = ["cloud-localds", seed_image, *seed_files],
             sudo = True)
         if code != 0:
-            return False
-    finally:
-        fileops.remove_directory(
-            src = seed_dir,
-            verbose = verbose,
-            pretend_run = pretend_run)
+            return None
+    return seed_image
 
-    # Bring up the network, pin the guest's address, and install
+# Start the network, reserve the guest's address when one is given, and run the install; whether it succeeded
+def _install_vm(vm_name, address, network, disk_image, seed_image, memory, vcpus, verbose, pretend_run, exit_on_failure):
     start_network(network, verbose = verbose, pretend_run = pretend_run)
     mac = get_vm_mac(vm_name)
     if address:
@@ -535,6 +588,7 @@ def parse_interface_mac(output):
                 return token.lower()
     return None
 
+# MAC of the guest's first network interface from virsh domiflist; None when none is listed
 def get_vm_interface_mac(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     output = command.run_output_command(
         cmd = get_virsh_command(["domiflist", vm_name]),
@@ -618,7 +672,7 @@ def destroy_vm(
     # Stop it first; a running guest cannot be undefined
     command.run_returncode_command(
         cmd = get_virsh_command(["destroy", vm_name]),
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
     code = command.run_returncode_command(
@@ -636,3 +690,90 @@ def destroy_vm(
 # Attach to a guest's serial console, the way back in after an ssh lockout
 def get_console_command(vm_name = DEFAULT_NAME):
     return get_virsh_command(["console", vm_name])
+
+###########################################################
+# Test machine actions
+###########################################################
+
+# Create a guest of the given memory, processors, disk size and release, logging where
+# it boots; quits when it cannot be created
+def _create_test_vm(vm_name, ssh_key_file, address, memory, vcpus, disk_size, release, flags):
+    success = create_vm(
+        vm_name = vm_name,
+        ssh_key_file = ssh_key_file,
+        address = address,
+        memory = memory,
+        vcpus = vcpus,
+        disk_size = disk_size,
+        release = release,
+        **flags)
+    if not success:
+        logger.log_error("Unable to create the virtual machine", quit_program = True)
+    logger.log_info("Booting at %s; first boot takes a minute or two" % address)
+
+# Log a guest's snapshots, one per line
+def _log_test_vm_snapshots(vm_name, verbose):
+    for snapshot in list_snapshots(vm_name, verbose = verbose):
+        logger.log_info(snapshot)
+
+# A guest's address; quits when it has none yet
+def _get_test_vm_address(vm_name, verbose):
+    address = get_vm_ip(vm_name, verbose = verbose)
+    if not address:
+        logger.log_error("No address yet for '%s'" % vm_name, quit_program = True)
+    return address
+
+# Point a domain and its configured subdomains at a guest in /etc/hosts, or drop the
+# managed block when remove is set; quits when the guest has no address yet
+def _update_test_hosts(vm_name, domain, remove, verbose, pretend_run, exit_on_failure):
+    if remove:
+        hostsfile.remove_entries(
+            sudo = True,
+            verbose = True,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return
+    hostsfile.set_entries(
+        address = _get_test_vm_address(vm_name, verbose),
+        domain = domain,
+        sudo = True,
+        verbose = True,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Call the handler for action from handlers; quits when there is none
+def _dispatch_vm_action(action, handlers):
+    handler = handlers.get(action)
+    if handler:
+        handler()
+    else:
+        logger.log_error("Unknown action '%s'" % action, quit_program = True)
+
+# Run a testvm action on a guest: create, destroy, snapshot, revert, snapshots (logged one
+# per line), ip (written to stdout), console or hosts; quits on any other action
+def run_vm_action(
+    action,
+    vm_name = DEFAULT_NAME,
+    snapshot_name = None,
+    address = DEFAULT_ADDRESS,
+    ssh_key_file = None,
+    domain = None,
+    release = DEFAULT_RELEASE,
+    memory = DEFAULT_MEMORY,
+    vcpus = DEFAULT_VCPUS,
+    disk_size = DEFAULT_DISK_SIZE,
+    remove_hosts = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    _dispatch_vm_action(action, {
+        "create": lambda: _create_test_vm(vm_name, ssh_key_file, address, memory, vcpus, disk_size, release, flags),
+        "destroy": lambda: destroy_vm(vm_name = vm_name, **flags),
+        "snapshot": lambda: snapshot_vm(vm_name = vm_name, snapshot_name = snapshot_name, **flags),
+        "revert": lambda: revert_vm(vm_name = vm_name, snapshot_name = snapshot_name, **flags),
+        "snapshots": lambda: _log_test_vm_snapshots(vm_name, verbose),
+        "ip": lambda: logger.log_output("%s\n" % _get_test_vm_address(vm_name, verbose)),
+        "console": lambda: command.run_interactive_command(cmd = get_console_command(vm_name), **flags),
+        "hosts": lambda: _update_test_hosts(vm_name, domain, remove_hosts, verbose, pretend_run, exit_on_failure),
+    })

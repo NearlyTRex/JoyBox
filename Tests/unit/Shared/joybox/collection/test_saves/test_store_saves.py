@@ -20,16 +20,16 @@ from joybox import filebulk
 # save paths reads the packed archives back into tokenized paths.
 ###########################################################
 
-PROFILE = config.token_user_profile_dir
-INSTALL = config.token_store_install_dir
+PROFILE = config.TOKEN_USER_PROFILE_DIR
+INSTALL = config.TOKEN_STORE_INSTALL_DIR
 
 
 class FakeStore:
 
     def __init__(self, profile_dirs, install_dirs):
         self.translation_map = {
-            config.token_user_registry_dir: [],
-            config.token_user_public_dir: ["C:\\Users\\Public"],
+            config.TOKEN_USER_REGISTRY_DIR: [],
+            config.TOKEN_USER_PUBLIC_DIR: ["C:\\Users\\Public"],
             PROFILE: profile_dirs,
             INSTALL: install_dirs}
         self.asked = []
@@ -191,9 +191,11 @@ def test_flags_reach_the_lister_and_the_json_write(archived, fake_archive, monke
     assert archived.updates == [expected]
 
 
-def test_importing_a_store_save_is_a_no_op(store_game):
+def test_importing_a_store_save_is_a_no_op(store_game, monkeypatch):
     # The store restores its own saves.
-    assert saves.import_store_game_save(store_game) is True
+    monkeypatch.setattr(saves.stores, "is_store_platform", lambda platform: platform == "Steam")
+
+    assert saves.import_game_save(store_game) is True
 
 
 ###########################################################
@@ -223,7 +225,7 @@ def packing(monkeypatch):
         packs.append({"save_dir": input_save_dir, "files": files, **kwargs})
         return packs_result[0]
     packs_result = [True]
-    monkeypatch.setattr(saves, "_pack_save_dir", pack_save_dir)
+    monkeypatch.setattr(saves, "pack_save_dir", pack_save_dir)
     return packs, packs_result
 
 

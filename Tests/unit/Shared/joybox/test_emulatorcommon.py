@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config
-from joybox import command
+from joybox import capture
 from joybox import emulatorcommon
 from joybox import gui
 from joybox import paths
@@ -41,11 +41,11 @@ def launches(monkeypatch):
     def run_capture_command(**kwargs):
         calls.append(kwargs)
         return 0
-    monkeypatch.setattr(command, "run_capture_command", run_capture_command)
+    monkeypatch.setattr(capture, "run_capture_command", run_capture_command)
     return calls
 
 
-LAUNCH_CMD = ["emu", config.token_game_file, "--dir", config.token_game_dir, "--name", config.token_game_name]
+LAUNCH_CMD = ["emu", config.TOKEN_GAME_FILE, "--dir", config.TOKEN_GAME_DIR, "--name", config.TOKEN_GAME_NAME]
 
 
 def test_a_single_launch_file_replaces_every_token(launches):
@@ -88,4 +88,45 @@ def test_a_launch_name_alone_leaves_the_file_token(launches):
     info = FakeGameInfo(launch_name = "Acme")
 
     emulatorcommon.simple_launch(info, LAUNCH_CMD)
-    assert launches[0]["cmd"] == ["emu", config.token_game_file, "--dir", CACHE_DIR, "--name", "Acme"]
+    assert launches[0]["cmd"] == ["emu", config.TOKEN_GAME_FILE, "--dir", CACHE_DIR, "--name", "Acme"]
+
+
+def test_a_single_launch_file_string_is_selected():
+    assert emulatorcommon.select_launch_file("acme.iso") == "acme.iso"
+    assert emulatorcommon.select_launch_file([]) == ""
+
+
+def test_launch_tokens_are_replaced_in_every_segment():
+    assert emulatorcommon.replace_launch_tokens(LAUNCH_CMD, "Acme", "acme.iso", CACHE_DIR) == [
+        "emu", paths.join_paths(CACHE_DIR, "acme.iso"), "--dir", CACHE_DIR, "--name", "Acme"]
+
+
+###########################################################
+# Add-on packages
+###########################################################
+
+def test_package_dirs_install_dlc_then_updates():
+    installed = []
+
+    def install_package_dir(package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+        installed.append((package_dir, pretend_run))
+        return True
+
+    assert emulatorcommon.install_package_dirs(
+        install_package_dir, dlc_dirs = ["/dlc"], update_dirs = ["/update"], pretend_run = True) is True
+    assert installed == [("/dlc", True), ("/update", True)]
+
+
+def test_package_dirs_stop_at_the_first_failure():
+    installed = []
+
+    def install_package_dir(package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+        installed.append(package_dir)
+        return False
+
+    assert emulatorcommon.install_package_dirs(install_package_dir, dlc_dirs = ["/a", "/b"]) is False
+    assert installed == ["/a"]
+
+
+def test_no_package_dirs_install_nothing():
+    assert emulatorcommon.install_package_dirs(lambda *args, **kwargs: False) is True

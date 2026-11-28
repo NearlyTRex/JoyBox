@@ -1,0 +1,25 @@
+# Help text for the launch_pegasus command, read by joybox/arguments.py
+
+description = "Start the Pegasus game frontend installed by setup_tools."
+details = """
+Runs the Pegasus program from the tools directory, with its own folder as the working
+directory and the current environment passed through. It also sets
+`JOYBOX_LAUNCH_JSON` to the JoyBox launcher command, which the `launch:` lines in the
+Pegasus metadata files JoyBox writes call to start a game.
+
+It waits for Pegasus to exit and logs an error if it exits with a non-zero code. It
+takes only the common options."""
+section = "Game Launching"
+see_also = [
+    "setup_tools",
+    "setup_game_assets",
+    "build_game_metadata_files",
+    "launch_game_json",
+]
+notes = [
+    "Pegasus must be installed first (`setup_tools -k Pegasus`); the command exits with an error if it is not found.",
+]
+examples = [
+    ["Start Pegasus", "launch_pegasus"],
+    ["Dry run without starting Pegasus", "launch_pegasus -p -v"],
+]

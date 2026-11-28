@@ -1,0 +1,60 @@
+# Flycast: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["OTHER_SEGA_DREAMCAST"]
+
+[config.Flycast]
+program = { windows = "Flycast/windows/flycast.exe", linux = "Flycast/linux/Flycast.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Flycast.save_dir]
+windows = "Flycast/windows/data"
+linux = "Flycast/linux/Flycast.AppImage.home/.local/share/flycast"
+
+[config.Flycast.config_file]
+windows = "Flycast/windows/emu.cfg"
+linux = "Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"
+
+[[config_files]]
+path = "Flycast/windows/emu.cfg"
+
+[[config_files]]
+path = "Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "flyinghead"
+github_repo = "flycast"
+starts_with = "flycast-win64"
+ends_with = ".zip"
+search_file = "flycast.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Flycast.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["cmake", "..", "-DCMAKE_BUILD_TYPE=Release", "&&", "make", "-j", "4"]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/Flycast/Build/flycast", to = "AppImage/usr/bin/flycast" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/flycast", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "flycast.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["-config", "window:fullscreen=yes"]

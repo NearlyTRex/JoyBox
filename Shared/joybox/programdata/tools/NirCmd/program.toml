@@ -1,0 +1,17 @@
+# NirCmd: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.NirCmd]
+program = { windows = "NirCmd/windows/nircmdc.exe", linux = "NirCmd/windows/nircmdc.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip"
+search_file = "nircmdc.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "nircmdc.exe"

@@ -164,18 +164,7 @@ def test_uninstall_removes_joybox(isolated_settings):
 ###########################################################
 
 def test_string_package_descriptors():
-    assert installer_python.get_python_package_id("rich") == "rich"
     assert installer_python.get_package_spec("rich") == ["rich"]
-    assert installer_python.get_python_package_info("rich") == {
-        "id": "rich", "name": "rich", "description": "", "category": ""}
-
-
-def test_dict_package_descriptors():
-    pkg = {"id": "rich", "name": "Rich", "description": "text", "category": "ui"}
-    assert installer_python.get_python_package_id(pkg) == "rich"
-    assert installer_python.get_python_package_info(pkg) == pkg
-    assert installer_python.get_python_package_info({"id": "rich"})["name"] == "rich"
-    assert installer_python.get_python_package_id({}) == ""
 
 
 def test_spec_overrides_the_install_argument():

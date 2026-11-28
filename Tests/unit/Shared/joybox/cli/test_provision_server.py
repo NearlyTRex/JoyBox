@@ -1,4 +1,5 @@
 # Imports
+import importlib.util
 from typing import ClassVar
 
 # Third-party imports
@@ -6,6 +7,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import serverinfo
 from joybox.cli import provision_server
 
 
@@ -59,12 +61,12 @@ def tool(monkeypatch):
     monkeypatch.setattr(FakeProvisioner, "created", [])
     monkeypatch.setattr(FakeProvisioner, "result", True)
     monkeypatch.setattr(FakeProvisioner, "verify_failures", 0)
-    monkeypatch.setattr(provision_server.serverinfo, "ServerInfo", FakeServer)
-    monkeypatch.setattr(provision_server.serverinfo, "select_server", harness.selected.append)
+    monkeypatch.setattr(serverinfo, "ServerInfo", FakeServer)
+    monkeypatch.setattr(serverinfo, "select_server", harness.selected.append)
     monkeypatch.setattr(provision_server.provision, "Provisioner", FakeProvisioner)
     monkeypatch.setattr(provision_server.provision, "get_missing_settings", lambda server, stages: harness.missing)
-    real_find_spec = provision_server.importlib.util.find_spec
-    monkeypatch.setattr(provision_server.importlib.util, "find_spec",
+    real_find_spec = importlib.util.find_spec
+    monkeypatch.setattr(importlib.util, "find_spec",
         lambda name, *args: (object() if harness.paramiko else None) if name == "paramiko" else real_find_spec(name, *args))
     return harness
 

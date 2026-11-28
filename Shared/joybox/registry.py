@@ -3,13 +3,36 @@ import os
 import os.path
 
 # Local imports
-import joybox.validation as validation
-import joybox.paths as paths
+from joybox import config
+from joybox import validation
+from joybox import paths
 from joybox import fileops
 from joybox import serialization
-import joybox.command as command
+from joybox import command
 
-# Read registry file
+# Entry for one .reg block: its first line as the bracketless key, the rest as its value lines
+def parse_registry_entry(token):
+    registry_key = ""
+    registry_values = []
+    for line_num, line in enumerate(token.split("\n")):
+        if line_num == 0:
+            registry_key = line.strip("[]")
+        else:
+            registry_values.append(line)
+    registry_entry = {}
+    registry_entry["key"] = registry_key.strip()
+    registry_entry["value"] = "\n".join(registry_values)
+    return registry_entry
+
+# Whether a key starts with no ignore prefix and, when keep prefixes are given, with one of them
+def is_registry_key_kept(registry_key, ignore_keys, keep_keys):
+    if any(registry_key.startswith(ignore_key) for ignore_key in ignore_keys):
+        return False
+    if keep_keys:
+        return any(registry_key.startswith(keep_key) for keep_key in keep_keys)
+    return True
+
+# Parse a UTF-16 .reg file into its header and key/value entries, filtered by key prefix; empty on a pretend run
 def read_registry_file(
     registry_file,
     ignore_keys = (),
@@ -39,54 +62,19 @@ def read_registry_file(
             registry["header"] = token.strip()
             continue
 
-        # Create entry
-        registry_key = ""
-        registry_values = []
-
         # Read entry
-        line_num = 0
-        for line in token.split("\n"):
-            if line_num == 0:
-                registry_key = line.strip("[]")
-            else:
-                registry_values.append(line)
-            line_num += 1
-
-        # Clean entry
-        registry_key = registry_key.strip()
-        if len(registry_key) == 0:
+        registry_entry = parse_registry_entry(token)
+        if len(registry_entry["key"]) == 0:
             continue
 
-        # Check if entry should be ignored
-        should_ignore = False
-        for ignore_key in ignore_keys:
-            if registry_key.startswith(ignore_key):
-                should_ignore = True
-                break
-        if should_ignore:
-            continue
-
-        # Create entry
-        registry_entry = {}
-        registry_entry["key"] = registry_key
-        registry_entry["value"] = "\n".join(registry_values)
-
-        # Add entry
-        if len(keep_keys):
-            should_keep = False
-            for keep_key in keep_keys:
-                if registry_key.startswith(keep_key):
-                    should_keep = True
-                    break
-            if should_keep:
-                registry["entries"].append(registry_entry)
-        else:
+        # Add entry unless ignored or not kept
+        if is_registry_key_kept(registry_entry["key"], ignore_keys, keep_keys):
             registry["entries"].append(registry_entry)
 
     # Return results
     return registry
 
-# Write registry file
+# Write a header and entries back out as a UTF-16 .reg file in the platform's line endings
 def write_registry_file(
     registry_file,
     registry_data,
@@ -109,7 +97,7 @@ def write_registry_file(
         registry_file, registry_text, encoding = "utf-16", newline = None,
         verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
-# Export registry file
+# Export one key with reg export through the options' prefix; True when the .reg file appears
 def export_registry_file(
     registry_file,
     registry_key,
@@ -150,7 +138,7 @@ def export_registry_file(
     # Check result
     return os.path.exists(registry_file)
 
-# Import registry file
+# Load a .reg file with reg import through the options' prefix; True when reg exits cleanly
 def import_registry_file(
     registry_file,
     options,
@@ -185,7 +173,68 @@ def import_registry_file(
     # Assume successful
     return True
 
-# Backup registry
+# Export one key to temp_reg_file and read back the entries the filters allow; None when the export fails
+def export_registry_key_data(
+    temp_reg_file,
+    registry_key,
+    options,
+    ignore_keys,
+    keep_keys,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    success = export_registry_file(
+        registry_file = temp_reg_file,
+        registry_key = registry_key,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return None
+    return read_registry_file(
+        registry_file = temp_reg_file,
+        ignore_keys = ignore_keys,
+        keep_keys = keep_keys,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Header and filtered entries of every export key, each exported to its own .reg in tmp_dir; None when an export fails
+def collect_registry_data(
+    tmp_dir,
+    export_keys,
+    options,
+    ignore_keys,
+    keep_keys,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    registry_data = {}
+    registry_data["header"] = ""
+    registry_data["entries"] = []
+    for key_index, base_key in enumerate(export_keys):
+
+        # Export and read registry key
+        key_data = export_registry_key_data(
+            temp_reg_file = paths.join_paths(tmp_dir, "temp%d.reg" % key_index),
+            registry_key = base_key,
+            options = options,
+            ignore_keys = ignore_keys,
+            keep_keys = keep_keys,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if key_data is None:
+            return None
+
+        # Collect entries
+        if not registry_data["header"]:
+            registry_data["header"] = key_data.get("header", "")
+        registry_data["entries"] += key_data.get("entries", [])
+    return registry_data
+
+# Export each key to a temporary .reg, keep the entries the filters allow, and write them into one .reg file
 def backup_user_registry(
     registry_file,
     options,
@@ -203,45 +252,21 @@ def backup_user_registry(
     # Check params
     validation.assert_is_valid_path(registry_file, "registry_file")
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Export each key to its own file, collect the entries, and drop the exports
-    try:
-        registry_data = {}
-        registry_data["header"] = ""
-        registry_data["entries"] = []
-        for key_index, base_key in enumerate(export_keys):
-
-            # Export registry key
-            temp_reg_file = paths.join_paths(tmp_dir_result, "temp%d.reg" % key_index)
-            success = export_registry_file(
-                registry_file = temp_reg_file,
-                registry_key = base_key,
-                options = options,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-
-            # Read registry file
-            key_data = read_registry_file(
-                registry_file = temp_reg_file,
-                ignore_keys = ignore_keys,
-                keep_keys = keep_keys,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-            # Collect entries
-            if not registry_data["header"]:
-                registry_data["header"] = key_data.get("header", "")
-            registry_data["entries"] += key_data.get("entries", [])
+    # Export each key to its own file in a temporary directory, collect the entries, and drop the exports
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
+        registry_data = collect_registry_data(
+            tmp_dir = tmp_dir_result,
+            export_keys = export_keys,
+            options = options,
+            ignore_keys = ignore_keys,
+            keep_keys = keep_keys,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if registry_data is None:
+            return False
 
         # Write new pruned registry file
         return write_registry_file(
@@ -250,8 +275,83 @@ def backup_user_registry(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run)
+
+# Import the setup or game prefix's saved .reg file; True with nothing to do when none is saved
+def restore_registry(
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get registry dir
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
+
+    # Get registry file
+    registry_file = ""
+    if options.get_prefix_name() == config.PrefixType.SETUP:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP)
+    elif options.get_prefix_name() == config.PrefixType.GAME:
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME)
+    if not paths.does_path_exist(registry_file):
+        return True
+
+    # Import registry file
+    return import_registry_file(
+        registry_file = registry_file,
+        options = options,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Registry file, export keys and ignore keys for the setup or game prefix; None for any other prefix
+def get_registry_backup_targets(options, registry_dir):
+    if options.get_prefix_name() == config.PrefixType.SETUP:
+        return (
+            paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP),
+            config.registry_export_keys_setup,
+            config.ignored_registry_keys_setup)
+    if options.get_prefix_name() == config.PrefixType.GAME:
+        return (
+            paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME),
+            config.registry_export_keys_game,
+            config.ignored_registry_keys_game)
+    return None
+
+# Save the requested keys from the setup or game prefix into its profile's .reg file; False for any other prefix
+def backup_registry(
+    options,
+    registry_keys = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get registry keys
+    registry_keys = [] if registry_keys is None else registry_keys
+
+    # Ignore empty keys
+    if not registry_keys:
+        return True
+
+    # Get registry dir
+    registry_dir = options.get_prefix_user_profile_registry_dir()
+    if not registry_dir:
+        return False
+
+    # Get registry file, export keys, and ignore keys
+    backup_targets = get_registry_backup_targets(options, registry_dir)
+    if not backup_targets:
+        return False
+    registry_file, registry_export_keys, registry_ignore_keys = backup_targets
+
+    # Backup registry
+    return backup_user_registry(
+        registry_file = registry_file,
+        options = options,
+        export_keys = registry_export_keys,
+        ignore_keys = registry_ignore_keys,
+        keep_keys = registry_keys,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

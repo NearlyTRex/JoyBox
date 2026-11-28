@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import importlib.util
 import os
 import sys
@@ -43,6 +44,10 @@ def write(text):
     sys.stdout.write(text)
     sys.stdout.flush()
 
+# Print a line as it is, for plain interactive output
+def say(message = ""):
+    print(message)
+
 # Print a dimmed status line
 def status(message):
     print(paint(f"  {message}", DIM))
@@ -61,7 +66,7 @@ def notice(message):
 def read_line(prompt_text, colour = CYAN):
     # Importing readline turns on editing and history where it exists
     if importlib.util.find_spec("readline"):
-        import readline  # noqa: F401
+        importlib.import_module("readline")
     try:
         return input(paint(prompt_text, colour))
     except (EOFError, KeyboardInterrupt):

@@ -5,6 +5,8 @@ import pytest
 from joybox import network
 from network_helpers import FakeResponse, only_call
 
+real_requests = pytest.importorskip("requests")
+
 
 ###########################################################
 # Remote requests
@@ -30,7 +32,7 @@ def test_a_url_that_does_not_answer_with_success_is_unreachable(requests_module,
 
 
 def test_a_refused_connection_is_unreachable(requests_module):
-    requests_module["error"] = OSError("connection refused")
+    requests_module["error"] = real_requests.ConnectionError("connection refused")
 
     assert network.is_url_reachable("https://example.test") is False
 
@@ -83,19 +85,19 @@ def test_an_unsuccessful_json_response_yields_nothing(requests_module, status_co
 
 
 def test_an_unreachable_json_endpoint_yields_nothing(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     assert network.get_remote_json("https://example.test/api") is None
 
 
 def test_a_response_that_is_not_json_yields_nothing(requests_module):
-    requests_module["response"] = FakeResponse(payload = ValueError("not json"))
+    requests_module["response"] = FakeResponse(payload = real_requests.JSONDecodeError("not json", "", 0))
 
     assert network.get_remote_json("https://example.test/api") is None
 
 
 def test_a_failed_json_request_can_quit_the_program(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         network.get_remote_json("https://example.test/api", exit_on_failure = True)
@@ -130,7 +132,7 @@ def test_an_unsuccessful_post_yields_nothing(requests_module):
 
 
 def test_a_failed_post_can_quit_the_program(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         network.post_remote_json("https://example.test/api", exit_on_failure = True)
@@ -181,7 +183,7 @@ def test_an_unsuccessful_html_response_yields_nothing(requests_module):
 
 
 def test_an_unreachable_page_yields_nothing(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     assert network.get_remote_html("https://example.test") is None
 
@@ -229,7 +231,7 @@ def test_an_html_request_can_carry_its_own_headers(requests_module):
 
 
 def test_a_failed_html_request_can_quit_the_program(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         network.get_remote_html("https://example.test", exit_on_failure = True)
@@ -252,7 +254,7 @@ def test_an_xml_request_does_not_wait_forever(requests_module):
 
 
 def test_a_failed_xml_request_can_quit_the_program(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         network.get_remote_xml("https://example.test/feed", exit_on_failure = True)
@@ -308,6 +310,6 @@ def test_a_verbose_request_logs_the_url_and_status(requests_module, monkeypatch,
 
 
 def test_an_unreachable_post_endpoint_yields_nothing(requests_module):
-    requests_module["error"] = OSError("no route to host")
+    requests_module["error"] = real_requests.ConnectionError("no route to host")
 
     assert network.post_remote_json("https://example.test/api", data = {}) is None

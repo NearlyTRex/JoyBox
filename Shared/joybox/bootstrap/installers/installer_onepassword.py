@@ -1,10 +1,10 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
-# OnePassword
+# Installs the 1Password app and op CLI from 1Password's apt repository, with its debsig policy
 class OnePassword(installer.Installer):
     def __init__(
         self,
@@ -24,16 +24,20 @@ class OnePassword(installer.Installer):
         self.app_path = "/usr/bin/1password"
         self.cli_path = "/usr/bin/op"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether both /usr/bin/1password and /usr/bin/op exist
     def is_installed(self):
         return all(
             self.connection.does_file_or_directory_exist(path)
             for path in [self.app_path, self.cli_path])
 
+    # Add 1Password's keyring, debsig policy and apt source, then apt-get install
+    # the app and CLI
     def install(self):
         logger.log_info("Installing 1Password")
         self.connection.make_directory(self.policy_path, sudo = True)
@@ -42,12 +46,15 @@ class OnePassword(installer.Installer):
         self.connection.download_file(f"{self.url}/linux/debian/debsig/1password.pol", f"{self.policy_path}/1password.pol", sudo = True)
         self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", self.archive_key_path, "/tmp/1password.asc"], sudo = True)
         self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", f"{self.policy_keyring_path}/debsig.gpg", "/tmp/1password.asc"], sudo = True)
-        self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n", sudo = True)
+        if not self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n", sudo = True):
+            logger.log_error(f"Unable to write {self.sources_list_path}")
+            return False
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
         self.connection.run_checked(
             [self.aptget_tool, "install", "-y"] + self.packages, sudo = True)
         return True
 
+    # apt-get remove the app and CLI, then delete the source, keyring and debsig policy
     def uninstall(self):
         logger.log_info("Uninstalling 1Password")
         self.connection.run_checked(

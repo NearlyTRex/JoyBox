@@ -1,0 +1,163 @@
+# Imports
+import os
+
+# Third-party imports
+import pytest
+
+# Local imports
+from joybox import hashutil
+from hashing_helpers import expected_digests, write_file
+
+
+###########################################################
+# File digests
+#
+# These are what an archive's integrity is judged against, so they have to
+# agree with the reference implementations and be stable across chunk sizes.
+###########################################################
+
+PAYLOAD = b"The quick brown fox jumps over the lazy dog"
+
+FUNCTIONS = {
+    "crc32": hashutil.calculate_file_crc32,
+    "md5": hashutil.calculate_file_md5,
+    "sha1": hashutil.calculate_file_sha1,
+    "sha256": hashutil.calculate_file_sha256,
+}
+
+
+@pytest.fixture
+def payload_file(tmp_path):
+    return write_file(tmp_path, "payload.bin", PAYLOAD)
+
+
+###########################################################
+# Correctness
+###########################################################
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_a_digest_matches_the_reference_implementation(payload_file, name):
+    assert FUNCTIONS[name](payload_file) == expected_digests(PAYLOAD)[name]
+
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_an_empty_file_still_produces_a_digest(tmp_path, name):
+    empty = write_file(tmp_path, "empty.bin", b"")
+
+    assert FUNCTIONS[name](empty) == expected_digests(b"")[name]
+
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_the_chunk_size_does_not_change_the_digest(payload_file, name):
+    # A file larger than one chunk takes the loop rather than a single read
+    whole = FUNCTIONS[name](payload_file)
+
+    assert FUNCTIONS[name](payload_file, chunksize = 1) == whole
+    assert FUNCTIONS[name](payload_file, chunksize = 7) == whole
+
+
+def test_xxh3_is_stable_across_chunk_sizes(payload_file):
+    pytest.importorskip("xxhash")
+
+    whole = hashutil.calculate_file_xxh3(payload_file)
+
+    assert whole
+    assert hashutil.calculate_file_xxh3(payload_file, chunksize = 3) == whole
+
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_different_contents_produce_different_digests(tmp_path, name):
+    first = write_file(tmp_path, "first.bin", b"one")
+    second = write_file(tmp_path, "second.bin", b"two")
+
+    assert FUNCTIONS[name](first) != FUNCTIONS[name](second)
+
+
+def test_a_crc32_is_rendered_the_way_a_dat_file_stores_one(payload_file):
+    # Eight lowercase hex digits, no prefix - so it can be compared against a
+    # dat entry without reformatting either side
+    value = hashutil.calculate_file_crc32(payload_file)
+
+    assert len(value) == 8
+    assert not value.startswith("0x")
+    assert value == value.lower()
+
+
+def test_a_crc32_with_leading_zeros_keeps_its_width(tmp_path):
+    # "%x" would drop them, giving a checksum narrower than any dat carries
+    candidate = write_file(tmp_path, "probe.bin", b"x" * 23)
+
+    assert hashutil.calculate_file_crc32(candidate) == "036683ba"
+
+
+###########################################################
+# Failure and pretend runs
+###########################################################
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_a_missing_file_digests_to_nothing(tmp_path, name):
+    assert FUNCTIONS[name](os.path.join(str(tmp_path), "absent.bin")) == ""
+
+
+@pytest.mark.parametrize("name", sorted(FUNCTIONS))
+def test_a_pretend_run_reads_nothing(payload_file, name):
+    assert FUNCTIONS[name](payload_file, pretend_run = True) == ""
+
+
+def test_a_pretend_run_does_not_need_the_file_to_exist(tmp_path):
+    absent = os.path.join(str(tmp_path), "absent.bin")
+
+    assert hashutil.calculate_file_md5(absent, pretend_run = True) == ""
+
+
+def test_a_directory_digests_to_nothing(tmp_path):
+    assert hashutil.calculate_file_md5(str(tmp_path)) == ""
+
+
+###########################################################
+# Verbose and exit-on-failure runs
+###########################################################
+
+ALL_FUNCTIONS = dict(FUNCTIONS, xxh3 = hashutil.calculate_file_xxh3)
+
+
+def digest(name, *args, **kwargs):
+    if name == "xxh3":
+        pytest.importorskip("xxhash")
+    return ALL_FUNCTIONS[name](*args, **kwargs)
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_verbose_digest_reports_progress_to_completion(payload_file, name, capsys):
+    quiet = digest(name, payload_file)
+
+    assert digest(name, payload_file, chunksize = 8, verbose = True) == quiet
+    assert "100%" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_verbose_pretend_run_still_reads_nothing(tmp_path, name):
+    absent = os.path.join(str(tmp_path), "absent.bin")
+
+    assert digest(name, absent, verbose = True, pretend_run = True) == ""
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_missing_file_quits_when_failures_are_fatal(tmp_path, name):
+    absent = os.path.join(str(tmp_path), "absent.bin")
+
+    with pytest.raises(SystemExit):
+        digest(name, absent, exit_on_failure = True)
+
+
+def test_a_quiet_xxh3_pretend_run_reads_nothing(tmp_path):
+    pytest.importorskip("xxhash")
+
+    assert hashutil.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin"),
+                                       pretend_run = True) == ""
+
+
+def test_a_missing_file_xxh3_digests_to_nothing(tmp_path):
+    pytest.importorskip("xxhash")
+
+    assert hashutil.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin")) == ""

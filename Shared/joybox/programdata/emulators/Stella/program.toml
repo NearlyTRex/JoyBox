@@ -1,0 +1,37 @@
+# Stella: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Stella]
+program = { windows = "Stella/windows/Stella.exe", linux = "Stella/linux/Stella.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "stella-emu"
+github_repo = "stella"
+starts_with = "Stella"
+ends_with = "windows.zip"
+search_file = "64-bit/Stella.exe"
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Stella.git"
+output_file = "Stella-x86_64.AppImage"
+build_cmd = ["./configure", "&&", "make", "-j", "4"]
+internal_copies = [
+    { from = "Source/Stella/stella", to = "AppImage/usr/bin/stella" },
+    { from = "Source/Stella/src/os/unix/stella.desktop", to = "AppImage/stella.desktop" },
+    { from = "Source/Stella/src/common/stella.png", to = "AppImage/stella.png" },
+]
+internal_symlinks = [{ from = "usr/bin/stella", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "64-bit/Stella.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

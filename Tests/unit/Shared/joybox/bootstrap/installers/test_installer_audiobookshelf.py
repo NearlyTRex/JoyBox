@@ -28,13 +28,13 @@ def test_the_env_carries_the_port_library_and_pinned_image(docker_app):
 
 
 def test_the_library_is_mounted_read_only():
-    assert "${AUDIOBOOKSHELF_AUDIO_DIR}:/audiobooks:ro" in installer_audiobookshelf.docker_compose_template
+    assert "${AUDIOBOOKSHELF_AUDIO_DIR}:/audiobooks:ro" in installer_audiobookshelf.DOCKER_COMPOSE_TEMPLATE
 
 
 def test_the_site_is_proxied_with_websockets(docker_app):
     app = docker_app(installers.Audiobookshelf)
 
-    assert app.installer.nginx_config_template == installer_dockerapp.nginx_http_websocket_config_template
+    assert app.installer.nginx_config_template == installer_dockerapp.NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE
     assert "audio.joybox.test" in app.nginx()
     assert "proxy_pass http://localhost:8084" in app.nginx()
 

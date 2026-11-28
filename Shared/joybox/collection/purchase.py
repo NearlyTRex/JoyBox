@@ -2,18 +2,18 @@
 import os
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
-import joybox.serialization as serialization
-import joybox.environment as environment
-import joybox.gameinfo as gameinfo
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import prompts
+from joybox import serialization
+from joybox import environment
 from joybox import gamecollection
 from joybox import gamenaming
-import joybox.storebase as storebase
-import joybox.stores as stores
+from joybox import storebase
+from joybox import stores
 from .metadata import create_game_metadata_entry
+from .selection import iterate_selected_subcategories
 from .metadata import update_game_metadata_entry
 from .jsondata import get_game_json_ignore_entries
 from .jsondata import add_game_json_ignore_entry
@@ -22,7 +22,7 @@ from .jsondata import update_game_json_file
 
 ############################################################
 
-# Login game store
+# Sign in to the store for these categories; True when there is no store or it has no login of its own
 def login_game_store(
     game_supercategory,
     game_category,
@@ -45,47 +45,45 @@ def login_game_store(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Login all game stores
+# Sign in to the store of every ROM category; stops at the first failure
 def login_all_game_stores(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                success = login_game_store(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    return False
-
-    # Should be successful
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_rom_categories():
+        success = login_game_store(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################
 
-# Import game store purchases
-def import_game_store_purchases(
-    game_supercategory,
-    game_category,
-    game_subcategory,
-    purchases = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+# The store for these categories when it can import purchases; None otherwise
+def get_importable_store(game_supercategory, game_category, game_subcategory):
 
     # Get store
     store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
     if not store_obj:
-        return True
+        return None
 
     # Check if purchases can be imported
     if not store_obj.can_import_purchases():
-        return True
+        return None
+    return store_obj
+
+# The given purchases, or the store's latest, with the store's ignore entries; None when there are no purchases
+def _load_purchases_and_ignores(
+    store_obj,
+    purchases = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get all purchases
     if purchases is None:
@@ -95,7 +93,7 @@ def import_game_store_purchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not purchases:
-        return True
+        return None
 
     # Get all ignores
     logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
@@ -106,115 +104,222 @@ def import_game_store_purchases(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    return purchases, ignores
+
+# The importable store for these categories with its purchases and ignore entries; None when there is nothing to do
+def _load_store_purchases(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    purchases = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get store
+    store_obj = get_importable_store(game_supercategory, game_category, game_subcategory)
+    if not store_obj:
+        return None
+
+    # Get all purchases and ignores
+    loaded = _load_purchases_and_ignores(store_obj, purchases, verbose, pretend_run, exit_on_failure)
+    if not loaded:
+        return None
+    return (store_obj,) + loaded
+
+# The purchase's info identifier and the store's JSON files matching its app id, name or url; None when it has no identifier or is ignored
+def _search_purchase_json_files(store_obj, purchase, ignores, exit_on_failure = False):
+    purchase_identifiers = [
+        purchase.get_value(config.JSON_KEY_STORE_APPID),
+        purchase.get_value(config.JSON_KEY_STORE_APPNAME),
+        purchase.get_value(config.JSON_KEY_STORE_APPURL)
+    ]
+
+    # Get info identifier
+    info_identifier = purchase.get_value(store_obj.get_info_identifier_key())
+    if not info_identifier:
+        return None
+    if info_identifier in ignores.keys():
+        return None
+
+    # Find matching json files
+    json_matches = serialization.search_json_files(
+        src = environment.get_json_metadata_dir(
+            game_supercategory = store_obj.get_supercategory(),
+            game_category = store_obj.get_category(),
+            game_subcategory = store_obj.get_subcategory()),
+        search_values = purchase_identifiers,
+        search_keys = config.json_keys_store_appdata,
+        exit_on_failure = exit_on_failure)
+    return info_identifier, json_matches
+
+# Log the purchase's app id, name, url and name, then ask whether to import, skip or ignore it
+def _prompt_purchase_import(purchase):
+    logger.log_info("Found new potential entry:")
+    for label, json_key in [
+        ("Appid", config.JSON_KEY_STORE_APPID),
+        ("Appname", config.JSON_KEY_STORE_APPNAME),
+        ("Appurl", config.JSON_KEY_STORE_APPURL),
+        ("Name", config.JSON_KEY_STORE_NAME)]:
+        value = purchase.get_value(json_key)
+        if value:
+            logger.log_info(" - %s:\t" % label + value)
+    return prompts.prompt_for_value("Import this? (n to skip, i to ignore)", default_value = "y")
+
+# Record the purchase in the store's ignore file; False after logging when that fails
+def _ignore_purchase(
+    store_obj,
+    info_identifier,
+    purchase_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    success = add_game_json_ignore_entry(
+        game_supercategory = store_obj.get_supercategory(),
+        game_category = store_obj.get_category(),
+        game_subcategory = store_obj.get_subcategory(),
+        game_identifier = info_identifier,
+        game_name = purchase_name,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to add ignore entry for game '%s'" % purchase_name)
+        return False
+    return True
+
+# Ask for the entry name, defaulting to the game name derived from the purchase name; None after a warning when none is chosen
+def _prompt_entry_name(purchase_name):
+    default_name = None
+    if purchase_name:
+        default_name = gamenaming.derive_game_name_from_regular_name(purchase_name)
+    entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
+    if not entry_name:
+        logger.log_warning("No entry name chosen, skipping")
+        return None
+    return entry_name
+
+# The purchase's app url, looked up from the store by name and saved on the purchase when it had none
+def _fill_purchase_appurl(
+    store_obj,
+    purchase,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    purchase_appurl = purchase.get_value(config.JSON_KEY_STORE_APPURL)
+    purchase_name = purchase.get_value(config.JSON_KEY_STORE_NAME)
+    if not purchase_appurl and purchase_name:
+        purchase_appurl = store_obj.get_latest_url(
+            identifier = purchase_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if purchase_appurl:
+            purchase.set_value(config.JSON_KEY_STORE_APPURL, purchase_appurl)
+    return purchase_appurl
+
+# Create the entry's JSON file from the purchase and its metadata entry; False after logging the failed step
+def _create_purchase_entries(
+    store_obj,
+    purchase,
+    entry_name,
+    purchase_appurl,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create json file
+    success = create_game_json_file(
+        game_supercategory = store_obj.get_supercategory(),
+        game_category = store_obj.get_category(),
+        game_subcategory = store_obj.get_subcategory(),
+        game_name = entry_name,
+        initial_data = {store_obj.get_key(): purchase.get_data_copy()},
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to create json file for game '%s'" % entry_name)
+        return False
+
+    # Create metadata entry
+    success = create_game_metadata_entry(
+        game_supercategory = store_obj.get_supercategory(),
+        game_category = store_obj.get_category(),
+        game_subcategory = store_obj.get_subcategory(),
+        game_name = entry_name,
+        game_url = purchase_appurl,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to add metadata entry for game '%s'" % entry_name)
+        return False
+    return True
+
+# Offer one purchase with no JSON file or ignore entry for import, skipping or ignoring; False only when a write fails
+def _import_purchase(
+    store_obj,
+    purchase,
+    ignores,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Skip if ignored or json file already exists
+    found = _search_purchase_json_files(store_obj, purchase, ignores, exit_on_failure = exit_on_failure)
+    if not found:
+        return True
+    info_identifier, json_matches = found
+    if json_matches:
+        return True
+
+    # Determine if this should be imported
+    purchase_name = purchase.get_value(config.JSON_KEY_STORE_NAME)
+    should_import = _prompt_purchase_import(purchase)
+    if should_import.lower() == "n":
+        return True
+
+    # Add to ignore
+    if should_import.lower() == "i":
+        return _ignore_purchase(store_obj, info_identifier, purchase_name, verbose, pretend_run, exit_on_failure)
+
+    # Prompt for entry name
+    entry_name = _prompt_entry_name(purchase_name)
+    if not entry_name:
+        return True
+
+    # Create json file and metadata entry
+    purchase_appurl = _fill_purchase_appurl(store_obj, purchase, verbose, pretend_run, exit_on_failure)
+    return _create_purchase_entries(store_obj, purchase, entry_name, purchase_appurl, verbose, pretend_run, exit_on_failure)
+
+# Prompt for each store purchase with no JSON file or ignore entry: import it as a JSON file and metadata entry, skip it, or ignore it
+def import_game_store_purchases(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    purchases = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get store, purchases and ignores
+    loaded = _load_store_purchases(game_supercategory, game_category, game_subcategory, purchases, verbose, pretend_run, exit_on_failure)
+    if not loaded:
+        return True
+    store_obj, purchases, ignores = loaded
 
     # Import each purchase
     logger.log_info("Starting to import purchases for %s" % store_obj.get_type())
     for purchase in purchases:
-        purchase_appid = purchase.get_value(config.json_key_store_appid)
-        purchase_appname = purchase.get_value(config.json_key_store_appname)
-        purchase_appurl = purchase.get_value(config.json_key_store_appurl)
-        purchase_name = purchase.get_value(config.json_key_store_name)
-        purchase_identifiers = [
-            purchase_appid,
-            purchase_appname,
-            purchase_appurl
-        ]
-
-        # Get info identifier
-        info_identifier = purchase.get_value(store_obj.get_info_identifier_key())
-        if not info_identifier:
-            continue
-        if info_identifier in ignores.keys():
-            continue
-
-        # Skip if json file already exists
-        json_matches = serialization.search_json_files(
-            src = environment.get_json_metadata_dir(
-                game_supercategory = store_obj.get_supercategory(),
-                game_category = store_obj.get_category(),
-                game_subcategory = store_obj.get_subcategory()),
-            search_values = purchase_identifiers,
-            search_keys = config.json_keys_store_appdata,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if len(json_matches):
-            continue
-
-        # Determine if this should be imported
-        logger.log_info("Found new potential entry:")
-        if purchase_appid:
-            logger.log_info(" - Appid:\t" + purchase_appid)
-        if purchase_appname:
-            logger.log_info(" - Appname:\t" + purchase_appname)
-        if purchase_appurl:
-            logger.log_info(" - Appurl:\t" + purchase_appurl)
-        if purchase_name:
-            logger.log_info(" - Name:\t" + purchase_name)
-        should_import = prompts.prompt_for_value("Import this? (n to skip, i to ignore)", default_value = "y")
-        if should_import.lower() == "n":
-            continue
-
-        # Add to ignore
-        if should_import.lower() == "i":
-            success = add_game_json_ignore_entry(
-                game_supercategory = store_obj.get_supercategory(),
-                game_category = store_obj.get_category(),
-                game_subcategory = store_obj.get_subcategory(),
-                game_identifier = info_identifier,
-                game_name = purchase_name,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                logger.log_error("Unable to add ignore entry for game '%s'" % purchase_name)
-                return False
-            continue
-
-        # Prompt for entry name
-        default_name = None
-        if purchase_name:
-            default_name = gamenaming.derive_game_name_from_regular_name(purchase_name)
-        entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
-        if not entry_name:
-            logger.log_warning("No entry name chosen, skipping")
-            continue
-
-        # Get appurl if possible
-        if not purchase_appurl and purchase_name:
-            purchase_appurl = store_obj.get_latest_url(
-                identifier = purchase_name,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if purchase_appurl:
-                purchase.set_value(config.json_key_store_appurl, purchase_appurl)
-
-        # Create json file
-        success = create_game_json_file(
-            game_supercategory = store_obj.get_supercategory(),
-            game_category = store_obj.get_category(),
-            game_subcategory = store_obj.get_subcategory(),
-            game_name = entry_name,
-            initial_data = {store_obj.get_key(): purchase.get_data_copy()},
+        success = _import_purchase(
+            store_obj = store_obj,
+            purchase = purchase,
+            ignores = ignores,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error("Unable to create json file for game '%s'" % entry_name)
-            return False
-
-        # Create metadata entry
-        success = create_game_metadata_entry(
-            game_supercategory = store_obj.get_supercategory(),
-            game_category = store_obj.get_category(),
-            game_subcategory = store_obj.get_subcategory(),
-            game_name = entry_name,
-            game_url = purchase_appurl,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to add metadata entry for game '%s'" % entry_name)
             return False
 
     # Should be successful
@@ -222,7 +327,86 @@ def import_game_store_purchases(
 
 ############################################################
 
-# Update game store purchases
+# Update the named game's JSON file and metadata entry; False after logging the failed step
+def _update_purchase_entries(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    game_name,
+    keys = None,
+    force = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Update json file
+    success = update_game_json_file(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        game_root = None,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to update json file for game '%s'" % game_name)
+        return False
+
+    # Update metadata entry
+    success = update_game_metadata_entry(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        keys = keys,
+        force = force,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to update metadata entry for game '%s'" % game_name)
+        return False
+    return True
+
+# Refresh one purchase's JSON file and metadata entry when it has a JSON file and is not ignored; False only when an update fails
+def _update_purchase(
+    store_obj,
+    purchase,
+    ignores,
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    keys = None,
+    force = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Find matching json file
+    found = _search_purchase_json_files(store_obj, purchase, ignores, exit_on_failure = exit_on_failure)
+    if not found:
+        return True
+    _, json_matches = found
+    json_file = None
+    if json_matches:
+        json_file = json_matches[0]
+    if not paths.is_path_file(json_file):
+        return True
+
+    # Update json file and metadata entry
+    return _update_purchase_entries(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = paths.get_filename_basename(json_file),
+        keys = keys,
+        force = force,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Refresh the JSON file and metadata entry of each store purchase that already has a JSON file
 def update_game_store_purchases(
     game_supercategory,
     game_category,
@@ -234,100 +418,28 @@ def update_game_store_purchases(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get store
-    store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
-    if not store_obj:
+    # Get store, purchases and ignores
+    loaded = _load_store_purchases(game_supercategory, game_category, game_subcategory, purchases, verbose, pretend_run, exit_on_failure)
+    if not loaded:
         return True
-
-    # Check if purchases can be imported
-    if not store_obj.can_import_purchases():
-        return True
-
-    # Get all purchases
-    if purchases is None:
-        logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
-        purchases = store_obj.get_latest_purchases(
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    if not purchases:
-        return True
-
-    # Get all ignores
-    logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
-    ignores = get_game_json_ignore_entries(
-        game_supercategory = store_obj.get_supercategory(),
-        game_category = store_obj.get_category(),
-        game_subcategory = store_obj.get_subcategory(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    store_obj, purchases, ignores = loaded
 
     # Update each purchase
     logger.log_info("Starting to update purchases for %s" % store_obj.get_type())
     for purchase in purchases:
-        purchase_appid = purchase.get_value(config.json_key_store_appid)
-        purchase_appname = purchase.get_value(config.json_key_store_appname)
-        purchase_appurl = purchase.get_value(config.json_key_store_appurl)
-        purchase_identifiers = [
-            purchase_appid,
-            purchase_appname,
-            purchase_appurl
-        ]
-
-        # Get info identifier
-        info_identifier = purchase.get_value(store_obj.get_info_identifier_key())
-        if not info_identifier:
-            continue
-        if info_identifier in ignores.keys():
-            continue
-
-        # Find matching json file
-        json_matches = serialization.search_json_files(
-            src = environment.get_json_metadata_dir(
-                game_supercategory = store_obj.get_supercategory(),
-                game_category = store_obj.get_category(),
-                game_subcategory = store_obj.get_subcategory()),
-            search_values = purchase_identifiers,
-            search_keys = config.json_keys_store_appdata,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        json_file = None
-        if len(json_matches):
-            json_file = json_matches[0]
-        if not paths.is_path_file(json_file):
-            continue
-
-        # Get game name
-        game_name = paths.get_filename_basename(json_file)
-
-        # Update json file
-        success = update_game_json_file(
+        success = _update_purchase(
+            store_obj = store_obj,
+            purchase = purchase,
+            ignores = ignores,
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
-            game_name = game_name,
-            game_root = None,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to update json file for game '%s'" % game_name)
-            return False
-
-        # Update metadata entry
-        success = update_game_metadata_entry(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name,
             keys = keys,
             force = force,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error("Unable to update metadata entry for game '%s'" % game_name)
             return False
 
     # Should be successful
@@ -361,7 +473,7 @@ def get_game_store_purchases(
         skipped_stores.append(store_obj.get_type())
     return purchases
 
-# Build game store purchase
+# Fetch the store's purchases once, import the new ones and update the known ones; True when the store is skipped for no sign-in
 def build_game_store_purchases(
     game_supercategory,
     game_category,
@@ -391,19 +503,19 @@ def build_game_store_purchases(
         return True
 
     # Import new purchases, then update known ones
-    selection = dict(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        purchases = purchases,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    selection = {
+        "game_supercategory": game_supercategory,
+        "game_category": game_category,
+        "game_subcategory": game_subcategory,
+        "purchases": purchases,
+        "verbose": verbose,
+        "pretend_run": pretend_run,
+        "exit_on_failure": exit_on_failure}
     if not import_game_store_purchases(**selection):
         return False
     return update_game_store_purchases(keys = keys, force = force, **selection)
 
-# Build all game store purchases
+# Build store purchases for the chosen ROM categories, then warn which stores were skipped
 def build_all_game_store_purchases(
     keys = None,
     categories = None,
@@ -412,27 +524,20 @@ def build_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
-    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
     skipped_stores = []
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in selected_categories:
-            category_subcategories = config.subcategory_map[game_category]
-            if selected_subcategories:
-                category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-            for game_subcategory in category_subcategories:
-                success = build_game_store_purchases(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    keys = keys,
-                    force = force,
-                    skipped_stores = skipped_stores,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    return False
+    for game_supercategory, game_category, game_subcategory in iterate_selected_subcategories(categories, subcategories):
+        success = build_game_store_purchases(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            keys = keys,
+            force = force,
+            skipped_stores = skipped_stores,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # List the stores that were left out
     if skipped_stores:
@@ -441,40 +546,29 @@ def build_all_game_store_purchases(
 
 ############################################################
 
-# Download game store purchase
-def download_game_store_purchase(
-    game_info,
-    output_dir = None,
-    skip_existing = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get store
-    store_obj = stores.get_store_by_platform(game_info.get_platform())
-    if not store_obj:
-        return False
-
-    # Check if downloads supported
-    if not store_obj.can_download_purchases():
-        return True
-
-    # Get output dir
+# The game's folder under the output dir, laid out like the locker, or its locker folder when no output dir is given
+def get_purchase_output_dir(game_info, output_dir = None):
     if output_dir:
         output_offset = environment.get_locker_gaming_files_offset(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name())
-        output_dir = paths.join_paths(os.path.realpath(output_dir), output_offset)
-    else:
-        output_dir = environment.get_locker_gaming_files_dir(
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory(),
-            game_name = game_info.get_name())
-    if skip_existing and paths.does_directory_contain_files(output_dir):
-        return True
+        return paths.join_paths(os.path.realpath(output_dir), output_offset)
+    return environment.get_locker_gaming_files_dir(
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory(),
+        game_name = game_info.get_name())
+
+# Download the store's latest build of the game into the output dir, named with its version
+def download_latest_store_build(
+    store_obj,
+    game_info,
+    output_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Get store info
     store_info_identifier = game_info.get_store_info_identifier()
@@ -501,36 +595,70 @@ def download_game_store_purchase(
         exit_on_failure = exit_on_failure)
     return success
 
-# Download all game store purchases
+# Download the store's latest build into the locker folder or under the output dir; True when the store has no downloads
+def download_game_store_purchase(
+    game_info,
+    output_dir = None,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get store
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
+    if not store_obj:
+        return False
+
+    # Check if downloads supported
+    if not store_obj.can_download_purchases():
+        return True
+
+    # Get output dir
+    output_dir = get_purchase_output_dir(game_info, output_dir)
+    if skip_existing and paths.does_directory_contain_files(output_dir):
+        return True
+
+    # Download latest build
+    return download_latest_store_build(
+        store_obj = store_obj,
+        game_info = game_info,
+        output_dir = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Download the store build of every store game in the collection, skipping other platforms; stops at the first failure
 def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = download_game_store_purchase(
-                        game_info = game_info,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
-    return True
+    return gamecollection.run_on_all_rom_games(
+        download_game_store_purchase,
+        include = lambda game_info: stores.is_store_platform(game_info.get_platform()),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ############################################################
+
+# Build the store purchases of each (supercategory, category, subcategory); quits at the first failure
+def build_store_purchases_for_categories(
+    categories,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_supercategory, game_category, game_subcategory in categories:
+        success = build_game_store_purchases(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Build of store purchases failed!",
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                quit_program = True)

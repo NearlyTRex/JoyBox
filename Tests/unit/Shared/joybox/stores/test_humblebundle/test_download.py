@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox.stores import humblebundle
+from joybox import storebase
 from humble_helpers import MANAGER_CMD
 
 APPNAME = "tombraider_windows"
@@ -18,7 +18,7 @@ def temp(humble_store, tools, recording_command, monkeypatch, tmp_path):
     def create_temporary_directory(**kwargs):
         state["temp"].mkdir()
         return (True, str(state["temp"]))
-    monkeypatch.setattr(humblebundle.fileops, "create_temporary_directory", create_temporary_directory)
+    monkeypatch.setattr(storebase.store.fileops, "create_temporary_directory", create_temporary_directory)
 
     def archive_folder(input_path, output_path, **kwargs):
         state["archived"].append((input_path, output_path, kwargs))
@@ -27,7 +27,7 @@ def temp(humble_store, tools, recording_command, monkeypatch, tmp_path):
             with open(os.path.join(output_path, "game.7z"), "w", encoding = "utf-8"):
                 pass
         return state["archive_ok"]
-    monkeypatch.setattr(humblebundle.backup, "archive_folder", archive_folder)
+    monkeypatch.setattr(storebase.store.backup, "archive_folder", archive_folder)
     return state
 
 
@@ -56,7 +56,7 @@ def test_a_download_passes_its_flags_through(humble_store, temp, recording_comma
 
 
 def test_a_download_that_archives_nothing_fails(humble_store, temp, monkeypatch, tmp_path):
-    monkeypatch.setattr(humblebundle.backup, "archive_folder", lambda **kwargs: True)
+    monkeypatch.setattr(storebase.store.backup, "archive_folder", lambda **kwargs: True)
 
     assert humble_store.download(APPNAME, str(tmp_path / "out")) is False
     assert not temp["temp"].exists()
@@ -80,7 +80,7 @@ def test_a_failed_archive_removes_its_temp(humble_store, temp, tmp_path):
 def test_a_crashing_archive_removes_its_temp(humble_store, temp, monkeypatch, tmp_path):
     def archive_folder(**kwargs):
         raise OSError("disk full")
-    monkeypatch.setattr(humblebundle.backup, "archive_folder", archive_folder)
+    monkeypatch.setattr(storebase.store.backup, "archive_folder", archive_folder)
 
     with pytest.raises(OSError):
         humble_store.download(APPNAME, str(tmp_path / "out"))
@@ -88,7 +88,7 @@ def test_a_crashing_archive_removes_its_temp(humble_store, temp, monkeypatch, tm
 
 
 def test_a_download_needs_a_temp_directory(humble_store, temp, recording_command, monkeypatch, tmp_path):
-    monkeypatch.setattr(humblebundle.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
+    monkeypatch.setattr(storebase.store.fileops, "create_temporary_directory", lambda **kwargs: (False, "no"))
 
     assert humble_store.download(APPNAME, str(tmp_path / "out")) is False
     assert recording_command.calls == []

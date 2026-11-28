@@ -130,6 +130,22 @@ def test_a_successful_create_can_delete_the_source(installed, recording_command,
     assert not source.exists()
 
 
+def test_a_successful_create_deletes_every_packed_source(installed, recording_command, tmp_path):
+    sources = [tmp_path / name for name in ("main", "extra", "other")]
+    for source in sources:
+        source.mkdir()
+    image = tmp_path / "Game.iso"
+    image.write_bytes(b"x")
+
+    assert iso.create_iso(str(image), source_dirs = [str(source) for source in sources], delete_original = True) is True
+    assert [source.exists() for source in sources] == [False, False, False]
+
+
+def test_packed_source_folders_skip_the_invalid_ones():
+    assert iso.get_packed_source_dirs("/main", [None, "/extra", ""]) == ["/main", "/extra"]
+    assert iso.get_packed_source_dirs() == []
+
+
 def test_a_successful_create_keeps_the_source_by_default(installed, recording_command, tmp_path):
     source = tmp_path / "tree"
     source.mkdir()
@@ -142,3 +158,13 @@ def test_a_successful_create_keeps_the_source_by_default(installed, recording_co
 
 def test_a_create_that_writes_nothing_reports_failure(installed, recording_command, tmp_path):
     assert iso.create_iso(str(tmp_path / "Game.iso"), source_dir = str(tmp_path)) is False
+
+
+def test_a_zip_is_extracted_beside_itself_then_built_into_an_iso(monkeypatch):
+    calls = []
+    monkeypatch.setattr(iso.archive, "extract_archive", lambda **kwargs: calls.append(("extract", kwargs["extract_dir"])))
+    monkeypatch.setattr(iso, "create_iso", lambda **kwargs: calls.append(("create", kwargs["source_dir"], kwargs["volume_name"])))
+
+    iso.create_iso_from_zip("/in/Game.zip", "/in/Game.iso", volume_name = "GAME")
+
+    assert calls == [("extract", "/in/Game_extracted"), ("create", "/in/Game_extracted", "GAME")]

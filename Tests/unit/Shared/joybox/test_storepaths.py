@@ -23,30 +23,30 @@ def tokenize(path, base_path = None):
 @pytest.mark.parametrize("token", ["{UserDir}", "{UserProfile}", "%USERPROFILE%", "%userprofile%", "<home>"])
 def test_every_home_token_maps_to_the_profile_directory(token):
     assert tokenize(f"{token}/Docs") == \
-        os.path.join(config.token_user_profile_dir, "Docs")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "Docs")
 
 
 @pytest.mark.parametrize("token", ["{EpicID}", "{EpicId}", "<storeUserId>"])
 def test_every_store_user_token_maps_to_the_store_user(token):
     assert tokenize(f"{token}/save") == \
-        os.path.join(config.token_store_user_id, "save")
+        os.path.join(config.TOKEN_STORE_USER_ID, "save")
 
 
 def test_appdata_maps_to_local():
     assert tokenize("{AppData}/Game") == \
-        os.path.join(config.token_user_profile_dir, "AppData", "Local", "Game")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "AppData", "Local", "Game")
 
 
 def test_appdata_roaming_maps_to_roaming():
     # The "/../Roaming" suffix has to be matched before the bare {AppData}, or
     # it resolves to Local and the wrong directory is backed up.
     assert tokenize("{AppData}/../Roaming/Game") == \
-        os.path.join(config.token_user_profile_dir, "AppData", "Roaming", "Game")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "AppData", "Roaming", "Game")
 
 
 def test_appdata_locallow_maps_to_locallow():
     assert tokenize("{AppData}/../LocalLow/Game") == \
-        os.path.join(config.token_user_profile_dir, "AppData", "LocalLow", "Game")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "AppData", "LocalLow", "Game")
 
 
 @pytest.mark.parametrize("variant", [
@@ -71,22 +71,22 @@ def test_no_traversal_survives_tokenization(path):
 ])
 def test_windows_directory_tokens_expand(token, expected):
     assert tokenize(f"{token}/Game") == \
-        os.path.join(config.token_user_profile_dir, expected, "Game")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, expected, "Game")
 
 
 def test_saved_games_expands():
     assert tokenize("{UserSavedGames}/Game") == \
-        os.path.join(config.token_user_profile_dir, "Saved Games", "Game")
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "Saved Games", "Game")
 
 
 def test_the_public_directory_token_expands():
     assert tokenize("<winPublic>/Game") == \
-        os.path.join(config.token_user_public_dir, "Game")
+        os.path.join(config.TOKEN_USER_PUBLIC_DIR, "Game")
 
 
 def test_the_store_root_token_expands():
     assert tokenize("<root>/Game") == \
-        os.path.join(config.token_store_install_dir, "Game")
+        os.path.join(config.TOKEN_STORE_INSTALL_DIR, "Game")
 
 
 ###########################################################
@@ -96,7 +96,7 @@ def test_the_store_root_token_expands():
 @pytest.mark.parametrize("token", ["{InstallDir}", "<base>"])
 def test_the_install_token_defaults_to_the_game_install_dir(token):
     assert tokenize(f"{token}/save") == \
-        os.path.join(config.token_game_install_dir, "save")
+        os.path.join(config.TOKEN_GAME_INSTALL_DIR, "save")
 
 
 @pytest.mark.parametrize("token", ["{InstallDir}", "<base>"])
@@ -107,7 +107,7 @@ def test_an_explicit_base_path_replaces_the_install_token(token):
 
 def test_an_invalid_base_path_falls_back_to_the_token():
     assert tokenize("<base>/save", "") == \
-        os.path.join(config.token_game_install_dir, "save")
+        os.path.join(config.TOKEN_GAME_INSTALL_DIR, "save")
 
 
 ###########################################################

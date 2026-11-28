@@ -172,6 +172,17 @@ def test_runnable_files_are_found_and_recorded(game_tree, store, popups, monkeyp
         assert json.load(handle)["gog"]["launch"] == [{"exe": "game.exe", "cwd": "Game"}]
 
 
+def test_an_install_is_scanned_for_likely_game_programs(tmp_path):
+    for relative in ["Game/game.exe", "Game/readme.txt", "Program Files (x86)/Common Files/helper.exe"]:
+        target = tmp_path / relative
+        target.parent.mkdir(parents = True, exist_ok = True)
+        target.write_text("x")
+
+    programs = gameinfo.scan_launch_programs(str(tmp_path))
+
+    assert [(program.get_exe(), program.get_cwd()) for program in programs] == [("game.exe", "Game")]
+
+
 ###########################################################
 # Files and launch values
 ###########################################################
@@ -246,8 +257,8 @@ def test_raw_json_round_trips(game_tree):
 
 def test_metadata_flags(game):
     entry = metadataentry.MetadataEntry()
-    entry.set_value(config.metadata_key_coop, "Yes")
-    entry.set_value(config.metadata_key_playable, "No")
+    entry.set_value(config.METADATA_KEY_COOP, "Yes")
+    entry.set_value(config.METADATA_KEY_PLAYABLE, "No")
     game.set_metadata(entry)
 
     assert game.is_coop() is True

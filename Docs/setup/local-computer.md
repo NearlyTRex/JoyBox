@@ -149,7 +149,9 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `pipewire` | A silent "Game Mic (silent)" source for Wine/Proton games, and a rule that stops them changing any mic's volume; set by `[UserData.GameMic]` (see [Configuration](../reference/configuration.md#game-mic)) |
 | `rust` | Current stable Rust and cargo from rustup (not apt's older `cargo`), the `x86_64-pc-windows-msvc` target, and cargo-xwin + xwin for MSVC builds (`cargo xwin build --target x86_64-pc-windows-msvc`) |
 | `steam` | Steam gaming platform |
-| `sysctl` | Kernel sysctl tweaks |
+| `sysctl` | Kernel sysctl tweaks: a higher inotify limit, and swappiness tuned for zram |
+| `zram` | Compressed swap in RAM, sized at half of RAM with zstd, used before the swap file |
+| `swapfile` | Grows `/swapfile` to 16 GB as the fallback behind zram, and mounts it at boot; teardown leaves it in place |
 | `udev` | USB device rules, and virtual-controller access for Sunshine |
 | `ufw` | Firewall rules: Sunshine's ports, opened to the LAN on a streaming host |
 | `virtualbox` | VirtualBox |

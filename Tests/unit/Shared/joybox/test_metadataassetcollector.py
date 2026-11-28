@@ -44,10 +44,10 @@ def answer(monkeypatch, value):
 ###########################################################
 
 def test_boxfront_searches_images_steam_and_griddb(sources):
-    results = metadataassetcollector.find_metadata_assets_from_google_images("PC", "Doom (USA)", config.AssetType.BOXFRONT)
-    results += metadataassetcollector.find_metadata_assets_from_youtube("PC", "Doom (USA)", config.AssetType.BOXFRONT)
-    results += metadataassetcollector.find_metadata_assets_from_steam("PC", "Doom (USA)", config.AssetType.BOXFRONT)
-    results += metadataassetcollector.find_metadata_assets_from_steamgriddb("PC", "Doom (USA)", config.AssetType.BOXFRONT)
+    results = metadataassetcollector.find_metadata_assets_from_google_images("Doom (USA)", config.AssetType.BOXFRONT)
+    results += metadataassetcollector.find_metadata_assets_from_youtube("Doom (USA)", config.AssetType.BOXFRONT)
+    results += metadataassetcollector.find_metadata_assets_from_steam("Doom (USA)", config.AssetType.BOXFRONT)
+    results += metadataassetcollector.find_metadata_assets_from_steamgriddb("Doom (USA)", config.AssetType.BOXFRONT)
 
     assert [url.get_url() for url in results] == ["https://img/1", "https://steam/1", "https://grid/1"]
     assert [source for source, kwargs in sources] == ["images", "steam", "griddb"]
@@ -55,17 +55,17 @@ def test_boxfront_searches_images_steam_and_griddb(sources):
 
 
 def test_video_searches_youtube_trailers_and_steam(sources):
-    results = metadataassetcollector.find_metadata_assets_from_google_images("PC", "Doom", config.AssetType.VIDEO)
-    results += metadataassetcollector.find_metadata_assets_from_youtube("PC", "Doom", config.AssetType.VIDEO)
-    results += metadataassetcollector.find_metadata_assets_from_steam("PC", "Doom", config.AssetType.VIDEO)
-    results += metadataassetcollector.find_metadata_assets_from_steamgriddb("PC", "Doom", config.AssetType.VIDEO)
+    results = metadataassetcollector.find_metadata_assets_from_google_images("Doom", config.AssetType.VIDEO)
+    results += metadataassetcollector.find_metadata_assets_from_youtube("Doom", config.AssetType.VIDEO)
+    results += metadataassetcollector.find_metadata_assets_from_steam("Doom", config.AssetType.VIDEO)
+    results += metadataassetcollector.find_metadata_assets_from_steamgriddb("Doom", config.AssetType.VIDEO)
 
     assert [url.get_url() for url in results] == ["https://vid/1", "https://steam/1"]
     assert sources[0][1]["search_name"] == "Doom trailer"
 
 
 def test_other_asset_types_search_nothing(sources):
-    assert metadataassetcollector.find_metadata_assets_from_steam("PC", "Doom", config.AssetType.LABEL) == []
+    assert metadataassetcollector.find_metadata_assets_from_steam("Doom", config.AssetType.LABEL) == []
     assert sources == []
 
 

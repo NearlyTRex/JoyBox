@@ -2,9 +2,11 @@
 import pytest
 
 # Local imports
+from joybox import sourcebuild
+from joybox import release
 from joybox import config
 from joybox.emulators import mame
-from emulator_helpers import ConfigureSeams
+from emulator_helpers import ConfigureSeams, Release
 
 
 ###########################################################
@@ -16,16 +18,6 @@ from emulator_helpers import ConfigureSeams
 ###########################################################
 
 PLATFORMS = ["windows", "linux"]
-
-
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
 
 
 @pytest.fixture
@@ -44,15 +36,8 @@ def program_paths(monkeypatch):
 def online(monkeypatch, program_paths):
     # One fake for both so calls stay in order across platforms
     fake = Release()
-    monkeypatch.setattr(mame.release, "download_github_release", fake)
-    monkeypatch.setattr(mame.sourcebuild, "build_appimage_from_source", fake)
-    return fake
-
-
-@pytest.fixture
-def stored(monkeypatch, program_paths):
-    fake = Release()
-    monkeypatch.setattr(mame.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "download_github_release", fake)
+    monkeypatch.setattr(sourcebuild, "build_appimage_from_source", fake)
     return fake
 
 
@@ -132,9 +117,9 @@ def configure(monkeypatch):
 def test_configure_writes_inis_and_copies_system_files_to_each_platform(configure):
     assert mame.Mame().configure() is True
 
-    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in mame.config_files]
+    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in mame.Mame().get_config_files()]
     assert all(contents.startswith("#\n# CORE SEARCH PATH OPTIONS") for _, contents in configure.touched)
-    assert len(configure.copied) == 2 * len(mame.system_files)
+    assert len(configure.copied) == 2 * len(mame.Mame().get_system_files())
     assert configure.copied[:2] == [
         ("/locker/Mame/roms/cdimono1.zip", "/emu/setup_dir/windows/roms/cdimono1.zip"),
         ("/locker/Mame/roms/cdimono1.zip", "/emu/setup_dir/linux/roms/cdimono1.zip"),
@@ -165,7 +150,7 @@ def test_configure_fails_when_a_system_file_cannot_be_copied(configure):
 
 def test_a_pretend_configure_succeeds_without_real_hashes(configure):
     assert mame.Mame().configure(config.SetupParams(pretend_run = True)) is True
-    assert len(configure.copied) == 2 * len(mame.system_files)
+    assert len(configure.copied) == 2 * len(mame.Mame().get_system_files())
 
 
 ###########################################################
@@ -201,7 +186,7 @@ def launcher(monkeypatch):
         lambda name, key, platform = None: "/emu/%s" % key)
     monkeypatch.setattr(mame.programs, "get_emulator_program", lambda name: "/bin/mame")
     monkeypatch.setattr(mame.gui, "display_error_popup", popup)
-    monkeypatch.setattr(mame.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(mame.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "popups": popups}
 
 
@@ -213,7 +198,7 @@ def test_an_arcade_set_runs_by_name_from_the_game_dir(launcher):
     launched = launcher["launched"]
     assert launched["launch_cmd"] == [
         "/bin/mame", "-inipath", "/emu/config_dir",
-        "-rompath", config.token_game_dir, config.token_game_name]
+        "-rompath", config.TOKEN_GAME_DIR, config.TOKEN_GAME_NAME]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"]) == ("video", "/cap.mp4")
 
@@ -232,7 +217,7 @@ def test_a_console_runs_its_system_driver_with_the_game_as_media(launcher, platf
 
     assert launcher["launched"]["launch_cmd"] == [
         "/bin/mame", "-inipath", "/emu/config_dir",
-        "-rompath", "/emu/roms_dir", system_name, media_flag, config.token_game_file]
+        "-rompath", "/emu/roms_dir", system_name, media_flag, config.TOKEN_GAME_FILE]
 
 
 def test_a_windowed_launch_asks_mame_for_a_window(launcher):

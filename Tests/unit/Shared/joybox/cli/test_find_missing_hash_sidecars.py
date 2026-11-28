@@ -40,11 +40,11 @@ def tool(monkeypatch, isolated_settings):
     harness.sidecar = {"Game.zip": {"hash": "aaaa"}}
     harness.reported = []
     tool_module = find_missing_hash_sidecars
-    monkeypatch.setattr(tool_module.lockerinfo, "LockerInfo", FakeLockerInfo)
+    monkeypatch.setattr(tool_module.synctransfers.lockerinfo, "LockerInfo", FakeLockerInfo)
     monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, remote_type: True)
     monkeypatch.setattr(synclisting, "list_files_with_hashes", lambda **kwargs: harness.remote)
     monkeypatch.setattr(synctransfers, "list_files_with_hashes_from_sidecar", lambda **kwargs: harness.sidecar)
-    monkeypatch.setattr(tool_module.reports, "write_list_report", lambda items, **kwargs: harness.reported.extend(items))
+    monkeypatch.setattr(tool_module.synctransfers.reports, "write_list_report", lambda items, **kwargs: harness.reported.extend(items))
     return harness
 
 

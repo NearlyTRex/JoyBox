@@ -4,6 +4,8 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import hardening
+from joybox import serverinfo
+from joybox.bootstrap import runner
 from joybox.cli import verify_server
 
 
@@ -44,8 +46,8 @@ def tool(monkeypatch, isolated_settings):
             raise harness.results
         return harness.results
 
-    monkeypatch.setattr(verify_server.serverinfo, "get_connection", get_connection)
-    monkeypatch.setattr(verify_server.runner, "get_public_ports", lambda server: [80, 443])
+    monkeypatch.setattr(serverinfo, "get_connection", get_connection)
+    monkeypatch.setattr(runner, "get_public_ports", lambda server: [80, 443])
     monkeypatch.setattr(verify_server.hardening, "verify_hardening", verify)
     return harness
 
@@ -84,7 +86,8 @@ def test_the_exit_status_counts_the_failures(tool, capsys):
 def test_the_connection_is_torn_down_when_a_check_raises(tool):
     tool.results = RuntimeError("boom")
 
-    assert tool.exit_code() != 0
+    with pytest.raises(RuntimeError, match = "boom"):
+        tool.exit_code()
 
     assert tool.connection.events == ["setup", "teardown"]
 

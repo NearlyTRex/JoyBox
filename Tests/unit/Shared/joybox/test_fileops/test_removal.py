@@ -184,6 +184,14 @@ def test_remove_by_glob_failure(tmp_path, monkeypatch):
         fileops.remove_file_or_directory(str(tmp_path / "*"), exit_on_failure = True)
 
 
+def test_remove_by_glob_reports_a_match_it_could_not_remove(tmp_path, monkeypatch):
+    write(tmp_path / "match_a")
+    write(tmp_path / "match_b")
+    monkeypatch.setattr(fileops.os, "remove", fail)
+    assert not fileops.remove_file_or_directory(str(tmp_path / "match_*"))
+    assert sorted(os.listdir(tmp_path)) == ["match_a", "match_b"]
+
+
 def test_remove_object_of_nothing(tmp_path):
     assert not fileops.remove_object(str(tmp_path / "missing"))
 

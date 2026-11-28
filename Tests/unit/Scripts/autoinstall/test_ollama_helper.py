@@ -162,7 +162,7 @@ def test_the_report_counts_only_the_computing_cards(helper):
 def served(helper, monkeypatch):
     monkeypatch.setattr(helper, "read_gpus", lambda: [gpu("GPU-bbb")])
     monkeypatch.setattr(helper, "read_ram", lambda: (1000, 500))
-    server = helper.http.server.ThreadingHTTPServer(("127.0.0.1", 0), helper.HardwareHandler)
+    server = helper.make_server(port = 0)
     thread = threading.Thread(target = server.serve_forever, daemon = True)
     thread.start()
     yield "http://127.0.0.1:%d" % server.server_address[1]
@@ -195,6 +195,16 @@ def test_other_paths_are_not_found(served):
     assert raised.value.code == 404
 
 
+@pytest.mark.allow_network
+def test_only_get_is_answered(served):
+    request = urllib.request.Request(served + "/hardware", data = b"", method = "POST")
+    with pytest.raises(urllib.error.HTTPError) as raised:
+        with urllib.request.urlopen(request, timeout = 5) as response:
+            response.read()
+
+    assert (raised.value.code, raised.value.headers["Allow"]) == (405, "GET")
+
+
 ###########################################################
 # Commands
 ###########################################################
@@ -220,16 +230,18 @@ def test_the_server_listens_on_localhost_beside_ollama(helper, monkeypatch):
     bound = []
 
     class Server:
-        def __init__(self, address, handler):
-            bound.append((address, handler))
-
         def serve_forever(self):
             bound.append("serving")
 
-    monkeypatch.setattr(helper.http.server, "ThreadingHTTPServer", Server)
+    def make_server(host, port, app, server_class, handler_class):
+        bound.append((host, port, app, server_class, handler_class))
+        return Server()
+
+    monkeypatch.setattr(helper.simple_server, "make_server", make_server)
     helper.serve()
 
-    assert bound == [(("127.0.0.1", 11435), helper.HardwareHandler), "serving"]
+    assert bound == [
+        ("127.0.0.1", 11435, helper.hardware_app, helper.ThreadingWSGIServer, helper.QuietHandler), "serving"]
 
 
 def test_a_failed_select_is_an_error(helper, monkeypatch):

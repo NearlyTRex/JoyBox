@@ -1,5 +1,7 @@
 # Imports
+import importlib
 import os
+import shutil
 import errno
 import fnmatch
 import pathlib
@@ -8,9 +10,13 @@ import ntpath
 import time
 
 # Local imports
-import joybox.config as config
-import joybox.text as text
-import joybox.strings as strings
+from joybox import config
+from joybox import text
+from joybox import strings
+
+# Get magic, imported on first use
+def _get_magic():
+    return importlib.import_module("magic")
 
 ###########################################################
 # Path checking and validation utilities
@@ -35,20 +41,15 @@ def does_path_exist(path, case_sensitive_paths = True, partial_paths = False):
         return False
     if case_sensitive_paths:
         return os.path.exists(path)
-    elif partial_paths:
-        path_parent = str(pathlib.Path(path).parent)
-        path_name = str(pathlib.Path(path).name)
-        if os.path.isdir(path_parent):
-            for obj in os.listdir(path_parent):
-                if obj.startswith(path_name):
-                    return True
-    else:
-        path_parent = str(pathlib.Path(path).parent)
-        path_name = str(pathlib.Path(path).name)
-        if os.path.isdir(path_parent):
-            for obj in os.listdir(path_parent):
-                if path_name.lower() == obj.lower():
-                    return True
+    path_parent = str(pathlib.Path(path).parent)
+    path_name = str(pathlib.Path(path).name)
+    if not os.path.isdir(path_parent):
+        return False
+    for obj in os.listdir(path_parent):
+        if partial_paths and obj.startswith(path_name):
+            return True
+        if not partial_paths and path_name.lower() == obj.lower():
+            return True
     return False
 
 # Check if two paths point to the same location
@@ -79,13 +80,13 @@ def is_path_symlink(path):
         return False
     return os.path.islink(path)
 
-# Check if path is file or directory
+# Check if path is an existing file or directory, following symlinks to either
 def is_path_file_or_directory(path):
     if not is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
-    return os.path.isfile(path) or os.path.isdir(path) and not os.path.islink(path)
+    return os.path.isfile(path) or os.path.isdir(path)
 
 # Check if drive letter is valid
 def is_drive_letter_valid(drive_letter):
@@ -93,7 +94,7 @@ def is_drive_letter_valid(drive_letter):
         return False
     return drive_letter.isalpha()
 
-# Replace invalid path characters
+# Strip rich text and control characters, apply config.path_text_replacements, trim trailing dots and collapse spaces
 def replace_invalid_path_characters(path):
 
     # Rich text
@@ -120,7 +121,7 @@ def replace_invalid_path_characters(path):
 # Path list utilities
 ###########################################################
 
-# Prune paths
+# Sorted, de-duplicated paths with any that start with an exclude prefix dropped
 def prune_paths(paths, excludes = ()):
     new_paths = set()
     for path in paths:
@@ -132,54 +133,63 @@ def prune_paths(paths, excludes = ()):
             new_paths.add(path)
     return strings.sort_strings(new_paths)
 
-# Prune child paths
+# Sorted paths with those nested under another listed path dropped; the bare install-dir token goes when a deeper one is listed
 def prune_child_paths(paths):
     filtered_paths = list(paths)
-    if config.token_game_install_dir in filtered_paths:
+    if config.TOKEN_GAME_INSTALL_DIR in filtered_paths:
         has_specific_install_paths = any(
-            path.startswith(config.token_game_install_dir + "/")
+            path.startswith(config.TOKEN_GAME_INSTALL_DIR + "/")
             for path in filtered_paths
         )
         if has_specific_install_paths:
-            filtered_paths = [p for p in filtered_paths if p != config.token_game_install_dir]
+            filtered_paths = [p for p in filtered_paths if p != config.TOKEN_GAME_INSTALL_DIR]
     new_paths = set()
     for path in strings.sort_strings(filtered_paths):
         if not any(is_parent_path(added_path, path) for added_path in new_paths):
             new_paths.add(path)
     return strings.sort_strings(new_paths)
 
-# Build file list
+# A listed location as is, or relative to absolute_root under new_relative_path when relative paths are asked for
+def _format_listed_path(location, absolute_root, new_relative_path, use_relative_paths):
+    if not use_relative_paths:
+        return location
+    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
+        new_relative_path += config.OS_PATHSEP
+    return new_relative_path + os.path.relpath(location, absolute_root)
+
+# Files in the directory tree at root, in walk order, formatted as build_file_list lists them
+def _list_tree_files(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
+    absolute_root = os.path.abspath(root)
+    files = []
+    for base, _, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+        for filename in filenames:
+            location = os.path.abspath(os.path.join(base, filename))
+            if ignore_symlinks and os.path.islink(location):
+                continue
+            files.append(_format_listed_path(location, absolute_root, new_relative_path, use_relative_paths))
+    return files
+
+# Sorted files under root, recursing, as absolute paths or relative ones under new_relative_path; empty for an invalid root
 def build_file_list(root, excludes = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     excludes = [] if excludes is None else excludes
     files = []
     if not is_path_valid(root):
         return files
-    absolute_root = os.path.abspath(root)
     if os.path.isdir(root):
-        for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
-            for filename in filenames:
-                location = os.path.abspath(os.path.join(base, filename))
-                if ignore_symlinks and os.path.islink(location):
-                    continue
-                if use_relative_paths:
-                    if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
-                        new_relative_path += config.os_pathsep
-                    files.append(new_relative_path + os.path.relpath(location, absolute_root))
-                else:
-                    files.append(location)
+        files = _list_tree_files(root, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs)
     elif os.path.isfile(root):
         location = os.path.abspath(root)
         if not ignore_symlinks or not os.path.islink(location):
             files.append(location)
     return prune_paths(files, excludes)
 
-# Build file list by extensions
+# Files from build_file_list whose extension matches one listed, in any case; every file when none are listed
 def build_file_list_by_extensions(root, excludes = None, extensions = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     excludes = [] if excludes is None else excludes
     extensions = [] if extensions is None else extensions
     files = []
     for file in build_file_list(root, excludes, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
-        base, ext = get_filename_split(file)
+        _, ext = get_filename_split(file)
         if isinstance(extensions, list) and len(extensions) > 0:
             if ext in extensions or ext.lower() in extensions or ext.upper() in extensions:
                 files.append(file)
@@ -187,7 +197,7 @@ def build_file_list_by_extensions(root, excludes = None, extensions = None, new_
             files.append(file)
     return strings.sort_strings(files)
 
-# Build directory list
+# Sorted directories under root, root itself included, as absolute or relative paths; empty for an invalid root
 def build_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     excludes = [] if excludes is None else excludes
     directories = []
@@ -196,39 +206,41 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
     absolute_root = os.path.abspath(root)
     if os.path.isdir(absolute_root):
         directories.append(absolute_root)
-    for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+    for base, dirnames, _ in os.walk(root, followlinks = follow_symlink_dirs):
         for dirname in dirnames:
             location = os.path.abspath(os.path.join(base, dirname))
             if ignore_symlinks and os.path.islink(location):
                 continue
-            if use_relative_paths:
-                if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
-                    new_relative_path += config.os_pathsep
-                directories.append(new_relative_path + os.path.relpath(location, absolute_root))
-            else:
-                directories.append(location)
+            directories.append(_format_listed_path(location, absolute_root, new_relative_path, use_relative_paths))
     return prune_paths(directories, excludes)
 
-# Build empty directory list
+# Where a path build_directory_list listed sits on disk, undoing its relative form
+def _locate_listed_path(root, listed_path, new_relative_path, use_relative_paths):
+    if not use_relative_paths or os.path.isabs(listed_path):
+        return listed_path
+    if new_relative_path and not new_relative_path.endswith(config.OS_PATHSEP):
+        new_relative_path += config.OS_PATHSEP
+    return os.path.join(os.path.abspath(root), listed_path.removeprefix(new_relative_path))
+
+# Directories from build_directory_list that hold nothing
 def build_empty_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False):
     excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
-        if is_directory_empty(potential_dir):
+        if is_directory_empty(_locate_listed_path(root, potential_dir, new_relative_path, use_relative_paths)):
             directories.append(potential_dir)
     return directories
 
-# Build symlink directory list
+# Directories from build_directory_list that are themselves symlinks
 def build_symlink_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False):
     excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
-        if os.path.islink(potential_dir):
+        if os.path.islink(_locate_listed_path(root, potential_dir, new_relative_path, use_relative_paths)):
             directories.append(potential_dir)
     return directories
 
-# Build leaf directory list (directories with no subdirectories)
-# Check if path matches any exclude pattern
+# Whether a relative path, or any leading part of it, matches one of the fnmatch exclude patterns
 def matches_exclude_pattern(rel_path, excludes):
     for pattern in excludes:
         if fnmatch.fnmatch(rel_path, pattern):
@@ -240,7 +252,35 @@ def matches_exclude_pattern(rel_path, excludes):
                 return True
     return False
 
-# Returns list of dicts with path, file_count, and total_size
+# Subdirectory paths directly inside a directory, skipping dot entries when ignore_hidden
+def _list_subdirectories(current_path, ignore_hidden):
+    subdirs = []
+    for entry in os.listdir(current_path):
+        if ignore_hidden and entry.startswith("."):
+            continue
+        entry_path = join_paths(current_path, entry)
+        if is_path_directory(entry_path):
+            subdirs.append(entry_path)
+    return subdirs
+
+# Leaf directory info: its path, the count of files directly in it and their total size in bytes
+def _summarize_leaf_directory(current_path, ignore_hidden):
+    file_count = 0
+    total_size = 0
+    for entry in os.listdir(current_path):
+        if ignore_hidden and entry.startswith("."):
+            continue
+        entry_path = join_paths(current_path, entry)
+        if is_path_file(entry_path):
+            file_count += 1
+            total_size += get_file_size(entry_path)
+    return {
+        "path": current_path,
+        "file_count": file_count,
+        "total_size": total_size
+    }
+
+# Directories under root with no subdirectories, as dicts of path, file_count and total_size in bytes
 def build_leaf_directory_list(
     root,
     excludes = None,
@@ -267,37 +307,14 @@ def build_leaf_directory_list(
         if rel_path and matches_exclude_pattern(rel_path, excludes):
             continue
 
-        # Check for subdirectories
-        subdirs = []
-        for entry in os.listdir(current_path):
-            if ignore_hidden and entry.startswith("."):
-                continue
-            entry_path = join_paths(current_path, entry)
-            if is_path_directory(entry_path):
-                subdirs.append(entry_path)
-
         # If has subdirectories, add them to queue
+        subdirs = _list_subdirectories(current_path, ignore_hidden)
         if subdirs:
             work_queue.extend(subdirs)
             continue
 
-        # This is a leaf directory - calculate file count and size
-        file_count = 0
-        total_size = 0
-        for entry in os.listdir(current_path):
-            if ignore_hidden and entry.startswith("."):
-                continue
-            entry_path = join_paths(current_path, entry)
-            if is_path_file(entry_path):
-                file_count += 1
-                total_size += get_file_size(entry_path)
-
-        # Build directory info
-        leaf_dirs.append({
-            "path": current_path,
-            "file_count": file_count,
-            "total_size": total_size
-        })
+        # This is a leaf directory
+        leaf_dirs.append(_summarize_leaf_directory(current_path, ignore_hidden))
     return leaf_dirs
 
 # Returns the leaf directories as (small, large), where large ones exceed a threshold
@@ -336,22 +353,22 @@ def group_files_by_directory(files):
 # Path conversion utilities
 ###########################################################
 
-# Convert to top level paths
+# Whether a top-level component is kept: always without a valid root or filter, else only as a file or dir under it
+def _is_kept_top_level_path(path_front, path_root, only_files, only_dirs):
+    if not is_path_valid(path_root) or not (only_files or only_dirs):
+        return True
+    path_full = os.path.join(path_root, path_front)
+    if only_files and os.path.isfile(path_full):
+        return True
+    return bool(only_dirs and os.path.isdir(path_full))
+
+# Sorted first components of each path, kept only when they are files or dirs under path_root if asked
 def convert_to_top_level_paths(path_list, path_root = None, only_files = False, only_dirs = False):
     top_level_paths = set()
     for path in path_list:
         path_offset = get_filename_drive_offset(path)
         path_front = get_filename_front(path_offset)
-        should_save_path = False
-        if is_path_valid(path_root) and (only_files or only_dirs):
-            path_full = os.path.join(path_root, path_front)
-            if only_files and os.path.isfile(path_full):
-                should_save_path = True
-            elif only_dirs and os.path.isdir(path_full):
-                should_save_path = True
-        else:
-            should_save_path = True
-        if should_save_path:
+        if _is_kept_top_level_path(path_front, path_root, only_files, only_dirs):
             top_level_paths.add(path_front)
     return strings.sort_strings(top_level_paths)
 
@@ -362,25 +379,25 @@ def get_relative_path(path, start_dir):
     except ValueError:
         return None
 
-# Convert file list to relative paths
+# Sorted paths with the base_dir prefix stripped, using OS separators
 def convert_file_list_to_relative_paths(file_list, base_dir):
-    replacement = normalize_file_path(base_dir, separator = config.os_pathsep)
-    if not replacement.endswith(config.os_pathsep):
-        replacement += config.os_pathsep
+    replacement = normalize_file_path(base_dir, separator = config.OS_PATHSEP)
+    if not replacement.endswith(config.OS_PATHSEP):
+        replacement += config.OS_PATHSEP
     relative_file_list = []
     for filename in file_list:
-        normalized_filename = normalize_file_path(filename, separator = config.os_pathsep)
+        normalized_filename = normalize_file_path(filename, separator = config.OS_PATHSEP)
         relative_file_list.append(normalized_filename.removeprefix(replacement))
     return strings.sort_strings(relative_file_list)
 
-# Convert file list to absolute paths
+# Sorted paths each joined onto base_dir
 def convert_file_list_to_absolute_paths(file_list, base_dir):
     absolute_file_list = []
     for filename in file_list:
         absolute_file_list.append(os.path.join(base_dir, filename))
     return strings.sort_strings(absolute_file_list)
 
-# Normalize file path
+# Collapse a path in POSIX, Windows or native style, then turn backslashes into separator
 def normalize_file_path(path, force_posix = False, force_windows = False, separator = os.sep):
     normalized_path = path
     if force_posix:
@@ -392,7 +409,7 @@ def normalize_file_path(path, force_posix = False, force_windows = False, separa
     normalized_path = normalized_path.replace("\\", separator)
     return normalized_path
 
-# Split file path
+# Split on splitter and normalize each part, dropping the drive anchor from every part after the first
 def split_file_path(path, splitter):
     split_paths = []
     for idx, part in enumerate(path.split(splitter)):
@@ -403,7 +420,7 @@ def split_file_path(path, splitter):
             split_paths.append(get_filename_drive_offset(norm_part))
     return split_paths
 
-# Rebase file path
+# Move a path from under old_base_path to under new_base_path; returned normalized but unchanged when outside it
 def rebase_file_path(path, old_base_path, new_base_path):
     norm_path = normalize_file_path(path)
     norm_old_base_path = normalize_file_path(old_base_path)
@@ -417,14 +434,14 @@ def rebase_file_path(path, old_base_path, new_base_path):
         return norm_path
     return normalize_file_path(os.path.join(norm_new_base_path, remainder))
 
-# Rebase file paths
+# rebase_file_path applied to each path, keeping order
 def rebase_file_paths(paths, old_base_path, new_base_path):
     rebased_paths = []
     for path in paths:
         rebased_paths.append(rebase_file_path(path, old_base_path, new_base_path))
     return rebased_paths
 
-# Join paths
+# Join strings and enum values into one normalized path; raises TypeError on any other type
 def join_paths(*paths):
     processed_paths = []
     for path in paths:
@@ -440,29 +457,29 @@ def join_paths(*paths):
 # Directory info utilities
 ###########################################################
 
-# Get directory name
+# Last component of the path
 def get_directory_name(path):
     return str(pathlib.Path(path).name)
 
-# Get directory parts
+# Path components as a list, anchor first
 def get_directory_parts(path):
     return list(pathlib.Path(path).parts)
 
-# Get directory parent
+# Path with its last component removed
 def get_directory_parent(path):
     return str(pathlib.Path(path).parent)
 
-# Get directory front
+# First component of the path; empty for an empty path
 def get_directory_front(path):
     for part in get_directory_parts(path):
         return part
     return ""
 
-# Get directory size
+# Total bytes of the files under the directory, recursively
 def get_directory_size(path):
     return sum(p.stat().st_size for p in pathlib.Path(path).rglob('*') if p.is_file())
 
-# Get directory contents
+# Sorted entry names in the directory, without excluded prefixes; empty when it is missing
 def get_directory_contents(path, excludes = None):
     excludes = [] if excludes is None else excludes
     contents = []
@@ -471,21 +488,20 @@ def get_directory_contents(path, excludes = None):
             contents = os.listdir(path)
     return prune_paths(contents, excludes)
 
-# Get directory anchor
+# Root anchor such as / or C:\, read as POSIX when it starts with / and as Windows otherwise
 def get_directory_anchor(path):
-    if path.startswith(config.drive_root_posix):
+    if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
-    else:
-        return str(pathlib.PureWindowsPath(path).anchor)
+    return str(pathlib.PureWindowsPath(path).anchor)
 
-# Get directory drive
+# Lowercased first character of the anchor, the drive letter on Windows; empty without one
 def get_directory_drive(path):
     anchor = get_directory_anchor(path)
     if len(anchor) == 0:
         return ""
     return anchor[0].lower()
 
-# Get directory drive offset
+# Path with its anchor removed
 def get_directory_drive_offset(path):
     anchor = get_directory_anchor(path)
     if len(anchor) == 0:
@@ -500,33 +516,31 @@ def is_directory_empty(path):
 def does_directory_contain_files(path, recursive = True):
     if recursive:
         return len(build_file_list(path)) > 0
-    else:
-        files = []
-        for obj in get_directory_contents(path):
-            obj_path = os.path.join(path, obj)
-            if os.path.isfile(obj_path):
-                files.append(obj)
-        return len(files) > 0
+    files = []
+    for obj in get_directory_contents(path):
+        obj_path = os.path.join(path, obj)
+        if os.path.isfile(obj_path):
+            files.append(obj)
+    return len(files) > 0
 
 # Check if directory contains files by extensions
 def does_directory_contain_files_by_extensions(path, extensions = None, recursive = True):
     extensions = [] if extensions is None else extensions
     if recursive:
         return len(build_file_list_by_extensions(path, extensions = extensions)) > 0
-    else:
-        files = []
-        for obj in get_directory_contents(path):
-            obj_path = os.path.join(path, obj)
-            if os.path.isfile(obj_path):
-                if does_filename_match_extensions(obj_path, extensions):
-                    files.append(obj)
-        return len(files) > 0
+    files = []
+    for obj in get_directory_contents(path):
+        obj_path = os.path.join(path, obj)
+        if os.path.isfile(obj_path):
+            if does_filename_match_extensions(obj_path, extensions):
+                files.append(obj)
+    return len(files) > 0
 
 # Check if directory contains symlink dirs
 def does_directory_contain_symlink_dirs(path):
     return len(build_symlink_directory_list(path)) > 0
 
-# Get directory info
+# Dict of the name, parts, parent, size, contents, drive details and emptiness of a directory
 def get_directory_info(path):
     info = {}
     info["orig"] = path
@@ -547,21 +561,21 @@ def get_directory_info(path):
 # Filename info utilities
 ###########################################################
 
-# Get filename parts
+# Path components as a list, anchor first
 def get_filename_parts(path):
     return list(pathlib.Path(path).parts)
 
-# Get filename directory
+# Parent directory of the file
 def get_filename_directory(path):
     return str(pathlib.Path(path).parent)
 
-# Get filename front
+# First component of the path; empty for an empty path
 def get_filename_front(path):
     for part in get_filename_parts(path):
         return part
     return ""
 
-# Get filename split
+# [path without extension, extension], with tarball suffixes such as .tar.gz kept whole
 def get_filename_split(path):
     filename_ext = get_filename_extension(path)
     if not filename_ext:
@@ -569,7 +583,7 @@ def get_filename_split(path):
     filename_remainder = path[:-len(filename_ext)]
     return [filename_remainder, filename_ext]
 
-# Get filename basename
+# File name without directory or extension, with tarball suffixes such as .tar.gz removed whole
 def get_filename_basename(path):
     filename = pathlib.Path(path).name
     for tarball_ext in config.ArchiveTarballFileType.cvalues():
@@ -577,37 +591,36 @@ def get_filename_basename(path):
             return filename[:-len(tarball_ext)]
     return str(pathlib.Path(path).stem)
 
-# Get filename extension
+# File suffix including the dot, with tarball suffixes such as .tar.gz returned whole; empty without one
 def get_filename_extension(path):
     for tarball_ext in config.ArchiveTarballFileType.cvalues():
         if path.endswith(tarball_ext):
             return tarball_ext
     return pathlib.Path(path).suffix
 
-# Get filename anchor
+# Root anchor such as / or C:\, read as POSIX when it starts with / and as Windows otherwise
 def get_filename_anchor(path):
-    if path.startswith(config.drive_root_posix):
+    if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
-    else:
-        return str(pathlib.PureWindowsPath(path).anchor)
+    return str(pathlib.PureWindowsPath(path).anchor)
 
-# Get filename drive
+# Lowercased first character of the anchor, the drive letter on Windows; empty without one
 def get_filename_drive(path):
     anchor = get_filename_anchor(path)
     if len(anchor) == 0:
         return ""
     return anchor[0].lower()
 
-# Get filename drive offset
+# Path with its anchor removed
 def get_filename_drive_offset(path):
     anchor = get_filename_anchor(path)
     if len(anchor) == 0:
         return path
     return path[len(anchor):]
 
-# Get filename front slice
+# Path with its first component removed
 def get_filename_front_slice(path):
-    return rebase_file_path(path, get_filename_front(path) + config.os_pathsep, "")
+    return rebase_file_path(path, get_filename_front(path) + config.OS_PATHSEP, "")
 
 # Check if filename matches extensions
 def does_filename_match_extensions(path, extensions = None):
@@ -620,22 +633,22 @@ def does_filename_match_extensions(path, extensions = None):
             return True
     return False
 
-# Get filename file
+# File name with extension but no directory
 def get_filename_file(path):
     return get_filename_basename(path) + get_filename_extension(path)
 
-# Change filename extension
+# Same path with its extension swapped for new_extension, which includes the dot
 def change_filename_extension(path, new_extension):
     return join_paths(get_filename_directory(path), get_filename_basename(path) + new_extension)
 
-# Get file size
+# Size of the file in bytes; raises OSError when it is missing
 def get_file_size(path):
     return os.path.getsize(path)
 
-# Get file mime type
+# MIME type libmagic detects; empty when python-magic is missing or the file cannot be read
 def get_file_mime_type(path):
     try:
-        import magic
+        magic = _get_magic()
     except ImportError:
         return ""
     try:
@@ -643,24 +656,24 @@ def get_file_mime_type(path):
     except (OSError, magic.MagicException):
         return ""
 
-# Get file age in hours
+# Hours since the file was last modified; infinity when it cannot be read
 def get_file_age_in_hours(path):
     try:
         file_mtime = os.path.getmtime(path)
         current_time = time.time()
         age_seconds = current_time - file_mtime
         return age_seconds / 3600.0  # Convert to hours
-    except Exception:
+    except OSError:
         return float('inf')  # Return infinite age if file doesn't exist or error
 
 # Get file modification time as timestamp
 def get_file_mod_time(path):
     try:
         return int(os.path.getmtime(path))
-    except Exception:
+    except OSError:
         return 0
 
-# Get filename info
+# Dict of the parts, directory, base name, extension, drive details, size and MIME type of a file
 def get_filename_info(path):
     info = {}
     info["orig"] = path
@@ -682,6 +695,28 @@ def get_filename_info(path):
 # Path validation and filtering
 ###########################################################
 
+# Drive to validate against and the path without it: its own drive, else the system drive, else none; no drive off Windows
+def _split_validation_drive(path):
+    if os.name != "nt":
+        return "", path
+    drive, path = os.path.splitdrive(path)
+    if not os.path.isdir(drive):
+        drive = os.environ.get("SystemDrive", "C:")
+    if not os.path.isdir(drive):
+        drive = ""
+    return drive, path
+
+# Whether lstat rejects the name itself as invalid or too long, rather than just not finding it
+def _is_rejected_path_name(location):
+    try:
+        os.lstat(location)
+    except OSError as e:
+        if getattr(e, "winerror", None) == 123:
+            return True
+        if e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
+            return True
+    return False
+
 # Check if path is valid
 # https://stackoverflow.com/questions/9532499/check-whether-a-path-is-valid-in-python-without-creating-a-file-at-the-paths-ta
 # https://gist.github.com/mo-han/240b3ef008d96215e352203b88be40db
@@ -689,31 +724,18 @@ def is_path_valid(path):
     try:
         if not isinstance(path, str) or not path or len(path) == 0:
             return False
-        if os.name == "nt":
-            drive, path = os.path.splitdrive(path)
-            if not os.path.isdir(drive):
-                drive = os.environ.get("SystemDrive", "C:")
-            if not os.path.isdir(drive):
-                drive = ""
-        else:
-            drive = ""
+        drive, path = _split_validation_drive(path)
         parts = pathlib.Path(path).parts
         if not parts:
             check_list = [path]
         else:
             check_list = [os.path.join(*parts), *parts]
         for x in check_list:
-            try:
-                os.lstat(drive + x)
-            except OSError as e:
-                if hasattr(e, "winerror") and e.winerror == 123:
-                    return False
-                elif e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
-                    return False
+            if _is_rejected_path_name(drive + x):
+                return False
     except (TypeError, ValueError):
         return False
-    else:
-        return True
+    return True
 
 # Check if a path should be excluded (any exclude token appears in a path component)
 def is_exclude_path(path, excludes = ()):
@@ -721,3 +743,27 @@ def is_exclude_path(path, excludes = ()):
         if any(exclude in part for part in path.split(os.sep)):
             return True
     return False
+
+###########################################################
+# Runnable commands
+###########################################################
+
+# Executable path for cmd, trying each search dir with Windows program extensions before PATH; None when not found
+def get_runnable_command_path(cmd, search_dirs = ()):
+    for search_dir in search_dirs:
+        potential_paths = [join_paths(search_dir, cmd)]
+        for cmd_ext in config.WindowsProgramFileType.cvalues():
+            potential_paths.append(join_paths(search_dir, cmd + cmd_ext))
+        for potential_path in potential_paths:
+            verified_path = shutil.which(potential_path)
+            if verified_path:
+                return verified_path
+    return shutil.which(cmd)
+
+# Check if runnable command
+def is_runnable_command(cmd, search_dirs = None):
+    search_dirs = [] if search_dirs is None else search_dirs
+    cmd_path = get_runnable_command_path(cmd, search_dirs)
+    if not cmd_path:
+        return False
+    return True

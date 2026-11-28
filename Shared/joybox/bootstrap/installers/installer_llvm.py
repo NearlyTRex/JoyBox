@@ -1,9 +1,9 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
 from joybox import platform_info
+from . import installer
 
 # The LLVM release to install from apt.llvm.org, beside the distribution's own clang
 LLVM_VERSION = 23
@@ -59,11 +59,12 @@ class Llvm(installer.Installer):
 
         # Add apt repository
         logger.log_info("Adding LLVM apt repository")
-        self.connection.write_file(
-            f"/tmp/{self.sources_list}",
-            f"deb [signed-by={self.archive_key_path}] {self.url}/{self.codename}/ "
-            f"llvm-toolchain-{self.codename}-{self.version} main\n"
-        )
+        if not self.connection.write_file(
+                f"/tmp/{self.sources_list}",
+                f"deb [signed-by={self.archive_key_path}] {self.url}/{self.codename}/ "
+                f"llvm-toolchain-{self.codename}-{self.version} main\n"):
+            logger.log_error(f"Unable to write /tmp/{self.sources_list}")
+            return False
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo = True)
 
         # Update and install

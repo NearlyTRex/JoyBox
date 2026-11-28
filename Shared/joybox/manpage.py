@@ -6,8 +6,9 @@ import tempfile
 import textwrap
 
 # Local imports
-import joybox.default_settings as default_settings
+from joybox import default_settings
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
 from joybox import serialization
 
@@ -65,7 +66,7 @@ def describe_command(module_name, python_path, timeout = 60):
         env["HOME"] = home_dir
         env["USERPROFILE"] = home_dir
         env["PYTHONPATH"] = os.pathsep.join(python_path)
-        options = command.create_command_options()
+        options = commandbase.create_command_options()
         options.set_allow_processing(False)
         options.set_env(env)
         options.set_cwd(home_dir)
@@ -154,15 +155,17 @@ def format_description_cell(option):
         parts.append("Allowed: %s." % ", ".join("`%s`" % choice for choice in option["choices"]))
     return " ".join(parts).replace("|", "\\|").replace("\n", " ")
 
+# Synopsis word for a positional or required option: <dest> or its first flag with value
+def format_synopsis_word(option):
+    if option["positional"]:
+        return "<%s>" % option["dest"]
+    return "%s%s" % (option["flags"][0], format_value(option))
+
 # Get the synopsis line
 def format_synopsis(tool_name, spec):
     words = [tool_name]
     for group in spec["groups"]:
-        for option in group["options"]:
-            if option["positional"]:
-                words.append("<%s>" % option["dest"])
-            elif option["required"]:
-                words.append("%s%s" % (option["flags"][0], format_value(option)))
+        words += [format_synopsis_word(option) for option in group["options"] if option["positional"] or option["required"]]
     words.append("[options]")
     return " ".join(words)
 
@@ -177,6 +180,38 @@ def format_bullet(text):
         subsequent_indent = "  ",
         break_long_words = False,
         break_on_hyphens = False)
+
+# Option table lines for one argument group, ending with a blank line
+def format_option_table(group):
+    lines = [
+        "### %s" % (group["title"] or DEFAULT_GROUP_TITLE),
+        "",
+        "| Option | Description |",
+        "|--------|-------------|",
+    ]
+    for option in group["options"]:
+        lines.append("| %s | %s |" % (format_option_cell(option), format_description_cell(option)))
+    lines.append("")
+    return lines
+
+# Examples, Notes and See also section lines, each only when the spec has entries for it
+def format_trailing_sections(spec, descriptions):
+    lines = []
+    if spec.get("examples"):
+        lines += ["## Examples", ""]
+        for title, example in spec["examples"]:
+            lines += ["### %s" % title, "", "```bash", example, "```", ""]
+    if spec.get("notes"):
+        lines += ["## Notes", ""]
+        lines += [format_bullet(note) for note in spec["notes"]]
+        lines.append("")
+    if spec.get("see_also"):
+        lines += ["## See also", ""]
+        for other in spec["see_also"]:
+            summary = descriptions.get(other)
+            lines.append(format_bullet("[%s](%s.md)%s" % (other, other, " — %s" % summary if summary else "")))
+        lines.append("")
+    return lines
 
 # Render a tool's man page
 def render_page(tool_name, spec, descriptions = None):
@@ -201,29 +236,8 @@ def render_page(tool_name, spec, descriptions = None):
         lines += ["## Description", "", spec["details"].strip(), ""]
     lines += ["## Options", ""]
     for group in spec["groups"]:
-        lines += [
-            "### %s" % (group["title"] or DEFAULT_GROUP_TITLE),
-            "",
-            "| Option | Description |",
-            "|--------|-------------|",
-        ]
-        for option in group["options"]:
-            lines.append("| %s | %s |" % (format_option_cell(option), format_description_cell(option)))
-        lines.append("")
-    if spec.get("examples"):
-        lines += ["## Examples", ""]
-        for title, example in spec["examples"]:
-            lines += ["### %s" % title, "", "```bash", example, "```", ""]
-    if spec.get("notes"):
-        lines += ["## Notes", ""]
-        lines += [format_bullet(note) for note in spec["notes"]]
-        lines.append("")
-    if spec.get("see_also"):
-        lines += ["## See also", ""]
-        for other in spec["see_also"]:
-            summary = descriptions.get(other)
-            lines.append(format_bullet("[%s](%s.md)%s" % (other, other, " — %s" % summary if summary else "")))
-        lines.append("")
+        lines += format_option_table(group)
+    lines += format_trailing_sections(spec, descriptions)
     return "\n".join(lines)
 
 # Render the index of every tool, grouped by section

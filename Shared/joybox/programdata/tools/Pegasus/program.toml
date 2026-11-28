@@ -1,0 +1,87 @@
+# Pegasus: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Pegasus]
+program = { windows = "Pegasus/windows/pegasus-fe.exe", linux = "Pegasus/linux/Pegasus.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+theme_github_branch = "dev"
+
+[config.Pegasus.themes_dir]
+windows = "Pegasus/windows/config/themes"
+linux = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/themes"
+
+[[config_files]]
+path = "Pegasus/windows/portable.txt"
+
+[[config_files]]
+path = "Pegasus/windows/config/game_dirs.txt"
+
+[[config_files]]
+path = "Pegasus/windows/config/settings.txt"
+template = "settings.txt"
+
+[[config_files]]
+path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"
+
+[[config_files]]
+path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"
+template = "settings.txt"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "pegasus-fe.exe"
+install_files = ["pegasus-fe.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "mmatyas"
+github_repo = "pegasus-frontend"
+starts_with = "pegasus-fe"
+ends_with = "win-mingw-static.zip"
+search_file = "pegasus-fe.exe"
+install_files = ["pegasus-fe.exe"]
+get_latest = true
+
+[[setup]]
+kind = "github_repository"
+platform = "windows"
+label = "Pegasus theme"
+github_user = "NearlyTRex"
+github_repo = "PegasusThemeGrid"
+github_branch = "{program_config:theme_github_branch}"
+output_dir = "{program_path_config:themes_dir}/PegasusThemeGrid"
+clean = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Pegasus.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["qmake", "..", "CONFIG+=release", "USE_SDL_GAMEPAD=1", "&&", "make", "-j", "4"]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/Pegasus/Build/src/app/pegasus-fe", to = "AppImage/usr/bin/pegasus-fe" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/pegasus-fe", to = "AppRun" }]
+
+[[setup]]
+kind = "github_repository"
+platform = "linux"
+label = "Pegasus theme"
+github_user = "NearlyTRex"
+github_repo = "PegasusThemeGrid"
+github_branch = "{program_config:theme_github_branch}"
+output_dir = "{program_path_config:themes_dir}/PegasusThemeGrid"
+clean = true
+
+[launch]
+cwd = "{program_dir}"
+env = { JOYBOX_LAUNCH_JSON = "{command_path:launch_game_json}" }

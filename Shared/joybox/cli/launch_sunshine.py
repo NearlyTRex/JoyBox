@@ -1,66 +1,24 @@
 # Imports
-import joybox.system as system
-import joybox.command as command
-import joybox.programs as programs
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import system
+from joybox.tools import sunshine
+from joybox import arguments
+from joybox import setup
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Start the Sunshine game-streaming host installed by setup_tools.",
-        details = (
-            "Runs the Sunshine program from the tools directory so a Moonlight client can stream\n"
-            "games from this machine. It waits for Sunshine to exit and logs an error if it exits\n"
-            "with a non-zero code. It takes only the common options."),
-        examples = [
-            ("Start Sunshine", "launch_sunshine"),
-            ("Dry run without starting Sunshine", "launch_sunshine -p -v"),
-        ],
-        notes = [
-            "Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if it is not found.",
-            "`setup_tools -k Sunshine -c` writes the apps clients can start (Desktop, Pegasus and Steam Big Picture); apps added in Sunshine's web page are replaced the next time it configures.",
-            "Set `[Tools.Sunshine] sunshine_streaming_host` and install the bootstrap's `autostart`, `ufw` and `udev` components to start it at every login, open its ports to the LAN and allow virtual controllers.",
-        ],
-        see_also = ["setup_tools", "launch_pegasus", "launch_moonlight"],
-        section = "Game Launching")
+    parser = arguments.ArgumentParser(command = "launch_sunshine")
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the Sunshine streaming host from its tools folder and wait for it to exit
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
+    args = setup.start_command(parser)
 
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
-
-    # Get tool
-    sunshine_tool = None
-    if programs.is_tool_installed("Sunshine"):
-        sunshine_tool = programs.get_tool_program("Sunshine")
-    if not sunshine_tool:
-        logger.log_error("Sunshine was not found", quit_program = True)
-
-    # Get launch command
-    launch_cmd = [
-        sunshine_tool
-    ]
-
-    # Run launch command
-    code = command.run_returncode_command(
-        cmd = launch_cmd,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
-    if code != 0:
-        logger.log_error("Launch command failed with code %d" % code, quit_program = True)
+    # Launch Sunshine
+    sunshine.Sunshine().launch(verbose = args.verbose, pretend_run = args.pretend_run, exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

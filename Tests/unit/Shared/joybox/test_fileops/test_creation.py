@@ -201,6 +201,50 @@ def test_temporary_directory_reports_a_failure(monkeypatch):
     assert fileops.create_temporary_directory() == (False, "Unable to create temporary directory")
 
 
+def test_temporary_directory_block_removes_it_afterwards(tmp_path):
+    with fileops.temporary_directory(directory = str(tmp_path)) as path:
+        assert os.path.dirname(path) == os.path.realpath(tmp_path)
+        write(os.path.join(path, "scratch.txt"), "data")
+    assert os.listdir(tmp_path) == []
+
+
+def test_temporary_directory_block_removes_it_on_an_error(tmp_path):
+    with pytest.raises(RuntimeError):
+        with fileops.temporary_directory(directory = str(tmp_path)):
+            raise RuntimeError("failed")
+    assert os.listdir(tmp_path) == []
+
+
+def test_temporary_directory_block_yields_none_when_it_cannot_be_made(monkeypatch):
+    monkeypatch.setattr(fileops.tempfile, "mkdtemp", lambda **kwargs: "/nonexistent/joybox")
+    with fileops.temporary_directory() as path:
+        assert path is None
+
+
+def test_temporary_directory_block_in_a_pretend_run(tmp_path):
+    with fileops.temporary_directory(directory = str(tmp_path), pretend_run = True) as path:
+        assert os.path.dirname(path) == str(tmp_path)
+    assert os.listdir(tmp_path) == []
+
+
+def test_an_existing_directory_is_used_and_kept(tmp_path):
+    with fileops.existing_or_temporary_directory(str(tmp_path)) as path:
+        assert path == str(tmp_path)
+        write(os.path.join(path, "kept.txt"), "data")
+    assert os.listdir(tmp_path) == ["kept.txt"]
+
+
+def test_without_an_existing_directory_a_temporary_one_is_used(tmp_path, monkeypatch):
+    def mkdtemp(**kwargs):
+        os.mkdir(tmp_path / "made")
+        return str(tmp_path / "made")
+
+    monkeypatch.setattr(fileops.tempfile, "mkdtemp", mkdtemp)
+    with fileops.existing_or_temporary_directory(None) as path:
+        assert path == os.path.realpath(tmp_path / "made")
+    assert not os.path.exists(path)
+
+
 def test_temporary_file():
     ok, path = fileops.create_temporary_file(suffix = ".txt", prefix = "joybox", verbose = True)
     try:
@@ -230,7 +274,55 @@ def test_temporary_file_reports_a_failure(monkeypatch):
 
 ###########################################################
 # Symlinks
+#
+# Unix always has them; Windows is probed with a real link in the home dir,
+# which is left in place so later probes are free.
 ###########################################################
+
+def test_unix_supports_symlinks(monkeypatch):
+    monkeypatch.setattr(fileops.platform_info, "is_unix_platform", lambda: True)
+
+    assert fileops.are_symlinks_supported() is True
+
+
+@pytest.fixture
+def windows_home(monkeypatch, tmp_path):
+    created = []
+
+    def create_symlink(src, dest, **kwargs):
+        created.append(dest)
+        os.symlink(src, dest)
+        return True
+
+    def touch_file(src, **kwargs):
+        with open(src, "w", encoding = "utf-8"):
+            return True
+
+    monkeypatch.setattr(fileops.platform_info, "is_unix_platform", lambda: False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(fileops, "touch_file", touch_file)
+    monkeypatch.setattr(fileops, "create_symlink", create_symlink)
+    return {"home": tmp_path, "created": created}
+
+
+def test_windows_probes_with_a_link_in_the_home_dir(windows_home):
+    assert fileops.are_symlinks_supported() is True
+    assert windows_home["created"] == [str(windows_home["home"] / ".symdest")]
+
+
+def test_an_existing_probe_link_is_reused(windows_home):
+    os.symlink(windows_home["home"] / ".symsrc", windows_home["home"] / ".symdest")
+
+    assert fileops.are_symlinks_supported() is True
+    assert windows_home["created"] == []
+
+
+def test_windows_without_link_rights_is_unsupported(windows_home, monkeypatch):
+    monkeypatch.setattr(fileops, "create_symlink", lambda src, dest, **kwargs: False)
+
+    assert fileops.are_symlinks_supported() is False
+
+
 
 def test_symlink_creates_its_parent(tmp_path):
     target = write(tmp_path / "target.txt")
@@ -327,3 +419,19 @@ def test_set_modified_time_leaves_the_file_date_in_a_pretend_run(tmp_path):
 
     assert fileops.set_file_modified_time(path, 1104537600, pretend_run = True) is True
     assert os.path.getmtime(path) == before
+
+
+def test_each_directory_is_made_with_its_parents(tmp_path):
+    first = tmp_path / "a" / "b"
+    second = tmp_path / "c"
+
+    assert fileops.make_directories([str(first), str(second)]) is True
+    assert first.is_dir() and second.is_dir()
+
+
+def test_making_directories_stops_at_the_first_failure(tmp_path, monkeypatch):
+    made = []
+    monkeypatch.setattr(fileops, "make_directory", lambda src, **kwargs: made.append(src) or False)
+
+    assert fileops.make_directories([str(tmp_path / "a"), str(tmp_path / "b")]) is False
+    assert made == [str(tmp_path / "a")]

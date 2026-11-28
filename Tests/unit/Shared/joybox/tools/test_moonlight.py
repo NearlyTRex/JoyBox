@@ -64,7 +64,7 @@ def test_configure_puts_moonlight_in_the_menu_only_on_a_client(steps, isolated_s
 
 
 def test_a_failed_launcher_fails_the_configure(steps):
-    steps.fail_at = len(moonlight.config_files)
+    steps.fail_at = len(moonlight.Moonlight().get_config_files())
 
     assert not moonlight.Moonlight().configure()
     assert steps.errors == ["Could not setup the Moonlight launcher"]

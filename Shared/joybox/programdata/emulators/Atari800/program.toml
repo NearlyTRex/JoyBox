@@ -1,0 +1,56 @@
+# Atari800: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["OTHER_ATARI_800"]
+
+[config.Atari800]
+program = { windows = "Atari800/windows/atari800.exe", linux = "Atari800/linux/Atari800.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Atari800.config_file]
+windows = "Atari800/windows/.atari800.cfg"
+linux = "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"
+
+[[config_files]]
+path = "Atari800/windows/.atari800.cfg"
+
+[[config_files]]
+path = "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "atari800"
+github_repo = "atari800"
+starts_with = "atari800"
+ends_with = "win32-sdl.zip"
+search_file = "atari800.exe"
+get_latest = false
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Atari800.git"
+output_file = "Atari800-x86_64.AppImage"
+build_cmd = ["./autogen.sh", "&&", "./configure", "&&", "make", "-j", "4"]
+internal_copies = [
+    { from = "Source/Atari800/act", to = "AppImage/usr/bin" },
+    { from = "Source/Atari800/src/atari800", to = "AppImage/usr/bin/atari800" },
+    { from = "Source/Atari800/debian/atari800.desktop", to = "AppImage/atari800.desktop" },
+    { from = "Source/Atari800/data/atari1.png", to = "AppImage/atari800.png" },
+]
+internal_symlinks = [{ from = "usr/bin/atari800", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "atari800.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]

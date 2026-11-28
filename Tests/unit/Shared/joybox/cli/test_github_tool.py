@@ -34,7 +34,7 @@ def tool(monkeypatch, isolated_settings):
     harness.result = True
     isolated_settings.set_value("UserData.GitHub", "github_username", CONFIGURED_USER)
     isolated_settings.set_value("UserData.GitHub", "github_access_token", CONFIGURED_TOKEN)
-    network = github_tool.network
+    network = github_tool.githubrepos.network
 
     def list_repositories(**kwargs):
         harness.listed.append(kwargs)

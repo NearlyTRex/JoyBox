@@ -2,13 +2,13 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
+from . import installer
 
-# GitHooks
+# Points the JoyBox checkout's core.hooksPath at its version-controlled .githooks dir
 class GitHooks(installer.Installer):
     def __init__(
         self,
@@ -24,6 +24,7 @@ class GitHooks(installer.Installer):
         self.hooks_path = ".githooks"
         self.hooks_dir = os.path.join(self.joybox_root, self.hooks_path)
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
@@ -34,9 +35,11 @@ class GitHooks(installer.Installer):
             [self.git_tool, "-C", self.joybox_root, "config", "--local", "--get", "core.hooksPath"]
         ) or "").strip()
 
+    # Whether the repo's local core.hooksPath is .githooks
     def is_installed(self):
         return self._get_hooks_path() == self.hooks_path
 
+    # core.hooksPath as installed or missing
     def get_package_status(self):
         ok = self.is_installed()
         return {
@@ -44,6 +47,8 @@ class GitHooks(installer.Installer):
             "missing": [] if ok else ["core.hooksPath"],
         }
 
+    # Set core.hooksPath to .githooks in the repo's git config; False when the
+    # directory is missing or the setting does not stick
     def install(self):
 
         # Start install
@@ -67,6 +72,7 @@ class GitHooks(installer.Installer):
         logger.log_info(f"git hooks active (core.hooksPath = {self.hooks_path})")
         return True
 
+    # Unset core.hooksPath when it is set
     def uninstall(self):
 
         # Start uninstall

@@ -27,7 +27,7 @@ def test_a_cookie_file_is_named_after_its_site(monkeypatch):
     path = webcookies.get_cookie_file("gog")
 
     assert "gog" in path
-    assert path.endswith(webcookies.config.cookie_suffix_path)
+    assert path.endswith(webcookies.config.COOKIE_SUFFIX_PATH)
 
 
 def test_two_sites_get_distinct_cookie_files(monkeypatch):
@@ -49,7 +49,7 @@ COOKIES = [
 
 
 def test_cookies_are_saved(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     driver = FakeDriver(cookies = COOKIES)
 
     assert webcookies.save_cookie(driver, str(target)) is True
@@ -57,21 +57,21 @@ def test_cookies_are_saved(tmp_path):
 
 
 def test_saving_creates_the_cookie_directory(tmp_path):
-    target = tmp_path / "nested" / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / "nested" / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     webcookies.save_cookie(FakeDriver(cookies = COOKIES), str(target))
 
     assert target.exists()
 
 
 def test_no_cookies_saves_nothing(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
 
     assert webcookies.save_cookie(FakeDriver(cookies = []), str(target)) is False
     assert not target.exists()
 
 
 def test_a_dead_session_saves_no_cookies(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
 
     assert webcookies.save_cookie(FakeDriver(dead = True), str(target)) is False
     assert not target.exists()
@@ -83,7 +83,7 @@ def test_an_invalid_cookie_path_is_refused(path):
 
 
 def test_cookies_are_loaded(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     target.write_text(json.dumps(COOKIES))
     driver = FakeDriver()
 
@@ -99,7 +99,7 @@ def test_a_missing_cookie_file_loads_nothing(tmp_path):
 
 
 def test_a_cookie_file_that_is_not_a_list_is_refused(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     target.write_text(json.dumps({"name": "session"}))
 
     assert webcookies.load_cookie(FakeDriver(), str(target)) is False
@@ -107,7 +107,7 @@ def test_a_cookie_file_that_is_not_a_list_is_refused(tmp_path):
 
 def test_one_bad_cookie_does_not_stop_the_rest(tmp_path):
     # An expired or malformed cookie should not cost the whole session.
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     target.write_text(json.dumps([{"bad": "cookie"}] + COOKIES))
     driver = FakeDriver()
 
@@ -116,7 +116,7 @@ def test_one_bad_cookie_does_not_stop_the_rest(tmp_path):
 
 
 def test_a_dead_session_loads_no_cookies(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     target.write_text(json.dumps(COOKIES))
     driver = FakeDriver(dead = True)
 
@@ -125,7 +125,7 @@ def test_a_dead_session_loads_no_cookies(tmp_path):
 
 
 def test_pretending_loads_no_cookies(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     target.write_text(json.dumps(COOKIES))
     driver = FakeDriver()
     webcookies.load_cookie(driver, str(target), pretend_run = True)
@@ -134,11 +134,25 @@ def test_pretending_loads_no_cookies(tmp_path):
 
 
 def test_cookies_survive_a_save_and_load(tmp_path):
-    target = tmp_path / ("store" + webcookies.config.cookie_suffix_path)
+    target = tmp_path / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
     webcookies.save_cookie(FakeDriver(cookies = COOKIES), str(target))
     driver = FakeDriver()
     webcookies.load_cookie(driver, str(target))
 
+    assert driver.added_cookies == COOKIES
+
+
+def test_a_cookie_file_is_written_with_its_directory(tmp_path):
+    target = tmp_path / "Cookies" / ("store" + webcookies.config.COOKIE_SUFFIX_PATH)
+
+    assert webcookies.write_cookie_file(str(target), COOKIES) is True
+    assert json.loads(target.read_text()) == COOKIES
+
+
+def test_adding_cookies_counts_those_the_browser_took():
+    driver = FakeDriver()
+
+    assert webcookies.add_cookies(driver, [{"bad": "cookie"}] + COOKIES, verbose = True) == len(COOKIES)
     assert driver.added_cookies == COOKIES
 
 
@@ -325,21 +339,17 @@ def test_a_verbose_cookie_file_that_is_not_a_list_is_refused(tmp_path):
     assert webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, {"name": "x"}), verbose = True) is False
 
 
+def write_garbled_cookies(tmp_path):
+    target = tmp_path / "store.json"
+    target.write_text("{not json")
+    return str(target)
+
+
 @pytest.mark.parametrize("verbose", [False, True])
-def test_a_cookie_file_that_cannot_be_read_loads_nothing(tmp_path, monkeypatch, verbose):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webcookies.serialization, "read_json_file", broken)
-
-    assert webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), verbose = verbose) is False
+def test_a_cookie_file_that_cannot_be_read_loads_nothing(tmp_path, verbose):
+    assert webcookies.load_cookie(FakeDriver(), write_garbled_cookies(tmp_path), verbose = verbose) is False
 
 
-def test_a_failed_cookie_load_can_quit_the_program(tmp_path, monkeypatch):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webcookies.serialization, "read_json_file", broken)
-
+def test_a_failed_cookie_load_can_quit_the_program(tmp_path):
     with pytest.raises(SystemExit):
-        webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), exit_on_failure = True)
+        webcookies.load_cookie(FakeDriver(), write_garbled_cookies(tmp_path), exit_on_failure = True)

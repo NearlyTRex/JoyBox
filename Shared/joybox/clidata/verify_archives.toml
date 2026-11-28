@@ -1,0 +1,23 @@
+# Help text for the verify_archives command, read by joybox/arguments.py
+
+description = "Test archive files for corruption with 7-Zip."
+details = """
+Finds every archive of the chosen types under the input path (or takes the one file
+given) and runs `7z t` on it, which reads every entry and checks its CRC. The run
+stops with an error at the first archive that fails.
+
+Nothing is written or changed."""
+section = "Files & Archives"
+see_also = [
+    "decompress_archives",
+    "chdverify",
+    "rezip_files",
+]
+notes = [
+    "Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.",
+    "7-Zip must be installed as a JoyBox tool.",
+]
+examples = [
+    ["Test every zip in a folder", "verify_archives -i /path/to/archives"],
+    ["Test zip and 7z archives", "verify_archives -i /path/to/archives -a ZIP 7Z"],
+]

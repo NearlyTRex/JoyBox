@@ -5,11 +5,12 @@
 # day-0 scripts, the deploy, the sshd hardening and the verification. Each stage
 # checks what is already done, so a second run resumes rather than repeats.
 #
-# ConnectionSSH keeps one client per process, so root and the account are never
-# connected at the same time; each stage opens what it needs and closes it.
+# Each stage opens the connection it needs, as root or as the account, and
+# closes it before the next, so no stage leaves a session behind.
 
 # Imports
 import contextlib
+import importlib.util
 import os
 import shlex
 import socket
@@ -17,15 +18,19 @@ import time
 import uuid
 
 # Local imports
-import joybox.bootstrap as bootstrap
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.runner as runner
-import joybox.command as command
-import joybox.hardening as hardening
-import joybox.hostsfile as hostsfile
-import joybox.logger as logger
+from joybox import bootstrap
+from joybox.bootstrap import constants
+from joybox.bootstrap import runner
+from joybox import command
+from joybox import commandbase
+from joybox import paths
+from joybox import hardening
+from joybox import hostsfile
+from joybox import logger
+from joybox import runtime
+from joybox import serverinfo
 from joybox import terminal
-import joybox.virtualmachine as virtualmachine
+from joybox import virtualmachine
 from joybox import runoptions
 from joybox.connection import ConnectionSSH
 
@@ -118,11 +123,11 @@ def is_port_open(host, port, timeout = 3):
 
 # Check the local certificate authority is trusted here, for mkcert entries
 def is_mkcert_ready():
-    if not command.is_runnable_command("mkcert"):
+    if not paths.is_runnable_command("mkcert"):
         return False
     output = command.run_output_command(
         cmd = ["mkcert", "-CAROOT"],
-        options = command.create_command_options(suppress_output = True))
+        options = commandbase.create_command_options(suppress_output = True))
     if isinstance(output, bytes):
         output = output.decode()
     ca_root = (output or "").strip()
@@ -132,6 +137,7 @@ def is_mkcert_ready():
 # Provisioner
 ###########################################################
 
+# Runs the provisioning stages for one server entry, from the workstation over ssh
 class Provisioner:
     def __init__(
         self,
@@ -151,6 +157,7 @@ class Provisioner:
     # Connections
     ###########################################################
 
+    # An unopened ssh connection to the server as the given user, that does not exit on failure
     def build_connection(self, username):
         flags = self.flags.copy()
         flags.set(exit_on_failure = False)
@@ -198,6 +205,7 @@ class Provisioner:
             return False
         return connection.write_file(path, contents)
 
+    # Run a command on the target, logging it by label; False on a nonzero exit
     def run_step(self, connection, label, cmd):
         logger.log_info("Running %s" % label)
         code = connection.run_blocking(cmd)
@@ -241,53 +249,72 @@ class Provisioner:
         verbose = self.flags.verbose
 
         # Build or start it
-        created = False
-        if virtualmachine.does_vm_exist(name, verbose = verbose):
-            actual_mac = virtualmachine.get_vm_interface_mac(name, verbose = verbose)
-            if actual_mac and actual_mac != virtualmachine.get_vm_mac(name):
-                logger.log_error(
-                    "%s was built before fixed addresses and will not come up at %s; "
-                    "remove it with 'testvm destroy' and run this again" % (name, address))
+        created = not virtualmachine.does_vm_exist(name, verbose = verbose)
+        if created:
+            if not self._create_vm(name, address, verbose):
                 return False
-            if not virtualmachine.reserve_address(name, address, verbose = verbose):
-                return False
-            virtualmachine.start_vm(name, verbose = verbose)
-        else:
-            key_file = self.server.get_key_filepath()
-            public_key = key_file + ".pub" if key_file and os.path.isfile(key_file + ".pub") else None
-            if not virtualmachine.create_vm(
-                vm_name = name, ssh_key_file = public_key, address = address,
-                verbose = verbose, exit_on_failure = False):
-                return False
-            created = True
+        elif not self._start_existing_vm(name, address, verbose):
+            return False
 
         # Wait for it to answer
         logger.log_info("Waiting for %s to answer on ssh" % address)
         deadline = time.monotonic() + BOOT_TIMEOUT_SECONDS
-        while not self.wait_for_port(address, self.server.get_port()):
-            if time.monotonic() > deadline:
-                logger.log_error("%s did not answer within %d seconds" % (address, BOOT_TIMEOUT_SECONDS))
-                return False
-            time.sleep(BOOT_POLL_SECONDS)
+        if not self.wait_for_ssh(address, deadline):
+            return False
 
         # A new guest finishes first boot before anything else runs, and that
-        # state is kept to come back to. sshd answers before cloud-init has
-        # written root's key, so the first logins can be refused.
-        if created:
-            if not self.wait_for_login("root", deadline):
-                logger.log_error("root cannot log in to the new guest with %s" % self.server.get_key_filepath())
-                return False
-            with self.session("root") as connection:
-                if not connection:
-                    logger.log_error("root cannot log in to the new guest with %s" % self.server.get_key_filepath())
-                    return False
-                connection.run_blocking(["cloud-init", "status", "--wait"])
-            virtualmachine.snapshot_vm(name, SNAPSHOT_FRESH, verbose = verbose)
+        # state is kept to come back to
+        if created and not self._finish_first_boot(name, deadline, verbose):
+            return False
 
         # Point the domain at it here
         domain = self.server.get_domain_name()
         if domain:
             hostsfile.set_entries(address = address, domain = domain, sudo = True, verbose = True)
+        return True
+
+    # Reserve the guest's fixed address and start it; False for a guest built before fixed addresses
+    def _start_existing_vm(self, name, address, verbose):
+        actual_mac = virtualmachine.get_vm_interface_mac(name, verbose = verbose)
+        if actual_mac and actual_mac != virtualmachine.get_vm_mac(name):
+            logger.log_error(
+                "%s was built before fixed addresses and will not come up at %s; "
+                "remove it with 'testvm destroy' and run this again" % (name, address))
+            return False
+        if not virtualmachine.reserve_address(name, address, verbose = verbose):
+            return False
+        virtualmachine.start_vm(name, verbose = verbose)
+        return True
+
+    # Build the guest at its address, authorizing the entry's public key when one sits beside it
+    def _create_vm(self, name, address, verbose):
+        key_file = self.server.get_key_filepath()
+        public_key = key_file + ".pub" if key_file and os.path.isfile(key_file + ".pub") else None
+        return virtualmachine.create_vm(
+            vm_name = name, ssh_key_file = public_key, address = address,
+            verbose = verbose, exit_on_failure = False)
+
+    # Poll the ssh port until it answers; False once the deadline passes
+    def wait_for_ssh(self, address, deadline):
+        while not self.wait_for_port(address, self.server.get_port()):
+            if time.monotonic() > deadline:
+                logger.log_error("%s did not answer within %d seconds" % (address, BOOT_TIMEOUT_SECONDS))
+                return False
+            time.sleep(BOOT_POLL_SECONDS)
+        return True
+
+    # Wait out cloud-init as root, then snapshot the fresh guest. sshd answers
+    # before cloud-init has written root's key, so the first logins can be refused.
+    def _finish_first_boot(self, name, deadline, verbose):
+        if not self.wait_for_login("root", deadline):
+            logger.log_error("root cannot log in to the new guest with %s" % self.server.get_key_filepath())
+            return False
+        with self.session("root") as connection:
+            if not connection:
+                logger.log_error("root cannot log in to the new guest with %s" % self.server.get_key_filepath())
+                return False
+            connection.run_blocking(["cloud-init", "status", "--wait"])
+        virtualmachine.snapshot_vm(name, SNAPSHOT_FRESH, verbose = verbose)
         return True
 
     # The account, created on first contact as root
@@ -300,19 +327,25 @@ class Provisioner:
             if not connection:
                 logger.log_error("Neither %s nor root can log in with %s" % (user, self.server.get_key_filepath()))
                 return False
-            if not self.run_step(connection, "account creation", build_create_user_command(user)):
+            if not self._create_account(connection, user):
                 return False
-            password = self.server.get_password()
-            if password:
-                secret_path = "/root/.joybox-account-%s" % uuid.uuid4().hex[:8]
-                if not self.put_secret(connection, secret_path, "%s:%s\n" % (user, password)):
-                    return False
-                if not self.run_step(connection, "account password", build_set_password_command(secret_path)):
-                    return False
         if not self.can_log_in(user):
             logger.log_error("%s still cannot log in after being created" % user)
             return False
         return True
+
+    # Create the account over a root connection and set its password when one
+    # is configured
+    def _create_account(self, connection, user):
+        if not self.run_step(connection, "account creation", build_create_user_command(user)):
+            return False
+        password = self.server.get_password()
+        if not password:
+            return True
+        secret_path = "/root/.joybox-account-%s" % uuid.uuid4().hex[:8]
+        if not self.put_secret(connection, secret_path, "%s:%s\n" % (user, password)):
+            return False
+        return self.run_step(connection, "account password", build_set_password_command(secret_path))
 
     # The day-0 scripts, run as root; once hardening has closed root login they
     # are done and are skipped
@@ -329,29 +362,36 @@ class Provisioner:
                 return False
             secret_paths = {"htpasswd": "%s/htpasswd.secret" % remote_dir}
             try:
-                if not self.put_secret(connection, secret_paths["htpasswd"], self.server.get_htpasswd_password()):
+                if not self._run_day0_steps(connection, remote_dir, secret_paths):
                     return False
-
-                # The Storage Box password is read by the account rather than
-                # root, so it cannot sit in root's directory; the script hands
-                # it to the account, and it is removed afterwards
-                if self.server.has_storage_box():
-                    secret_paths["storage"] = "/run/joybox-storage-%s" % uuid.uuid4().hex[:8]
-                    if not self.put_secret(connection, secret_paths["storage"], self.server.get_storage_password()):
-                        return False
-                for label, cmd in build_day0_commands(self.server, remote_dir + "/scripts", secret_paths):
-                    if not self.run_step(connection, label, cmd):
-                        return False
             finally:
                 if "storage" in secret_paths:
                     connection.run_return_code(["rm", "-f", secret_paths["storage"]])
                 self.remove_day0_scripts(connection, remote_dir)
         return True
 
+    # Stage the secrets, recording each path in secret_paths, then run every day-0
+    # step; False at the first failure
+    def _run_day0_steps(self, connection, remote_dir, secret_paths):
+        if not self.put_secret(connection, secret_paths["htpasswd"], self.server.get_htpasswd_password()):
+            return False
+
+        # The Storage Box password is read by the account rather than
+        # root, so it cannot sit in root's directory; the script hands
+        # it to the account, and it is removed afterwards
+        if self.server.has_storage_box():
+            secret_paths["storage"] = "/run/joybox-storage-%s" % uuid.uuid4().hex[:8]
+            if not self.put_secret(connection, secret_paths["storage"], self.server.get_storage_password()):
+                return False
+        for label, cmd in build_day0_commands(self.server, remote_dir + "/scripts", secret_paths):
+            if not self.run_step(connection, label, cmd):
+                return False
+        return True
+
     # The components, deployed as the account, the same way bootstrap.py does
     def run_deploy(self):
         if self.server.get_tls_mode() == "mkcert" and not is_mkcert_ready():
-            if not command.is_runnable_command("mkcert"):
+            if not paths.is_runnable_command("mkcert"):
                 logger.log_error(
                     "mkcert is not installed; run: python3 bootstrap.py -a setup "
                     "-t local_ubuntu --components aptget")
@@ -388,6 +428,12 @@ class Provisioner:
         if self.server.is_local_vm():
             virtualmachine.delete_snapshot(name, SNAPSHOT_PRE_SSHD, verbose = self.flags.verbose)
             virtualmachine.snapshot_vm(name, SNAPSHOT_PRE_SSHD, verbose = self.flags.verbose)
+        if not self._run_sshd_hardening(user):
+            return False
+        return self._check_sshd_hardened(user, name)
+
+    # Push the day-0 scripts as root and run the sshd hardening script
+    def _run_sshd_hardening(self, user):
         with self.session("root") as connection:
             if not connection:
                 return False
@@ -395,12 +441,14 @@ class Provisioner:
             if not remote_dir:
                 return False
             try:
-                success = self.run_step(connection, "sshd hardening", [
+                return self.run_step(connection, "sshd hardening", [
                     remote_dir + "/scripts/init_sshd.sh", "--user", user])
             finally:
                 self.remove_day0_scripts(connection, remote_dir)
-            if not success:
-                return False
+
+    # After hardening the account must still log in and root must not; a test
+    # guest that lost the account's login is reverted to its pre-sshd snapshot
+    def _check_sshd_hardened(self, user, name):
         if not self.can_log_in(user):
             if self.server.is_local_vm():
                 logger.log_error("%s lost its key login; reverting to %s" % (user, SNAPSHOT_PRE_SSHD))
@@ -455,3 +503,86 @@ class Provisioner:
                 logger.log_error("Stage '%s' failed; fix it and run again to resume" % stage)
                 return False
         return True
+
+###########################################################
+# Provisioning and verifying a server entry
+###########################################################
+
+# The server entry and stages a provisioning run uses, every stage when none are given,
+# after checking its inputs before anything is touched: no unexpected arguments, a server
+# given and configured, known stages, the settings they need and paramiko; quits on the first failure
+def check_provision_inputs(server_index, stages = None, unknown = None):
+    if unknown:
+        logger.log_error("Unexpected arguments: %s" % " ".join(unknown), quit_program = True)
+    if server_index is None:
+        logger.log_error("--server is required", quit_program = True)
+    stages = stages or STAGES
+    unknown_stages = [stage for stage in stages if stage not in STAGES]
+    if unknown_stages:
+        logger.log_error("Unknown stage(s): %s" % ", ".join(unknown_stages), quit_program = True)
+    server = serverinfo.ServerInfo(server_index)
+    if not server.is_configured():
+        logger.log_error("No host configured for server %s" % server_index, quit_program = True)
+    missing = get_missing_settings(server, stages)
+    if missing:
+        logger.log_error("Set these in ~/JoyBox.ini first: %s" % ", ".join(missing), quit_program = True)
+    if importlib.util.find_spec("paramiko") is None:
+        logger.log_error(
+            "paramiko is not installed; run: python3 bootstrap.py -a setup "
+            "-t local_ubuntu --components python", quit_program = True)
+    return server, stages
+
+# Log the plan for provisioning a server entry, then, unless a pretend run, select the
+# server and run the stages; on failure quits with the failed check count when the last
+# stage is a failing verify, else with 1
+def provision_server(
+    server_index,
+    server,
+    stages,
+    components = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    provisioner = Provisioner(
+        server = server,
+        components = components,
+        stages = stages,
+        flags = runoptions.RunFlags(
+            verbose = verbose,
+            pretend_run = False,
+            exit_on_failure = exit_on_failure))
+    for line in provisioner.describe():
+        logger.log_info(line)
+    if pretend_run:
+        return
+
+    # Run
+    serverinfo.select_server(server_index)
+    if provisioner.run():
+        logger.log_info("Server %s is provisioned" % server_index)
+        return
+    if provisioner.verify_failures and provisioner.stages[-1] == "verify":
+        runtime.quit_program(provisioner.verify_failures)
+    runtime.quit_program(1)
+
+# Connect to a server entry, run the hardening checks against it and disconnect, returning
+# the results; quits when no host is configured for it
+def verify_server(server_index, domain = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    connection = serverinfo.get_connection(
+        server_index = server_index,
+        flags = runoptions.RunFlags(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure))
+    if not connection:
+        logger.log_error(
+            "No host configured for server %s" % server_index, quit_program = True)
+    connection.setup()
+    try:
+        return hardening.verify_hardening(
+            connection = connection,
+            domain = domain,
+            public_ports = runner.get_public_ports(server_index),
+            verbose = False)
+    finally:
+        connection.teardown()

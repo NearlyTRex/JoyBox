@@ -2,129 +2,141 @@
 import os
 import configparser
 import io
+import types
 
 # Local imports
-import joybox.secretstore as secretstore
+from joybox import secretstore
 from joybox import serialization
+from joybox import default_settings
 
 # Settings file name and default locations (home preferred, repo-root fallback)
 CONFIG_FILENAME = "JoyBox.ini"
 
+# JoyBox.ini in the user's home directory, the preferred location
 def get_home_settings_file():
     return os.path.join(os.path.expanduser("~"), CONFIG_FILENAME)
 
+# JoyBox.ini at the repo root, used when the home one is missing
 def get_repo_settings_file():
     return os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", CONFIG_FILENAME))
 
 _home_file = get_home_settings_file()
 _repo_file = get_repo_settings_file()
-_settings_file = _home_file if os.path.exists(_home_file) else _repo_file
-_parser = configparser.ConfigParser(interpolation = None)
-_loaded_path = None
-_overlay = {}
+# Which settings file is in use, its parsed contents, the file they were read from, and in-memory overrides
+_state = types.SimpleNamespace(
+    settings_file = _home_file if os.path.exists(_home_file) else _repo_file,
+    parser = configparser.ConfigParser(interpolation = None),
+    loaded_path = None,
+    overlay = {})
 
 ###########################################################
 # File / state management
 ###########################################################
 
+# Point reads at another ini file; it is parsed on the next read
 def set_settings_file(path):
-    global _settings_file, _loaded_path
-    _settings_file = path
-    _loaded_path = None
+    _state.settings_file = path
+    _state.loaded_path = None
 
+# Path of the ini file reads come from
 def get_settings_file():
-    return _settings_file
+    return _state.settings_file
 
+# Force a reparse on the next read and drop in-memory overrides and resolved secrets
 def reset():
-    global _loaded_path, _overlay
-    _loaded_path = None
-    _overlay = {}
+    _state.loaded_path = None
+    _state.overlay = {}
     secretstore.clear_resolved_secrets()
 
 def _ensure_loaded():
-    global _parser, _loaded_path
-    if _loaded_path != _settings_file:
+    if _state.loaded_path != _state.settings_file:
         parser = configparser.ConfigParser(interpolation = None)
-        parser.read(_settings_file, encoding = "utf-8")
-        _parser = parser
-        _loaded_path = _settings_file
+        parser.read(_state.settings_file, encoding = "utf-8")
+        _state.parser = parser
+        _state.loaded_path = _state.settings_file
 
 ###########################################################
 # Read API
 ###########################################################
 
+# Whether the selected ini file exists on disk
 def is_present():
-    return os.path.exists(_settings_file)
+    return os.path.exists(_state.settings_file)
 
+# Section names in the ini; raises RuntimeError on a read failure unless told not to, then empty
 def get_sections(throw_exception = True):
     try:
         _ensure_loaded()
-        return _parser.sections()
-    except Exception as e:
+        return _state.parser.sections()
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to read settings sections [file=%s]" % _settings_file) from e
+            raise RuntimeError("Unable to read settings sections [file=%s]" % _state.settings_file) from e
         return []
 
+# Field names in a section; empty when the section is missing or, not throwing, unreadable
 def get_fields(section, throw_exception = True):
     try:
         _ensure_loaded()
-        if section not in _parser:
+        if section not in _state.parser:
             return []
-        return list(_parser[section].keys())
-    except Exception as e:
+        return list(_state.parser[section].keys())
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_settings_file, section)) from e
+            raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_state.settings_file, section)) from e
         return []
 
+# Whether the ini has the section; False on a read failure when not throwing
 def has_section(section, throw_exception = True):
     try:
         _ensure_loaded()
-        return section in _parser
-    except Exception as e:
+        return section in _state.parser
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_settings_file, section)) from e
+            raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_state.settings_file, section)) from e
         return False
 
+# Whether the ini sets the field in the section; False on a read failure when not throwing
 def has_field(section, field, throw_exception = True):
     try:
         _ensure_loaded()
-        return (section in _parser) and (field in _parser[section])
-    except Exception as e:
+        return (section in _state.parser) and (field in _state.parser[section])
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+            raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return False
 
 def _get_shipped_default(section, field):
-    from joybox import default_settings
     value = default_settings.ini_defaults.get(section, {}).get(field)
     if secretstore.is_secret_reference(value):
         return None
     return value
 
+# Override, ini value, or shipped default, with secret references resolved
+# Raises RuntimeError on a read failure unless told not to, then returns default_value
 def get_value(section, field, default_value = None, throw_exception = True):
-    if (section, field) in _overlay:
-        return secretstore.resolve_value(_overlay[(section, field)])
+    if (section, field) in _state.overlay:
+        return secretstore.resolve_value(_state.overlay[(section, field)])
     try:
         _ensure_loaded()
         return secretstore.resolve_value(
-            _parser.get(section, field, fallback = default_value
+            _state.parser.get(section, field, fallback = default_value
                 if default_value is not None else _get_shipped_default(section, field)))
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
 
 # Get a value as written, a reference left unresolved
 def get_raw_value(section, field, default_value = None, throw_exception = True):
-    if (section, field) in _overlay:
-        return _overlay[(section, field)]
+    if (section, field) in _state.overlay:
+        return _state.overlay[(section, field)]
     try:
         _ensure_loaded()
-        return _parser.get(section, field, fallback = default_value
+        return _state.parser.get(section, field, fallback = default_value
             if default_value is not None else _get_shipped_default(section, field))
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
 
 def _coerce_integer(value):
@@ -142,69 +154,70 @@ def _coerce_bool(value):
         raise ValueError("Not a boolean: %s" % value)
     return configparser.ConfigParser.BOOLEAN_STATES[text]
 
+# Field as an int from the override, ini or shipped default; None when none sets it
 def get_integer_value(section, field, default_value = None, throw_exception = True):
     try:
-        if (section, field) in _overlay:
-            return _coerce_integer(_overlay[(section, field)])
+        if (section, field) in _state.overlay:
+            return _coerce_integer(_state.overlay[(section, field)])
         _ensure_loaded()
-        if default_value is None and not _parser.has_option(section, field):
+        if default_value is None and not _state.parser.has_option(section, field):
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_integer(shipped)
-        return _parser.getint(section, field, fallback = default_value)
-    except Exception as e:
+        return _state.parser.getint(section, field, fallback = default_value)
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+            raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
 
+# Field as a bool from the override, ini or shipped default; None when none sets it
 def get_bool_value(section, field, default_value = None, throw_exception = True):
     try:
-        if (section, field) in _overlay:
-            return _coerce_bool(_overlay[(section, field)])
+        if (section, field) in _state.overlay:
+            return _coerce_bool(_state.overlay[(section, field)])
         _ensure_loaded()
-        if default_value is None and not _parser.has_option(section, field):
+        if default_value is None and not _state.parser.has_option(section, field):
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_bool(shipped)
-        return _parser.getboolean(section, field, fallback = default_value)
-    except Exception as e:
+        return _state.parser.getboolean(section, field, fallback = default_value)
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+            raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
 
+# Get a value that must be text; not throwing, anything else reads as unset
+def get_text_value(section, field, default_value = None, throw_exception = True):
+    value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    if value is None or value is default_value or isinstance(value, str):
+        return value
+    if throw_exception:
+        raise RuntimeError("Settings value is not text [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field))
+    return default_value
+
+# Text value with environment variables expanded
 def get_path_value(section, field, default_value = None, throw_exception = True):
-    try:
-        value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
-        if value is None:
-            return default_value
-        return os.path.expandvars(value)
-    except Exception as e:
-        if throw_exception:
-            raise RuntimeError("Unable to get settings path value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
-        return default_value
+    value = get_text_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    return os.path.expandvars(value) if isinstance(value, str) else value
 
+# Text value split on delimiter; a non-text value comes back unsplit
 def get_list_value(section, field, delimiter = ",", default_value = None, throw_exception = True):
-    try:
-        value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
-        if value is None:
-            return default_value
-        return value.split(delimiter)
-    except Exception as e:
-        if throw_exception:
-            raise RuntimeError("Unable to get settings list value [file=%s][section=%s][field=%s][delimiter=%s]" % (_settings_file, section, field, delimiter)) from e
-        return default_value
+    value = get_text_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    return value.split(delimiter) if isinstance(value, str) else value
 
 ###########################################################
 # Write API (in-memory overlay; persisted only via save())
 ###########################################################
 
+# Override a field in memory; it reaches the ini only through save
 def set_value(section, field, value):
-    _overlay[(section, field)] = value
+    _state.overlay[(section, field)] = value
 
+# Write in-memory overrides into the ini file, adding missing sections; False when the write fails
 def save():
     _ensure_loaded()
-    for (section, field), value in _overlay.items():
-        if not _parser.has_section(section):
-            _parser.add_section(section)
-        _parser.set(section, field, str(value))
+    for (section, field), value in _state.overlay.items():
+        if not _state.parser.has_section(section):
+            _state.parser.add_section(section)
+        _state.parser.set(section, field, str(value))
     contents = io.StringIO()
-    _parser.write(contents)
-    return serialization.write_text_file(_settings_file, contents.getvalue())
+    _state.parser.write(contents)
+    return serialization.write_text_file(_state.settings_file, contents.getvalue())

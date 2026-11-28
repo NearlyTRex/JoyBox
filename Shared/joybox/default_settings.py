@@ -1,6 +1,6 @@
 # Local imports
-import joybox.secretstore as secretstore
-import joybox.serialization as serialization
+from joybox import secretstore
+from joybox import serialization
 from joybox import platform_info
 
 ###########################################################
@@ -10,7 +10,7 @@ ini_defaults = {}
 
 # 1Password reference for a secret or personal value, by section and field
 def get_secret_reference(section, field):
-    return "%sPersonal/JoyBox/%s/%s" % (secretstore.secret_reference_prefix, section, field)
+    return "%sPersonal/JoyBox/%s/%s" % (secretstore.SECRET_REFERENCE_PREFIX, section, field)
 
 # UserData.Dirs
 ini_defaults["UserData.Dirs"] = {}
@@ -715,6 +715,7 @@ def generate_default_config_content(sections = None, include_secret_references =
         content += "\n"
     return content
 
+# Write the generated default ini, limited to the given sections and overlaid with values, to path
 def create_default_config_file(path, sections = None, include_secret_references = True, values = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return serialization.write_text_file(
         src = path,

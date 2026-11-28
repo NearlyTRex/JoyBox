@@ -205,4 +205,3 @@ def test_the_shared_instance_is_reused():
     first = manifest.get_manifest_instance()
 
     assert manifest.get_manifest_instance() is first
-    assert manifest.shared_manifest is first

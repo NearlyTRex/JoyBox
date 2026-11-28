@@ -1,0 +1,20 @@
+# SameBoy: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.SameBoy]
+program = { windows = "SameBoy/windows/sameboy.exe", linux = "SameBoy/windows/sameboy.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "LIJI32"
+github_repo = "SameBoy"
+starts_with = "sameboy_winsdl"
+ends_with = ".zip"
+search_file = "sameboy.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "sameboy.exe"

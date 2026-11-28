@@ -11,6 +11,7 @@ from joybox import webfetch
 from webpage_helpers import FakeDriver
 
 pytest.importorskip("bs4")
+real_requests = pytest.importorskip("requests")
 
 
 @pytest.fixture
@@ -34,7 +35,7 @@ def fetches(monkeypatch):
 
     def raise_for_status():
         if state["status"] >= 400:
-            raise RuntimeError("HTTP %d" % state["status"])
+            raise real_requests.HTTPError("HTTP %d" % state["status"])
 
     def get(url, params = None, timeout = None):
         state["requests"].append({"url": url, "params": params, "timeout": timeout})
@@ -47,6 +48,7 @@ def fetches(monkeypatch):
 
     module = types.ModuleType("requests")
     module.get = get
+    module.RequestException = real_requests.RequestException
     monkeypatch.setitem(sys.modules, "requests", module)
     return state
 
@@ -82,7 +84,25 @@ def test_a_plain_request_carries_its_params_and_a_timeout(fetches):
 
     assert fetches["requests"] == [{
         "url": "https://store.example", "params": {"page": 2},
-        "timeout": webfetch.request_timeout_seconds}]
+        "timeout": webfetch.REQUEST_TIMEOUT_SECONDS}]
+
+
+@pytest.mark.parametrize("url, params, expected", [
+    ("https://store.example", None, "https://store.example"),
+    ("https://store.example", {"page": 2, "tag": ["a", "b"]}, "https://store.example?page=2&tag=a&tag=b"),
+    ("https://store.example/list?sort=new", {"page": 2}, "https://store.example/list?sort=new&page=2"),
+    ("https://store.example", "page=2", "https://store.example?page=2"),
+])
+def test_the_driver_loads_the_url_with_its_params(fetches, monkeypatch, url, params, expected):
+    loaded = []
+
+    def get_page_source(driver, url = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        loaded.append(url)
+        return "<html>driver</html>"
+    monkeypatch.setattr(webpage, "get_page_source", get_page_source)
+
+    assert webfetch.get_website_text(url, params = params) == "<html>driver</html>"
+    assert loaded == [expected]
 
 
 def test_an_error_response_is_not_page_text(fetches):
@@ -104,7 +124,7 @@ def test_the_driver_is_shut_down_when_reading_the_page_quits(fetches):
 
 def test_a_page_nothing_can_fetch_can_quit_the_program(fetches):
     fetches["driver"] = None
-    fetches["error"] = OSError("no route to host")
+    fetches["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         webfetch.get_website_text("https://store.example", exit_on_failure = True)
@@ -121,7 +141,7 @@ def test_a_fetched_page_does_not_quit_the_program(fetches):
     (FakeDriver(), "<html>driver</html>", None, "<html>driver</html>"),
     (FakeDriver(), "", None, "<html>requests</html>"),
     (None, "", None, "<html>requests</html>"),
-    (None, "", OSError("down"), ""),
+    (None, "", real_requests.ConnectionError("down"), ""),
 ])
 def test_verbose_fetching_returns_the_same_text(fetches, driver, source, error, expected):
     fetches.update(driver = driver, source = source, error = error)
@@ -238,6 +258,30 @@ def test_natural_ordering_picks_the_highest_name(names, latest):
     assert max(names, key = webfetch.get_natural_sort_key) == latest
 
 
+def test_the_latest_url_is_the_one_whose_name_sorts_highest():
+    urls = ["https://cdn.example/1.2/app-1.2.zip", "https://cdn.example/1.10/app-1.10.zip"]
+
+    assert webfetch.select_latest_url(urls, verbose = True) == "https://cdn.example/1.10/app-1.10.zip"
+
+
+def test_of_urls_sharing_a_name_the_last_listed_is_latest():
+    urls = ["https://mirror-a.example/app.zip", "https://mirror-b.example/app.zip"]
+
+    assert webfetch.select_latest_url(urls) == "https://mirror-b.example/app.zip"
+
+
+def test_page_urls_are_found_in_links_attributes_and_text():
+    parser = webpage.parse_html_page_source(
+        '<a href="/rel.zip">r</a><div data-src="https://cdn.example/attr.zip?x=1"></div><p>https://cdn.example/text.zip</p>')
+
+    found = webfetch.find_potential_page_urls(parser, "https://site.example")
+
+    assert "https://site.example/rel.zip" in found
+    assert "https://cdn.example/attr.zip?x=1" in found
+    assert "https://cdn.example/attr.zip" in found
+    assert "https://cdn.example/text.zip" in found
+
+
 ###########################################################
 # Fetching a page
 #
@@ -270,7 +314,7 @@ def test_an_empty_driver_result_falls_back_to_a_plain_request(fetches):
 
 def test_a_page_nothing_can_fetch_is_empty(fetches):
     fetches["driver"] = None
-    fetches["error"] = OSError("no route to host")
+    fetches["error"] = real_requests.ConnectionError("no route to host")
 
     assert webfetch.get_website_text("https://store.example") == ""
 

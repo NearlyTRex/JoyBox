@@ -1,0 +1,3 @@
+[config]
+amiga_model = A500
+governor_warning = 0

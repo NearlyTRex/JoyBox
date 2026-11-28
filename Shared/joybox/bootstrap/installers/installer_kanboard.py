@@ -1,16 +1,16 @@
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
 
 # Docker compose template
 #
 # Named volumes rather than bind mounts: with userns-remap the container cannot
 # write host directories, while a new volume takes the ownership the image
 # gives its mount point.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   kanboard:
     image: ${KANBOARD_IMAGE}
@@ -31,7 +31,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 KANBOARD_PORT_HTTP={port_http}
 KANBOARD_ADMIN_USER='{admin_user}'
 KANBOARD_ADMIN_PASS='{admin_pass}'
@@ -40,7 +40,7 @@ KANBOARD_ADMIN_PASS='{admin_pass}'
 # Sets the admin login from the container environment. A new database starts
 # with admin/admin, which is renamed to the configured user; afterwards the
 # configured user's password is reset to match JoyBox.ini.
-admin_script = """
+ADMIN_SCRIPT = """
 require "/var/www/app/app/common.php";
 $name = getenv("KANBOARD_ADMIN_USER");
 $pass = getenv("KANBOARD_ADMIN_PASS");
@@ -77,8 +77,8 @@ class Kanboard(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         # The password is required: a new Kanboard otherwise answers to admin/admin.
@@ -89,6 +89,8 @@ class Kanboard(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Kanboard"
         self.backup_volumes = ["kanboard_data", "kanboard_plugins"]
 
+    # Once the container is healthy, set the admin login with a PHP script run
+    # inside it; False when either step fails
     def post_install(self):
 
         # The database is created and migrated by the first PHP process, so
@@ -99,7 +101,7 @@ class Kanboard(installer_dockerapp.DockerAppInstaller):
 
         # Set the admin login
         logger.log_info(f"Setting the Kanboard admin login for {self.env_values['admin_user']}")
-        code = self.connection.run_blocking(["docker", "exec", "-u", "nginx", "kanboard", "php", "-r", admin_script])
+        code = self.connection.run_blocking(["docker", "exec", "-u", "nginx", "kanboard", "php", "-r", ADMIN_SCRIPT])
         if code != 0:
             logger.log_error(f"Unable to set the Kanboard admin login (exit {code})")
             return False

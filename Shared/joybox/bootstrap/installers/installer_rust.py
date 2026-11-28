@@ -2,11 +2,11 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.packages as packages
-from . import installer
+from joybox.bootstrap import constants
+from joybox.bootstrap import packages
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Extract package identifier from dict
 def get_cargo_package_id(pkg):

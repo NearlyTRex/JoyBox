@@ -12,9 +12,8 @@ from joybox import cmdline
 # driven end to end and then asserted on, with nothing installed and no machine
 # touched.
 #
-# Only the methods installers actually use are overridden. Anything else falls
-# through to the base class, which is a no-op - so a test that starts exercising
-# a new method will surface as a missing recording rather than a silent pass.
+# Every transport method the base class declares abstract is recorded here, so
+# a new one added to Connection stops this double from being built until it is.
 ###########################################################
 
 class RecordingConnection(connection.Connection):
@@ -148,6 +147,9 @@ class RecordingConnection(connection.Connection):
     def make_temporary_directory(self):
         self._record("make_temporary_directory")
         return "/tmp/joybox-test"
+
+    def get_home_directory(self):
+        return None
 
     def make_directory(self, src, sudo = False):
         self._record("make_directory", src, sudo = sudo)
@@ -311,7 +313,8 @@ class RecordingAptGet(RecordingInstaller):
 ###########################################################
 # Command recorder
 #
-# External tool wrappers build an argument list and hand it to joybox.command.
+# External tool wrappers build an argument list and hand it to joybox.command,
+# or to joybox.commandrun when it needs no preparing.
 # Recording that list pins the whole invocation without running anything.
 ###########################################################
 
@@ -319,6 +322,7 @@ class RecordingCommand:
 
     def __init__(self, monkeypatch, returncode = 0, output = ""):
         from joybox import command
+        from joybox import commandrun
 
         self.calls = []
         self.returncode = returncode
@@ -354,6 +358,9 @@ class RecordingCommand:
         ]:
             if hasattr(command, name):
                 monkeypatch.setattr(command, name, replacement)
+
+        # Commands run as they are, the way prefix setup runs its own tools
+        monkeypatch.setattr(commandrun, "run_prepared_returncode_command", run_returncode_command)
 
     # The single recorded command, failing loudly when there was not exactly one
     def only(self):
@@ -562,6 +569,75 @@ def write_param_sfo(path, values):
     path.parent.mkdir(parents = True, exist_ok = True)
     path.write_bytes(header + index + keys + data)
     return path
+
+
+###########################################################
+# Stub connection
+#
+# The base class with every transport method answering as if nothing were
+# there, for tests of the parts the base class implements itself.
+###########################################################
+
+class StubConnection(connection.Connection):
+    def get_home_directory(self):
+        return None
+
+    def make_temporary_directory(self):
+        return None
+
+    def run_output(self, cmd, sudo = False):
+        return ""
+
+    def run_return_code(self, cmd, sudo = False):
+        return 0
+
+    def run_blocking(self, cmd, sudo = False):
+        return 0
+
+    def run_interactive(self, cmd, sudo = False):
+        return 0
+
+    def run_checked(self, cmd, sudo = False, throw_exception = False):
+        return None
+
+    def make_directory(self, src, sudo = False):
+        return False
+
+    def remove_file_or_directory(self, src, sudo = False):
+        return False
+
+    def copy_file_or_directory(self, src, dest, sudo = False):
+        return False
+
+    def move_file_or_directory(self, src, dest, sudo = False):
+        return False
+
+    def link_file_or_directory(self, src, dest, sudo = False):
+        return False
+
+    def does_file_or_directory_exist(self, src):
+        return False
+
+    def transfer_files(self, src, dest, excludes = None, sudo = False):
+        return False
+
+    def read_file(self, src, sudo = False):
+        return None
+
+    def write_file(self, src, contents, sudo = False):
+        return False
+
+    def download_file(self, url, dest, sudo = False):
+        return False
+
+    def extract_tar_archive(self, src, dest, sudo = False):
+        return False
+
+    def change_owner(self, src, owner, sudo = False):
+        return False
+
+    def change_permission(self, src, permission, sudo = False):
+        return False
 
 
 ###########################################################

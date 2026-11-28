@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import toolbase
 from joybox.cli import launch_sunshine
 
 
@@ -19,14 +20,14 @@ def tool(monkeypatch, isolated_settings):
     harness.commands = []
     harness.code = 0
     harness.installed = True
-    monkeypatch.setattr(launch_sunshine.programs, "is_tool_installed", lambda name: harness.installed)
-    monkeypatch.setattr(launch_sunshine.programs, "get_tool_program", lambda name: SUNSHINE_PATH)
+    monkeypatch.setattr(toolbase.programs, "is_tool_installed", lambda name: harness.installed)
+    monkeypatch.setattr(toolbase.programs, "get_tool_program", lambda name: SUNSHINE_PATH)
 
     def run_command(cmd, **kwargs):
         harness.commands.append(cmd)
         return harness.code
 
-    monkeypatch.setattr(launch_sunshine.command, "run_returncode_command", run_command)
+    monkeypatch.setattr(toolbase.command, "run_returncode_command", run_command)
     return harness
 
 

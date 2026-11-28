@@ -91,11 +91,11 @@ def test_configure_passes_the_setup_params_through(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/BigPEmu", config.token_game_file, "-localdata"]
+    assert launch_cmd(seams) == ["/bin/BigPEmu", config.TOKEN_GAME_FILE, "-localdata"]
 
 
 def test_launch_has_no_fullscreen_flag(seams):
-    assert launch_cmd(seams, fullscreen = True) == ["/bin/BigPEmu", config.token_game_file, "-localdata"]
+    assert launch_cmd(seams, fullscreen = True) == ["/bin/BigPEmu", config.TOKEN_GAME_FILE, "-localdata"]
 
 
 def test_launch_passes_the_game_and_options_through(seams):

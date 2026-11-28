@@ -289,12 +289,19 @@ def test_verifying_present_files_reports_nothing(metadata_root):
     assert errors == []
 
 
-def test_verifying_a_missing_file_quits(metadata_root):
+def test_verifying_a_missing_file_quits_when_asked_to(metadata_root):
     _, errors = metadata_root
-    build(entry("A")).verify_files()
 
+    assert build(entry("A")).verify_files(exit_on_failure = True) is False
     assert "game.z64" in errors[0][0]
     assert errors[-1][1] == {"quit_program": True}
+
+
+def test_verifying_a_missing_file_reports_failure_otherwise(metadata_root):
+    _, errors = metadata_root
+
+    assert build(entry("A")).verify_files() is False
+    assert errors[-1][1] == {"quit_program": False}
 
 
 ###########################################################
@@ -438,3 +445,35 @@ def test_an_unknown_metadata_format_is_neither_read_nor_written(tmp_path):
 
 def test_an_unknown_platform_has_no_games():
     assert build(entry()).get_game(OTHER_PLATFORM, "Chrono Trigger") is None
+
+
+###########################################################
+# Metadata directories
+###########################################################
+
+@pytest.fixture
+def metadata_dir(tmp_path):
+    root = tmp_path / "metadata"
+    (root / "N64").mkdir(parents = True)
+    build(entry("Zelda"), entry("Mario")).export_to_metadata_file(str(root / "N64" / "metadata.pegasus.txt"))
+    (root / "notes.txt").write_text("")
+    return root
+
+
+def test_every_entry_of_a_metadata_dir_is_listed(metadata_dir):
+    listed = [(platform, game_entry.get_game()) for platform, game_entry in metadata.iterate_metadata_dir_entries(str(metadata_dir))]
+
+    assert listed == [(PLATFORM, "Mario"), (PLATFORM, "Zelda")]
+
+
+def test_entry_asset_files_are_split_into_found_and_missing(metadata_dir, monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        metadata.environment, "get_locker_gaming_asset_file",
+        lambda category, subcategory, name, asset_type: str(tmp_path / ("%s-%s" % (name, asset_type.val()))))
+    (tmp_path / "Mario-BoxFront").write_text("")
+
+    found, missing = metadata.find_entry_asset_files(str(metadata_dir))
+
+    assert found == {str(tmp_path / "Mario-BoxFront")}
+    assert str(tmp_path / "Zelda-BoxFront") in missing[config.AssetType.BOXFRONT]
+    assert set(missing) == set(config.AssetType.members())

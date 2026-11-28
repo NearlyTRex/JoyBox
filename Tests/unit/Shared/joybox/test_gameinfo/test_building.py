@@ -60,7 +60,7 @@ def test_a_game_derives_its_categories_from_where_it_sits(game):
 
 def test_a_game_derives_its_platform(game):
     assert game.get_platform() == gamenaming.derive_game_platform_from_categories(
-        config.Category.COMPUTER, config.Subcategory.COMPUTER_STEAM)
+        config.Subcategory.COMPUTER_STEAM)
 
 
 def test_a_game_remembers_the_file_it_came_from(game, game_tree):

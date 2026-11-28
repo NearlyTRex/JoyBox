@@ -214,3 +214,42 @@ def test_no_local_root_writes_no_sidecar(rclone, monkeypatch, sidecar_uploads):
 
     assert synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is True
     assert sidecar_uploads == []
+
+
+###########################################################
+# Progress
+###########################################################
+
+def download_into_directory(tmp_path, **kwargs):
+    synctransfers.download_files_from_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path), **kwargs)
+
+
+def download_onto_file(tmp_path, **kwargs):
+    synctransfers.download_files_from_remote(
+        REMOTE, REMOTE_TYPE, REMOTE_PATH + "/game.zip", str(tmp_path / "game.zip"), **kwargs)
+
+
+def upload(tmp_path, **kwargs):
+    del tmp_path
+    synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, **kwargs)
+
+
+TRANSFERS = [download_into_directory, download_onto_file, upload]
+
+
+@pytest.mark.parametrize("transfer", TRANSFERS)
+def test_a_verbose_transfer_shows_progress_by_default(rclone, monkeypatch, tmp_path, transfer):
+    recorder = record(monkeypatch)
+    transfer(tmp_path, verbose = True)
+
+    assert "--progress" in recorder.only()
+
+
+@pytest.mark.parametrize("transfer", TRANSFERS)
+def test_a_transfer_can_hide_progress(rclone, monkeypatch, tmp_path, transfer):
+    recorder = record(monkeypatch)
+    transfer(tmp_path, show_progress = False, verbose = True)
+
+    cmd = recorder.only()
+    assert "--progress" not in cmd
+    assert "--verbose" in cmd

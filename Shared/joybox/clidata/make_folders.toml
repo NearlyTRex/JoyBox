@@ -1,0 +1,22 @@
+# Help text for the make_folders command, read by joybox/arguments.py
+
+description = "Move each matching file into a folder of its own, named after the file."
+details = """
+For every file directly inside the input directory whose name ends with one of the
+given extensions, creates a folder named after the file without its extension and
+moves the file into it. `Game (USA).iso` becomes `Game (USA)/Game (USA).iso`.
+Subdirectories and files with other extensions are left alone."""
+section = "Files & Archives"
+see_also = [
+    "sanitize_filenames",
+    "compress_folders",
+]
+notes = [
+    "Extensions are matched case-sensitively and must not contain spaces, so `.iso` does not match `GAME.ISO`.",
+    "There is no confirmation prompt; use `-p -v` to see what would move first.",
+]
+examples = [
+    ["Put each disc image and archive in its own folder", "make_folders -i ~/Roms/PS2"],
+    ["Only handle ISO and CHD files", "make_folders -i ~/Roms/PS2 -f .iso,.chd"],
+    ["Preview the moves", "make_folders -i ~/Roms/PS2 -p -v"],
+]

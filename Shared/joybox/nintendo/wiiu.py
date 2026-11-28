@@ -6,6 +6,7 @@ import os
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import config
 from joybox import fileops
 from joybox import filebulk
@@ -14,6 +15,48 @@ from joybox import paths
 from joybox import programs
 from joybox import serialization
 from joybox import webpage
+
+# Run CDecrypt on the package's tmd and tik from inside the package dir; its return code
+def run_decrypt_command(
+    decrypt_tool,
+    input_file_tmd,
+    input_file_tik,
+    nus_package_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get decrypt command
+    decrypt_cmd = [
+        decrypt_tool,
+        input_file_tmd,
+        input_file_tik
+    ]
+
+    # Run decrypt command
+    return command.run_returncode_command(
+        cmd = decrypt_cmd,
+        options = commandbase.create_command_options(
+            cwd = nus_package_dir,
+            output_paths = [nus_package_dir],
+            blocking_processes = [decrypt_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Remove the package dir's files that have a Wii U NUS package extension
+def remove_wiiu_package_files(nus_package_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    for obj in paths.get_directory_contents(nus_package_dir):
+        obj_path = paths.join_paths(nus_package_dir, obj)
+        if not paths.is_path_file(obj_path):
+            continue
+        obj_ext = paths.get_filename_extension(obj_path)
+        if obj_ext in config.NintendoWiiUFileType.cvalues():
+            fileops.remove_file(
+                src = obj_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
 # Decrypt Wii U NUS package
 def decrypt_wiiu_nus_package(
@@ -24,11 +67,8 @@ def decrypt_wiiu_nus_package(
     exit_on_failure = False):
 
     # Get tool
-    decrypt_tool = None
-    if programs.is_tool_installed("CDecrypt"):
-        decrypt_tool = programs.get_tool_program("CDecrypt")
+    decrypt_tool = programs.find_tool_program("CDecrypt")
     if not decrypt_tool:
-        logger.log_error("CDecrypt was not found")
         return False
 
     # Get input files
@@ -37,20 +77,12 @@ def decrypt_wiiu_nus_package(
     if not os.path.exists(input_file_tmd) or not os.path.exists(input_file_tik):
         return False
 
-    # Get decrypt command
-    decrypt_cmd = [
+    # Run decrypt command
+    code = run_decrypt_command(
         decrypt_tool,
         input_file_tmd,
-        input_file_tik
-    ]
-
-    # Run decrypt command
-    code = command.run_returncode_command(
-        cmd = decrypt_cmd,
-        options = command.create_command_options(
-            cwd = nus_package_dir,
-            output_paths = [nus_package_dir],
-            blocking_processes = [decrypt_tool]),
+        input_file_tik,
+        nus_package_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -59,17 +91,7 @@ def decrypt_wiiu_nus_package(
 
     # Clean up
     if delete_original:
-        for obj in paths.get_directory_contents(nus_package_dir):
-            obj_path = paths.join_paths(nus_package_dir, obj)
-            if not paths.is_path_file(obj_path):
-                continue
-            obj_ext = paths.get_filename_extension(obj_path)
-            if obj_ext in config.NintendoWiiUFileType.cvalues():
-                fileops.remove_file(
-                    src = obj_path,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+        remove_wiiu_package_files(nus_package_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Should be decrypted now
     return True
@@ -81,78 +103,27 @@ def verify_wiiu_nus_package(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
+    # Test decrypting a copy of the package in a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        filebulk.copy_contents(
+            src = nus_package_dir,
+            dest = tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return decrypt_wiiu_nus_package(
+            nus_package_dir = tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
-    # Copy package
-    filebulk.copy_contents(
-        src = nus_package_dir,
-        dest = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Test decryption
-    decryption_result = decrypt_wiiu_nus_package(
-        nus_package_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check result
-    return decryption_result
-
-# Install Wii U NUS package
-def install_wiiu_nus_package(
-    nus_package_dir,
-    nand_dir,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Copy package
-    filebulk.copy_contents(
-        src = nus_package_dir,
-        dest = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if paths.is_directory_empty(tmp_dir_result):
-        return False
-
-    # Decrypt package
-    success = decrypt_wiiu_nus_package(
-        nus_package_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Get app xml
-    app_xml_file = paths.join_paths(tmp_dir_result, "code", "app.xml")
+# Get the title id a decrypted package's app xml names, or "" when it has none of 16 characters
+def get_wiiu_package_title_id(package_dir, verbose = False, exit_on_failure = False):
+    app_xml_file = paths.join_paths(package_dir, "code", "app.xml")
     if not os.path.exists(app_xml_file):
-        return False
-
-    # Get title id
+        return ""
     app_titleid = ""
     app_xml_contents = serialization.read_text_file(
         src = app_xml_file,
@@ -162,44 +133,60 @@ def install_wiiu_nus_package(
     if soup:
         for tag in soup.find_all("title_id"):
             app_titleid = tag.text
-    if len(app_titleid) != 16:
-        return False
+    return app_titleid if len(app_titleid) == 16 else ""
 
-    # Get app info
-    app_type = app_titleid[:8].lower()
-    app_folder = app_titleid[8:].lower()
-
-    # Look at each extracted folder
+# Move a decrypted package's folders into a nand, under the title its id names
+def move_wiiu_title_folders(package_dir, nand_dir, app_titleid, verbose = False, pretend_run = False, exit_on_failure = False):
+    title_dir = paths.join_paths(nand_dir, "usr", "title", app_titleid[:8].lower(), app_titleid[8:].lower())
     for obj in ["code", "content", "meta"]:
-
-        # Make folder
         success = fileops.make_directory(
-            src = paths.join_paths(tmp_dir_result, obj),
+            src = paths.join_paths(package_dir, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-
-        # Move folder
         success = fileops.move_file_or_directory(
-            src = paths.join_paths(tmp_dir_result, obj),
-            dest = paths.join_paths(nand_dir, "usr", "title", app_type, app_folder, obj),
+            src = paths.join_paths(package_dir, obj),
+            dest = paths.join_paths(title_dir, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Should be installed
     return True
+
+# Install Wii U NUS package
+def install_wiiu_nus_package(
+    nus_package_dir,
+    nand_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Decrypt a copy of the package in a temporary directory, then move it into the nand
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        filebulk.copy_contents(
+            src = nus_package_dir,
+            dest = tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if paths.is_directory_empty(tmp_dir):
+            return False
+        success = decrypt_wiiu_nus_package(
+            nus_package_dir = tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        app_titleid = get_wiiu_package_title_id(tmp_dir, verbose, exit_on_failure)
+        if not app_titleid:
+            return False
+        return move_wiiu_title_folders(tmp_dir, nand_dir, app_titleid, verbose, pretend_run, exit_on_failure)
 
 # Update Wii U keys file
 def update_wiiu_keys(
@@ -230,3 +217,32 @@ def update_wiiu_keys(
         exit_on_failure = exit_on_failure)
 
 ######################################################
+# Package folders
+######################################################
+
+# Decrypt, or else verify when asked, every NUS package under input_path, found by its title.tik
+def process_wiiu_nus_packages(
+    input_path,
+    decrypt = False,
+    verify = False,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for tik_file in paths.build_file_list_by_extensions(input_path, extensions = [".tik"]):
+        if not tik_file.endswith("title.tik"):
+            continue
+        package_dir = paths.get_filename_directory(tik_file)
+        if decrypt:
+            decrypt_wiiu_nus_package(
+                nus_package_dir = package_dir,
+                delete_original = delete_originals,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        elif verify:
+            verify_wiiu_nus_package(
+                nus_package_dir = package_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)

@@ -1,0 +1,20 @@
+# DXVK: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.DXVK]
+lib32 = ["x32/d3d10core.dll", "x32/d3d11.dll", "x32/d3d9.dll", "x32/dxgi.dll"]
+lib64 = ["x64/d3d10core.dll", "x64/d3d11.dll", "x64/d3d9.dll", "x64/dxgi.dll"]
+
+[[setup]]
+kind = "github_release"
+platform = "lib"
+for = "library"
+github_user = "doitsujin"
+github_repo = "dxvk"
+starts_with = "dxvk-2.2"
+ends_with = ".tar.gz"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"

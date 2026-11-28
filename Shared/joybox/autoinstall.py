@@ -1,16 +1,21 @@
 # Imports
+import importlib
 import copy
 import re
 
 # Local imports
-import joybox.fileops as fileops
-import joybox.iso as iso
-import joybox.logger as logger
-import joybox.network as network
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import fileops
+from joybox import iso
+from joybox import logger
+from joybox import network
+from joybox import paths
+from joybox import serialization
+from joybox import settings
 from joybox import ubunturelease
+
+# Get yaml, imported on first use
+def _get_yaml():
+    return importlib.import_module("yaml")
 
 ###########################################################
 # Ubuntu autoinstall images
@@ -22,20 +27,20 @@ from joybox import ubunturelease
 ###########################################################
 
 # The seed directory added to the image, and where it appears once booted
-seed_directory = "nocloud"
-seed_source = "/cdrom/%s/" % seed_directory
+SEED_DIRECTORY = "nocloud"
+SEED_SOURCE = "/cdrom/%s/" % SEED_DIRECTORY
 
 # The stock ISO waits for a menu choice; this is how long it waits before
 # installing itself, in seconds
-boot_timeout = 2
+BOOT_TIMEOUT = 2
 
 # What goes in the password field when a key is the only way in. An empty
 # field is not "no login", it is a login that takes no password, so the
 # account is locked instead and the key is left as the way in.
-locked_password = "!"
+LOCKED_PASSWORD = "!"
 
 # Where the stock image keeps the images it boots from
-bios_boot_image = "boot/grub/i386-pc/eltorito.img"
+BIOS_BOOT_IMAGE = "boot/grub/i386-pc/eltorito.img"
 # The efi image and the boot code are pulled out of the stock image and kept
 # beside the tree rather than inside it, since they are appended to the
 # rebuilt image as a partition and a system area rather than packed as files.
@@ -75,7 +80,7 @@ reserved_usernames = {
 }
 
 # What the installer accepts as a username
-username_pattern = r"^[a-z_][a-z0-9_-]*[$]?$"
+USERNAME_PATTERN = r"^[a-z_][a-z0-9_-]*[$]?$"
 
 # Get install profile
 # Everything the installer would have asked a person sitting at the machine.
@@ -123,7 +128,7 @@ def get_install_profile_problems(profile):
         problems.append(
             "Username %s is reserved by the system and the installer will "
             "refuse it (autoinstall_username)" % username)
-    elif not re.match(username_pattern, username):
+    elif not re.match(USERNAME_PATTERN, username):
         problems.append(
             "Username %s is not one the installer accepts; use lower case "
             "letters, digits, dashes and underscores (autoinstall_username)"
@@ -167,7 +172,7 @@ def build_network_config():
 # Where the sshd settings are written. sshd keeps the first value it reads
 # for a setting, and this sorts before the 50-cloud-init.conf cloud-init
 # writes, so these win.
-sshd_config_path = "/etc/ssh/sshd_config.d/10-joybox.conf"
+SSHD_CONFIG_PATH = "/etc/ssh/sshd_config.d/10-joybox.conf"
 
 # Build the sshd settings every installed machine gets: key-only login for the
 # account made here, and local port forwarding, so a service bound to localhost
@@ -201,7 +206,7 @@ def build_user_config(profile):
         "users": [account],
         "write_files": [
             {
-                "path": sshd_config_path,
+                "path": SSHD_CONFIG_PATH,
                 "content": build_sshd_config(profile.get("username")),
                 "permissions": "0644",
             },
@@ -222,7 +227,7 @@ def build_autoinstall_config(profile):
             "realname": profile.get("realname") or profile.get("username"),
             "username": profile.get("username"),
             "hostname": profile.get("hostname"),
-            "password": profile.get("password_hash") or locked_password,
+            "password": profile.get("password_hash") or LOCKED_PASSWORD,
         },
         "user-data": build_user_config(profile),
         "late-commands": [
@@ -244,7 +249,7 @@ def build_autoinstall_config(profile):
 
 # Build the user-data seed file contents
 def build_user_data(profile, overlay = None):
-    import yaml
+    yaml = _get_yaml()
 
     body = yaml.safe_dump(
         merge_autoinstall_data(build_autoinstall_config(profile), overlay),
@@ -298,14 +303,13 @@ def merge_autoinstall_data(base, overlay):
 # Read an overlay file
 # The file may be written as a whole autoinstall document or as just the
 # contents of one, so both are accepted.
-def read_overlay_file(overlay_file, verbose = False, pretend_run = False, exit_on_failure = False):
+def read_overlay_file(overlay_file, verbose = False, exit_on_failure = False):
     if not paths.is_path_file(overlay_file):
         logger.log_error("Overlay file not found: %s" % overlay_file)
         return None
     data = serialization.read_yaml_file(
         src = overlay_file,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not isinstance(data, dict) or not data:
         logger.log_error("Overlay file is empty or unreadable: %s" % overlay_file)
@@ -328,7 +332,7 @@ def write_seed_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    seed_dir = paths.join_paths(iso_dir, seed_directory)
+    seed_dir = paths.join_paths(iso_dir, SEED_DIRECTORY)
     success = fileops.make_directory(
         src = seed_dir,
         verbose = verbose,
@@ -358,7 +362,7 @@ def write_seed_files(
 # seed's semicolon as a command break and boots an interactive installer, so it
 # is escaped for grub; isolinux takes it as written
 def get_kernel_arguments(profile = None, escape_semicolons = False):
-    seed_argument = "ds=nocloud;s=%s" % seed_source
+    seed_argument = "ds=nocloud;s=%s" % SEED_SOURCE
     if escape_semicolons:
         seed_argument = seed_argument.replace(";", "\\;")
     arguments = ["autoinstall", seed_argument]
@@ -384,21 +388,24 @@ def patch_boot_entry(line, profile = None, escape_semicolons = False):
         return line[:separator.start()] + addition + line[separator.start():]
     return line.rstrip("\n") + addition + ("\n" if line.endswith("\n") else "")
 
+# One boot configuration line with kernel entries seeded and timeouts shortened
+# (grub's "set timeout=" in seconds, isolinux's "timeout" in tenths)
+def _patch_boot_config_line(line, profile, escape_semicolons):
+    stripped = line.strip()
+    leading = line[:len(line) - len(line.lstrip())]
+    if stripped.startswith("linux") or stripped.startswith("append"):
+        return patch_boot_entry(line, profile, escape_semicolons)
+    if stripped.startswith("set timeout="):
+        return "%sset timeout=%d\n" % (leading, BOOT_TIMEOUT)
+    if stripped.startswith("timeout "):
+        return "%stimeout %d\n" % (leading, BOOT_TIMEOUT * 10)
+    return line
+
 # Patch the contents of a boot configuration
 def patch_boot_config_contents(contents, profile = None, escape_semicolons = False):
     patched = []
     for line in contents.splitlines(keepends = True):
-        stripped = line.strip()
-        if stripped.startswith("linux") or stripped.startswith("append"):
-            patched.append(patch_boot_entry(line, profile, escape_semicolons))
-        elif stripped.startswith("set timeout="):
-            leading = line[:len(line) - len(line.lstrip())]
-            patched.append("%sset timeout=%d\n" % (leading, boot_timeout))
-        elif stripped.startswith("timeout "):
-            leading = line[:len(line) - len(line.lstrip())]
-            patched.append("%stimeout %d\n" % (leading, boot_timeout * 10))
-        else:
-            patched.append(line)
+        patched.append(_patch_boot_config_line(line, profile, escape_semicolons))
     return "".join(patched)
 
 # Get the boot configurations an extracted image may carry, and whether each
@@ -445,55 +452,48 @@ def patch_boot_configs(
 # Building
 ###########################################################
 
-# Get a stock image, downloading it only when it is not already here
-def obtain_source_image(
-    output_file,
-    version,
-    source_file = None,
-    verify = True,
-    verify_signature = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+# Whether the image's checksum matches the published one for this release
+def _verify_image(output_file, version, image, verify_signature, verbose, pretend_run, exit_on_failure):
+    return ubunturelease.verify_image_checksum(
+        iso_file = output_file,
+        version = version,
+        image = image,
+        verify_signature = verify_signature,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
-    # Already have one. A caller supplied image is taken as given, since it
-    # need not be a published release at all; one left by an earlier run is
-    # checked, because a truncated download looks exactly like a good one.
-    if source_file:
-        if paths.is_path_file(source_file):
-            return source_file
-        logger.log_error("Source image not found: %s" % source_file)
-        return None
-    if paths.is_path_file(output_file):
-        logger.log_info("Using the image already downloaded: %s" % output_file)
-        if not verify:
-            return output_file
-        image = ubunturelease.find_latest_release_image(
-            version = version,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if image and ubunturelease.verify_image_checksum(
-            iso_file = output_file,
-            version = version,
-            image = image,
-            verify_signature = verify_signature,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure):
-            return output_file
-        logger.log_warning("Discarding %s and downloading it again" % output_file)
-        fileops.remove_file(
-            src = output_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
+# Remove a bad image, which the next run would otherwise pick up as "already here"
+def _discard_image(output_file, verbose, pretend_run):
+    fileops.remove_file(
+        src = output_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = False)
+
+# The image an earlier run left, when unverified or still matching the newest release;
+# None after discarding it, since a truncated download looks exactly like a good one
+def _reuse_downloaded_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure):
+    logger.log_info("Using the image already downloaded: %s" % output_file)
+    if not verify:
+        return output_file
+    image = ubunturelease.find_latest_release_image(
+        version = version,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if image and _verify_image(output_file, version, image, verify_signature, verbose, pretend_run, exit_on_failure):
+        return output_file
+    logger.log_warning("Discarding %s and downloading it again" % output_file)
+    _discard_image(output_file, verbose, pretend_run)
+    return None
+
+# Download the newest published image, checked against what was published when asked; None on failure
+def download_release_image(output_file, version, verify = True, verify_signature = True, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Fetch the newest one published
     image = ubunturelease.find_latest_release_image(
         version = version,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not image:
         return None
@@ -510,28 +510,180 @@ def obtain_source_image(
         return None
 
     # Check it against what was published before building from it
-    if verify:
-        verified = ubunturelease.verify_image_checksum(
+    if verify and not _verify_image(output_file, version, image, verify_signature, verbose, pretend_run, exit_on_failure):
+        _discard_image(output_file, verbose, pretend_run)
+        return None
+    return output_file
+
+# Get a stock image, downloading it only when it is not already here
+def obtain_source_image(
+    output_file,
+    version,
+    source_file = None,
+    verify = True,
+    verify_signature = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Already have one. A caller supplied image is taken as given, since it
+    # need not be a published release at all; one left by an earlier run is
+    # checked.
+    if source_file:
+        if paths.is_path_file(source_file):
+            return source_file
+        logger.log_error("Source image not found: %s" % source_file)
+        return None
+    if paths.is_path_file(output_file):
+        reused = _reuse_downloaded_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure)
+        if reused:
+            return reused
+
+    # Fetch the newest one published
+    return download_release_image(output_file, version, verify, verify_signature, verbose, pretend_run, exit_on_failure)
+
+# The caller's whole seed, or None after logging that the file is missing or empty
+def read_user_data_file(user_data_file, verbose = False, exit_on_failure = False):
+    if not paths.is_path_file(user_data_file):
+        logger.log_error("User data file not found: %s" % user_data_file)
+        return None
+    user_data = serialization.read_text_file(
+        src = user_data_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not user_data:
+        logger.log_error("User data file is empty: %s" % user_data_file)
+        return None
+    return user_data
+
+# (ok, user_data, overlay): the caller's seed when given, else a checked profile, and the
+# overlay from the given file or the profile's. A whole seed supplied by the caller replaces
+# the generated one, so the profile only has to answer for the parts still being generated.
+def _gather_build_inputs(profile, user_data_file, overlay_file, verbose, exit_on_failure):
+
+    # Seed
+    user_data = None
+    if user_data_file:
+        user_data = read_user_data_file(user_data_file, verbose, exit_on_failure)
+        if not user_data:
+            return False, None, None
+    else:
+        problems = get_install_profile_problems(profile)
+        if problems:
+            for problem in problems:
+                logger.log_error(problem)
+            return False, None, None
+
+    # Anything the machine needs beyond a working install
+    overlay = None
+    if not overlay_file:
+        overlay_file = profile.get("overlay_file")
+    if overlay_file:
+        overlay = read_overlay_file(
+            overlay_file = overlay_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if overlay is None:
+            return False, None, None
+    return True, user_data, overlay
+
+# Take the stock image apart into iso_dir, with its boot images in work_dir; False on failure
+def _unpack_stock_image(stock_image, work_dir, iso_dir, verbose, pretend_run, exit_on_failure):
+    success = iso.extract_buildable_iso_tree(
+        iso_file = stock_image,
+        extract_dir = iso_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return iso.extract_iso_boot_images(
+        iso_file = stock_image,
+        extract_dir = work_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Add the answers to the extracted tree and point the bootloader at them; False on failure
+def _seed_image_tree(iso_dir, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+    success = write_seed_files(
+        iso_dir = iso_dir,
+        profile = profile,
+        overlay = overlay,
+        user_data = user_data,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return patch_boot_configs(
+        iso_dir = iso_dir,
+        profile = profile,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Unpack, seed and repack the stock image in a disposable directory, still BIOS and EFI bootable
+def _repack_image(stock_image, output_file, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as work_dir:
+        if not work_dir:
+            logger.log_error("Unable to create temporary directory")
+            return False
+        iso_dir = paths.join_paths(work_dir, "iso")
+
+        # Take the image apart, add the answers and point the bootloader at them
+        if not _unpack_stock_image(stock_image, work_dir, iso_dir, verbose, pretend_run, exit_on_failure):
+            return False
+        if not _seed_image_tree(iso_dir, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+            return False
+
+        # Put it back together, still bootable both ways
+        return iso.create_bootable_iso(
             iso_file = output_file,
-            version = version,
-            image = image,
-            verify_signature = verify_signature,
+            source_dir = iso_dir,
+            volume_name = ubunturelease.get_volume_name(profile.get("version")),
+            bios_boot_image = BIOS_BOOT_IMAGE,
+            efi_boot_image = iso.get_iso_efi_boot_image(work_dir),
+            mbr_image = iso.get_iso_mbr_image(work_dir),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not verified:
 
-            # A bad download left in place is picked up as "already here" by
-            # the next run, which would never recover on its own
-            fileops.remove_file(
-                src = output_file,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            return None
-    return output_file
+# The output file's directory, made if missing; None after logging when it cannot be.
+# The download lands beside the image, so a missing directory otherwise surfaces as a
+# curl failure after it has already fetched some of a three gigabyte file.
+def _make_output_directory(output_file, verbose, pretend_run, exit_on_failure):
+    output_dir = paths.get_filename_directory(output_file)
+    success = fileops.make_directory(
+        src = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to create output directory: %s" % output_dir)
+        return None
+    return output_dir
 
-# Build an autoinstall image
+# The given or downloaded stock image once the output's directory is made; the download goes
+# to download_file, by default beside the output; None when either step fails
+def _get_stock_image(output_file, download_file, version, source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure):
+    output_dir = _make_output_directory(output_file, verbose, pretend_run, exit_on_failure)
+    if output_dir is None:
+        return None
+    if not download_file:
+        download_file = paths.join_paths(output_dir, "ubuntu-server-%s.iso" % version)
+    return obtain_source_image(
+        output_file = download_file,
+        version = version,
+        source_file = source_file,
+        verify = verify,
+        verify_signature = verify_signature,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Repack a stock Ubuntu Server ISO, downloaded unless given, with a seed from the install profile or a user-data file
+# and a bootloader patched to use it, staying BIOS and EFI bootable; False on any failure
 def build_autoinstall_image(
     output_file,
     source_file = None,
@@ -548,138 +700,91 @@ def build_autoinstall_image(
     # Check everything the build needs before anything is downloaded
     if profile is None:
         profile = get_install_profile()
+    ok, user_data, overlay = _gather_build_inputs(profile, user_data_file, overlay_file, verbose, exit_on_failure)
+    if not ok:
+        return False
 
-    # A whole seed supplied by the caller replaces the generated one, so the
-    # profile only has to answer for the parts still being generated
-    user_data = None
-    if user_data_file:
-        if not paths.is_path_file(user_data_file):
-            logger.log_error("User data file not found: %s" % user_data_file)
-            return False
-        user_data = serialization.read_text_file(
-            src = user_data_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not user_data:
-            logger.log_error("User data file is empty: %s" % user_data_file)
-            return False
-    else:
-        problems = get_install_profile_problems(profile)
-        if problems:
-            for problem in problems:
-                logger.log_error(problem)
-            return False
+    # Get the stock image, beside the output unless told otherwise
+    stock_image = _get_stock_image(
+        output_file, download_file, profile.get("version"), source_file, verify, verify_signature, verbose, pretend_run, exit_on_failure)
+    if not stock_image:
+        return False
 
-    # Anything the machine needs beyond a working install
+    # Work somewhere disposable
+    if not _repack_image(stock_image, output_file, profile, overlay, user_data, verbose, pretend_run, exit_on_failure):
+        return False
+    logger.log_info("Built autoinstall image: %s" % output_file)
+    return True
+
+# The configured install profile, with each override that is given taking over
+def get_install_profile_with_overrides(release = None, hostname = None, serial_console = False):
+    profile = get_install_profile()
+    if release:
+        profile["version"] = release
+    if hostname:
+        profile["hostname"] = hostname
+    if serial_console:
+        profile["serial_console"] = True
+    return profile
+
+# Log each problem with the profile, then write the user-data and meta-data it produces,
+# with the overlay file or the profile's own merged in; stops at an unreadable overlay
+def show_install_seed(profile, overlay_file = None, verbose = False, exit_on_failure = False):
+    problems = get_install_profile_problems(profile)
+    for problem in problems:
+        logger.log_error(problem)
     overlay = None
-    if not overlay_file:
-        overlay_file = profile.get("overlay_file")
+    overlay_file = overlay_file or profile.get("overlay_file")
     if overlay_file:
         overlay = read_overlay_file(
             overlay_file = overlay_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if overlay is None:
-            return False
+            return
 
-    # Make sure there is somewhere to write to. The download lands beside the
-    # image, so a missing directory otherwise surfaces as a curl failure after
-    # it has already fetched some of a three gigabyte file.
-    output_dir = paths.get_filename_directory(output_file)
-    success = fileops.make_directory(
-        src = output_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to create output directory: %s" % output_dir)
-        return False
+    # The hash is redacted here only; the image itself still carries it
+    shown_profile = dict(profile)
+    if shown_profile.get("password_hash"):
+        shown_profile["password_hash"] = "[REDACTED]"
+    logger.log_output(build_user_data(shown_profile, overlay) + "\n")
+    logger.log_output(build_meta_data(profile) + "\n")
+    if problems:
+        logger.log_error("This configuration will not build until those are answered")
 
-    # Get the stock image
-    version = profile.get("version")
-    if not download_file:
-        download_file = paths.join_paths(output_dir, "ubuntu-server-%s.iso" % version)
-    stock_image = obtain_source_image(
-        output_file = download_file,
-        version = version,
+# Build the image as output_name in output_dir, or in the working directory when that is not
+# valid, then log how to write it to a usb stick and what booting it does
+def build_autoinstall_image_in_directory(
+    output_dir,
+    output_name,
+    profile,
+    source_file = None,
+    overlay_file = None,
+    user_data_file = None,
+    verify = True,
+    verify_signature = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if not paths.is_path_valid(output_dir):
+        output_dir = fileops.get_working_directory()
+    output_file = paths.join_paths(output_dir, output_name)
+    success = build_autoinstall_image(
+        output_file = output_file,
         source_file = source_file,
+        profile = profile,
+        overlay_file = overlay_file,
+        user_data_file = user_data_file,
         verify = verify,
         verify_signature = verify_signature,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not stock_image:
-        return False
-
-    # Work somewhere disposable
-    work_dir_ok, work_dir = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not work_dir_ok:
-        logger.log_error("Unable to create temporary directory")
-        return False
-    iso_dir = paths.join_paths(work_dir, "iso")
-
-    try:
-
-        # Take the image apart
-        success = iso.extract_buildable_iso_tree(
-            iso_file = stock_image,
-            extract_dir = iso_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-        success = iso.extract_iso_boot_images(
-            iso_file = stock_image,
-            extract_dir = work_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Add the answers and point the bootloader at them
-        success = write_seed_files(
-            iso_dir = iso_dir,
-            profile = profile,
-            overlay = overlay,
-            user_data = user_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-        success = patch_boot_configs(
-            iso_dir = iso_dir,
-            profile = profile,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Put it back together, still bootable both ways
-        success = iso.create_bootable_iso(
-            iso_file = output_file,
-            source_dir = iso_dir,
-            volume_name = ubunturelease.get_volume_name(version),
-            bios_boot_image = bios_boot_image,
-            efi_boot_image = iso.get_iso_efi_boot_image(work_dir),
-            mbr_image = iso.get_iso_mbr_image(work_dir),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-    finally:
-        fileops.remove_directory(
-            src = work_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-
-    logger.log_info("Built autoinstall image: %s" % output_file)
-    return True
+    if not success:
+        logger.log_error("Unable to build autoinstall image")
+        return
+    logger.log_info("Write it to a usb stick with:")
+    logger.log_info("  sudo dd if=%s of=/dev/sdX bs=4M status=progress conv=fsync" % output_file)
+    logger.log_info(
+        "Booting from it installs %s without asking anything (%d seconds to interrupt), then powers off."
+        % (profile.get("hostname"), BOOT_TIMEOUT))

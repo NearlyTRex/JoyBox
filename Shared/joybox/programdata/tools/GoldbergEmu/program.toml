@@ -1,0 +1,20 @@
+# GoldbergEmu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.GoldbergEmu]
+lib32 = ["steam_api.dll"]
+lib64 = ["steam_api64.dll"]
+
+[[setup]]
+kind = "webpage_release"
+platform = "lib"
+for = "library"
+webpage_url = "https://mr_goldberg.gitlab.io/goldberg_emulator/"
+webpage_base_url = "https://gitlab.com"
+starts_with = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/"
+ends_with = "/artifacts/download"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"

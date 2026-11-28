@@ -1,8 +1,14 @@
 # Imports
+import os
+
+# Third-party imports
 import pytest
 
 # Local imports
+from joybox import commandbase
+from joybox import config
 from joybox import registry
+import sandbox_helpers
 
 
 ###########################################################
@@ -451,7 +457,7 @@ def reg_runs(monkeypatch):
 
 def test_exporting_runs_reg_export_in_the_prefix(tmp_path, reg_runs):
     target = str(tmp_path / "out.reg")
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
 
     assert registry.export_registry_file(target, "HKCU\\Software", options)
     cmd, used = reg_runs["calls"][0]
@@ -463,19 +469,19 @@ def test_exporting_runs_reg_export_in_the_prefix(tmp_path, reg_runs):
 
 def test_a_failed_export_reports_failure(tmp_path, reg_runs):
     reg_runs["code"] = 1
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
     assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
 
 
 def test_an_export_that_writes_nothing_reports_failure(tmp_path, reg_runs):
     reg_runs["creates"] = False
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
     assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
 
 
 def test_importing_runs_reg_import_in_the_prefix(tmp_path, reg_runs):
     source = write_reg(tmp_path / "in.reg", sample(ACME))
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
 
     assert registry.import_registry_file(source, options)
     cmd, used = reg_runs["calls"][0]
@@ -487,4 +493,123 @@ def test_importing_runs_reg_import_in_the_prefix(tmp_path, reg_runs):
 def test_a_failed_import_reports_failure(tmp_path, reg_runs):
     reg_runs["code"] = 1
     source = write_reg(tmp_path / "in.reg", sample(ACME))
-    assert registry.import_registry_file(source, registry.command.create_command_options()) is False
+    assert registry.import_registry_file(source, commandbase.create_command_options()) is False
+
+
+###########################################################
+# Registry backup and restore
+#
+# Setup and game prefixes keep separate registry files. Mixing them up restores
+# an installer's keys into a game, or drops a game's settings on backup.
+###########################################################
+
+@pytest.fixture
+def registry_dir(tmp_path):
+    profile = tmp_path / "profile"
+    (profile / config.COMPUTER_FOLDER_REGISTRY).mkdir(parents = True)
+    return profile
+
+
+def prefix_options(profile, prefix_name):
+    entry = sandbox_helpers.WINE(prefix_name = prefix_name)
+    if profile:
+        entry.set_prefix_user_profile_dir(str(profile))
+    return entry
+
+
+@pytest.fixture
+def imported(monkeypatch):
+    calls = []
+    monkeypatch.setattr(registry, "import_registry_file", lambda **kwargs: calls.append(kwargs) or True)
+    return calls
+
+
+@pytest.fixture
+def backed_up(monkeypatch):
+    calls = []
+    monkeypatch.setattr(registry, "backup_user_registry", lambda **kwargs: calls.append(kwargs) or True)
+    return calls
+
+
+###########################################################
+# Restore
+###########################################################
+
+def test_restoring_without_a_profile_fails(imported):
+    assert registry.restore_registry(prefix_options(None, config.PrefixType.GAME)) is False
+    assert imported == []
+
+
+@pytest.mark.parametrize("prefix_name, filename", [
+    (config.PrefixType.SETUP, config.REGISTRY_FILENAME_SETUP),
+    (config.PrefixType.GAME, config.REGISTRY_FILENAME_GAME),
+])
+def test_each_prefix_restores_its_own_registry_file(registry_dir, imported, prefix_name, filename):
+    registry_file = registry_dir / config.COMPUTER_FOLDER_REGISTRY / filename
+    registry_file.write_text("REGEDIT4")
+
+    assert registry.restore_registry(prefix_options(registry_dir, prefix_name), verbose = True, pretend_run = True) is True
+    assert imported[0]["registry_file"] == str(registry_file)
+    assert imported[0]["verbose"] is True
+    assert imported[0]["pretend_run"] is True
+
+
+def test_a_missing_registry_file_is_nothing_to_restore(registry_dir, imported):
+    assert registry.restore_registry(prefix_options(registry_dir, config.PrefixType.GAME)) is True
+    assert imported == []
+
+
+def test_a_prefix_without_its_own_registry_restores_nothing(registry_dir, imported):
+    assert registry.restore_registry(prefix_options(registry_dir, config.PrefixType.TOOL)) is True
+    assert imported == []
+
+
+def test_a_failed_import_is_reported(registry_dir, monkeypatch):
+    (registry_dir / config.COMPUTER_FOLDER_REGISTRY / config.REGISTRY_FILENAME_GAME).write_text("")
+    monkeypatch.setattr(registry, "import_registry_file", lambda **kwargs: False)
+
+    assert registry.restore_registry(prefix_options(registry_dir, config.PrefixType.GAME)) is False
+
+
+###########################################################
+# Backup
+###########################################################
+
+@pytest.mark.parametrize("keys", [[], None])
+def test_no_keys_to_keep_is_nothing_to_back_up(backed_up, keys):
+    assert registry.backup_registry(prefix_options(None, config.PrefixType.GAME), registry_keys = keys) is True
+    assert backed_up == []
+
+
+def test_backing_up_without_a_profile_fails(backed_up):
+    assert registry.backup_registry(prefix_options(None, config.PrefixType.GAME), registry_keys = ["HKCU"]) is False
+    assert backed_up == []
+
+
+def test_a_setup_prefix_backs_up_with_the_setup_rules(registry_dir, backed_up):
+    assert registry.backup_registry(
+        prefix_options(registry_dir, config.PrefixType.SETUP), registry_keys = ["HKCU\\Software\\Game"]) is True
+
+    call = backed_up[0]
+    assert call["registry_file"] == os.path.join(
+        str(registry_dir), config.COMPUTER_FOLDER_REGISTRY, config.REGISTRY_FILENAME_SETUP)
+    assert call["export_keys"] == config.registry_export_keys_setup
+    assert call["ignore_keys"] == config.ignored_registry_keys_setup
+    assert call["keep_keys"] == ["HKCU\\Software\\Game"]
+
+
+def test_a_game_prefix_backs_up_with_the_game_rules(registry_dir, backed_up):
+    assert registry.backup_registry(
+        prefix_options(registry_dir, config.PrefixType.GAME), registry_keys = ["HKCU"], exit_on_failure = True) is True
+
+    call = backed_up[0]
+    assert call["registry_file"].endswith(config.REGISTRY_FILENAME_GAME)
+    assert call["export_keys"] == config.registry_export_keys_game
+    assert call["ignore_keys"] == config.ignored_registry_keys_game
+    assert call["exit_on_failure"] is True
+
+
+def test_a_prefix_without_its_own_registry_cannot_be_backed_up(registry_dir, backed_up):
+    # There is no file to write the keys to.
+    assert registry.backup_registry(prefix_options(registry_dir, config.PrefixType.TOOL), registry_keys = ["HKCU"]) is False
+    assert backed_up == []

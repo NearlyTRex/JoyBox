@@ -1,5 +1,5 @@
 # Local imports
-from joybox import lockersync
+from joybox import config, lockersync
 
 
 ###########################################################
@@ -56,3 +56,14 @@ def test_the_order_of_excludes_does_not_matter(cache_dir):
 def test_an_excluded_cache_is_still_named_for_its_locker(cache_dir):
     assert lockersync.get_cache_file("hetzner", ["Cache/**"]).startswith(
         str(cache_dir / "hetzner_"))
+
+
+def test_a_moved_path_the_primary_lacks_leaves_the_cache_unwritten(tmp_path):
+    cache_file = tmp_path / "hashmap.json"
+    secondary = {"Game.zip": {"hash": "aaaa"}}
+
+    lockersync.update_cached_secondary_hashes(
+        secondary, {}, ["Vanished.zip"], [{"type": config.SyncActionType.COPY, "src": "Vanished.zip", "dest": "Vanished.zip"}], str(cache_file))
+
+    assert secondary == {"Game.zip": {"hash": "aaaa"}}
+    assert not cache_file.exists()

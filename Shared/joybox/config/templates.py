@@ -1,5 +1,5 @@
 # Publish templates
-publish_html_header = """
+PUBLISH_HTML_HEADER = """
 <html>
 <head>
 <title>Game List - %s</title>
@@ -58,13 +58,13 @@ tr:nth-child(odd) {
 </thead>
 <tbody>
 """
-publish_html_footer = """
+PUBLISH_HTML_FOOTER = """
 </tbody>
 </table>
 </body>
 </html>
 """
-publish_html_entry_odd = """
+PUBLISH_HTML_ENTRY_ODD = """
 <tr>
 <td>%s</td>
 <td>%s</td>
@@ -78,7 +78,7 @@ publish_html_entry_odd = """
 </td>
 </tr>
 """
-publish_html_entry_even = """
+PUBLISH_HTML_ENTRY_EVEN = """
 <tr>
 <td>%s</td>
 <td>%s</td>

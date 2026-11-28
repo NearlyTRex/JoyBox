@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import storebase
 
 
 ###########################################################
@@ -155,7 +156,7 @@ def test_every_store_platform_matches_its_categories(store_list):
 
     platforms = {store.get_name(): store.get_platform() for store in store_list}
     derived = {
-        store.get_name(): gamenaming.derive_game_platform_from_categories(store.get_category(), store.get_subcategory())
+        store.get_name(): gamenaming.derive_game_platform_from_categories(store.get_subcategory())
         for store in store_list}
 
     assert platforms == derived
@@ -398,22 +399,21 @@ INSTALL_DIR_STORES = ["disc.Disc", "puppetcombo.PuppetCombo", "redcandle.RedCand
 def load_store_class(dotted):
     import importlib
     module_name, class_name = dotted.split(".")
-    module = importlib.import_module("joybox.stores." + module_name)
-    return module, getattr(module, class_name)
+    return getattr(importlib.import_module("joybox.stores." + module_name), class_name)
 
 
 @pytest.mark.parametrize("dotted", INSTALL_DIR_STORES)
 def test_an_install_dir_store_reports_its_install_dir(monkeypatch, tmp_path, dotted):
-    module, store_class = load_store_class(dotted)
-    monkeypatch.setattr(module.settings, "get_path_value", lambda section, key: str(tmp_path))
+    store_class = load_store_class(dotted)
+    monkeypatch.setattr(storebase.store.settings, "get_path_value", lambda section, key: str(tmp_path))
 
     assert store_class().get_install_dir() == str(tmp_path)
 
 
 @pytest.mark.parametrize("dotted", INSTALL_DIR_STORES)
 def test_an_install_dir_store_refuses_a_missing_install_dir(monkeypatch, dotted):
-    module, store_class = load_store_class(dotted)
-    monkeypatch.setattr(module.settings, "get_path_value", lambda section, key: None)
+    store_class = load_store_class(dotted)
+    monkeypatch.setattr(storebase.store.settings, "get_path_value", lambda section, key: None)
 
     with pytest.raises(RuntimeError):
         store_class()

@@ -253,7 +253,7 @@ class StagingFails(RecordingConnection):
 
 def use_local(monkeypatch, local):
     from joybox.bootstrap.installers import installer_certbot
-    monkeypatch.setattr(installer_certbot.connection, "ConnectionLocal", lambda flags, options: local)
+    monkeypatch.setattr(installer_certbot, "ConnectionLocal", lambda flags, options: local)
 
 
 def mkcert_output(cert = "CERT", key = "KEY", **kwargs):
@@ -326,11 +326,11 @@ def test_letsencrypt_uninstall_removes_the_renewal(isolated_settings, recording_
     assert recording_connection.ran("remove -y certbot")
 
 
-def test_an_unwritable_default_entry_is_not_installed(isolated_settings, monkeypatch):
+def test_an_unwritable_default_entry_fails_the_install(isolated_settings, monkeypatch):
     connection = RecordingConnection()
     certbot = build_certbot(isolated_settings, connection, "selfsigned")
     monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
 
-    assert certbot.install()
+    assert certbot.install() is False
     assert not connection.ran("install_conf")
-    assert connection.ran("systemctl", "restart")
+    assert not connection.ran("systemctl", "restart")

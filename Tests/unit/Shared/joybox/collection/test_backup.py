@@ -1,4 +1,6 @@
 # Imports
+import types
+
 import pytest
 
 # Local imports
@@ -130,13 +132,17 @@ def test_the_identifier_and_branch_reach_the_store(store):
 # Local games
 ###########################################################
 
-def test_a_local_game_is_never_backed_up():
+def test_a_local_game_is_never_backed_up(store):
     # The local copy is the master; there is no upstream to re-fetch from.
-    assert backup.should_backup_local_game_files(FakeGameInfo()) is False
+    store["is_store"] = False
+
+    assert backup.should_backup_game_files(FakeGameInfo()) is False
 
 
-def test_backing_up_a_local_game_reports_success():
-    assert backup.backup_local_game_files(FakeGameInfo(), locker_type = None) is True
+def test_backing_up_a_local_game_reports_success(store):
+    store["is_store"] = False
+
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = None) is True
 
 
 ###########################################################
@@ -253,19 +259,14 @@ def test_a_failed_upload_fails_and_cleans_up(pipeline):
 def every_game(monkeypatch):
     state = {"backed_up": [], "result": True}
 
-    class StubGameInfo:
-        def __init__(self, game_supercategory, game_category, game_subcategory, game_name, **kwargs):
-            self.name = game_name
-
-    def find_json_game_names(game_supercategory, game_category, game_subcategory):
-        return ["Alpha", "Beta"] if game_subcategory == backup.config.Subcategory.NINTENDO_NES else []
+    def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
+        return iter([types.SimpleNamespace(name = "Alpha"), types.SimpleNamespace(name = "Beta")])
 
     def backup_game_files(game_info, locker_type, **kwargs):
         state["backed_up"].append((game_info.name, locker_type))
         return state["result"]
 
-    monkeypatch.setattr(backup.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(backup.gamecollection, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(backup.gamecollection, "iterate_rom_game_infos", iterate_rom_game_infos)
     monkeypatch.setattr(backup, "backup_game_files", backup_game_files)
     return state
 

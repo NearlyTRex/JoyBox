@@ -43,13 +43,13 @@ def test_channel_fields_are_unique_across_genres(field):
 ###########################################################
 
 def test_batch_size_is_a_non_negative_int():
-    assert isinstance(audio.audio_download_batch_size, int)
-    assert audio.audio_download_batch_size >= 0
+    assert isinstance(audio.AUDIO_DOWNLOAD_BATCH_SIZE, int)
+    assert audio.AUDIO_DOWNLOAD_BATCH_SIZE >= 0
 
 
 def test_concurrent_fragments_is_within_the_download_clamp():
-    assert isinstance(audio.audio_download_concurrent_fragments, int)
-    assert 1 <= audio.audio_download_concurrent_fragments <= google.MAX_CONCURRENT_FRAGMENTS
+    assert isinstance(audio.AUDIO_DOWNLOAD_CONCURRENT_FRAGMENTS, int)
+    assert 1 <= audio.AUDIO_DOWNLOAD_CONCURRENT_FRAGMENTS <= google.MAX_CONCURRENT_FRAGMENTS
 
 
 ###########################################################

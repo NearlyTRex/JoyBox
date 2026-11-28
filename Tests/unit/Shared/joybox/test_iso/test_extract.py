@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import iso
+from joybox import config, iso
 
 
 ###########################################################
@@ -157,3 +157,27 @@ def test_a_failed_tree_extraction_is_reported(installed, monkeypatch, no_chmod,
 
     assert iso.extract_buildable_iso_tree(source_image, str(tmp_path / "tree")) is False
     assert no_chmod == []
+
+
+###########################################################
+# Extracting one disc image by filesystem and method
+###########################################################
+
+@pytest.fixture
+def extractors(monkeypatch):
+    calls = []
+    monkeypatch.setattr(iso.hfs, "extract_hfs", lambda **kwargs: calls.append(("hfs", kwargs["image_file"])))
+    monkeypatch.setattr(iso, "extract_iso", lambda **kwargs: calls.append(("iso", kwargs["iso_file"])))
+    monkeypatch.setattr(iso.archive, "extract_archive", lambda **kwargs: calls.append(("archive", kwargs["archive_file"])))
+    return calls
+
+
+@pytest.mark.parametrize("filesystem,extract_method,expected", [
+    (config.DiscFilesystemType.HFS, config.DiscExtractType.ISO, "hfs"),
+    (None, config.DiscExtractType.ISO, "iso"),
+    (None, None, "archive"),
+])
+def test_a_disc_image_is_extracted_by_its_filesystem_and_method(extractors, filesystem, extract_method, expected):
+    iso.extract_disc_image("/in/Game.iso", "/out", filesystem, extract_method)
+
+    assert extractors == [(expected, "/in/Game.iso")]

@@ -1,0 +1,44 @@
+# SteamDepotDownloader: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.SteamDepotDownloader]
+run_sandboxed = { windows = false, linux = true }
+
+[config.SteamDepotDownloader.program]
+windows = "SteamDepotDownloader/windows/DepotDownloader.exe"
+linux = "SteamDepotDownloader/linux/DepotDownloader"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "SteamRE"
+github_repo = "DepotDownloader"
+starts_with = "DepotDownloader-windows-x64"
+ends_with = ".zip"
+search_file = "DepotDownloader.exe"
+install_files = ["DepotDownloader.exe"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "SteamRE"
+github_repo = "DepotDownloader"
+starts_with = "DepotDownloader-linux-x64"
+ends_with = ".zip"
+search_file = "DepotDownloader"
+install_files = ["DepotDownloader"]
+chmod_files = [{ file = "DepotDownloader", perms = 755 }]
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "DepotDownloader.exe"
+install_files = ["DepotDownloader.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "DepotDownloader"
+install_files = ["DepotDownloader"]
+chmod_files = [{ file = "DepotDownloader", perms = 755 }]

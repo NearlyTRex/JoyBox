@@ -1,22 +1,21 @@
 # Imports
 import os
-import shutil
 
 # Local imports
 from joybox import cmdline
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.commandoptions as commandoptions
+from joybox import config
+from joybox import logger
+from joybox import environment
+from joybox import commandoptions
+from joybox import programs
 
-# Create command options
+# A CommandOptions built from the given arguments, so callers need not import commandoptions
 def create_command_options(*args, **kwargs):
     return commandoptions.CommandOptions(*args, **kwargs)
 
 ###########################################################
 
-# Get starter command
+# The program a command runs, its first argument; empty for an empty command
 def get_starter_command(cmd):
     cmd_list = cmdline.create_command_list(cmd)
     if len(cmd_list) == 0:
@@ -30,41 +29,18 @@ def is_only_starter_command(cmd):
 
 ###########################################################
 
-# Get runnable command path
-def get_runnable_command_path(cmd, search_dirs = ()):
-    for search_dir in search_dirs:
-        potential_paths = [paths.join_paths(search_dir, cmd)]
-        for cmd_ext in config.WindowsProgramFileType.cvalues():
-            potential_paths.append(paths.join_paths(search_dir, cmd + cmd_ext))
-        for potential_path in potential_paths:
-            verified_path = shutil.which(potential_path)
-            if verified_path:
-                return verified_path
-    return shutil.which(cmd)
-
-# Check if runnable command
-def is_runnable_command(cmd, search_dirs = None):
-    search_dirs = [] if search_dirs is None else search_dirs
-    cmd_path = get_runnable_command_path(cmd, search_dirs)
-    if not cmd_path:
-        return False
-    return True
-
-###########################################################
-
 # Check if command type is found
 def is_command_type_found(cmd, cmd_exts = (), search_start = 0, search_len = -1):
     cmd_list = cmdline.create_command_list(cmd)
-    for cmd_index in range(len(cmd_list)):
-        cmd_segment = cmd_list[cmd_index]
+    for cmd_index, cmd_segment in enumerate(cmd_list):
         is_found = False
         for ext in cmd_exts:
             if cmd_segment.lower().endswith(ext):
                 is_found = True
                 break
         is_in_range = True
-        if search_start >= 0 and search_start < len(cmd_list) and search_len > 0:
-            is_in_range = (cmd_index >= search_start) and (cmd_index < search_start + search_len)
+        if 0 <= search_start < len(cmd_list) and search_len > 0:
+            is_in_range = search_start <= cmd_index < search_start + search_len
         if is_found and is_in_range:
             return True
     return False
@@ -85,7 +61,6 @@ def is_local_script_command(cmd):
 
 # Check if local program command
 def is_local_program_command(cmd):
-    import joybox.programs as programs
     starter_cmd = get_starter_command(cmd)
     is_tool = programs.is_program_path_tool(starter_cmd)
     is_emulator = programs.is_program_path_emulator(starter_cmd)
@@ -93,7 +68,6 @@ def is_local_program_command(cmd):
 
 # Check if local sandboxed program command
 def is_local_sandboxed_program_command(cmd):
-    import joybox.programs as programs
     starter_cmd = get_starter_command(cmd)
     is_sandboxed_tool = programs.is_program_path_sandboxed_tool(starter_cmd)
     is_sandboxed_emulator = programs.is_program_path_sandboxed_emulator(starter_cmd)
@@ -121,7 +95,7 @@ def is_appimage_command(cmd):
 
 ###########################################################
 
-# Print command
+# Log a command at info level with passwords and other sensitive arguments masked
 def print_command(cmd):
     masked_cmd = cmdline.mask_sensitive_args(cmd)
     if isinstance(masked_cmd, str):

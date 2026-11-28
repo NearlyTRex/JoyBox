@@ -1,0 +1,54 @@
+# Mutagen: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Mutagen]
+package_dir = "Mutagen/lib"
+package_name = "mutagen"
+
+[config.MutagenMP3]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.mp3"
+
+[config.MutagenID3]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.id3"
+
+[config.MutagenMP4]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.mp4"
+
+[config.MutagenAAC]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.aac"
+
+[[setup]]
+kind = "github_repository"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "Mutagen"
+github_branch = "{program_config:github_branch}"
+clean = true
+
+[[setup]]
+kind = "tool_requirements"
+for = "library"
+
+[[setup]]
+kind = "github_archive"
+platform = "lib"
+for = "library"
+github_user = "NearlyTRex"
+github_repo = "Mutagen"
+github_branch = "{program_config:github_branch}"
+recursive = true
+clean = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"
+
+[[setup_offline]]
+kind = "tool_requirements_offline"
+for = "library"

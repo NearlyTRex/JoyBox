@@ -1,9 +1,10 @@
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
+from . import installer_nginx
 
 # Nginx stream config template
 #
@@ -11,7 +12,7 @@ from joybox import logger
 # published ports bypass ufw entirely, so binding the container publicly would
 # put port 5190 on the internet regardless of the firewall. Going through nginx
 # is what makes ufw actually govern this port.
-nginx_stream_config_template = """
+NGINX_STREAM_CONFIG_TEMPLATE = """
 upstream oscar_bos {{
     server 127.0.0.1:{port_bos};
 }}
@@ -33,27 +34,7 @@ server {{
 #
 # The management API is how screen names get created, so it is proxied over
 # https behind the shared htpasswd file rather than exposed directly.
-nginx_config_template = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
 
         # HTTP Basic Authentication
@@ -67,14 +48,14 @@ server {{
         proxy_set_header X-Forwarded-Proto https;
     }}
 }}
-"""
+""")
 
 # Dockerfile template
 #
 # Upstream publishes no container image, so the server is built from a pinned
 # git tag. The sqlite driver is pure Go (modernc.org/sqlite), so the binary can
 # be built without cgo and shipped on a bare runtime image.
-dockerfile_template = """
+DOCKERFILE_TEMPLATE = """
 ARG OSCAR_BUILDER_IMAGE=golang:1.26.2-alpine
 ARG OSCAR_RUNTIME_IMAGE=alpine:3.22
 
@@ -95,7 +76,7 @@ CMD ["/app/open_oscar_server"]
 """
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   oscar:
     build:
@@ -149,7 +130,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 OSCAR_PUBLIC_HOST={public_host}
 OSCAR_PORT_PUBLIC={port_public}
 OSCAR_PORT_BOS={port_bos}
@@ -157,7 +138,8 @@ OSCAR_PORT_API={port_api}
 OSCAR_LOG_LEVEL={log_level}
 """
 
-# Oscar
+# Runs the Open OSCAR AIM server in docker, its port published through an nginx
+# stream and its management API behind https
 class Oscar(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
@@ -171,28 +153,13 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
             default_value = "aim", throw_exception = False)
         self.port_public = settings.get_value("UserData.Oscar", "oscar_port_public",
             default_value = "5190", throw_exception = False)
-        self.nginx_config_values = {
-            "domain": self.domain_name,
-            "subdomain": self.subdomain,
-            "port_public": self.port_public,
-            "port_bos": settings.get_value("UserData.Oscar", "oscar_port_bos",
-                default_value = "15190", throw_exception = False),
-            "port_api": settings.get_value("UserData.Oscar", "oscar_port_api",
-                default_value = "18080", throw_exception = False)
-        }
-        self.env_values = {
-            "public_host": f"{self.subdomain}.{self.domain_name}",
-            "port_public": self.port_public,
-            "port_bos": self.nginx_config_values["port_bos"],
-            "port_api": self.nginx_config_values["port_api"],
-            "log_level": settings.get_value("UserData.Oscar", "oscar_log_level",
-                default_value = "info", throw_exception = False)
-        }
+        self.nginx_config_values = self._get_nginx_config_values()
+        self.env_values = self._get_env_values()
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.nginx_config_template = nginx_config_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.nginx_config_template = NGINX_CONFIG_TEMPLATE
 
         # Screen name created on install
         self.screen_name = settings.get_value("UserData.Oscar", "oscar_user",
@@ -209,6 +176,30 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Oscar"
         self.backup_volumes = ["oscar_data"]
 
+    # The nginx stream template values: the public port plus the BOS and API ports
+    def _get_nginx_config_values(self):
+        return {
+            "domain": self.domain_name,
+            "subdomain": self.subdomain,
+            "port_public": self.port_public,
+            "port_bos": settings.get_value("UserData.Oscar", "oscar_port_bos",
+                default_value = "15190", throw_exception = False),
+            "port_api": settings.get_value("UserData.Oscar", "oscar_port_api",
+                default_value = "18080", throw_exception = False)
+        }
+
+    # The .env template values, reusing the ports the nginx values settled on
+    def _get_env_values(self):
+        return {
+            "public_host": f"{self.subdomain}.{self.domain_name}",
+            "port_public": self.port_public,
+            "port_bos": self.nginx_config_values["port_bos"],
+            "port_api": self.nginx_config_values["port_api"],
+            "log_level": settings.get_value("UserData.Oscar", "oscar_log_level",
+                default_value = "info", throw_exception = False)
+        }
+
+    # Write the Dockerfile into the app dir, then run the docker app install
     def install(self):
 
         # Write the Dockerfile before the base class runs compose build
@@ -216,12 +207,14 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         app_dir = self.get_app_dir()
         self.connection.make_directory(app_dir)
         dockerfile_tmp_path = f"/tmp/{self.app_name}.Dockerfile"
-        if not self.connection.write_file(dockerfile_tmp_path, dockerfile_template):
+        if not self.connection.write_file(dockerfile_tmp_path, DOCKERFILE_TEMPLATE):
             logger.log_error(f"Unable to write dockerfile for {self.app_name}")
             return False
         self.connection.move_file_or_directory(dockerfile_tmp_path, f"{app_dir}/Dockerfile")
         return super().install()
 
+    # Create the configured screen name through the management API, resetting
+    # its password when it exists; skipped when none is set
     def post_install(self):
 
         # Screen names are otherwise created through the management API by hand
@@ -247,13 +240,14 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
             return False
         return True
 
+    # Install the stream config for the public OSCAR port, then the API vhost
     def install_nginx_config(self):
 
         # Public OSCAR port, proxied to the loopback-bound container
         logger.log_info("Installing Oscar stream entry")
         stream_tmp_path = f"/tmp/{self.app_name}.stream.conf"
         if not self.connection.write_file(stream_tmp_path,
-                nginx_stream_config_template.format(**self.nginx_config_values)):
+                NGINX_STREAM_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             logger.log_error(f"Unable to write nginx stream config for {self.app_name}")
             return False
         self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", stream_tmp_path], sudo = True)
@@ -264,6 +258,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         logger.log_info("Installing Oscar API entry")
         return super().install_nginx_config()
 
+    # Remove the stream config, then the API vhost
     def uninstall_nginx_config(self):
 
         # Remove the stream entry

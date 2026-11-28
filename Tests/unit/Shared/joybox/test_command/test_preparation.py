@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import command, config
+from joybox import command, commandbase, config
 
 
 ###########################################################
@@ -17,7 +17,7 @@ from joybox import command, config
 ###########################################################
 
 def options_with_prefix(tmp_path):
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_prefix_c_drive_real(str(tmp_path))
     return options
 
@@ -58,7 +58,7 @@ def test_a_string_command_is_split_into_a_list():
 
 
 def test_preparing_for_powershell_leaves_the_original_options_alone():
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
 
     _, new_options = command.setup_powershell_command(["Get-Process"], options = options)
 
@@ -141,8 +141,15 @@ def test_an_ordinary_command_is_left_as_it_is():
     assert new_cmd == ["/usr/bin/true"]
 
 
+def test_each_preprocessing_without_options_gets_its_own():
+    _, first_options = command.preprocess_command(["/usr/bin/true"])
+    _, second_options = command.preprocess_command(["/usr/bin/true"])
+
+    assert first_options is not second_options
+
+
 def test_powershell_can_be_forced_onto_an_ordinary_command():
-    options = command.create_command_options(force_powershell = True)
+    options = commandbase.create_command_options(force_powershell = True)
 
     new_cmd, _ = command.preprocess_command(["Get-Process"], options = options)
 
@@ -153,7 +160,7 @@ def test_appimage_handling_can_be_forced(tmp_path):
     target = tmp_path / "Tool.AppImage"
     target.write_text("")
     (tmp_path / "Tool.AppImage.home").mkdir()
-    options = command.create_command_options(force_appimage = True)
+    options = commandbase.create_command_options(force_appimage = True)
 
     _, new_options = command.preprocess_command([str(target)], options = options)
 
@@ -208,7 +215,7 @@ def test_a_prefix_can_be_forced_onto_a_native_command(monkeypatch):
     monkeypatch.setattr(
         command, "setup_prefix_command",
         lambda cmd, options, **kwargs: (["sandboxed"] + cmd, options))
-    options = command.create_command_options(force_prefix = True)
+    options = commandbase.create_command_options(force_prefix = True)
 
     new_cmd, _ = command.preprocess_command(["/usr/bin/tool"], options = options)
 
@@ -235,9 +242,9 @@ def test_a_prefix_command_is_one_for_wine_or_sandboxie(monkeypatch, wine, sandbo
 def prefix_sandbox(monkeypatch):
     state = {"created": [], "steps": []}
 
-    def create_prefix(self, **kwargs):
+    def create_prefix(options, **kwargs):
         state["created"].append(kwargs)
-        self.set_prefix_name(kwargs["prefix_name"])
+        options.set_prefix_name(kwargs["prefix_name"])
         return True
 
     def step(name):
@@ -248,7 +255,7 @@ def prefix_sandbox(monkeypatch):
 
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(type(command.create_command_options()), "create_prefix", create_prefix)
+    monkeypatch.setattr(command.sandboxprefix, "create_prefix", create_prefix)
     monkeypatch.setattr(command.sandbox, "setup_prefix_command", step("command"))
     monkeypatch.setattr(command.sandbox, "setup_prefix_environment", step("environment"))
     return state
@@ -264,7 +271,7 @@ def test_a_missing_prefix_is_created_as_the_default_prefix(prefix_sandbox):
 
 
 def test_a_ready_prefix_is_not_created_again(prefix_sandbox, tmp_path):
-    options = command.create_command_options(
+    options = commandbase.create_command_options(
         is_wine_prefix = True,
         prefix_name = config.PrefixType.GAME,
         prefix_dir = str(tmp_path))
@@ -287,11 +294,12 @@ def test_prefix_setup_passes_the_run_flags_to_every_step(prefix_sandbox):
 
     created = prefix_sandbox["created"][0]
     assert {key: created[key] for key in flags} == flags
-    assert [kwargs for _, kwargs in prefix_sandbox["steps"]] == [flags, flags]
+    # Wrapping the command reads no flags; giving it its environment takes them all
+    assert [kwargs for _, kwargs in prefix_sandbox["steps"]] == [{}, flags]
 
 
 def test_prefix_setup_leaves_the_original_options_alone(prefix_sandbox):
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
 
     _, new_options = command.setup_prefix_command(["/games/Game.exe"], options = options)
 
@@ -307,30 +315,29 @@ def test_a_wine_command_is_cleaned_up_afterwards(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/games/Game.exe"])
 
     assert cleaned == ["wine"]
 
 
-def test_a_sandboxie_command_is_cleaned_up_afterwards(monkeypatch):
+def test_a_sandboxie_command_has_nothing_to_stop(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", lambda **kwargs: cleaned.append("sandboxie"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/games/Game.exe"])
 
-    assert cleaned == ["sandboxie"]
+    assert cleaned == []
 
 
 def test_a_native_command_needs_no_cleanup(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", lambda **kwargs: cleaned.append("sandboxie"))
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/usr/bin/true"])
 
@@ -346,7 +353,7 @@ def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
     monkeypatch.setattr(
         command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
-    options = command.create_command_options(output_paths = ["/out/one", "/out/two"])
+    options = commandbase.create_command_options(output_paths = ["/out/one", "/out/two"])
 
     command.postprocess_command(["/games/Game.exe"], options = options)
 
@@ -360,7 +367,7 @@ def test_output_paths_that_are_not_a_list_are_ignored(monkeypatch):
     monkeypatch.setattr(
         command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
-    options = command.create_command_options(output_paths = "/out/one")
+    options = commandbase.create_command_options(output_paths = "/out/one")
 
     command.postprocess_command(["/games/Game.exe"], options = options)
 
@@ -376,14 +383,13 @@ def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
 
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", record)
+    monkeypatch.setattr(command.sandboxprefix, "cleanup_wine", record)
     monkeypatch.setattr(command.sandboxpaths, "transfer_from_sandbox", record)
-    options = command.create_command_options(output_paths = ["/out/one"])
+    options = commandbase.create_command_options(output_paths = ["/out/one"])
 
     command.postprocess_command(["/games/Game.exe"], options = options, **flags)
 
-    assert seen == [flags, flags, flags]
+    assert seen == [flags, flags]
 
 
 ###########################################################
@@ -424,7 +430,7 @@ def test_a_win31_launch_uses_the_windows_config(dosbox, no_discs, tmp_path):
 ])
 def test_the_c_drive_is_mounted(dosbox, no_discs, tmp_path, builder):
     cmd = builder(options_with_prefix(tmp_path))
-    expected = os.path.join(str(tmp_path), config.computer_folder_dos, "C")
+    expected = os.path.join(str(tmp_path), config.COMPUTER_FOLDER_DOS, "C")
 
     assert 'mount c "%s"' % expected in cmd
 
@@ -443,6 +449,22 @@ def test_each_disc_image_is_mounted_on_its_own_drive(dosbox, monkeypatch, tmp_pa
 
     assert 'imgmount d "/discs/one.chd" -t iso' in cmd
     assert 'imgmount e "/discs/two.chd" -t iso' in cmd
+
+
+@pytest.mark.parametrize("builder", [
+    command.get_dos_launch_command,
+    command.get_win31_launch_command,
+])
+def test_discs_beyond_the_last_drive_letter_are_left_unmounted(dosbox, monkeypatch, tmp_path, builder):
+    discs = ["/discs/%02d.chd" % index for index in range(len(config.drives_regular) + 1)]
+    monkeypatch.setattr(
+        command.paths, "build_file_list_by_extensions", lambda root, extensions = []: discs)
+
+    cmd = builder(options_with_prefix(tmp_path))
+
+    mounts = [part for part in cmd if part.startswith("imgmount")]
+    assert len(mounts) == len(config.drives_regular)
+    assert not any(discs[-1] in mount for mount in mounts)
 
 
 @pytest.mark.parametrize("builder", [
@@ -513,7 +535,7 @@ def test_win31_program_arguments_follow_the_program(dosbox, no_discs, tmp_path):
     command.get_win31_launch_command,
 ])
 def test_no_c_drive_is_mounted_without_a_prefix(dosbox, no_discs, builder):
-    cmd = builder(command.create_command_options())
+    cmd = builder(commandbase.create_command_options())
 
     assert not any(part.startswith("mount c") for part in cmd)
 
@@ -551,7 +573,7 @@ def scummvm(monkeypatch):
 
 def test_a_scumm_launch_points_at_the_game_directory(scummvm, tmp_path):
     cmd = command.get_scumm_launch_command(options_with_prefix(tmp_path))
-    expected = os.path.join(str(tmp_path), config.computer_folder_scumm)
+    expected = os.path.join(str(tmp_path), config.COMPUTER_FOLDER_SCUMM)
 
     assert cmd[0] == "/emus/scummvm"
     assert "--path=%s" % expected in cmd

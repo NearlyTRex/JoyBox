@@ -27,7 +27,7 @@ def tool(monkeypatch, isolated_settings):
     harness = CommandHarness(monkeypatch, setup_game_emulators)
     harness.installed = []
     harness.result = True
-    monkeypatch.setattr(setup_game_emulators.programs, "get_emulators", lambda: [FakePackage("Alpha"), FakePackage("Beta")])
+    monkeypatch.setattr(setup_game_emulators.emulators, "get_emulator_list", lambda: [FakePackage("Alpha"), FakePackage("Beta")])
 
     def install(**kwargs):
         harness.installed.append(kwargs["packages"])

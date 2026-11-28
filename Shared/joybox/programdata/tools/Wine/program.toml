@@ -1,0 +1,17 @@
+# Wine: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+only_on = "wine"
+
+[config.Wine]
+program = "{path_setting:Tools.Wine.wine_install_dir}/{setting:Tools.Wine.wine_exe}"
+sandbox_dir = "{path_setting:Tools.Wine.wine_sandbox_dir}"
+
+[config.WineBoot]
+program = "{path_setting:Tools.Wine.wine_install_dir}/{setting:Tools.Wine.wine_boot_exe}"
+
+[config.WineServer]
+program = "{path_setting:Tools.Wine.wine_install_dir}/{setting:Tools.Wine.wine_server_exe}"
+
+[config.WineTricks]
+program = "{path_setting:Tools.Wine.wine_install_dir}/{setting:Tools.Wine.wine_tricks_exe}"

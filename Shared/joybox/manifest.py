@@ -1,9 +1,20 @@
+# Imports
+import functools
+
 # Local imports
-import joybox.containers as containers
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.storepaths as storepaths
-import joybox.strings as strings
+from joybox import containers
+from joybox import programs
+from joybox import serialization
+from joybox import storepaths
+from joybox import strings
+
+# True when a "when" condition names Windows/DOS under Steam or no store, or Steam with no OS
+def is_windows_save_condition(when_info):
+    when_os = when_info["os"] if "os" in when_info else ""
+    when_store = when_info["store"] if "store" in when_info else ""
+    if when_os in ("windows", "dos") and when_store in ("steam", ""):
+        return True
+    return when_os == "" and when_store == "steam"
 
 # Manifest entry
 class ManifestEntry:
@@ -12,25 +23,20 @@ class ManifestEntry:
     def __init__(self, manifest_data):
         self.manifest_data = manifest_data
 
-    # Get paths
+    # Tokenized save paths under base_path for the Windows, DOS and Steam file entries
     def get_paths(self, base_path):
         paths = []
-        if "files" in self.manifest_data:
-            for path_location, path_info in self.manifest_data["files"].items():
-                if "when" in path_info:
-                    for when_info in path_info["when"]:
-                        when_os = when_info["os"] if "os" in when_info else ""
-                        when_store = when_info["store"] if "store" in when_info else ""
-                        is_windows_path = False
-                        if (when_os == "windows" or when_os == "dos") and (when_store == "steam" or when_store == ""):
-                            is_windows_path = True
-                        elif when_os == "" and when_store == "steam":
-                            is_windows_path = True
-                        if is_windows_path:
-                            paths.append(storepaths.create_tokenized_path(path_location, base_path))
+        if "files" not in self.manifest_data:
+            return paths
+        for path_location, path_info in self.manifest_data["files"].items():
+            if "when" not in path_info:
+                continue
+            for when_info in path_info["when"]:
+                if is_windows_save_condition(when_info):
+                    paths.append(storepaths.create_tokenized_path(path_location, base_path))
         return paths
 
-    # Get keys
+    # Registry keys the entry lists; empty when it has none
     def get_keys(self):
         keys = []
         if "registry" in self.manifest_data:
@@ -38,14 +44,14 @@ class ManifestEntry:
                 keys.append(key)
         return keys
 
-    # Get install dir
+    # First installDir name the entry lists; None when it has none
     def get_install_dir(self):
         if "installDir" in self.manifest_data:
             for key in self.manifest_data["installDir"]:
                 return key
         return None
 
-# Manifest class
+# Ludusavi game manifest, keyed by game name
 class Manifest:
 
     # Constructor
@@ -54,16 +60,15 @@ class Manifest:
         if manifest:
             self.manifest = manifest
 
-    # Load
-    def load(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    # Read the Ludusavi manifest YAML from the tool path the config names
+    def load(self, verbose = False, exit_on_failure = False):
         self.manifest = serialization.read_yaml_file(
             src = programs.get_tool_path_config_value("LudusaviManifest", "yaml"),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Find entry by name
-    def find_entry_by_name(self, name, verbose = False, pretend_run = False, exit_on_failure = False):
+    # Closest highly similar game name in the manifest; None when nothing matches
+    def find_entry_by_name(self, name):
         search_results = []
         for manifest_name, manifest_entry in self.manifest.items():
             if strings.are_strings_highly_similar(manifest_name, name):
@@ -77,8 +82,8 @@ class Manifest:
         return None
 
     # Find entry by steam id
-    def find_entry_by_steamid(self, steamid, verbose = False, pretend_run = False, exit_on_failure = False):
-        for manifest_name, manifest_entry in self.manifest.items():
+    def find_entry_by_steamid(self, steamid):
+        for manifest_entry in self.manifest.values():
             if "steam" not in manifest_entry:
                 continue
             if "id" not in manifest_entry["steam"]:
@@ -88,8 +93,8 @@ class Manifest:
         return None
 
     # Find entry by gog id
-    def find_entry_by_gogid(self, gogid, verbose = False, pretend_run = False, exit_on_failure = False):
-        for manifest_name, manifest_entry in self.manifest.items():
+    def find_entry_by_gogid(self, gogid):
+        for manifest_entry in self.manifest.values():
             if "gog" not in manifest_entry:
                 continue
             if "id" not in manifest_entry["gog"]:
@@ -98,12 +103,7 @@ class Manifest:
                 return ManifestEntry(manifest_entry)
         return None
 
-# Shared instance
-shared_manifest = None
-
-# Get manifest instance
+# Get the manifest instance the process shares, built on first use
+@functools.cache
 def get_manifest_instance():
-    global shared_manifest
-    if shared_manifest is None:
-        shared_manifest = Manifest()
-    return shared_manifest
+    return Manifest()

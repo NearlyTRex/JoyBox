@@ -1,0 +1,5 @@
+# 7-Zip: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.7-Zip]
+program = "{path_setting:Tools.7Zip.7z_install_dir}/{setting:Tools.7Zip.7z_exe}"

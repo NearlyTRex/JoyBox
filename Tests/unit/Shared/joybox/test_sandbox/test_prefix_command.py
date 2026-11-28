@@ -7,6 +7,7 @@ import pytest
 # Local imports
 import joybox.gui as gui
 from joybox import config, sandbox
+from joybox import prefixlayout
 from sandbox_helpers import WINE, SANDBOXIE, NEITHER
 
 
@@ -132,7 +133,7 @@ def test_the_working_directory_is_mapped_to_its_drive(tmp_path):
 
     sandbox.setup_prefix_environment(["game.exe"], options = entry)
 
-    drive = sandbox.get_real_drive_path(entry, config.drive_prefix_cwd)
+    drive = prefixlayout.get_real_drive_path(entry, config.DRIVE_PREFIX_CWD)
     assert os.path.realpath(drive) == str(tmp_path)
 
 
@@ -142,7 +143,7 @@ def test_an_unmapped_working_directory_gets_no_drive(tmp_path):
 
     sandbox.setup_prefix_environment(["game.exe"], options = entry)
 
-    assert not os.path.lexists(sandbox.get_real_drive_path(entry, config.drive_prefix_cwd))
+    assert not os.path.lexists(prefixlayout.get_real_drive_path(entry, config.DRIVE_PREFIX_CWD))
 
 
 def test_a_mapped_working_directory_needs_a_prefix_to_map_into(tmp_path, monkeypatch):
@@ -164,26 +165,3 @@ def test_environment_setup_without_options_changes_nothing():
 
     assert cmd == ["game.exe"]
     assert not built.is_prefix()
-
-
-###########################################################
-# Cleaning up after a command
-###########################################################
-
-def test_wine_cleanup_stops_the_wine_server(recording_command, monkeypatch):
-    killed = []
-    monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: "/tools/" + name)
-    monkeypatch.setattr(sandbox.process, "kill_active_named_processes", killed.append)
-
-    sandbox.cleanup_wine(["game.exe"], wine(), pretend_run = True)
-
-    assert recording_command.only() == ["/tools/WineServer", "-k"]
-    assert recording_command.calls[0]["kwargs"]["pretend_run"] is True
-    assert recording_command.calls[0]["options"].is_shell()
-    assert killed == [["/tools/WineServer"]]
-
-
-def test_sandboxie_cleanup_has_nothing_to_stop(recording_command):
-    sandbox.cleanup_sandboxie(["game.exe"], sandboxie())
-
-    assert recording_command.calls == []

@@ -116,7 +116,7 @@ def psg(monkeypatch):
     monkeypatch.setattr(
         gui.modules, "import_python_module_file",
         lambda module_path, module_name: fake)
-    monkeypatch.setattr(gui.display, "get_current_screen_resolution", lambda: SCREEN)
+    monkeypatch.setattr(gui, "get_current_screen_resolution", lambda: SCREEN)
     monkeypatch.setattr(gui.platform_info, "is_windows_platform", lambda: False)
     return fake
 
@@ -179,7 +179,7 @@ def test_a_popup_applies_its_theme(psg):
 def test_an_auto_close_popup_carries_its_duration(psg):
     gui.display_popup(
         "Title", "Message", config.MessageType.AUTO_CLOSE,
-        auto_close_duration = 9, non_blocking = True)
+        style = gui.PopupStyle(auto_close_duration = 9, non_blocking = True))
     kwargs = psg.popups[0][2]
 
     assert kwargs["auto_close_duration"] == 9
@@ -195,8 +195,9 @@ def test_a_text_prompt_takes_no_line_width(psg):
 def test_a_file_chooser_carries_its_file_options(psg):
     gui.display_popup(
         "Title", "Message", config.MessageType.GET_FILE,
-        save_as = True, file_types = (("Text", "*.txt"),),
-        initial_folder = "/start", default_path = "/start/file.txt")
+        style = gui.PopupStyle(
+            save_as = True, file_types = (("Text", "*.txt"),),
+            initial_folder = "/start", default_path = "/start/file.txt"))
     kwargs = psg.popups[0][2]
 
     assert kwargs["save_as"] is True
@@ -207,7 +208,7 @@ def test_a_file_chooser_carries_its_file_options(psg):
 
 def test_a_folder_chooser_has_no_save_mode(psg):
     gui.display_popup(
-        "Title", "Message", config.MessageType.GET_FOLDER, initial_folder = "/start")
+        "Title", "Message", config.MessageType.GET_FOLDER, style = gui.PopupStyle(initial_folder = "/start"))
     kwargs = psg.popups[0][2]
 
     assert kwargs["initial_folder"] == "/start"
@@ -216,8 +217,9 @@ def test_a_folder_chooser_has_no_save_mode(psg):
 
 def test_a_plain_popup_carries_its_appearance(psg):
     gui.display_popup(
-        "Title", "Message", button_color = "red", line_width = 40,
-        icon_file = "icon.png", image_file = "image.png", keep_on_top = True)
+        "Title", "Message", style = gui.PopupStyle(
+            button_color = "red", line_width = 40,
+            icon_file = "icon.png", image_file = "image.png", keep_on_top = True))
     kwargs = psg.popups[0][2]
 
     assert kwargs["button_color"] == "red"
@@ -396,9 +398,8 @@ def fake_pil(monkeypatch, open_image):
 
     image_module = types.SimpleNamespace(open = lambda path: open_image(path, Picture))
     imagetk_module = types.SimpleNamespace(PhotoImage = lambda image: ("photo", image))
-    monkeypatch.setitem(
-        sys.modules, "PIL",
-        types.SimpleNamespace(Image = image_module, ImageTk = imagetk_module))
+    monkeypatch.setitem(sys.modules, "PIL.Image", image_module)
+    monkeypatch.setitem(sys.modules, "PIL.ImageTk", imagetk_module)
     return thumbnails
 
 
@@ -500,3 +501,34 @@ def test_a_choices_window_needs_button_text(psg):
     with pytest.raises(AssertionError):
         gui.display_choices_window(["First"], "Title", "Message", "")
     assert psg.windows == []
+
+
+###########################################################
+# Screen resolution
+#
+# Windows open at the primary monitor's size.
+###########################################################
+
+class Monitor:
+    def __init__(self, width, height, is_primary):
+        self.width = width
+        self.height = height
+        self.is_primary = is_primary
+
+
+@pytest.fixture
+def monitors(monkeypatch):
+    found = []
+    module = types.SimpleNamespace(get_monitors = lambda: found)
+    monkeypatch.setitem(sys.modules, "screeninfo", module)
+    return found
+
+
+def test_the_primary_monitor_gives_the_resolution(monitors):
+    monitors += [Monitor(800, 600, False), Monitor(2560, 1440, True)]
+    assert gui.get_current_screen_resolution() == (2560, 1440)
+
+
+def test_no_primary_monitor_reads_as_zero(monitors):
+    monitors.append(Monitor(800, 600, False))
+    assert gui.get_current_screen_resolution() == (0, 0)

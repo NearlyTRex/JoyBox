@@ -1,17 +1,22 @@
 # Imports
 import base64
 import binascii
+import importlib
 import json
 import os
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.commandbase as commandbase
-import joybox.knownhosts as knownhosts
-import joybox.logger as logger
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import config
+from joybox import commandbase
+from joybox import knownhosts
+from joybox import logger
+from joybox import serialization
+from joybox import settings
+
+# Get cryptography.hazmat.primitives.ciphers, imported on first use
+def _get_ciphers():
+    return importlib.import_module("cryptography.hazmat.primitives.ciphers")
 
 ###########################################################
 # Remotes from the settings
@@ -66,8 +71,8 @@ OBSCURED_VALUE = re.compile(r"^[A-Za-z0-9_-]+$")
 
 # Apply obscure cipher key
 def apply_obscure_cipher(data, iv):
-    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-    cipher = Cipher(algorithms.AES(OBSCURE_KEY), modes.CTR(iv)).encryptor()
+    ciphers = _get_ciphers()
+    cipher = ciphers.Cipher(ciphers.algorithms.AES(OBSCURE_KEY), ciphers.modes.CTR(iv)).encryptor()
     return cipher.update(data) + cipher.finalize()
 
 # Obscure a value the way `rclone obscure` does
@@ -104,7 +109,7 @@ def get_remote_locker_types():
         locker_type for locker_type in config.LockerType.members()
         if locker_type not in (config.LockerType.ALL, config.LockerType.LOCAL, config.LockerType.EXTERNAL)]
 
-# Get locker setting
+# The locker_<type>_<field> value from [UserData.Share] in the settings; None when unset
 def get_locker_setting(locker_type, field):
     return settings.get_value("UserData.Share", "locker_%s_%s" % (locker_type.lower(), field), throw_exception = False)
 

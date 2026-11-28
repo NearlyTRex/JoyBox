@@ -1,0 +1,43 @@
+# ExtractXIso: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ExtractXIso]
+run_sandboxed = { windows = false, linux = false }
+
+[config.ExtractXIso.program]
+windows = "ExtractXIso/windows/extract-xiso.exe"
+linux = "ExtractXIso/linux/ExtractXIso.AppImage"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "XboxDev"
+github_repo = "extract-xiso"
+starts_with = "extract-xiso"
+ends_with = "win32-release.zip"
+search_file = "extract-xiso.exe"
+install_files = ["extract-xiso.exe"]
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/ExtractXIso.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["cmake", "..", "&&", "make"]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/ExtractXIso/Build/extract-xiso", to = "AppImage/usr/bin/extract-xiso" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/extract-xiso", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "extract-xiso.exe"
+install_files = ["extract-xiso.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

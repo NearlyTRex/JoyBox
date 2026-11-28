@@ -1,38 +1,20 @@
 # Imports
+import datetime
 import json
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.packages as packages
+from joybox.bootstrap import constants
+from joybox.bootstrap import packages
 from joybox import settings
 from joybox import serialization
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
+from . import installer_nginx
 
 # Nginx http config template
-nginx_http_config_template = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_HTTP_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
         proxy_pass http://localhost:{port_http};
         proxy_set_header Host $host;
@@ -41,30 +23,10 @@ server {{
         proxy_set_header Cookie $http_cookie;
     }}
 }}
-"""
+""")
 
 # Nginx http websocket config template
-nginx_http_websocket_config_template = """
-server {{
-    listen 80;
-    server_name {subdomain}.{domain};
-
-    location / {{
-        return 301 https://{subdomain}.{domain}$request_uri;
-    }}
-}}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Shared TLS policy and security headers
-    include /etc/nginx/snippets/ssl-params.conf;
-
+NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE = installer_nginx.build_https_site_template("""
     location / {{
         proxy_pass http://localhost:{port_http};
         proxy_http_version 1.1;
@@ -76,6 +38,25 @@ server {{
         proxy_set_header Cookie $http_cookie;
     }}
 }}
+""")
+
+# Shell function restore scripts stream each archive through, decrypting .age siblings
+_ARCHIVE_STREAM_FUNCTION = """archive_stream() {
+    # $1 is the plain archive name; prefer its encrypted sibling when present so
+    # backups taken before encryption was enabled still restore unchanged.
+    if [ -f "$SRC/$1.age" ]; then
+        if [ -z "${AGE_IDENTITY:-}" ]; then
+            echo "Error: $1.age is encrypted but backup_age_identity is not set" >&2
+            exit 1
+        fi
+        age -d -i "$AGE_IDENTITY" "$SRC/$1.age" | gzip -dc
+    elif [ -f "$SRC/$1" ]; then
+        gzip -dc "$SRC/$1"
+    else
+        echo "Error: neither $1 nor $1.age found in $SRC" >&2
+        exit 1
+    fi
+}
 """
 
 # Shared skeleton for the Docker Compose apps: a subclass sets its name, its
@@ -96,7 +77,7 @@ class DockerAppInstaller(installer.Installer):
         # Templates
         self.docker_compose_template = ""
         self.env_template = ""
-        self.nginx_config_template = nginx_http_config_template
+        self.nginx_config_template = NGINX_HTTP_CONFIG_TEMPLATE
 
         # Template values
         self.env_values = {}
@@ -115,14 +96,54 @@ class DockerAppInstaller(installer.Installer):
         self.backup_dirs = []
         self.backup_excludes = []
 
+    # The app's compose directory, ~/apps/<app_name> on the remote host
+    def get_app_dir(self):
+        return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
+
+    # Stop the compose project, deleting its volumes only with --purge-data
+    def compose_down(self):
+
+        # Stop the compose project. Volumes are preserved unless --purge-data
+        # was passed; "down -v" destroys databases and app data.
+        app_dir = self.get_app_dir()
+        down_command = self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "down"]
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: deleting container volumes for {self.app_name}")
+            down_command += ["-v"]
+        else:
+            logger.log_info(f"Keeping container volumes for {self.app_name} (use --purge-data to delete)")
+        self.connection.set_current_working_directory(app_dir)
+        self.connection.run_checked(down_command)
+        self.connection.set_current_working_directory(None)
+        return True
+
+    # Rename the app directory aside with a timestamp, or delete it with --purge-data
+    def retire_app_dir(self):
+
+        # Bind-mounted app data lives inside the app directory, so removing it
+        # destroys that data even when the volumes were kept. Rename instead.
+        app_dir = self.get_app_dir()
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: removing {app_dir}")
+            self.connection.remove_file_or_directory(app_dir)
+            return True
+        retired_dir = "%s.removed-%s" % (app_dir, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+        logger.log_info(f"Preserving app directory, moving to {retired_dir}")
+        self.connection.move_file_or_directory(app_dir, retired_dir)
+        return True
+
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Path of the marker file a completed install writes in the app directory
     def get_install_marker(self):
         return f"{self.get_app_dir()}/.joybox-installed"
 
+    # Whether the install marker exists and every container named for the app is
+    # running and not unhealthy
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.get_install_marker()):
             return False
@@ -132,6 +153,8 @@ class DockerAppInstaller(installer.Installer):
             len(fields) == 3 and fields[1] == "running" and "(unhealthy)" not in fields[2]
             for fields in mine)
 
+    # Env name to image ref for the app, from the pins in packages with any
+    # [UserData.Images] override applied
     def get_app_images(self):
 
         # Central pins from packages/images.py, optionally overridden
@@ -146,6 +169,7 @@ class DockerAppInstaller(installer.Installer):
                 images[env_name] = pinned_image
         return images
 
+    # The image pins as NAME=ref lines to append to the .env file
     def get_image_env_lines(self):
 
         # Compose substitutes ${VAR} from the env file, so pins reach the
@@ -155,11 +179,14 @@ class DockerAppInstaller(installer.Installer):
             lines += f"{env_name}={image_ref}\n"
         return lines
 
+    # The nginx manager subcommand for an action, the stream variant in stream mode
     def get_nginx_action(self, action):
         if self.nginx_config_mode == "stream":
             return f"{action}_stream_conf"
         return f"{action}_conf"
 
+    # Whether every required setting is present and non-blank, and no quoted
+    # setting holds a single quote or newline; logs the offenders
     def check_required_settings(self):
 
         # A missing key resolves to None and formats into templates as the
@@ -185,10 +212,12 @@ class DockerAppInstaller(installer.Installer):
             return False
         return True
 
+    # Backup root directory from UserData.Backup, /mnt/storage/Backups by default
     def get_backup_root(self):
         return settings.get_value("UserData.Backup", "backup_root",
             default_value = "/mnt/storage/Backups", throw_exception = False)
 
+    # How many backups to retain, from UserData.Backup; at least 1, 7 when unset or invalid
     def get_backup_keep(self):
         keep = settings.get_value("UserData.Backup", "backup_keep",
             default_value = "7", throw_exception = False)
@@ -197,28 +226,35 @@ class DockerAppInstaller(installer.Installer):
         except ValueError:
             return 7
 
+    # The age public key backups are encrypted to; empty when backups stay plain
     def get_backup_age_recipient(self):
         return settings.get_value("UserData.Backup", "backup_age_recipient",
             default_value = "", throw_exception = False).strip()
 
+    # Local path of the age private key restores decrypt with; empty when unset
     def get_backup_age_identity(self):
         return settings.get_value("UserData.Backup", "backup_age_identity",
             default_value = "", throw_exception = False).strip()
 
+    # The backup directory name: the backup label, or the app name without one
     def get_backup_label(self):
         return self.backup_label if self.backup_label else self.app_name
 
+    # Where this app's backups go under the backup root
     def get_backup_dir(self):
         return "%s/%s" % (self.get_backup_root(), self.get_backup_label())
 
+    # Whether the app has a database, volume or directory to back up
     def has_backup_items(self):
         return bool(self.backup_database or self.backup_volumes or self.backup_dirs)
 
+    # Image used to tar volumes, the UserData.Images override or the pinned one
     def get_helper_image(self):
         return settings.get_value("UserData.Images", "backup_helper_image",
             default_value = "", throw_exception = False).strip() \
             or packages.docker_images["_backup"]["BACKUP_HELPER_IMAGE"]
 
+    # Shell command printing the id of the compose service's container, found by label
     def get_container_lookup(self, service):
 
         # Resolve by compose label rather than container name: the services do
@@ -226,6 +262,8 @@ class DockerAppInstaller(installer.Installer):
         return ("docker ps -q --filter label=com.docker.compose.project=%s "
                 "--filter label=com.docker.compose.service=%s | head -n1") % (self.app_name, service)
 
+    # Shell prologue that sets BACKUP_BASE, warns when its parent is not a mount
+    # and fails when it is not writable
     def get_backup_preamble(self):
 
         # A silent backup onto an unmounted path fills the root disk instead.
@@ -242,6 +280,8 @@ if [ ! -w "$BACKUP_BASE" ]; then
 fi
 """ % self.get_backup_dir()
 
+    # Shell script that dumps the database and tars volumes and directories into a
+    # timestamped dir, age-encrypted when a recipient is set, then prunes old backups
     def build_backup_script(self, tag = ""):
 
         # Everything is redirected server-side; archive bytes never travel
@@ -255,6 +295,13 @@ fi
         enc = ('| age -r %s ' % recipient) if recipient else ""
         ext = ".age" if recipient else ""
 
+        script = self._build_backup_start_script(recipient, suffix)
+        script += self._build_backup_archive_script(enc, ext)
+        script += self._build_backup_publish_script()
+        return script
+
+    # Preamble, age check, then the .partial dest dir and its manifest header
+    def _build_backup_start_script(self, recipient, suffix):
         script = self.get_backup_preamble()
         if recipient:
             script += ('command -v age >/dev/null 2>&1 || '
@@ -267,6 +314,11 @@ fi
         script += 'echo "# Project: %s" >> "$DEST/backup_manifest.txt"\n' % self.app_name
         script += 'echo "# Created: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$DEST/backup_manifest.txt"\n'
         script += 'echo "# Host: $(hostname)" >> "$DEST/backup_manifest.txt"\n'
+        return script
+
+    # Dump the database and tar each volume and directory into $DEST, piped through enc
+    def _build_backup_archive_script(self, enc, ext):
+        script = ""
 
         # Backup databases
         if self.backup_database:
@@ -288,10 +340,14 @@ fi
             script += ('docker run --rm -v %s:/src:ro %s tar -C /src %s -cf - . '
                        '| gzip -9 %s> "$DEST/%s.tar.gz%s"\n') % (host_path, self.get_helper_image(), excludes, enc, directory, ext)
             script += 'echo "%s.tar.gz%s\tdirectory\t%s" >> "$DEST/backup_manifest.txt"\n' % (directory, ext, host_path)
+        return script
+
+    # Checksum and publish $DEST, repoint latest, then prune past the keep count
+    def _build_backup_publish_script(self):
 
         # Checksums, then publish atomically so a partial write is never
         # mistaken for a finished backup.
-        script += ('cd "$DEST" && find . -maxdepth 1 -type f \\( -name "*.gz" -o -name "*.age" \\) '
+        script = ('cd "$DEST" && find . -maxdepth 1 -type f \\( -name "*.gz" -o -name "*.age" \\) '
                    '-printf "%P\\n" | sort | xargs -r sha256sum > SHA256SUMS\n')
         script += 'mv "$DEST" "$BACKUP_BASE/$STAMP"\n'
         script += 'ln -sfn "$BACKUP_BASE/$STAMP" "$BACKUP_BASE/latest" || echo "Warning: could not update latest symlink"\n'
@@ -303,6 +359,8 @@ fi
         script += 'rm -rf "$BACKUP_BASE"/*.partial 2>/dev/null || true\n'
         return script
 
+    # Run the backup script on the server; True without doing anything when the
+    # app has nothing to back up or is not installed
     def backup(self, tag = ""):
 
         # Nothing stateful to capture
@@ -320,27 +378,13 @@ fi
             return False
         return True
 
+    # Shell script that verifies a backup's checksums, then replaces volumes,
+    # directories and the database from it, decrypting .age archives
     def build_restore_script(self, backup_id, identity_path = ""):
         script = self.get_backup_preamble()
         if identity_path:
             script += 'AGE_IDENTITY=%s\n' % identity_path
-        script += """archive_stream() {
-    # $1 is the plain archive name; prefer its encrypted sibling when present so
-    # backups taken before encryption was enabled still restore unchanged.
-    if [ -f "$SRC/$1.age" ]; then
-        if [ -z "${AGE_IDENTITY:-}" ]; then
-            echo "Error: $1.age is encrypted but backup_age_identity is not set" >&2
-            exit 1
-        fi
-        age -d -i "$AGE_IDENTITY" "$SRC/$1.age" | gzip -dc
-    elif [ -f "$SRC/$1" ]; then
-        gzip -dc "$SRC/$1"
-    else
-        echo "Error: neither $1 nor $1.age found in $SRC" >&2
-        exit 1
-    fi
-}
-"""
+        script += _ARCHIVE_STREAM_FUNCTION
         script += 'SRC="$BACKUP_BASE/%s"\n' % backup_id
         script += 'if [ ! -d "$SRC" ]; then echo "Error: no backup at $SRC"; exit 1; fi\n'
         script += 'echo "Restoring from $SRC"\n'
@@ -365,6 +409,8 @@ fi
         script += 'echo "Restore complete from $SRC"\n'
         return script
 
+    # Restore the --backup-id backup (latest by default) after a pre-restore snapshot,
+    # staging the age key in /dev/shm for the run; False when not installed
     def restore(self):
 
         # Nothing stateful to restore
@@ -384,21 +430,9 @@ fi
             return False
 
         # Stage the decryption key on tmpfs, never on disk
-        identity_local = self.get_backup_age_identity()
-        identity_remote = ""
-        if identity_local:
-            if not os.path.exists(identity_local):
-                logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
-                return False
-            identity_contents = serialization.read_text_file(identity_local)
-            if identity_contents is None:
-                logger.log_error(f"Unable to read the age identity {identity_local}")
-                return False
-            identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
-            if not self.connection.write_file(identity_remote, identity_contents):
-                logger.log_error("Could not stage the age identity on the server")
-                return False
-            self.connection.change_permission(identity_remote, "600")
+        identity_remote = self._stage_age_identity()
+        if identity_remote is None:
+            return False
 
         # Run restore
         logger.log_warning(f"Restoring {self.app_name} from {self.get_backup_dir()}/{backup_id}")
@@ -413,6 +447,27 @@ fi
             return False
         return True
 
+    # Copy the age identity to a 600 file in /dev/shm on the server; its path,
+    # empty when no identity is set, None when it cannot be staged
+    def _stage_age_identity(self):
+        identity_local = self.get_backup_age_identity()
+        if not identity_local:
+            return ""
+        if not os.path.exists(identity_local):
+            logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
+            return None
+        identity_contents = serialization.read_text_file(identity_local)
+        if identity_contents is None:
+            logger.log_error(f"Unable to read the age identity {identity_local}")
+            return None
+        identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
+        if not self.connection.write_file(identity_remote, identity_contents):
+            logger.log_error("Could not stage the age identity on the server")
+            return None
+        self.connection.change_permission(identity_remote, "600")
+        return identity_remote
+
+    # Render the nginx template and have the nginx manager install and enable it
     def install_nginx_config(self):
         nginx_tmp_path = f"/tmp/{self.app_name}.conf"
         if not self.connection.write_file(nginx_tmp_path, self.nginx_config_template.format(**self.nginx_config_values)):
@@ -423,10 +478,13 @@ fi
         self.connection.remove_file_or_directory(nginx_tmp_path)
         return True
 
+    # Have the nginx manager remove the app's nginx config
     def uninstall_nginx_config(self):
         self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("remove"), f"{self.app_name}.conf"], sudo = True)
         return True
 
+    # Write the compose file and a 600 .env, add the nginx config and firewall ports,
+    # bring the project up, run post_install, then write the install marker
     def install(self):
 
         # Check required settings
@@ -442,6 +500,29 @@ fi
         self.connection.remove_file_or_directory(self.get_install_marker())
         for subdir in self.app_subdirs:
             self.connection.make_directory(f"{app_dir}/{subdir}")
+
+        # Write docker compose and env
+        if not self._write_compose_files(app_dir):
+            return False
+
+        # Create Nginx entry, open its ports and restart it
+        if not self._configure_nginx():
+            return False
+
+        # Start docker
+        logger.log_info("Starting docker")
+        self.connection.set_current_working_directory(app_dir)
+        self.connection.run_checked(self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "up", "-d", "--build"])
+        self.connection.set_current_working_directory(None)
+
+        # Post install
+        if not self.post_install():
+            return False
+        return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
+
+    # Stage the compose file and the 600 .env in /tmp and move them into app_dir;
+    # False when either cannot be written
+    def _write_compose_files(self, app_dir):
 
         # Write docker compose
         logger.log_info("Writing docker compose")
@@ -464,6 +545,10 @@ fi
         self.connection.change_permission(env_tmp_path, "600")
         self.connection.move_file_or_directory(env_tmp_path, f"{app_dir}/.env")
         self.connection.change_permission(f"{app_dir}/.env", "600")
+        return True
+
+    # Install the app's nginx config, open its firewall ports and restart nginx
+    def _configure_nginx(self):
 
         # Create Nginx entry
         logger.log_info("Creating Nginx entry")
@@ -479,21 +564,14 @@ fi
         # Restart Nginx
         logger.log_info("Restarting Nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        return True
 
-        # Start docker
-        logger.log_info("Starting docker")
-        self.connection.set_current_working_directory(app_dir)
-        self.connection.run_checked(self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "up", "-d", "--build"])
-        self.connection.set_current_working_directory(None)
-
-        # Post install
-        if not self.post_install():
-            return False
-        return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
-
+    # Setup an app runs once its containers are up; the base has none and returns True
     def post_install(self):
         return True
 
+    # Send a JSON payload to a URL with curl from the server via a private file;
+    # the HTTP status code as a string, empty when staging fails
     def call_local_api(self, method, url, payload):
 
         # The payload carries a password, so it goes through a private file
@@ -508,6 +586,7 @@ fi
         self.connection.remove_file_or_directory(payload_path)
         return (status or "").strip()
 
+    # Whether the URL answers with any HTTP status within the timeout, in seconds
     def wait_for_http(self, url, timeout_seconds = 180):
         logger.log_info(f"Waiting for {self.app_name} to answer at {url}")
         script = ('for i in $(seq 1 %d); do '
@@ -515,6 +594,8 @@ fi
                   'sleep 1; done; exit 1') % (timeout_seconds, url)
         return self.connection.run_return_code(["sh", "-c", script]) == 0
 
+    # Whether the service's container reports healthy, or running when it has no
+    # healthcheck, within the timeout in seconds
     def wait_for_service_health(self, service, timeout_seconds = 300):
 
         # Compose only guarantees the container started; an app behind it may
@@ -538,6 +619,8 @@ exit 1
 """ % (timeout_seconds, lookup, service, service)
         return self.connection.run_return_code(["sh", "-c", script]) == 0
 
+    # Stop the project, retire its directory, remove the nginx config, close its
+    # firewall ports and restart nginx; False when the nginx config step fails
     def uninstall(self):
 
         # Stop docker
@@ -550,7 +633,9 @@ exit 1
 
         # Remove Nginx entry
         logger.log_info("Removing Nginx entry")
-        self.uninstall_nginx_config()
+        nginx_removed = self.uninstall_nginx_config()
+        if not nginx_removed:
+            logger.log_error(f"Removing the nginx config for {self.app_name} failed")
 
         # Close firewall ports
         if self.nginx_ports:
@@ -561,4 +646,4 @@ exit 1
         # Restart Nginx
         logger.log_info("Restarting Nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-        return True
+        return nginx_removed

@@ -1,0 +1,31 @@
+# Help text for the threeds_rom_tool command, read by joybox/arguments.py
+
+description = "Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files."
+details = """
+Finds every `.cia` and `.3ds` file under the input path (or takes the one file given)
+and applies the chosen action to each file it fits. Output is written next to the
+source file, and the source is left in place.
+
+`-a` converts each CIA to a CCI and `-b` converts each CCI to a CIA, both with
+CtrMakeRom. `-t` trims each `<name>.3ds` into `<name>.trim.3ds`, and `-u` restores each
+`<name>.trim.3ds` to its full size as `<name>.3ds`, both with 3DSRomTool working on a
+temporary copy. `-e` unpacks each CIA with CtrTool into a `<name>` folder holding the
+certificate chain, ticket and TMD (`00000000.cer`, `.tik`, `.tmd`) and the content
+files as `.app` files. `-n` prints CtrTool's description of every CIA and CCI."""
+section = "Game ROMs & Images"
+see_also = [
+    "nds_rom_tool",
+]
+notes = [
+    "Give one action. When several are given, each file gets the first one in the order `-a`, `-b`, `-t`, `-u`, `-e`, `-n` that fits its type.",
+    "Files already named `.trim.3ds` are not trimmed again by `-t`.",
+    "CtrMakeRom, 3DSRomTool and CtrTool must be installed as JoyBox tools.",
+]
+examples = [
+    ["Trim every CCI in a folder", "3ds_rom_tool -i /path/to/3ds -t"],
+    ["Preview the trim without changing anything", "3ds_rom_tool -i /path/to/3ds -t -p -v"],
+    ["Restore trimmed CCIs to full size", "3ds_rom_tool -i /path/to/3ds -u"],
+    ["Convert a CIA to a CCI", "3ds_rom_tool -i \"/path/to/Game (USA).cia\" -a"],
+    ["Unpack every CIA into a folder of its own", "3ds_rom_tool -i /path/to/3ds -e --no-preview"],
+    ["Print the header information of every 3DS file", "3ds_rom_tool -i /path/to/3ds -n"],
+]

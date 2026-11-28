@@ -1,37 +1,13 @@
 # Imports
-import joybox.system as system
+from joybox import system
 from joybox.nintendo import switch
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
+from joybox import arguments
+from joybox import setup
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Trim or untrim Nintendo Switch cartridge images (.xci).",
-        details = (
-            "Finds every `.xci` file under the input path (or takes the one file given) and runs\n"
-            "XCI Trimmer on a temporary copy of it. `-t` removes the unused padding at the end of\n"
-            "the image and writes `<name>_trimmed.xci`; `-u` pads a trimmed image back to its full\n"
-            "cartridge size and writes `<name>_untrimmed.xci`. Both are written next to the source.\n"
-            "\n"
-            "With `-d` the source `.xci` is deleted after XCI Trimmer succeeds and the new file\n"
-            "has been moved into place."),
-        examples = [
-            ("Trim every XCI in a folder", "switch_rom_tool -i /path/to/switch -t"),
-            ("Trim and delete the originals, previewing first", "switch_rom_tool -i /path/to/switch -t -d -p -v"),
-            ("Pad one trimmed image back to full size", "switch_rom_tool -i \"/path/to/Game (USA).xci\" -u"),
-        ],
-        notes = [
-            "Without `-t` or `-u` nothing is done. If both are given, `-t` wins.",
-            "Output files are also `.xci`, so running the tool again on the same folder processes them too.",
-            "Each image is copied to the temporary directory first, which needs room for the image and its output.",
-            "XCI Trimmer and the JoyBox Python environment must be installed as JoyBox tools.",
-        ],
-        see_also = ["3ds_rom_tool"],
-        section = "Game ROMs & Images")
+    parser = arguments.ArgumentParser(command = "switch_rom_tool")
     parser.add_input_path_argument(description = "An `.xci` file, or a directory searched recursively for them; must exist")
     parser.add_boolean_argument(args = ("-t", "--trim"), description = "Trim each image into `<name>_trimmed.xci`")
     parser.add_boolean_argument(args = ("-u", "--untrim"), description = "Pad each image to full size into `<name>_untrimmed.xci`")
@@ -39,18 +15,12 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, trim or untrim each Switch XCI under the input with XCI Trimmer into a new file beside it
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -59,41 +29,23 @@ def main():
     action = "Trim" if args.trim else "Untrim" if args.untrim else None
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action,
-            "Delete originals: %s" % args.delete_originals
-        ]
-        if not prompts.prompt_for_preview("Switch ROM tool", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Action: %s" % action,
+        "Delete originals: %s" % args.delete_originals
+    ]
+    if not prompts.confirm_preview(args.no_preview, "Switch ROM tool", details):
+        return
 
-    # Find xci files
-    for file in paths.build_file_list_by_extensions(input_path, extensions = [".xci"]):
-        current_file = file
-        current_file_dir = paths.get_filename_directory(current_file)
-        current_file_basename = paths.get_filename_basename(current_file)
-
-        # Trim xci
-        if args.trim:
-            switch.trim_switch_xci(
-                src_xci_file = current_file,
-                dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_trimmed.xci"),
-                delete_original = args.delete_originals,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Untrim xci
-        elif args.untrim:
-            switch.untrim_switch_xci(
-                src_xci_file = current_file,
-                dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_untrimmed.xci"),
-                delete_original = args.delete_originals,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
+    # Trim or untrim the xci files
+    switch.process_switch_xcis(
+        input_path = input_path,
+        trim = args.trim,
+        untrim = args.untrim,
+        delete_originals = args.delete_originals,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

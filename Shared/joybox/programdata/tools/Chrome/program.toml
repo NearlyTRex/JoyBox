@@ -1,0 +1,6 @@
+# Chrome: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Chrome]
+program = "{path_setting:Tools.Chrome.chrome_install_dir}/{setting:Tools.Chrome.chrome_exe}"
+download_dir = "{path_setting:Tools.Chrome.chrome_download_dir}"

@@ -2,11 +2,11 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
+from . import installer
 
 # Nous Research's Hermes agent CLI, run editable from a pinned checkout in its own
 # venv, since it finds its files through the source tree and its install.sh edits
@@ -26,19 +26,24 @@ class HermesAgent(installer.Installer):
         self.command_path = os.path.join(self.venv_dir, "bin", "hermes")
         self.link_path = os.path.join(os.path.expanduser("~"), ".local", "bin", "hermes")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether the hermes command exists in its venv
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.command_path)
 
+    # hermes-agent as installed or missing, by the venv command
     def get_package_status(self):
         if self.is_installed():
             return {"installed": ["hermes-agent"], "missing": []}
         return {"installed": [], "missing": ["hermes-agent"]}
 
+    # Shallow-clone the pinned release tag, or fetch and check it out in an
+    # existing checkout; False when git fails
     def fetch_release(self):
         if self.connection.does_file_or_directory_exist(os.path.join(self.source_dir, ".git")):
             logger.log_info(f"Updating Hermes Agent checkout to {self.release}")
@@ -57,6 +62,8 @@ class HermesAgent(installer.Installer):
              self.repository_url, self.source_dir])
         return code == 0
 
+    # Fetch the pinned release, pip install it editable into its own venv and
+    # link the command into ~/.local/bin; False when a step fails
     def install(self):
 
         # Start install
@@ -98,6 +105,7 @@ class HermesAgent(installer.Installer):
         logger.log_info("Hermes Agent installed successfully")
         return True
 
+    # Remove the ~/.local/bin link and the install dir with its venv, keeping ~/.hermes
     def uninstall(self):
 
         # Start uninstall

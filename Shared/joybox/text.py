@@ -1,72 +1,88 @@
 # Imports
+import importlib
 import importlib.util
 import re
 import textwrap
 
 # Local imports
-import joybox.config as config
+from joybox import config
+
+# Get unidecode, imported on first use
+def _get_unidecode():
+    return importlib.import_module("unidecode")
+
+# Get html_text, imported on first use
+def _get_html_text():
+    return importlib.import_module("html_text")
 
 ###########################################################
 # Text processing utilities
 ###########################################################
 
-# Capitalize text
+# Title-case each word by its first letter, leaving filler words after the first lowercase as written
 def capitalize_text(text):
     if len(text) == 0:
         return ""
-    elif len(text) == 1:
+    if len(text) == 1:
         return text.upper()
-    else:
-        words = []
-        for index, word in enumerate(text.split(" ")):
-            for filler_word in config.filler_words:
-                if index != 0 and word.lower() == filler_word.lower():
-                    words.append(word)
-                    break
-            else:
-                if len(word) == 1:
-                    words.append(word[0].upper())
-                elif len(word) >= 2:
-                    words.append(word[0].upper() + word[1:])
-        return " ".join(words)
+    words = []
+    for index, word in enumerate(text.split(" ")):
+        if index != 0 and _is_filler_word(word):
+            words.append(word)
+        elif len(word) > 0:
+            words.append(_capitalize_word(word))
+    return " ".join(words)
 
-# Wrap text to lines
+# Whether a word is one of the configured filler words, ignoring case
+def _is_filler_word(word):
+    for filler_word in config.filler_words:
+        if word.lower() == filler_word.lower():
+            return True
+    return False
+
+# A non-empty word with its first letter uppercased
+def _capitalize_word(word):
+    if len(word) == 1:
+        return word[0].upper()
+    return word[0].upper() + word[1:]
+
+# Lines wrapped to width, with a spacer line between the original paragraphs
 def wrap_text_to_lines(text, width = 80, spacer = "."):
     wrapped_lines = []
     text_lines = text.split("\n")
     for index, line in enumerate(text_lines):
         for wrapped_line in textwrap.wrap(line.strip(), width=width):
             wrapped_lines.append(wrapped_line)
-        if index < len(text_lines) - 1 and len(spacer):
+        if index < len(text_lines) - 1 and spacer:
             wrapped_lines.append(spacer)
     return wrapped_lines
 
-# Clean rich text
+# Plain ASCII text: transliterated by unidecode when installed, typographic characters replaced, the rest dropped
 def clean_rich_text(text):
     new_text = text
     # unidecode is optional; without it non-ascii is dropped below
     if importlib.util.find_spec("unidecode"):
-        import unidecode
+        unidecode = _get_unidecode()
         new_text = unidecode.unidecode(new_text)
     for old, new in config.rich_text_replacements.items():
         new_text = new_text.replace(old, new)
     new_text = new_text.encode("ascii", "ignore").decode()
     return new_text.strip()
 
-# Clean web text
+# Rich text cleanup plus the configured web text replacements
 def clean_web_text(text):
     new_text = clean_rich_text(text)
     for old, new in config.web_text_replacements.items():
         new_text = new_text.replace(old, new)
     return new_text
 
-# Extract web text
+# Readable text from an HTML document via html_text; None when it is not installed
 def extract_web_text(text):
     try:
-        import html_text
-        return html_text.extract_text(text)
-    except Exception:
+        html_text = _get_html_text()
+    except ImportError:
         return None
+    return html_text.extract_text(text)
 
 ###########################################################
 # Substring utilities

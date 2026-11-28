@@ -82,7 +82,7 @@ def test_setup_stops_at_the_first_failure(seams, method, failing_call):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Yuzu", "-g", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Yuzu", "-g", config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flags(seams):
@@ -154,7 +154,7 @@ def test_configure_copies_the_keys_and_sysdata_to_each_platform(profiles):
 
     assert profiles.copied.values("dest") == [
         "/emu/Yuzu/setup_dir/%s/%s" % (platform, filename)
-        for filename in yuzu.system_files for platform in PLATFORMS]
+        for filename in yuzu.Yuzu().get_system_files() for platform in PLATFORMS]
 
 
 def test_configure_refuses_keys_with_the_wrong_hash(profiles):

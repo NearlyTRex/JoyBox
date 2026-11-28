@@ -46,9 +46,9 @@ def test_listed_games_become_purchases(gog_store, listing, temp_dir):
 
     assert appids(purchases) == ["1207658924", "1207658932"]
     first = purchases[0]
-    assert first.get_value(config.json_key_store_appname) == "the_witcher"
-    assert first.get_value(config.json_key_store_name) == "The Witcher"
-    assert first.get_value(config.json_key_store_appurl) == "https://www.gog.com/en/game/the_witcher"
+    assert first.get_value(config.JSON_KEY_STORE_APPNAME) == "the_witcher"
+    assert first.get_value(config.JSON_KEY_STORE_NAME) == "The Witcher"
+    assert first.get_value(config.JSON_KEY_STORE_APPURL) == "https://www.gog.com/en/game/the_witcher"
     assert listing["calls"][0][0] == ["/tools/lgogdownloader", "--list", "j"]
     assert listing["calls"][0][1].get_stdout() == str(temp_dir["path"] / "manifest.json")
 
@@ -176,31 +176,31 @@ def test_product_info_is_read_from_the_api(gog_store, product):
     data = gog_store.get_latest_jsondata("1207658924")
 
     assert product["fetched"] == [API_URL]
-    assert data.get_value(config.json_key_store_appid) == "1207658924"
-    assert data.get_value(config.json_key_store_appname) == "the_witcher"
-    assert data.get_value(config.json_key_store_name) == "The Witcher"
-    assert data.get_value(config.json_key_store_appurl) == "https://www.gog.com/game/the_witcher"
+    assert data.get_value(config.JSON_KEY_STORE_APPID) == "1207658924"
+    assert data.get_value(config.JSON_KEY_STORE_APPNAME) == "the_witcher"
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == "The Witcher"
+    assert data.get_value(config.JSON_KEY_STORE_APPURL) == "https://www.gog.com/game/the_witcher"
 
 
 def test_the_build_is_the_first_installer_for_the_preferred_platform(gog_store, product):
-    assert gog_store.get_latest_jsondata("1207658924").get_value(config.json_key_store_buildid) == "1.5"
+    assert gog_store.get_latest_jsondata("1207658924").get_value(config.JSON_KEY_STORE_BUILDID) == "1.5"
 
     gog_store.platform = "mac"
-    assert gog_store.get_latest_jsondata("1207658924").get_value(config.json_key_store_buildid) == "1.0"
+    assert gog_store.get_latest_jsondata("1207658924").get_value(config.JSON_KEY_STORE_BUILDID) == "1.0"
 
 
 def test_a_versionless_installer_keeps_the_default_build(gog_store, product):
     product["json"]["downloads"]["installers"] = [{"os": "windows", "version": ""}, {"os": "windows"}]
-    assert gog_store.get_latest_jsondata("1207658924").get_value(config.json_key_store_buildid) == config.default_buildid
+    assert gog_store.get_latest_jsondata("1207658924").get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
     product["json"]["downloads"]["installers"] = [{"os": "windows"}]
-    assert gog_store.get_latest_jsondata("1207658924").get_value(config.json_key_store_buildid) == config.default_buildid
+    assert gog_store.get_latest_jsondata("1207658924").get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_no_installer_for_the_platform_keeps_the_default_build(gog_store, product):
     gog_store.platform = "linux"
 
-    assert gog_store.get_latest_jsondata("1207658924").get_value(config.json_key_store_buildid) == config.default_buildid
+    assert gog_store.get_latest_jsondata("1207658924").get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_an_unreachable_product_card_falls_back_to_the_store_page(gog_store, product, reachable):
@@ -209,7 +209,7 @@ def test_an_unreachable_product_card_falls_back_to_the_store_page(gog_store, pro
 
     data = gog_store.get_latest_jsondata("1207658924")
 
-    assert data.get_value(config.json_key_store_appurl) == "https://www.gog.com/en/game/the_witcher"
+    assert data.get_value(config.JSON_KEY_STORE_APPURL) == "https://www.gog.com/en/game/the_witcher"
 
 
 def test_no_reachable_page_leaves_the_url_unset(gog_store, product, reachable):
@@ -218,7 +218,7 @@ def test_no_reachable_page_leaves_the_url_unset(gog_store, product, reachable):
 
     data = gog_store.get_latest_jsondata("1207658924")
 
-    assert data.get_value(config.json_key_store_appurl) is None
+    assert data.get_value(config.JSON_KEY_STORE_APPURL) is None
 
 
 def test_product_info_needs_the_api(gog_store, product, reachable):
@@ -255,5 +255,5 @@ def test_manifest_paths_join_the_product_info(gog_store, product, monkeypatch):
     monkeypatch.setattr(gog.manifest, "get_manifest_instance", OneEntryManifest)
     data = gog_store.get_latest_jsondata("1207658924")
 
-    assert data.get_value(config.json_key_store_paths) == [config.token_game_install_dir + "/saves"]
-    assert data.get_value(config.json_key_store_keys) == ["HKEY_CURRENT_USER/Software/CD Projekt"]
+    assert data.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/saves"]
+    assert data.get_value(config.JSON_KEY_STORE_KEYS) == ["HKEY_CURRENT_USER/Software/CD Projekt"]

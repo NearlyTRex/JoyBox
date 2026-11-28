@@ -1,0 +1,34 @@
+# Wad2Bin: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Wad2Bin]
+program = { windows = "Wad2Bin/windows/wad2bin-windows-x64.exe", linux = "Wad2Bin/linux/wad2bin" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "DarkMatterCore"
+github_repo = "wad2bin"
+starts_with = "wad2bin-windows-x64"
+ends_with = ".exe"
+search_file = "wad2bin-windows-x64.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "DarkMatterCore"
+github_repo = "wad2bin"
+starts_with = "wad2bin-linux-x86_64"
+ends_with = ".tar.gz"
+search_file = "wad2bin"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "wad2bin-windows-x64.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "wad2bin"

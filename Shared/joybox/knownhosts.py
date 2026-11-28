@@ -10,10 +10,10 @@
 import os
 
 # Local imports
-import joybox.command as command
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import command
+from joybox import fileops
+from joybox import logger
+from joybox import paths
 
 # How long to wait for a server to show its key
 SCAN_TIMEOUT_SECONDS = 10
@@ -28,6 +28,21 @@ def get_known_hosts_path():
 # Get the name a host is recorded under, which carries the port unless it is ssh's own
 def get_host_entry(host, port = 22):
     return host if int(port) == 22 else "[%s]:%s" % (host, port)
+
+# Append known_hosts lines to the file (the user's own by default), making its directory
+# private when it is new; False when the file cannot be written
+def append_known_hosts_lines(lines, known_hosts_path = None, verbose = False, exit_on_failure = False):
+    known_hosts_path = known_hosts_path or get_known_hosts_path()
+    known_hosts_dir = os.path.dirname(known_hosts_path)
+    if not paths.does_path_exist(known_hosts_dir):
+        fileops.make_directory(known_hosts_dir)
+        fileops.chmod_file_or_directory(known_hosts_dir, "700")
+    return fileops.touch_file(
+        known_hosts_path,
+        contents = "\n".join(lines) + "\n",
+        contents_mode = "a",
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Check whether a host's key is already recorded
 def is_host_known(host, port = 22):
@@ -56,17 +71,8 @@ def remember_host(host, port = 22, verbose = False, pretend_run = False, exit_on
         logger.log_error("Unable to read the host key of %s; it is not trusted, so connecting to it will fail" % entry)
         return False
 
-    # Write them into known_hosts, making ~/.ssh private when it is new
-    known_hosts_dir = os.path.dirname(get_known_hosts_path())
-    if not paths.does_path_exist(known_hosts_dir):
-        fileops.make_directory(known_hosts_dir)
-        fileops.chmod_file_or_directory(known_hosts_dir, "700")
-    if not fileops.touch_file(
-        get_known_hosts_path(),
-        contents = "\n".join(lines) + "\n",
-        contents_mode = "a",
-        verbose = verbose,
-        exit_on_failure = exit_on_failure):
+    # Write them into known_hosts
+    if not append_known_hosts_lines(lines, verbose = verbose, exit_on_failure = exit_on_failure):
         logger.log_error("Unable to record the host key of %s in %s" % (entry, get_known_hosts_path()))
         return False
     _checked.add(entry)

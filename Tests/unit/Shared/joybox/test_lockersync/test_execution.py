@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config, lockersync
-from lockersync_helpers import FakeBackend, orphan_action, transfer_action
+from lockersync_helpers import FakeBackend, FakeLockerInfo, orphan_action, transfer_action
 
 
 ###########################################################
@@ -212,3 +212,13 @@ def test_run_flags_reach_the_batch(messages):
     assert passed["show_progress"] is True
     assert passed["pretend_run"] is True
     assert passed["exit_on_failure"] is True
+
+
+###########################################################
+# Secondary excludes
+###########################################################
+
+def test_a_secondary_sync_also_leaves_out_its_recycle_folder():
+    sec_info = FakeLockerInfo("Backup", excluded_dirs = ["Cache/**"])
+
+    assert lockersync.get_secondary_sync_excludes(sec_info) == ["Cache/**", lockersync.RECYCLE_FOLDER + "/**"]

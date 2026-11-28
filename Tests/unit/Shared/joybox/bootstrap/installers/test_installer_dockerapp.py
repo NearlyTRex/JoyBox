@@ -549,7 +549,118 @@ def test_uninstall_keeps_data_and_closes_ports(isolated_settings):
     assert connection.ran("manager_nginx.sh", "systemctl", "restart")
 
 
+def test_a_failed_nginx_removal_fails_the_uninstall_after_cleanup(isolated_settings):
+    app = build_demo(uninstall_nginx_config = lambda: False)
+    connection = app.connection
+
+    assert app.uninstall() is False
+    assert connection.ran("manager_nginx.sh", "close_port", "9000")
+    assert connection.ran("manager_nginx.sh", "systemctl", "restart")
+
+
 def test_uninstall_without_ports_closes_none(isolated_settings):
     app = build_demo(nginx_ports = [])
     assert app.uninstall()
     assert not app.connection.ran("close_port")
+
+
+###########################################################
+# App directory
+#
+# compose_down and retire_app_dir are the two places where a missing guard
+# destroys data the user expected to keep.
+###########################################################
+
+REMOTE_HOME = "/home/deploy"
+
+
+def docker_app(purge_data = False, app_name = "testapp"):
+    connection = RecordingConnection(command_output = {"printf": REMOTE_HOME})
+    app = installer_dockerapp.DockerAppInstaller(connection, runoptions.RunFlags(verbose = False, purge_data = purge_data))
+    app.app_name = app_name
+    return app, connection
+
+
+def test_the_app_directory_is_built_from_the_home():
+    base, _ = docker_app(app_name = "filebrowser")
+    assert base.get_app_dir() == f"{REMOTE_HOME}/apps/filebrowser"
+
+
+###########################################################
+# Composing down
+###########################################################
+
+def test_volumes_are_kept_by_default():
+    # "down -v" destroys databases and app data.
+    base, connection = docker_app(purge_data = False)
+    base.compose_down()
+
+    assert connection.ran("down")
+    assert not connection.ran("down", "-v")
+
+
+def test_volumes_are_removed_only_with_purge_data():
+    base, connection = docker_app(purge_data = True)
+    base.compose_down()
+
+    assert connection.ran("down", "-v")
+
+
+def test_compose_runs_in_the_app_directory():
+    base, connection = docker_app()
+    base.compose_down()
+
+    directories = [call[1][0] for call in connection.called("set_current_working_directory")]
+    assert f"{REMOTE_HOME}/apps/testapp" in directories
+
+
+def test_the_working_directory_is_reset_afterwards():
+    # A leaked cwd would silently redirect every later command.
+    base, connection = docker_app()
+    base.compose_down()
+
+    directories = [call[1][0] for call in connection.called("set_current_working_directory")]
+    assert directories[-1] is None
+
+
+def test_compose_down_uses_the_app_env_file():
+    base, connection = docker_app()
+    base.compose_down()
+
+    assert connection.ran("--env-file", f"{REMOTE_HOME}/apps/testapp/.env")
+
+
+###########################################################
+# Retiring the app directory
+###########################################################
+
+def test_the_app_directory_is_renamed_by_default():
+    # Bind-mounted app data lives here, so removing it destroys data even when
+    # the volumes were kept.
+    base, connection = docker_app(purge_data = False)
+    base.retire_app_dir()
+
+    assert connection.removed_paths == []
+    assert len(connection.moved) == 1
+
+    source, destination = connection.moved[0]
+    assert source == f"{REMOTE_HOME}/apps/testapp"
+    assert destination.startswith(f"{REMOTE_HOME}/apps/testapp.removed-")
+
+
+def test_the_app_directory_is_removed_only_with_purge_data():
+    base, connection = docker_app(purge_data = True)
+    base.retire_app_dir()
+
+    assert connection.removed_paths == [f"{REMOTE_HOME}/apps/testapp"]
+    assert connection.moved == []
+
+
+def test_the_retired_directory_name_is_timestamped():
+    base, connection = docker_app()
+    base.retire_app_dir()
+
+    _, destination = connection.moved[0]
+    stamp = destination.rsplit(".removed-", 1)[1]
+
+    assert len(stamp) == 15 and stamp[8] == "_"

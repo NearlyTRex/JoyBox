@@ -1,5 +1,5 @@
 # Local imports
-import joybox.config as config
+from joybox import config
 
 ###########################################################
 
@@ -9,13 +9,13 @@ def is_platform_valid(platform_type):
         return platform_type in config.platforms
     return False
 
-# Get platform section
+# Platform's whole entry in config.platforms; None for an unknown platform
 def get_platform_section(platform_type):
     if platform_type and platform_type in config.platforms:
         return config.platforms[platform_type]
     return None
 
-# Get platform value
+# One key of the platform's config.platforms entry; None when the platform or key is unknown
 def get_platform_value(platform_type, platform_key):
     if platform_type and platform_type in config.platforms:
         if platform_key and platform_key in config.platforms[platform_type]:
@@ -38,9 +38,9 @@ def is_letter_platform(platform_type):
 
 ###########################################################
 
-# Get addons types
+# Addon kinds (updates, DLC) the platform supports, from config.platforms; empty for an unknown platform
 def get_addon_types(platform_type):
-    return get_platform_value(platform_type, config.platform_key_addons)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_ADDONS) or []
 
 # Check if updates are possible
 def are_updates_possible(platform_type):
@@ -56,9 +56,9 @@ def are_addons_possible(platform_type):
 
 ###########################################################
 
-# Get launcher types
+# Launch modes the platform supports, from config.platforms; empty for an unknown platform
 def get_launcher_types(platform_type):
-    return get_platform_value(platform_type, config.platform_key_launcher)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_LAUNCHER) or []
 
 # Check if no launcher available
 def has_no_launcher(platform_type):
@@ -74,17 +74,17 @@ def is_launched_by_file(platform_type):
 
 ###########################################################
 
-# Get autofill json keys
+# JSON keys whose values are always overwritten when filled; None for an unknown platform
 def get_autofill_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_autofill_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_AUTOFILL_JSON)
 
-# Get fillonce json keys
+# JSON keys filled only while absent, then kept; None for an unknown platform
 def get_fillonce_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_fillonce_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_FILLONCE_JSON)
 
-# Get merge json keys
+# JSON keys whose new values merge additively into the old; None for an unknown platform
 def get_merge_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_merge_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_MERGE_JSON)
 
 # Check if autofill key
 def is_autofill_json_key(platform_type, json_key):

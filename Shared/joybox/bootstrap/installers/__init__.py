@@ -1,123 +1,204 @@
 # Imports
 from joybox.bootstrap.installers.installer_aptget import (
-    get_aptget_package_id as get_aptget_package_id,
-    get_aptget_package_info as get_aptget_package_info,
-    AptGet as AptGet)
+    AptGet)
 from joybox.bootstrap.installers.installer_autostart import (
-    Autostart as Autostart)
+    Autostart)
 from joybox.bootstrap.installers.installer_awscli import (
-    AwsCli as AwsCli)
+    AwsCli)
 from joybox.bootstrap.installers.installer_audiobookshelf import (
-    Audiobookshelf as Audiobookshelf)
+    Audiobookshelf)
 from joybox.bootstrap.installers.installer_brave import (
-    Brave as Brave)
+    Brave)
 from joybox.bootstrap.installers.installer_certbot import (
-    Certbot as Certbot)
+    Certbot)
 from joybox.bootstrap.installers.installer_cockpit import (
-    Cockpit as Cockpit)
+    Cockpit)
 from joybox.bootstrap.installers.installer_chrome import (
-    Chrome as Chrome)
+    Chrome)
 from joybox.bootstrap.installers.installer_claude import (
-    Claude as Claude)
+    Claude)
 from joybox.bootstrap.installers.installer_config import (
-    Config as Config)
+    Config)
 from joybox.bootstrap.installers.installer_dconf import (
-    Dconf as Dconf)
+    Dconf)
 from joybox.bootstrap.installers.installer_deno import (
-    Deno as Deno)
+    Deno)
 from joybox.bootstrap.installers.installer_dockerapp import (
-    DockerAppInstaller as DockerAppInstaller)
+    DockerAppInstaller)
 from joybox.bootstrap.installers.installer_dotfiles import (
-    Dotfiles as Dotfiles)
+    Dotfiles)
 from joybox.bootstrap.installers.installer_gh import (
-    Gh as Gh)
+    Gh)
 from joybox.bootstrap.installers.installer_githooks import (
-    GitHooks as GitHooks)
+    GitHooks)
 from joybox.bootstrap.installers.installer_filebrowser import (
-    FileBrowser as FileBrowser,
-    is_totp_secret as is_totp_secret)
+    FileBrowser,
+    is_totp_secret)
 from joybox.bootstrap.installers.installer_fitlog import (
-    FitLog as FitLog)
+    FitLog)
 from joybox.bootstrap.installers.installer_flatpak import (
-    get_flatpak_package_id as get_flatpak_package_id,
-    get_flatpak_package_info as get_flatpak_package_info,
-    Flatpak as Flatpak)
+    get_flatpak_package_id,
+    get_flatpak_package_info,
+    Flatpak)
 from joybox.bootstrap.installers.installer_gitkraken import (
-    GitKraken as GitKraken)
+    GitKraken)
 from joybox.bootstrap.installers.installer_hermes import (
-    HermesAgent as HermesAgent)
+    HermesAgent)
 from joybox.bootstrap.installers.installer_jenkins import (
-    Jenkins as Jenkins)
+    Jenkins)
 from joybox.bootstrap.installers.installer_keys import (
-    Keys as Keys)
+    Keys)
 from joybox.bootstrap.installers.installer_kanboard import (
-    Kanboard as Kanboard)
+    Kanboard)
 from joybox.bootstrap.installers.installer_llamacpp import (
-    LlamaCpp as LlamaCpp)
+    LlamaCpp)
 from joybox.bootstrap.installers.installer_llvm import (
-    Llvm as Llvm)
+    Llvm)
 from joybox.bootstrap.installers.installer_navidrome import (
-    Navidrome as Navidrome)
+    Navidrome)
 from joybox.bootstrap.installers.installer_nginx import (
-    Nginx as Nginx)
+    build_https_site_template,
+    build_ssl_server_head,
+    Nginx)
 from joybox.bootstrap.installers.installer_node import (
-    get_node_package_id as get_node_package_id,
-    get_node_package_info as get_node_package_info,
-    Node as Node)
+    get_node_package_id,
+    get_node_package_info,
+    Node)
 from joybox.bootstrap.installers.installer_managedfiles import (
-    ManagedFiles as ManagedFiles)
+    ManagedFiles)
 from joybox.bootstrap.installers.installer_ollama import (
-    Ollama as Ollama)
+    Ollama)
 from joybox.bootstrap.installers.installer_ollama_tunnel import (
-    OllamaTunnel as OllamaTunnel)
+    OllamaTunnel)
 from joybox.bootstrap.installers.installer_oscar import (
-    Oscar as Oscar)
+    Oscar)
 from joybox.bootstrap.installers.installer_onepassword import (
-    OnePassword as OnePassword)
+    OnePassword)
 from joybox.bootstrap.installers.installer_pidgin import (
-    Pidgin as Pidgin)
+    Pidgin)
 from joybox.bootstrap.installers.installer_pipewire import (
-    Pipewire as Pipewire)
+    Pipewire)
 from joybox.bootstrap.installers.installer_python import (
-    get_python_package_id as get_python_package_id,
-    get_package_spec as get_package_spec,
-    is_isolated_package as is_isolated_package,
-    get_package_commands as get_package_commands,
-    get_python_package_info as get_python_package_info,
-    get_requirement_name as get_requirement_name,
-    get_requirement_names as get_requirement_names,
-    Python as Python)
+    get_package_spec,
+    is_isolated_package,
+    get_package_commands,
+    get_requirement_name,
+    get_requirement_names,
+    Python)
 from joybox.bootstrap.installers.installer_rust import (
-    get_cargo_package_id as get_cargo_package_id,
-    get_cargo_package_info as get_cargo_package_info,
-    Rust as Rust)
+    get_cargo_package_id,
+    get_cargo_package_info,
+    Rust)
 from joybox.bootstrap.installers.installer_sdl3 import (
-    Sdl3 as Sdl3)
+    Sdl3)
 from joybox.bootstrap.installers.installer_steam import (
-    Steam as Steam)
+    Steam)
+from joybox.bootstrap.installers.installer_swapfile import (
+    Swapfile)
 from joybox.bootstrap.installers.installer_sysctl import (
-    Sysctl as Sysctl)
+    Sysctl)
 from joybox.bootstrap.installers.installer_udev import (
-    Udev as Udev)
+    Udev)
 from joybox.bootstrap.installers.installer_ufw import (
-    Ufw as Ufw)
+    Ufw)
 from joybox.bootstrap.installers.installer_vale import (
-    Vale as Vale)
+    Vale)
 from joybox.bootstrap.installers.installer_virtualbox import (
-    VirtualBox as VirtualBox)
+    VirtualBox)
 from joybox.bootstrap.installers.installer_vscodium import (
-    VSCodium as VSCodium)
+    VSCodium)
 from joybox.bootstrap.installers.installer_wine import (
-    Wine as Wine)
+    Wine)
 from joybox.bootstrap.installers.installer_winget import (
-    WinGet as WinGet)
+    WinGet)
 from joybox.bootstrap.installers.installer_wireplumber import (
-    Wireplumber as Wireplumber)
+    Wireplumber)
 from joybox.bootstrap.installers.installer_wordpress import (
-    Wordpress as Wordpress)
+    Wordpress)
 from joybox.bootstrap.installers.installer_wrappers import (
-    Wrappers as Wrappers)
+    Wrappers)
 from joybox.bootstrap.installers.installer_xorg import (
-    Xorg as Xorg)
+    Xorg)
+from joybox.bootstrap.installers.installer_zram import (
+    Zram)
 from joybox.bootstrap.installers.installer import (
-    Installer as Installer)
+    get_package_id,
+    get_package_info,
+    Installer,
+    split_package_status)
+
+# The names this package re-exports
+__all__ = [
+    "AptGet",
+    "Autostart",
+    "AwsCli",
+    "Audiobookshelf",
+    "Brave",
+    "Certbot",
+    "Cockpit",
+    "Chrome",
+    "Claude",
+    "Config",
+    "Dconf",
+    "Deno",
+    "DockerAppInstaller",
+    "Dotfiles",
+    "Gh",
+    "GitHooks",
+    "FileBrowser",
+    "is_totp_secret",
+    "FitLog",
+    "get_flatpak_package_id",
+    "get_flatpak_package_info",
+    "Flatpak",
+    "GitKraken",
+    "HermesAgent",
+    "Jenkins",
+    "Keys",
+    "Kanboard",
+    "LlamaCpp",
+    "Llvm",
+    "Navidrome",
+    "Nginx",
+    "build_https_site_template",
+    "build_ssl_server_head",
+    "get_node_package_id",
+    "get_node_package_info",
+    "Node",
+    "ManagedFiles",
+    "Ollama",
+    "OllamaTunnel",
+    "Oscar",
+    "OnePassword",
+    "Pidgin",
+    "Pipewire",
+    "get_package_spec",
+    "is_isolated_package",
+    "get_package_commands",
+    "get_requirement_name",
+    "get_requirement_names",
+    "Python",
+    "get_cargo_package_id",
+    "get_cargo_package_info",
+    "Rust",
+    "Sdl3",
+    "Steam",
+    "Swapfile",
+    "Sysctl",
+    "Udev",
+    "Ufw",
+    "Vale",
+    "VirtualBox",
+    "VSCodium",
+    "Wine",
+    "WinGet",
+    "Wireplumber",
+    "Wordpress",
+    "Wrappers",
+    "Xorg",
+    "Zram",
+    "get_package_id",
+    "get_package_info",
+    "Installer",
+    "split_package_status",
+]

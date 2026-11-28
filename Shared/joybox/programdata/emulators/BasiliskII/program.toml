@@ -1,0 +1,62 @@
+# BasiliskII: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["OTHER_APPLE_MACOS_8"]
+
+[config.BasiliskII]
+program = { windows = "BasiliskII/windows/BasiliskII.exe", linux = "BasiliskII/linux/BasiliskII.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.BasiliskII.setup_dir]
+windows = "BasiliskII/windows"
+linux = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII"
+
+[config.BasiliskII.config_file]
+windows = "BasiliskII/windows/BasiliskII_prefs"
+linux = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"
+
+[[config_files]]
+path = "BasiliskII/windows/BasiliskII_prefs"
+template = "BasiliskII_prefs"
+
+[[config_files]]
+path = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"
+template = "prefs"
+
+[[system_files]]
+path = "quadra.rom"
+md5 = "69489153dde910a69d5ae6de5dd65323"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "MacEmu"
+starts_with = "BasiliskII-Windows"
+ends_with = ".zip"
+search_file = "BasiliskII.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "Korkman"
+github_repo = "macemu-appimage-builder"
+starts_with = "BasiliskII-x86_64"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "BasiliskII.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["--disk", "{game_file}"]
+fullscreen_args = ["--nogui", "true"]

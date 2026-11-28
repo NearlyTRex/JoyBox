@@ -28,9 +28,11 @@ class RunFlags:
         self.backup_id = backup_id
         self.confirm = confirm
 
+    # A deep copy, so changes to it leave these flags alone
     def copy(self):
         return copy.deepcopy(self)
 
+    # Assign the given flags and return self; raises AttributeError on an unknown name
     def set(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):
@@ -62,9 +64,11 @@ class RunOptions:
         self.stderr = stderr
         self.include_stderr = include_stderr
 
+    # A deep copy, so changes to it leave these options alone
     def copy(self):
         return copy.deepcopy(self)
 
+    # Assign the given options and return self; raises AttributeError on an unknown name
     def set(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):

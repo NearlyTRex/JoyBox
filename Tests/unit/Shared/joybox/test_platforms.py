@@ -42,8 +42,8 @@ def test_a_missing_key_returns_nothing():
 def test_a_value_is_read_from_the_section():
     platform = ALL_PLATFORMS[0]
 
-    assert platforms.get_platform_value(platform, config.platform_key_addons) == \
-        config.platforms[platform][config.platform_key_addons]
+    assert platforms.get_platform_value(platform, config.PLATFORM_KEY_ADDONS) == \
+        config.platforms[platform][config.PLATFORM_KEY_ADDONS]
 
 
 ###########################################################
@@ -95,9 +95,25 @@ def test_addons_are_possible_when_any_type_is_declared(platform):
     assert platforms.are_addons_possible(platform) == expected
 
 
+@pytest.mark.parametrize("platform", ["not-a-platform", None])
+def test_an_unknown_platform_has_no_addons(platform):
+    assert platforms.get_addon_types(platform) == []
+    assert platforms.are_updates_possible(platform) is False
+    assert platforms.are_dlc_possible(platform) is False
+    assert platforms.are_addons_possible(platform) is False
+
+
 ###########################################################
 # Launchers
 ###########################################################
+
+@pytest.mark.parametrize("platform", ["not-a-platform", None])
+def test_an_unknown_platform_has_no_launch_mode(platform):
+    assert platforms.get_launcher_types(platform) == []
+    assert platforms.has_no_launcher(platform) is False
+    assert platforms.is_launched_by_name(platform) is False
+    assert platforms.is_launched_by_file(platform) is False
+
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_every_platform_declares_launcher_types(platform):

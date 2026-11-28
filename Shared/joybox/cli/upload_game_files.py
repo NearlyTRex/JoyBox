@@ -1,50 +1,14 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.environment as environment
-import joybox.collection as collection
-from joybox import gamecollection
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.prompts as prompts
+from joybox import config
+from joybox import system
+from joybox import arguments
+from joybox.collection import uploading
+from joybox import setup
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Encrypt game folders in place and upload them to a remote locker.",
-        details = (
-            "For each selected game, works on its folder in the source locker\n"
-            "(`Gaming/<supercategory>/<category>/<subcategory>/<game>`) or on `-i`:\n"
-            "\n"
-            "1. Encrypts every file in the folder with GPG (AES-256) using the destination\n"
-            "   locker's passphrase. Each file becomes `<md5 of name>.enc` with its real name stored\n"
-            "   inside, and the unencrypted original is deleted.\n"
-            "2. Records each file's real name, XXH3 hash and size, plus the encrypted file's name,\n"
-            "   MD5 and size, in the game hash metadata (`Hashes/<supercategory>/<category>/\n"
-            "   <subcategory>.json` under the configured game metadata directory).\n"
-            "3. Copies the encrypted folder to the same path, relative to the local locker, on the\n"
-            "   destination locker.\n"
-            "\n"
-            "In `Standard` mode the games are the folders found in the source locker, narrowed by\n"
-            "`-u`, `-c`, `-s` and `-n` (an exact folder name). In `Custom` mode `-c`, `-s` and `-n`\n"
-            "are required and name exactly one game."),
-        examples = [
-            ("Encrypt and upload one Nintendo Switch game to Hetzner", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"),
-            ("Show what would be encrypted and uploaded without changing anything", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner -p -v"),
-            ("Upload a Steam game", "upload_game_files -c Computer -s Steam -n \"Game Name\" -d Hetzner"),
-            ("Upload a game's DLC", "upload_game_files -u DLC -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"),
-            ("Upload every Nintendo Switch game in the local locker", "upload_game_files -c Nintendo -s \"Nintendo Switch\" -d Hetzner"),
-            ("Upload one game from a folder of your choosing", "upload_game_files -m Custom -i /path/to/game/files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -d Hetzner"),
-        ],
-        notes = [
-            "The local copies are left encrypted: the unencrypted originals are deleted. Decrypt them with `crypt_tool -d -t Locker` or copy them out decrypted with `backup_tool -r Decrypt`.",
-            "Files that are already `.enc` are left as they are, so an interrupted run can be repeated.",
-            "`-i` is used for every selected game, so give it only with `-m Custom` or a `-n` that matches one game.",
-            "The first game that fails stops the run.",
-        ],
-        see_also = ["backup_tool", "crypt_tool", "sync_tool", "backup_game_files"],
-        section = "Backups & Lockers")
+    parser = arguments.ArgumentParser(command = "upload_game_files")
     parser.add_group("Game selection")
     parser.add_input_path_argument(description = "Game folder to encrypt and upload instead of the one derived from the game options")
     parser.add_game_supercategory_argument(description = "Supercategory of the games to upload")
@@ -57,11 +21,7 @@ def build_parser():
         arg_type = config.LockerType,
         default = config.LockerType.LOCAL,
         description = "Locker whose game folders are selected and encrypted")
-    parser.add_enum_argument(
-        args = ("-m", "--generation_mode"),
-        arg_type = config.GenerationModeType,
-        default = config.GenerationModeType.STANDARD,
-        description = "`Standard` finds games in the source locker; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
+    parser.add_generation_mode_argument(description = "`Standard` finds games in the source locker; `Custom` takes exactly the game named by `-c`, `-s` and `-n`")
     parser.add_enum_argument(
         args = ("-d", "--dest_locker"),
         arg_type = config.LockerType,
@@ -69,63 +29,37 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, encrypt each selected game's folder in place, hash it and upload it to the remote locker
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get custom input path if provided
     custom_input_path = parser.get_path("input_path")
 
     # Collect games to process
-    games_to_process = []
-    for game_info in gamecollection.iterate_selected_game_infos(
+    games_to_process = uploading.get_upload_game_roots(
         parser = parser,
         generation_mode = args.generation_mode,
-        locker_type = args.source_locker,
+        source_locker = args.source_locker,
+        input_path = custom_input_path,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure):
-        game_root = custom_input_path or environment.get_locker_gaming_files_dir(
-            game_info.get_supercategory(),
-            game_info.get_category(),
-            game_info.get_subcategory(),
-            game_info.get_name(),
-            args.source_locker)
-        games_to_process.append((game_info, game_root))
+        exit_on_failure = args.exit_on_failure)
 
     # Show preview
-    if not args.no_preview:
-        details = [game_root for _, game_root in games_to_process]
-        if not prompts.prompt_for_preview("Upload game files (encrypt and upload to %s)" % args.dest_locker, details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [game_root for _, game_root in games_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Upload game files (encrypt and upload to %s)" % args.dest_locker, details):
+        return
 
     # Upload game files
-    for game_info, game_root in games_to_process:
-        success = collection.upload_game_files(
-            game_info = game_info,
-            game_root = game_root,
-            locker_type = args.dest_locker,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-        if not success:
-            logger.log_error(
-                message = "Upload of game files failed!",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory(),
-                game_name = game_info.get_name(),
-                quit_program = True)
+    uploading.upload_game_roots(
+        games_to_process,
+        locker_type = args.dest_locker,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

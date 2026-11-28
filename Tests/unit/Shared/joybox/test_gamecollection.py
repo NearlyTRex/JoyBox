@@ -64,6 +64,90 @@ def test_json_game_names_can_be_narrowed_to_a_lockers_games(game_tree):
 
 
 ###########################################################
+# Iterating every rom
+###########################################################
+
+def test_every_rom_subcategory_is_walked_once():
+    walked = list(gamecollection.iterate_rom_categories())
+    expected = sum(len(config.subcategory_map[category]) for category in config.Category.members())
+
+    assert len(walked) == len(set(walked)) == expected
+    assert {supercategory for supercategory, _, _ in walked} == {ROMS}
+    assert (ROMS, CATEGORY, SUBCATEGORY) in walked
+    assert (ROMS, COMPUTER, GOG) in walked
+
+
+def test_every_rom_game_with_json_is_built(game_tree):
+    write_game(game_tree, name = "Contra")
+    write_game(game_tree, name = "Zelda")
+
+    games = list(gamecollection.iterate_rom_game_infos(verbose = True))
+
+    assert [(game.get_category(), game.get_subcategory(), game.get_name()) for game in games] == [
+        (CATEGORY, SUBCATEGORY, "Contra"), (CATEGORY, SUBCATEGORY, "Zelda")]
+
+
+def test_an_action_runs_on_every_included_rom_game(game_tree):
+    for name in ("Alpha", "Beta", "Gamma"):
+        write_game(game_tree, name = name)
+    calls = []
+
+    def action(game_info, **kwargs):
+        calls.append((game_info.get_name(), kwargs))
+        return True
+
+    assert gamecollection.run_on_all_rom_games(
+        action, include = lambda game_info: game_info.get_name() != "Beta",
+        locker_type = config.LockerType.LOCAL, pretend_run = True) is True
+    assert [name for name, _ in calls] == ["Alpha", "Gamma"]
+    assert calls[0][1] == {
+        "locker_type": config.LockerType.LOCAL, "verbose": False, "pretend_run": True, "exit_on_failure": False}
+
+
+def test_an_action_on_every_rom_game_stops_at_the_first_failure(game_tree):
+    for name in ("Alpha", "Beta"):
+        write_game(game_tree, name = name)
+    calls = []
+
+    assert gamecollection.run_on_all_rom_games(lambda game_info, **kwargs: calls.append(game_info.get_name())) is False
+    assert calls == ["Alpha"]
+
+
+class CategorizedGame:
+
+    def get_supercategory(self):
+        return ROMS
+
+    def get_category(self):
+        return CATEGORY
+
+    def get_subcategory(self):
+        return SUBCATEGORY
+
+    def get_name(self):
+        return "Contra"
+
+
+def test_a_game_error_is_logged_against_its_categories(monkeypatch):
+    logged = []
+    monkeypatch.setattr(gamecollection.logger, "log_error", lambda **kwargs: logged.append(kwargs))
+
+    gamecollection.log_game_error(CategorizedGame(), "Broken")
+
+    assert logged == [{"message": "Broken", "game_supercategory": ROMS, "game_category": CATEGORY, "game_subcategory": SUBCATEGORY}]
+
+
+def test_a_game_error_can_name_the_game_and_quit(monkeypatch):
+    logged = []
+    monkeypatch.setattr(gamecollection.logger, "log_error", lambda **kwargs: logged.append(kwargs))
+
+    gamecollection.log_game_error_and_quit(CategorizedGame(), "Broken")
+
+    assert logged[0]["game_name"] == "Contra"
+    assert logged[0]["quit_program"] is True
+
+
+###########################################################
 # Iterating the selection
 ###########################################################
 
@@ -213,3 +297,21 @@ def test_no_files_yields_nothing():
 
 def test_a_non_list_yields_nothing():
     assert gamecollection.find_best_game_file(None) == ""
+
+
+###########################################################
+# Game roots
+###########################################################
+
+def test_a_given_game_root_directory_is_kept(tmp_path):
+    assert gamecollection.resolve_game_root(ROMS, CATEGORY, SUBCATEGORY, "Contra", str(tmp_path)) == str(tmp_path)
+
+
+def test_a_game_root_defaults_to_the_lockers_game_folder(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        gamecollection.environment, "get_locker_gaming_files_dir",
+        lambda **kwargs: "/locker/%s/%s" % (kwargs["game_name"], kwargs["locker_type"]))
+
+    assert gamecollection.resolve_game_root(
+        ROMS, CATEGORY, SUBCATEGORY, "Contra", str(tmp_path / "absent"), config.LockerType.LOCAL) == \
+        "/locker/Contra/%s" % config.LockerType.LOCAL

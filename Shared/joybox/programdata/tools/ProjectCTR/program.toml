@@ -1,0 +1,88 @@
+# ProjectCTR: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.CtrMakeRom]
+program = { windows = "CtrMakeRom/windows/makerom.exe", linux = "CtrMakeRom/linux/makerom" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.CtrTool]
+program = { windows = "CtrTool/windows/ctrtool.exe", linux = "CtrTool/linux/ctrtool" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+program = "CtrMakeRom"
+platform = "windows"
+github_user = "3DSGuy"
+github_repo = "Project_CTR"
+starts_with = "makerom"
+ends_with = "win_x86_64.zip"
+search_file = "makerom.exe"
+install_files = ["makerom.exe"]
+
+[[setup]]
+kind = "github_release"
+program = "CtrTool"
+platform = "windows"
+github_user = "3DSGuy"
+github_repo = "Project_CTR"
+starts_with = "ctrtool"
+ends_with = "win_x64.zip"
+search_file = "ctrtool.exe"
+install_files = ["ctrtool.exe"]
+
+[[setup]]
+kind = "github_release"
+program = "CtrMakeRom"
+platform = "linux"
+github_user = "3DSGuy"
+github_repo = "Project_CTR"
+starts_with = "makerom"
+ends_with = "ubuntu_x86_64.zip"
+search_file = "makerom"
+install_files = ["makerom"]
+release_type = "ARCHIVE"
+chmod_files = [{ file = "makerom", perms = 755 }]
+
+[[setup]]
+kind = "github_release"
+program = "CtrTool"
+platform = "linux"
+github_user = "3DSGuy"
+github_repo = "Project_CTR"
+starts_with = "ctrtool"
+ends_with = "ubuntu_x86_64.zip"
+search_file = "ctrtool"
+install_files = ["ctrtool"]
+release_type = "ARCHIVE"
+chmod_files = [{ file = "ctrtool", perms = 755 }]
+
+[[setup_offline]]
+kind = "stored_release"
+program = "CtrMakeRom"
+platform = "windows"
+search_file = "makerom.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+program = "CtrTool"
+platform = "windows"
+search_file = "ctrtool.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+program = "CtrMakeRom"
+platform = "linux"
+search_file = "makerom"
+install_files = ["makerom"]
+release_type = "ARCHIVE"
+chmod_files = [{ file = "makerom", perms = 755 }]
+
+[[setup_offline]]
+kind = "stored_release"
+program = "CtrTool"
+platform = "linux"
+search_file = "ctrtool"
+install_files = ["ctrtool"]
+release_type = "ARCHIVE"
+chmod_files = [{ file = "ctrtool", perms = 755 }]

@@ -1,47 +1,14 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.audio as audio
-import joybox.audiometadata as audiometadata
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import config
+from joybox import system
+from joybox import audio
+from joybox import audiometadata
+from joybox import arguments
+from joybox import setup
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Tag audio files with the right per-genre defaults, then apply them in one run.",
-        details = (
-            "Runs `audio_metadata_tool`'s `Tag` and `Apply` steps with the settings always used\n"
-            "for the library, so they do not have to be remembered. For each genre it:\n"
-            "\n"
-            "1. Reads each album's tags into its JSON file, leaving out comments and forcing the\n"
-            "   `genre` tag to the genre folder's name.\n"
-            "2. Writes the JSON tags back into the audio files, unless `--no_apply` is given.\n"
-            "\n"
-            "The one per-genre difference is track numbering. Genres downloaded from YouTube by\n"
-            "`download_audio_files` carry meaningless, identical track numbers, so their tracks are\n"
-            "renumbered by file order. The genres treated this way are listed in\n"
-            "`audio_track_index_genres` in `Shared/joybox/config/audio.py` (`ASMR` and `Story`);\n"
-            "every other genre keeps its track numbers.\n"
-            "\n"
-            "Albums are found as in `audio_metadata_tool`, and without `-g` every genre with albums\n"
-            "is processed. Use `audio_metadata_tool` directly for `Clear` or other settings."),
-        examples = [
-            ("Tag and apply the Story genre (renumbered by file order)", "tag_audio_files -g Story"),
-            ("Tag and apply the whole library", "tag_audio_files"),
-            ("Preview tagging a genre without writing anything", "tag_audio_files -g Story -p -v"),
-            ("Tag and apply one album", "tag_audio_files -g Regular -b \"Some Album\""),
-            ("Force an extra field on top of the defaults", "tag_audio_files -g Soundtrack --set album_artist=\"Various Artists\""),
-            ("Write the JSON files only, leaving the audio files alone", "tag_audio_files -g ASMR --no_apply"),
-        ],
-        notes = [
-            "`tag_audio_files -g Story` is the same as `audio_metadata_tool -a Tag -g Story --exclude_comments --set genre=Story --use_index_for_track_number` followed by `audio_metadata_tool -a Apply -g Story`.",
-            "`--set genre=...` replaces the automatic genre. Use `--set` for other fields; it accepts the same fields as `audio_metadata_tool --set`.",
-            "A genre with no albums is skipped with a warning.",
-        ],
-        see_also = ["audio_metadata_tool", "download_audio_files", "generate_playlist"],
-        section = "Audio & Video")
+    parser = arguments.ArgumentParser(command = "tag_audio_files")
     parser.add_group("Selection")
     parser.add_enum_argument(
         args = ("-g", "--genre"),
@@ -67,18 +34,12 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Tag each genre's albums to JSON with its fixed defaults, then write the tags back into the audio files unless told not to
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Resolve extra forced tag overrides
     extra_force_tags = audiometadata.parse_force_tags(args.set)

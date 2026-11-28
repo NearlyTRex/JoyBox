@@ -8,6 +8,22 @@ from connection_ssh_helpers import build, logged
 
 
 ###########################################################
+# Extending PATH
+###########################################################
+
+@pytest.mark.parametrize("windows", [True, False])
+def test_path_is_extended_the_unix_way_whatever_this_machine_runs(monkeypatch, windows):
+    monkeypatch.setattr(connection_ssh.connection.platform_info, "is_windows_platform", lambda: windows)
+    connection = build()
+    added = []
+    monkeypatch.setattr(connection, "add_to_unix_path", lambda src: added.append(src) or True)
+    monkeypatch.setattr(connection, "add_to_windows_path", lambda src: pytest.fail("Windows PATH edited over SSH"))
+
+    assert connection.add_to_path("/opt/tools/bin") is True
+    assert added == ["/opt/tools/bin"]
+
+
+###########################################################
 # Building the remote command
 ###########################################################
 

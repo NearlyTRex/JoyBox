@@ -53,8 +53,8 @@ def test_a_dead_session_looks_nothing_up():
     assert webpage.get_element(driver, LOCATOR) is None
 
 
-def test_an_unexpected_lookup_error_can_quit_the_program():
-    parent = FakeParent(error = ValueError("something else"))
+def test_a_lookup_the_driver_fails_can_quit_the_program():
+    parent = FakeParent(error = exceptions.WebDriverException("disconnected"))
 
     with pytest.raises(SystemExit):
         webpage.get_element(parent, LOCATOR, exit_on_failure = True)

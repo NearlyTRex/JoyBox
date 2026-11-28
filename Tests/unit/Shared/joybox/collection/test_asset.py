@@ -3,6 +3,8 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import environment
+from joybox import logger
 from joybox.collection import asset
 
 
@@ -37,6 +39,10 @@ class FakeGameInfo:
 
     def get_store_asset_identifier(self):
         return "220"
+
+    def get_asset_file(self, asset_type):
+        return environment.get_locker_gaming_asset_file(
+            self.get_category(), self.get_subcategory(), self.get_name(), asset_type)
 
 
 class FakeStore:
@@ -114,7 +120,7 @@ def assets(monkeypatch, tmp_path):
     monkeypatch.setattr(
         asset.fileops, "remove_directory",
         lambda src, **kwargs: state["removed"].append(src) or True)
-    monkeypatch.setattr(asset.logger, "log_error", lambda *args, **kwargs: None)
+    monkeypatch.setattr(logger, "log_error", lambda *args, **kwargs: None)
     state["tmp_dir"] = tmp_dir
     return state
 
@@ -236,13 +242,23 @@ def test_a_failed_download_is_not_converted(assets):
     assert assets["backups"] == []
 
 
+def test_a_reachable_store_url_is_found(assets):
+    assert asset.find_reachable_asset_url(FakeGameInfo(), config.AssetType.BOXFRONT) == "https://store.example/boxfront.jpg"
+
+
+def test_an_unreachable_url_is_not_found(assets):
+    assets["reachable"] = False
+
+    assert asset.find_reachable_asset_url(FakeGameInfo(), config.AssetType.BOXFRONT) is None
+
+
 ###########################################################
 # Downloading every asset
 ###########################################################
 
 @pytest.fixture
 def all_assets(monkeypatch):
-    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True, "lockers": set()}
+    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True, "lockers": set(), "backed_up_to": set()}
 
     def find_json_game_names(supercategory, category, subcategory, locker_type = None):
         state["lockers"].add(locker_type)
@@ -252,7 +268,8 @@ def all_assets(monkeypatch):
         asset.gameinfo, "GameInfo",
         lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))
 
-    def download_metadata_asset(game_info, asset_type, skip_existing, **kwargs):
+    def download_metadata_asset(game_info, asset_type, skip_existing, locker_type = None, **kwargs):
+        state["backed_up_to"].add(locker_type)
         state["downloaded"].append((
             game_info.get_name(), asset_type, skip_existing,
             game_info.get_subcategory()))
@@ -294,10 +311,24 @@ def test_every_asset_can_be_limited_to_a_lockers_games(all_assets):
     asset.download_all_metadata_assets(categories = [config.Category.COMPUTER], locker_type = config.LockerType.LOCAL)
 
     assert all_assets["lockers"] == {config.LockerType.LOCAL}
+    assert all_assets["backed_up_to"] == {config.LockerType.LOCAL}
 
 
 def test_downloading_every_asset_stops_at_the_first_failure(all_assets):
     all_assets["ok"] = False
 
     assert asset.download_all_metadata_assets() is False
+    assert len(all_assets["downloaded"]) == 1
+
+
+def test_one_game_gets_every_minimum_asset_in_its_locker(all_assets):
+    assert asset.download_game_assets(FakeGameInfo(), locker_type = config.LockerType.LOCAL) is True
+    assert [entry[1] for entry in all_assets["downloaded"]] == config.AssetMinType.members()
+    assert all_assets["backed_up_to"] == {config.LockerType.LOCAL}
+
+
+def test_one_games_assets_stop_at_the_first_failure(all_assets):
+    all_assets["ok"] = False
+
+    assert asset.download_game_assets(FakeGameInfo()) is False
     assert len(all_assets["downloaded"]) == 1

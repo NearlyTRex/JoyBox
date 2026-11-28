@@ -210,7 +210,7 @@ def test_the_bootloader_stops_waiting(tmp_path, stock_image, xorriso):
 
     grub = read_from_image(xorriso, output_file, "/boot/grub/grub.cfg", tmp_path)
 
-    assert "set timeout=%d" % autoinstall.boot_timeout in grub
+    assert "set timeout=%d" % autoinstall.BOOT_TIMEOUT in grub
     assert "set timeout=30" not in grub
 
 
@@ -389,7 +389,7 @@ def test_the_efi_image_is_a_partition_of_its_own(tmp_path, stock_image, xorriso)
 
     reported = system_area_report(xorriso, output_file)
 
-    assert iso.efi_partition_type in reported
+    assert iso.EFI_PARTITION_TYPE in reported
 
 
 def test_the_boot_code_is_carried_into_the_system_area(tmp_path, stock_image, xorriso):
@@ -548,7 +548,7 @@ def test_a_supplied_seed_that_is_missing_stops_the_build(tmp_path, stock_image):
 
 def test_a_downloaded_image_is_checked_before_it_is_used(tmp_path, monkeypatch, stock_image):
     # A truncated download would otherwise be unpacked and built from.
-    from joybox import hashing
+    from joybox import hashutil
 
     checked = []
     monkeypatch.setattr(
@@ -561,7 +561,7 @@ def test_a_downloaded_image_is_checked_before_it_is_used(tmp_path, monkeypatch, 
         ubunturelease, "fetch_release_checksums",
         lambda **kwargs: checked.append(kwargs) or {
             "ubuntu-24.04.1-live-server-amd64.iso":
-                hashing.calculate_file_sha256(src = stock_image)})
+                hashutil.calculate_file_sha256(src = stock_image)})
 
     obtained = autoinstall.obtain_source_image(
         output_file = str(tmp_path / "downloaded.iso"),

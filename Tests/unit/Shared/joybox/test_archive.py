@@ -6,177 +6,6 @@ from joybox import archive, config
 
 
 ###########################################################
-# Archive type detection
-#
-# is_archive gates content comparison in hashing and release handling, so a
-# type missing from it is silently treated as a plain file.
-###########################################################
-
-DETECTORS = [
-    ("is_zip_archive", config.ArchiveZipFileType),
-    ("is_7z_archive", config.Archive7zFileType),
-    ("is_rar_archive", config.ArchiveRarFileType),
-    ("is_lzh_archive", config.ArchiveLzhFileType),
-    ("is_stuffit_archive", config.ArchiveStuffItFileType),
-    ("is_tarball_archive", config.ArchiveTarballFileType),
-    ("is_disc_archive", config.ArchiveDiscFileType),
-]
-
-
-@pytest.mark.parametrize("detector,enum_class", DETECTORS, ids = [d for d, _ in DETECTORS])
-def test_each_detector_recognises_its_own_extensions(detector, enum_class):
-    check = getattr(archive, detector)
-
-    missed = [extension for extension in enum_class.cvalues() if check(f"file{extension}") is not True]
-
-    assert not missed, f"{detector} missed {missed}"
-
-
-@pytest.mark.parametrize("detector,enum_class", DETECTORS, ids = [d for d, _ in DETECTORS])
-def test_each_detector_is_case_insensitive(detector, enum_class):
-    check = getattr(archive, detector)
-
-    missed = [extension for extension in enum_class.cvalues() if check(f"file{extension.upper()}") is not True]
-
-    assert not missed, f"{detector} missed {missed}"
-
-
-@pytest.mark.parametrize("detector,_enum", DETECTORS, ids = [d for d, _ in DETECTORS])
-def test_no_detector_claims_a_plain_file(detector, _enum):
-    assert getattr(archive, detector)("notes.txt") is False
-
-
-@pytest.mark.parametrize("detector,enum_class", DETECTORS, ids = [d for d, _ in DETECTORS])
-def test_every_archive_type_is_an_archive(detector, enum_class):
-    # is_archive has to cover every type the codebase can extract.
-    missed = [extension for extension in enum_class.cvalues() if archive.is_archive(f"file{extension}") is not True]
-
-    assert not missed, f"is_archive does not recognise {missed}"
-
-
-def test_rar_counts_as_an_archive():
-    # RAR is extractable and has its own detector, so it belongs in is_archive.
-    assert archive.is_archive("file.rar") is True
-    assert archive.is_extractable_archive_type(config.ArchiveFileType.RAR) is True
-
-
-def test_executables_and_appimages_count_as_archives():
-    assert archive.is_archive("setup.exe") is True
-    assert archive.is_archive("app.AppImage") is True
-
-
-def test_a_plain_file_is_not_an_archive():
-    assert archive.is_archive("notes.txt") is False
-
-
-def test_a_tarball_compound_extension_is_recognised():
-    # ".tar.gz" must match as a unit, not as ".gz".
-    assert archive.is_tarball_archive("backup.tar.gz") is True
-
-
-###########################################################
-# Archive type resolution
-###########################################################
-
-@pytest.mark.parametrize("extension,expected", [
-    (".zip", config.ArchiveFileType.ZIP),
-    (".7z", config.ArchiveFileType.SEVENZIP),
-    (".rar", config.ArchiveFileType.RAR),
-    (".lzh", config.ArchiveFileType.LZH),
-    (".lha", config.ArchiveFileType.LHA),
-    (".sit", config.ArchiveFileType.SIT),
-])
-def test_a_type_is_resolved_from_the_extension(extension, expected):
-    assert archive.get_archive_type(f"file{extension}") == expected
-
-
-def test_an_unknown_extension_resolves_to_nothing():
-    assert archive.get_archive_type("notes.txt") is None
-
-
-@pytest.mark.parametrize("mime_type,expected", [
-    ("application/zip", config.ArchiveFileType.ZIP),
-    ("application/x-7z-compressed", config.ArchiveFileType.SEVENZIP),
-    ("application/x-rar-compressed", config.ArchiveFileType.RAR),
-    ("application/x-lzh-compressed", config.ArchiveFileType.LZH),
-    ("application/x-stuffit", config.ArchiveFileType.SIT),
-    ("application/gzip", config.ArchiveFileType.TAR_GZ),
-    ("application/x-iso9660-image", config.ArchiveFileType.ISO),
-    ("text/plain", None),
-])
-def test_a_file_without_an_extension_is_typed_by_its_content(tmp_path, monkeypatch, mime_type, expected):
-    source = tmp_path / "download"
-    source.write_bytes(b"data")
-    monkeypatch.setattr(archive.paths, "get_file_mime_type", lambda path: mime_type)
-
-    assert archive.get_archive_type(str(source)) == expected
-
-
-###########################################################
-# Capability flags
-###########################################################
-
-def test_zip_and_sevenzip_can_be_created():
-    assert archive.is_creatable_archive_type(config.ArchiveFileType.ZIP) is True
-    assert archive.is_creatable_archive_type(config.ArchiveFileType.SEVENZIP) is True
-
-
-def test_rar_cannot_be_created():
-    # No free RAR compressor, so creation is deliberately not offered.
-    assert archive.is_creatable_archive_type(config.ArchiveFileType.RAR) is False
-
-
-def test_everything_creatable_is_also_extractable():
-    creatable = [
-        archive_type for archive_type in config.ArchiveFileType.members()
-        if archive.is_creatable_archive_type(archive_type)]
-    unextractable = [
-        archive_type for archive_type in creatable if archive.is_extractable_archive_type(archive_type) is not True]
-
-    assert creatable
-    assert not unextractable, f"{unextractable} can be created but not extracted"
-
-
-@pytest.mark.parametrize("archive_type", [
-    config.ArchiveFileType.ZIP,
-    config.ArchiveFileType.SEVENZIP,
-    config.ArchiveFileType.RAR,
-    config.ArchiveFileType.LZH,
-    config.ArchiveFileType.SIT,
-    config.ArchiveFileType.ISO,
-    config.ArchiveFileType.EXE,
-])
-def test_the_extractable_types_are_extractable(archive_type):
-    assert archive.is_extractable_archive_type(archive_type) is True
-
-
-###########################################################
-# Known archive matching
-###########################################################
-
-def test_an_extension_match_does_not_need_the_file_to_exist():
-    # Extensions are checked before the file is touched.
-    assert archive.is_known_archive("absent.zip", extensions = [".zip"]) is True
-
-
-def test_a_mime_match_needs_a_real_file(tmp_path):
-    assert archive.is_known_archive(
-        str(tmp_path / "absent.bin"), mime_types = ["application/zip"]) is False
-
-
-def test_a_matching_mime_type_identifies_a_real_file(tmp_path, monkeypatch):
-    source = tmp_path / "download"
-    source.write_bytes(b"data")
-    monkeypatch.setattr(archive.paths, "get_file_mime_type", lambda path: "Application/ZIP")
-
-    assert archive.is_known_archive(str(source), mime_types = ["application/zip"])
-
-
-def test_no_criteria_matches_nothing():
-    assert archive.is_known_archive("file.zip") is False
-
-
-###########################################################
 # Compression flags
 #
 # The flags decide what the archive is and whether it can be rebuilt byte for
@@ -262,12 +91,12 @@ def test_a_single_archive_is_checked_for(tmp_path):
     target = tmp_path / "Game.7z"
     target.write_text("archive")
 
-    assert archive.check_archive_compression_output_files(str(target), None, None) is True
+    assert archive.check_archive_compression_output_files(str(target), None) is True
 
 
 def test_a_missing_archive_is_a_failure(tmp_path):
     assert archive.check_archive_compression_output_files(
-        str(tmp_path / "absent.7z"), None, None) is False
+        str(tmp_path / "absent.7z"), None) is False
 
 
 def test_every_volume_is_checked_for(tmp_path):
@@ -275,19 +104,19 @@ def test_every_volume_is_checked_for(tmp_path):
     for index in [1, 2, 3]:
         (tmp_path / ("Game.7z.%03d" % index)).write_text("volume")
 
-    assert archive.check_archive_compression_output_files(str(target), None, "4g") is True
+    assert archive.check_archive_compression_output_files(str(target), "4g") is True
 
 
 def test_a_split_archive_with_no_volumes_is_a_failure(tmp_path):
     assert archive.check_archive_compression_output_files(
-        str(tmp_path / "Game.7z"), None, "4g") is False
+        str(tmp_path / "Game.7z"), "4g") is False
 
 
 def test_volumes_are_searched_up_to_the_last_numbered_one(monkeypatch):
     seen = []
     monkeypatch.setattr(archive.os.path, "exists", lambda path: seen.append(path) or True)
 
-    assert archive.check_archive_compression_output_files("/out/Game.7z", config.ArchiveFileType.SEVENZIP, "1g")
+    assert archive.check_archive_compression_output_files("/out/Game.7z", "1g")
     assert "/out/Game.7z.998" in seen
     assert "/out/Game.7z.999" not in seen
 
@@ -298,50 +127,9 @@ def test_a_lone_volume_loses_its_numbering(tmp_path):
     target = tmp_path / "Game.7z"
     (tmp_path / "Game.7z.001").write_text("volume")
 
-    assert archive.check_archive_compression_output_files(str(target), None, "4g") is True
+    assert archive.check_archive_compression_output_files(str(target), "4g") is True
     assert target.is_file()
     assert not (tmp_path / "Game.7z.001").exists()
-
-
-###########################################################
-# Archive checksums
-###########################################################
-
-def test_each_entry_in_a_zip_carries_its_crc(tmp_path):
-    import zipfile
-
-    target = tmp_path / "Game.zip"
-    with zipfile.ZipFile(str(target), "w") as handle:
-        handle.writestr("first.txt", "first")
-        handle.writestr("nested/second.txt", "second")
-
-    checksums = archive.get_archive_checksums(str(target))
-
-    assert sorted(entry["path"] for entry in checksums) == ["first.txt", "nested/second.txt"]
-    assert all(len(entry["crc"]) == 8 for entry in checksums)
-
-
-def test_directory_entries_are_not_checksummed(tmp_path):
-    import zipfile
-
-    target = tmp_path / "Game.zip"
-    with zipfile.ZipFile(str(target), "w") as handle:
-        handle.writestr("nested/", "")
-        handle.writestr("nested/file.txt", "data")
-
-    assert [entry["path"] for entry in archive.get_archive_checksums(str(target))] == \
-        ["nested/file.txt"]
-
-
-def test_a_non_zip_archive_has_no_checksums(tmp_path):
-    target = tmp_path / "Game.7z"
-    target.write_text("not really a 7z")
-
-    assert archive.get_archive_checksums(str(target)) == []
-
-
-def test_a_missing_archive_has_no_checksums(tmp_path):
-    assert archive.get_archive_checksums(str(tmp_path / "absent.zip")) == []
 
 
 ###########################################################
@@ -380,11 +168,6 @@ def missing(monkeypatch):
 def existing_output(monkeypatch):
     monkeypatch.setattr(archive.os.path, "exists", lambda path: True)
     monkeypatch.setattr(archive.paths, "is_directory_empty", lambda path: False)
-
-
-def test_an_appimage_is_neither_creatable_nor_extractable():
-    assert not archive.is_creatable_archive_type(config.ArchiveFileType.APPIMAGE)
-    assert not archive.is_extractable_archive_type(config.ArchiveFileType.APPIMAGE)
 
 
 def test_creating_an_archive_adds_the_source(installed, recording_command, existing_output):
@@ -789,3 +572,54 @@ def test_a_banner_line_is_not_mistaken_for_a_file(installed, monkeypatch):
 def test_listing_without_the_tool_yields_nothing(missing, recording_command):
     assert archive.list_archive("/in/Game.7z") == []
     assert recording_command.ran() is False
+
+
+def test_a_listing_is_parsed_into_its_file_paths():
+    assert archive.parse_archive_listing(LISTING) == ["nested/file.txt", "top.txt"]
+
+
+###########################################################
+# Archive type checks
+###########################################################
+
+def test_a_creatable_archive_type_is_returned():
+    assert archive.get_creatable_archive_type("/out/Game.7z") == config.ArchiveFileType.SEVENZIP
+
+
+@pytest.mark.parametrize("archive_file", ["/out/Game.rar", "/out/Game.unknown"])
+def test_an_uncreatable_archive_type_is_none(archive_file):
+    assert archive.get_creatable_archive_type(archive_file) is None
+
+
+def test_a_known_archive_is_extractable():
+    assert archive.is_extractable_archive("/in/Game.rar") is True
+
+
+def test_an_unknown_archive_is_not_extractable():
+    assert archive.is_extractable_archive("/in/Game.unknown") is False
+
+
+@pytest.mark.parametrize(("path", "file_types", "expected"), [
+    ("/in/Game.iso", ".iso,.bin", True),
+    ("/in/Game.bin", ".iso,.bin", True),
+    ("/in/Game.cue", ".iso,.bin", False),
+    ("/in/Game.cue", "", True),
+])
+def test_a_path_is_matched_against_the_listed_file_types(path, file_types, expected):
+    assert archive.has_listed_file_type(path, file_types) is expected
+
+
+###########################################################
+# Rezipping
+###########################################################
+
+def test_a_zip_is_extracted_then_rezipped_in_place(monkeypatch):
+    calls = []
+    monkeypatch.setattr(archive, "extract_archive", lambda **kwargs: calls.append(("extract", kwargs)) or True)
+    monkeypatch.setattr(archive, "create_archive_from_folder", lambda **kwargs: calls.append(("create", kwargs)) or True)
+
+    archive.rezip_archive("/in/Game.zip")
+
+    assert [(name, kwargs["archive_file"]) for name, kwargs in calls] == [
+        ("extract", "/in/Game.zip"), ("create", "/in/Game.zip")]
+    assert calls[0][1]["extract_dir"] == calls[1][1]["source_dir"] == "/in/Game_extracted"

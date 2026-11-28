@@ -1,84 +1,36 @@
 # Imports
-import joybox.config as config
-import joybox.environment as environment
-from joybox import gamecollection
-import joybox.system as system
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
-import joybox.serialization as serialization
+from joybox import collection
+from joybox import system
+from joybox import arguments
+from joybox import setup
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Tidy every game JSON file: sort its keys and drop empty values.",
-        details = (
-            "Rewrites each game JSON file in the metadata repository, across all supercategories,\n"
-            "categories and subcategories, with keys sorted and four-space indentation.\n"
-            "\n"
-            "Top-level keys whose value is null, an empty string, an empty list or object, or\n"
-            "`false` are removed. Nested values are left as they are."),
-        examples = [
-            ("Clean every JSON file", "clean_game_json_files"),
-            ("Clean without the confirmation prompt", "clean_game_json_files --no-preview"),
-            ("Show which files would be cleaned", "clean_game_json_files -p -v"),
-        ],
-        notes = [
-            "There are no selection options; every JSON file is processed.",
-            "A key set to `false` is removed, so a false flag and a missing flag end up the same.",
-        ],
-        see_also = ["build_game_json_files", "analyze_game_json_files", "clean_game_hash_files", "clean_game_metadata_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "clean_game_json_files")
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite every game JSON file with sorted keys and empty top-level values dropped
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect json files to process
-    json_files_to_process = []
-    for game_supercategory in config.Supercategory.members():
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-
-                    # Get json file
-                    json_file = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
-                    if not paths.is_path_file(json_file):
-                        continue
-                    json_files_to_process.append(json_file)
+    json_files_to_process = collection.jsondata.find_existing_game_json_files()
 
     # Show preview
-    if not args.no_preview:
-        if not prompts.prompt_for_preview("Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
-            logger.log_warning("Operation cancelled by user")
-            return
+    if not prompts.confirm_preview(args.no_preview, "Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
+        return
 
     # Clean json files
-    for json_file in json_files_to_process:
-        serialization.clean_json_file(
-            src = json_file,
-            sort_keys = True,
-            remove_empty_values = True,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+    collection.jsondata.clean_game_json_files(
+        json_files = json_files_to_process,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

@@ -66,7 +66,6 @@ def test_a_verbose_wait_returns_the_element(waits):
 @pytest.mark.parametrize("error", [
     exceptions.TimeoutException("timed out"),
     exceptions.WebDriverException("disconnected"),
-    ValueError("unexpected"),
 ])
 def test_a_verbose_failed_wait_finds_nothing(waits, error):
     waits["error"] = error
@@ -74,11 +73,18 @@ def test_a_verbose_failed_wait_finds_nothing(waits, error):
     assert webpage.wait_for_element(FakeDriver(), LOCATOR, verbose = True) is None
 
 
-def test_an_unexpected_wait_error_can_quit_the_program(waits):
-    waits["error"] = ValueError("unexpected")
+def test_a_wait_the_driver_fails_can_quit_the_program(waits):
+    waits["error"] = exceptions.WebDriverException("disconnected")
 
     with pytest.raises(SystemExit):
         webpage.wait_for_element(FakeDriver(), LOCATOR, exit_on_failure = True)
+
+
+def test_a_bug_in_a_wait_is_not_taken_for_a_missing_element(waits):
+    waits["error"] = ValueError("unexpected")
+
+    with pytest.raises(ValueError):
+        webpage.wait_for_element(FakeDriver(), LOCATOR)
 
 
 def test_a_timed_out_wait_does_not_quit_the_program(waits):

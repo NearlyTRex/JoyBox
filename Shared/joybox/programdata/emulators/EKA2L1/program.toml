@@ -1,0 +1,59 @@
+# EKA2L1: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["OTHER_NOKIA_NGAGE"]
+
+[config.EKA2L1]
+program = { windows = "EKA2L1/windows/eka2l1_qt.exe", linux = "EKA2L1/linux/EKA2L1.AppImage" }
+setup_dir = { windows = "EKA2L1/windows", linux = "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.EKA2L1.save_dir]
+windows = "EKA2L1/windows/data/drives/c/system/apps"
+linux = "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/data/drives/c/system/apps"
+
+[config.EKA2L1.config_file]
+windows = "EKA2L1/windows/config.yml"
+linux = "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"
+
+[[config_files]]
+path = "EKA2L1/windows/config.yml"
+
+[[config_files]]
+path = "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"
+
+[[system_files]]
+path = "data.zip"
+md5 = "e4c10430ddc600cdffff1fb348a6b0c3"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "EKA2L1"
+github_repo = "EKA2L1"
+starts_with = "EKA2L1-Windows-x86_64"
+ends_with = ".zip"
+search_file = "eka2l1_qt.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "EKA2L1"
+github_repo = "EKA2L1"
+starts_with = "EKA2L1-Linux-x86_64"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "eka2l1_qt.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["--mount", "{game_dir}", "--app", "{game_name}"]

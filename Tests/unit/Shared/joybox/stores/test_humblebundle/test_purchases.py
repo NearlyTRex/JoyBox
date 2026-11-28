@@ -34,7 +34,7 @@ def manager(humble_store, tools, recording_command, monkeypatch, tmp_path):
 
 
 def appnames(purchases):
-    return [purchase.get_value(config.json_key_store_appname) for purchase in purchases]
+    return [purchase.get_value(config.JSON_KEY_STORE_APPNAME) for purchase in purchases]
 
 
 def commands(recording_command):
@@ -54,7 +54,7 @@ def test_the_library_becomes_purchases(humble_store, manager):
 
 
 def test_each_purchase_gets_its_own_appid(humble_store, manager):
-    appids = [purchase.get_value(config.json_key_store_appid) for purchase in humble_store.get_latest_purchases()]
+    appids = [purchase.get_value(config.JSON_KEY_STORE_APPID) for purchase in humble_store.get_latest_purchases()]
 
     assert all(appids) and len(set(appids)) == 2
 
@@ -151,9 +151,9 @@ def test_the_cache_holds_appids_appnames_and_names(humble_store, manager):
     purchases = humble_store.get_latest_purchases()
 
     assert json.loads(manager.cache.read_text()) == [
-        {config.json_key_store_appid: purchase.get_value(config.json_key_store_appid),
-         config.json_key_store_appname: purchase.get_value(config.json_key_store_appname),
-         config.json_key_store_name: purchase.get_value(config.json_key_store_name)}
+        {config.JSON_KEY_STORE_APPID: purchase.get_value(config.JSON_KEY_STORE_APPID),
+         config.JSON_KEY_STORE_APPNAME: purchase.get_value(config.JSON_KEY_STORE_APPNAME),
+         config.JSON_KEY_STORE_NAME: purchase.get_value(config.JSON_KEY_STORE_NAME)}
         for purchase in purchases]
 
 
@@ -161,8 +161,8 @@ def test_cached_appids_are_kept(humble_store, manager):
     first = humble_store.get_latest_purchases()
     again = humble_store.get_latest_purchases()
 
-    assert [p.get_value(config.json_key_store_appid) for p in again] == [
-        p.get_value(config.json_key_store_appid) for p in first]
+    assert [p.get_value(config.JSON_KEY_STORE_APPID) for p in again] == [
+        p.get_value(config.JSON_KEY_STORE_APPID) for p in first]
 
 
 def test_a_cached_empty_library_is_reused(humble_store, manager, recording_command):

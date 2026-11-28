@@ -147,8 +147,8 @@ class Downloads:
 @pytest.fixture
 def downloads(monkeypatch):
     state = Downloads()
-    monkeypatch.setattr(audio.config, "audio_download_batch_size", 0)
-    monkeypatch.setattr(audio.config, "audio_download_oldest_first", False)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_BATCH_SIZE", 0)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_OLDEST_FIRST", False)
     monkeypatch.setattr(
         audio.environment, "get_file_audio_metadata_archive_file",
         lambda genre_type, name: "/archive/" + name + ".txt")
@@ -208,7 +208,7 @@ def test_a_download_carries_the_channel_archive(downloads):
     assert call["download_archive"] == "/archive/Some Channel.txt"
     assert call["audio_only"] is True
     assert call["cookie_source"] == "firefox"
-    assert call["concurrent_fragments"] == config.audio_download_concurrent_fragments
+    assert call["concurrent_fragments"] == config.AUDIO_DOWNLOAD_CONCURRENT_FRAGMENTS
 
 
 def test_a_channel_that_is_up_to_date_downloads_nothing(downloads):
@@ -226,7 +226,7 @@ def test_an_unlistable_channel_is_downloaded_whole(downloads):
 
 
 def test_new_videos_are_split_into_batches(downloads, monkeypatch):
-    monkeypatch.setattr(audio.config, "audio_download_batch_size", 2)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_BATCH_SIZE", 2)
     downloads.videos[CHANNEL_URL] = [(v, "https://v/" + v) for v in "abcde"]
 
     assert run() is True
@@ -237,7 +237,7 @@ def test_new_videos_are_split_into_batches(downloads, monkeypatch):
 
 
 def test_each_temporary_batch_directory_is_removed(downloads, monkeypatch):
-    monkeypatch.setattr(audio.config, "audio_download_batch_size", 1)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_BATCH_SIZE", 1)
     downloads.videos[CHANNEL_URL] = [("a", "https://v/a"), ("b", "https://v/b")]
     run()
 
@@ -265,7 +265,7 @@ def test_the_download_order_can_be_forced(downloads, oldest_first, expected):
 
 
 def test_the_download_order_defaults_to_the_config(downloads, monkeypatch):
-    monkeypatch.setattr(audio.config, "audio_download_oldest_first", True)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_OLDEST_FIRST", True)
     downloads.videos[CHANNEL_URL] = [("a", "https://v/a"), ("b", "https://v/b")]
     run()
 
@@ -337,7 +337,7 @@ def test_an_output_path_is_resumed_before_downloading(downloads):
 
 
 def test_an_output_path_is_kept(downloads, monkeypatch):
-    monkeypatch.setattr(audio.config, "audio_download_batch_size", 1)
+    monkeypatch.setattr(audio.config, "AUDIO_DOWNLOAD_BATCH_SIZE", 1)
     downloads.videos[CHANNEL_URL] = [("a", "https://v/a"), ("b", "https://v/b")]
     run(output_path = "/work")
 

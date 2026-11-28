@@ -7,6 +7,7 @@ import contextlib
 
 # Local imports
 from joybox import config
+from joybox import programs
 from joybox import serialization
 from joybox import logger
 from joybox import paths
@@ -51,7 +52,27 @@ def report_diff(diff_paths, remote_type, remote_path, local_path, verbose, prete
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-# Diff files
+# Run rclone check of local against remote, skipping hidden files, writing each diff file
+# diff_paths names (combined, intersected, missing on source, missing on destination, errors)
+# and reporting them; False only when rclone is missing; size-only when quick
+def write_diff_files(remote_name, remote_type, remote_path, local_path, excludes, diff_paths, quick, verbose, pretend_run, exit_on_failure):
+    rclone_tool = programs.find_tool_program("RClone")
+    if not rclone_tool:
+        return False
+    check_cmd = [rclone_tool, "check", local_path, sync.get_remote_connection_path(remote_name, remote_type, remote_path)]
+    check_cmd += sync.get_common_remote_flags(remote_type, config.RemoteActionType.DIFF)
+    check_cmd += sync.get_exclude_flags(sync.get_excludes_with(excludes, ".*/**"))
+    check_cmd += get_diff_output_flags(diff_paths)
+    if quick:
+        check_cmd += ["--size-only"]
+    check_cmd += sync.get_run_flags(verbose = verbose)
+    sync.run_rclone_command(
+        check_cmd, [remote_name], verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    report_diff(diff_paths, remote_type, remote_path, local_path, verbose, pretend_run, exit_on_failure)
+    return True
+
+# Compare local and remote with rclone check, skipping hidden files, and write the requested diff lists
+# False only when rclone is missing; size-only when quick
 def diff_files(
     remote_name,
     remote_type,
@@ -67,23 +88,17 @@ def diff_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = sync.get_rclone_tool()
-    if not rclone_tool:
-        return False
-
-    # Run check, leaving out hidden files and folders and writing the diff files asked for
-    diff_paths = [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]
-    check_cmd = [rclone_tool, "check", local_path, sync.get_remote_connection_path(remote_name, remote_type, remote_path)]
-    check_cmd += sync.get_common_remote_flags(remote_name, remote_type, config.RemoteActionType.DIFF)
-    check_cmd += sync.get_exclude_flags(sync.get_excludes_with(excludes, ".*/**"))
-    check_cmd += get_diff_output_flags(diff_paths)
-    if quick:
-        check_cmd += ["--size-only"]
-    check_cmd += sync.get_run_flags(verbose = verbose)
-    sync.run_rclone_command(
-        check_cmd, [remote_name], verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-    report_diff(diff_paths, remote_type, remote_path, local_path, verbose, pretend_run, exit_on_failure)
-    return True
+    return write_diff_files(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
+        excludes = excludes,
+        diff_paths = [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path],
+        quick = quick,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Write a transfer list to a temporary file, tracking it for cleanup
 def write_transfer_list(entries, temp_files):
@@ -109,23 +124,24 @@ def read_diff_entries(diff_path):
 @contextlib.contextmanager
 def diff_workspace(diff_dir):
     generate_diffs = not diff_dir
-    if generate_diffs:
-        success, diff_dir = fileops.create_temporary_directory()
-        if not success:
+    with fileops.existing_or_temporary_directory(diff_dir) as work_dir:
+        if not work_dir:
             logger.log_error("Failed to create diff directory")
             yield None, False, []
             return
-    temp_files = []
-    try:
-        if not paths.does_path_exist(diff_dir):
-            logger.log_error("Diff directory was invalid")
-            diff_dir = None
-        yield diff_dir, generate_diffs, temp_files
-    finally:
-        for temp_file in temp_files:
-            fileops.remove_file(temp_file, exit_on_failure = False)
-        if generate_diffs:
-            fileops.remove_directory(diff_dir, exit_on_failure = False)
+        temp_files = []
+        try:
+            if not paths.does_path_exist(work_dir):
+                logger.log_error("Diff directory was invalid")
+                work_dir = None
+            yield work_dir, generate_diffs, temp_files
+        finally:
+            remove_temporary_files(temp_files)
+
+# Remove the temporary files a diff sync made
+def remove_temporary_files(temp_files):
+    for temp_file in temp_files:
+        fileops.remove_file(temp_file, exit_on_failure = False)
 
 # Get a diff sync's excludes: hidden files and folders, and the recycle folder when there is one
 def get_diff_sync_excludes(excludes, recycle_folder):
@@ -213,34 +229,17 @@ def run_diff_sync_transfers(transfer, files_to_upload, files_to_download, recycl
     logger.log_info("Downloading %d files from remote..." % len(files_to_download))
     return synctransfers.download_files_from_remote(**transfer, files_from = transfer_list_path, interactive = interactive)
 
-# Diff sync files
-def diff_sync_files(
-    remote_name,
-    remote_type,
-    remote_path,
-    local_path,
-    excludes = None,
-    diff_dir = None,
-    diff_combined_file = "diff_combined.txt",
-    diff_intersected_file = "diff_intersected.txt",
-    diff_missing_src_file = "diff_missing_src.txt",
-    diff_missing_dest_file = "diff_missing_dest.txt",
-    sync_changed = True,
-    recycle_missing = False,
-    recycle_folder = ".recycle_bin",
-    quick = False,
-    interactive = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    with diff_workspace(diff_dir) as (diff_dir, generate_diffs, temp_files):
-        if not diff_dir:
+# The diff files a diff sync reads from its diff directory: combined, intersected, missing on
+# the source and missing on the destination
+DIFF_SYNC_FILE_NAMES = ("diff_combined.txt", "diff_intersected.txt", "diff_missing_src.txt", "diff_missing_dest.txt")
+
+# Sync a transfer's differences from the diff_file_names in diff_dir, or from a fresh diff into
+# a temporary directory when there is none; False when the directory or a transfer fails
+def sync_diff_workspace(transfer, excludes, diff_dir, diff_file_names, sync_changed, recycle_missing, recycle_folder, quick, interactive):
+    with diff_workspace(diff_dir) as (work_dir, generate_diffs, temp_files):
+        if not work_dir:
             return False
-        transfer = dict(
-            remote_name = remote_name, remote_type = remote_type, remote_path = remote_path, local_path = local_path,
-            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        diff_paths = [os.path.join(diff_dir, name) for name in (
-            diff_combined_file, diff_intersected_file, diff_missing_src_file, diff_missing_dest_file)]
+        diff_paths = [os.path.join(work_dir, name) for name in diff_file_names]
         if generate_diffs:
             generate_sync_diffs(transfer, get_diff_sync_excludes(excludes, recycle_folder), diff_paths, quick)
         files_to_upload, files_to_download = plan_diff_sync(transfer, diff_paths, sync_changed)
@@ -249,3 +248,35 @@ def diff_sync_files(
             return False
     logger.log_info("DiffSync complete!")
     return True
+
+# Diff local against remote, upload what the remote lacks, then download what local lacks
+# or, with recycle_missing, move it to the remote recycle folder; changed files go the newer way
+def diff_sync_files(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    excludes = None,
+    diff_dir = None,
+    diff_file_names = DIFF_SYNC_FILE_NAMES,
+    sync_changed = True,
+    recycle_missing = False,
+    recycle_folder = ".recycle_bin",
+    quick = False,
+    interactive = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    return sync_diff_workspace(
+        transfer = {
+            "remote_name": remote_name, "remote_type": remote_type, "remote_path": remote_path,
+            "local_path": local_path, "verbose": verbose, "pretend_run": pretend_run,
+            "exit_on_failure": exit_on_failure},
+        excludes = excludes,
+        diff_dir = diff_dir,
+        diff_file_names = diff_file_names,
+        sync_changed = sync_changed,
+        recycle_missing = recycle_missing,
+        recycle_folder = recycle_folder,
+        quick = quick,
+        interactive = interactive)

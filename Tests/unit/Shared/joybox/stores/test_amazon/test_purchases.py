@@ -133,8 +133,8 @@ def test_the_cache_holds_names_and_appids(amazon_store, library):
     amazon_store.get_latest_purchases()
 
     assert json.loads(library["cache"].read_text()) == [
-        {config.json_key_store_appid: "amzn1.adg.product.aaa", config.json_key_store_name: "Deponia"},
-        {config.json_key_store_appid: "amzn1.adg.product.bbb", config.json_key_store_name: "Tomb Raider"}]
+        {config.JSON_KEY_STORE_APPID: "amzn1.adg.product.aaa", config.JSON_KEY_STORE_NAME: "Deponia"},
+        {config.JSON_KEY_STORE_APPID: "amzn1.adg.product.bbb", config.JSON_KEY_STORE_NAME: "Tomb Raider"}]
 
 
 def test_an_empty_library_is_cached_too(amazon_store, library, recording_command):

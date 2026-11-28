@@ -1,73 +1,75 @@
 # Imports
+import importlib
 import time
 import collections.abc
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
+from joybox import config
+from joybox import logger
+
+# Get mergedeep, imported on first use
+def _get_mergedeep():
+    return importlib.import_module("mergedeep")
 
 ###########################################################
 # Data structure utilities
 ###########################################################
 
-# Merge dictionaries
+# Name of the mergedeep strategy each merge type uses; mergedeep's own default is REPLACE
+merge_strategy_names = {
+    config.MergeType.REPLACE: "REPLACE",
+    config.MergeType.ADDITIVE: "ADDITIVE",
+    config.MergeType.SAFE_REPLACE: "TYPESAFE_REPLACE",
+    config.MergeType.SAFE_ADDITIVE: "TYPESAFE_ADDITIVE"
+}
+
+# Deep-merge dict2 into dict1 with the mergedeep strategy the merge type picks; whichever
+# side is a dict when only one is, dict1 unchanged on a type clash, None when neither is
 def merge_dictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
+        mergedeep = _get_mergedeep()
+        strategy = getattr(mergedeep.Strategy, merge_strategy_names.get(merge_type, "REPLACE"))
         try:
-            import mergedeep
-            if merge_type == config.MergeType.REPLACE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
-            elif merge_type == config.MergeType.ADDITIVE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
-            elif merge_type == config.MergeType.SAFE_REPLACE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
-            elif merge_type == config.MergeType.SAFE_ADDITIVE:
-                return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
-            else:
-                return mergedeep.merge(dict1, dict2)
-        except Exception:
+            return mergedeep.merge(dict1, dict2, strategy = strategy)
+        except TypeError:
             return dict1
-    elif isinstance(dict1, dict) and not isinstance(dict2, dict):
+    if isinstance(dict1, dict):
         return dict1
-    elif not isinstance(dict1, dict) and isinstance(dict2, dict):
+    if isinstance(dict2, dict):
         return dict2
-    else:
-        return None
+    return None
 
-# Merge lists
-def merge_lists(list1, list2, merge_type = None):
+# The sorted union of both lists without duplicates; whichever is a list when only one is
+def merge_lists(list1, list2):
     if isinstance(list1, list) and isinstance(list2, list):
         return sorted(set(list1 + list2))
-    elif isinstance(list1, list) and not isinstance(list2, list):
+    if isinstance(list1, list) and not isinstance(list2, list):
         return list1
-    elif not isinstance(list1, list) and isinstance(list2, list):
+    if not isinstance(list1, list) and isinstance(list2, list):
         return list2
-    else:
-        return None
+    return None
 
-# Merge data
+# Merge two values by kind: dicts deep-merge, lists union, two scalars pair into a list,
+# and a lone non-empty value comes back as is; None when both are empty
 def merge_data(data1, data2, merge_type = None):
     if isinstance(data1, dict) or isinstance(data2, dict):
         return merge_dictionaries(
             dict1 = data1,
             dict2 = data2,
             merge_type = merge_type)
-    elif isinstance(data1, list) or isinstance(data2, list):
+    if isinstance(data1, list) or isinstance(data2, list):
         return merge_lists(
             list1 = data1,
-            list2 = data2,
-            merge_type = merge_type)
-    else:
-        if data1 and data2:
-            return [data1, data2]
-        elif data1 and not data2:
-            return data1
-        elif not data1 and data2:
-            return data2
-        else:
-            return None
+            list2 = data2)
+    if data1 and data2:
+        return [data1, data2]
+    if data1 and not data2:
+        return data1
+    if not data1 and data2:
+        return data2
+    return None
 
-# Deduplicate adjacent lines
+# Drop lines that repeat the line before them, keeping the first of each run
 def deduplicate_adjacent_lines(lines):
     new_lines = []
     for line in lines:
@@ -85,7 +87,8 @@ def is_iterable_non_string(obj):
         return False
     return is_iterable_container(obj)
 
-# Search dictionary
+# The first (key, value) whose string value contains the search text, recursing into
+# nested dicts and limited to the given keys when any; empty list when none match
 def search_dictionary(data, search_value, search_keys = None):
     search_keys = [] if search_keys is None else search_keys
     if not isinstance(data, dict):
@@ -104,9 +107,26 @@ def search_dictionary(data, search_value, search_keys = None):
 # Retry utilities
 ###########################################################
 
-# Retry function with exponential backoff and cleanup
+# Run the cleanup between attempts, warning instead of raising when it fails with a retry_on error
+def _run_retry_cleanup(cleanup_func, retry_on, verbose):
+    try:
+        cleanup_func()
+    except retry_on as cleanup_error:
+        if verbose:
+            logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
+
+# Log, when verbose, that every attempt failed
+def _log_retries_exhausted(operation_name, max_retries, verbose):
+    if verbose and operation_name:
+        logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
+    elif verbose:
+        logger.log_error("Operation failed after %d attempts" % max_retries)
+
+# Retry function with exponential backoff and cleanup, retrying when it raises one of the
+# retry_on errors or returns None after such a failure; a first-attempt None is the answer
 def retry_with_backoff(
     func,
+    retry_on,
     cleanup_func = None,
     max_retries = 3,
     initial_delay = 1,
@@ -119,23 +139,16 @@ def retry_with_backoff(
             if result is not None or attempt == 0:
                 return result
             reason = "no result"
-        except Exception as e:
+        except retry_on as e:
             reason = str(e)
         if verbose and operation_name:
             logger.log_warning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, reason))
         elif verbose:
             logger.log_warning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, reason))
         if cleanup_func:
-            try:
-                cleanup_func()
-            except Exception as cleanup_error:
-                if verbose:
-                    logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
+            _run_retry_cleanup(cleanup_func, retry_on, verbose)
         if attempt == max_retries - 1:
-            if verbose and operation_name:
-                logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
-            elif verbose:
-                logger.log_error("Operation failed after %d attempts" % max_retries)
+            _log_retries_exhausted(operation_name, max_retries, verbose)
             return None
         delay = initial_delay * (backoff_factor ** attempt)
         if verbose:

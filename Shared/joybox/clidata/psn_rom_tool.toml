@@ -1,0 +1,29 @@
+# Help text for the psn_rom_tool command, read by joybox/arguments.py
+
+description = "Rename PlayStation Network packages and license files to their content IDs."
+details = """
+With `-r`, every PSN file under the input path is renamed in its own directory to the
+36-character content ID it belongs to, such as
+`UP0001-NPUB12345_00-GAMENAME00000001`:
+
+- `.rap` files take the content ID from the `.pkg` file with the same base name next to
+  them, so they are renamed before the packages are. A `.rap` without a matching
+  `.pkg` is left alone.
+- `.pkg` files take it from the package header.
+- `.work.bin` and `.fake.rif` license files take it from their own contents.
+
+Extensions are kept, so the results are `<content id>.rap`, `.pkg`, `.work.bin` and
+`.fake.rif`."""
+section = "Game ROMs & Images"
+see_also = [
+    "ps3_rom_tool",
+    "psv_rom_tool",
+]
+notes = [
+    "A file whose new name is already taken is left as it is.",
+    "Without `-r` nothing is done.",
+]
+examples = [
+    ["Rename the PSN files in a folder", "psn_rom_tool -i /path/to/psn -r"],
+    ["Preview the renames without changing anything", "psn_rom_tool -i /path/to/psn -r -p -v"],
+]

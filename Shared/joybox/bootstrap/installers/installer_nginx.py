@@ -1,22 +1,22 @@
 # Local imports
-import joybox.bootstrap.constants as constants
+from joybox.bootstrap import constants
 from joybox import serverinfo
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Apex fallback page
 #
 # Served at the apex only when no application owns it. Seeing this in
 # production means the apex-root.conf snippet was reverted to the fallback.
-apex_fallback_page = "<!doctype html><title>JoyBox</title><h1>JoyBox</h1><p>No site is configured for this domain yet.</p>"
+APEX_FALLBACK_PAGE = "<!doctype html><title>JoyBox</title><h1>JoyBox</h1><p>No site is configured for this domain yet.</p>"
 
 # Apex root snippet template
 #
 # Included by the certbot-managed apex 443 server block. This static version is
 # the fallback; the wordpress component replaces it with a proxy block and
 # restores this one on teardown.
-apex_root_snippet_template = """
+APEX_ROOT_SNIPPET_TEMPLATE = """
 root /var/www/html;
 index index.html;
 
@@ -26,7 +26,7 @@ location / {
 """
 
 # Nginx config template
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -39,7 +39,42 @@ server {{
 }}
 """
 
-# Nginx
+# Port 80 server for {subdomain}.{domain} that redirects every request to https,
+# as a str.format template like the site templates built on it
+NGINX_HTTPS_REDIRECT_SERVER = """
+server {{
+    listen 80;
+    server_name {subdomain}.{domain};
+
+    location / {{
+        return 301 https://{subdomain}.{domain}$request_uri;
+    }}
+}}
+"""
+
+# Opening of the port 443 server for {subdomain}.{domain}: the Let's Encrypt
+# certificate and the shared ssl-params snippet, each after its comment lines
+# (an empty comment adds none)
+def build_ssl_server_head(cert_comment, params_comment):
+    lines = ["", "server {{", "    listen 443 ssl;", "    server_name {subdomain}.{domain};", ""]
+    lines += ["    # %s" % line for line in cert_comment.splitlines()]
+    lines += [
+        "    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;",
+        "    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;",
+        ""]
+    lines += ["    # %s" % line for line in params_comment.splitlines()]
+    lines += ["    include /etc/nginx/snippets/ssl-params.conf;", ""]
+    return "\n".join(lines)
+
+# A site on {subdomain}.{domain}: the https redirect server, then the ssl server
+# opened by build_ssl_server_head and finished by the given locations
+def build_https_site_template(
+    locations,
+    cert_comment = "SSL configuration",
+    params_comment = "Shared TLS policy and security headers"):
+    return NGINX_HTTPS_REDIRECT_SERVER + build_ssl_server_head(cert_comment, params_comment) + locations
+
+# Installs nginx with the default server entry, the apex fallback snippet and page
 class Nginx(installer.Installer):
     def __init__(
         self,
@@ -51,14 +86,18 @@ class Nginx(installer.Installer):
             "domain": serverinfo.get_domain_name()
         }
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether /usr/sbin/nginx exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/sbin/nginx")
 
+    # apt-get install nginx, then have the nginx manager install the default entry,
+    # the apex-root snippet and fallback page, and restart it; False when one cannot be staged
     def install(self):
 
         # Install Nginx
@@ -69,26 +108,25 @@ class Nginx(installer.Installer):
 
         # Create default entry
         logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/default")
+        if not self.install_nginx_conf("default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Create apex root snippet
         logger.log_info("Creating apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", apex_root_snippet_template)
+        if not self.install_nginx_snippet("apex-root.conf", APEX_ROOT_SNIPPET_TEMPLATE):
+            return False
 
         # Create default page
         logger.log_info("Creating default page")
-        if self.connection.write_file("/tmp/index.html", apex_fallback_page):
-            self.connection.run_checked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/index.html")
+        if not self.run_nginx_manager_on_file("copy_html", "index.html", APEX_FALLBACK_PAGE):
+            return False
 
         # Restart Nginx
         logger.log_info("Restarting Nginx")
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
+    # Stop nginx, remove the default entry, then apt-get remove nginx and nginx-common
     def uninstall(self):
 
         # Stop Nginx

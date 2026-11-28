@@ -1,49 +1,24 @@
 # Imports
-import joybox.system as system
-import joybox.environment as environment
-import joybox.collection as collection
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.prompts as prompts
+from joybox import system
+from joybox import environment
+from joybox import collection
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Render the Pegasus metadata as one browsable HTML table per category.",
-        details = (
-            "For each category, reads the metadata file of every subcategory that has one and\n"
-            "writes `Published/<Category>.html` in the game metadata repository, for example\n"
-            "`Nintendo.html`. Each game gets a table row with a per-platform number, its platform,\n"
-            "name, player count and co-op flag, and search links to GameFAQs and MobyGames.\n"
-            "\n"
-            "Only `Roms` metadata is published. Existing pages are overwritten."),
-        examples = [
-            ("Publish every category", "publish_game_metadata_files"),
-            ("Publish without the confirmation prompt", "publish_game_metadata_files --no-preview"),
-            ("Dry run", "publish_game_metadata_files -p -v"),
-        ],
-        notes = [
-            "There are no selection options; every category is published.",
-            "`scan_game_files` runs this same step at the end of its pipeline.",
-        ],
-        see_also = ["build_game_metadata_files", "sort_game_metadata", "scan_game_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "publish_game_metadata_files")
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, render the Pegasus metadata of every ROM category as an HTML table page
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show preview
     if not args.no_preview:

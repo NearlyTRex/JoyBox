@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import commandoptions, config, programs, sandbox, sandboxprefix
+from joybox import commandoptions, config, programs
 
 
 ###########################################################
@@ -759,83 +759,3 @@ def test_a_native_setup_leaves_the_prefix_directory_unset(sandbox_dirs):
 
     assert options.get_prefix_dir() is None
     assert options.get_general_prefix_dir() is None
-
-
-###########################################################
-# Prefix creation
-###########################################################
-
-@pytest.fixture
-def fake_sandbox(monkeypatch, tmp_path):
-    state = {"calls": [], "result": True, "profile": tmp_path / "profile", "c_drive": tmp_path / "drive_c"}
-    state["profile"].mkdir()
-    state["c_drive"].mkdir()
-
-    def create(kind):
-        def run(options, **kwargs):
-            state["calls"].append((kind, kwargs))
-            return state["result"]
-        return run
-
-    monkeypatch.setattr(sandboxprefix, "create_basic_prefix", create("basic"))
-    monkeypatch.setattr(sandboxprefix, "create_linked_prefix", create("linked"))
-    monkeypatch.setattr(sandbox, "get_user_profile_path", lambda options: str(state["profile"]))
-    monkeypatch.setattr(sandbox, "get_real_c_drive_path", lambda options: str(state["c_drive"]))
-    return state
-
-
-def create(options, **kwargs):
-    return options.create_prefix(
-        is_wine_prefix = True,
-        is_sandboxie_prefix = False,
-        prefix_name = config.PrefixType.GAME,
-        prefix_dir = "/prefixes/game",
-        **kwargs)
-
-
-def test_creating_a_prefix_records_its_profile_and_drives(fake_sandbox):
-    options = build()
-
-    assert create(options) is True
-    assert options.get_prefix_user_profile_dir() == str(fake_sandbox["profile"])
-    assert options.get_prefix_c_drive_real() == str(fake_sandbox["c_drive"])
-    assert options.get_prefix_c_drive_virtual() == config.drive_root_windows
-
-
-def test_a_basic_prefix_is_created_unless_a_linked_one_is_asked_for(fake_sandbox):
-    create(build())
-    create(build(), linked_prefix = True, other_links = ["/shared"])
-
-    assert [kind for kind, _ in fake_sandbox["calls"]] == ["basic", "linked"]
-    assert fake_sandbox["calls"][1][1]["other_links"] == ["/shared"]
-
-
-@pytest.mark.parametrize("linked", [False, True])
-def test_prefix_creation_passes_the_run_flags_through(fake_sandbox, linked):
-    create(build(), linked_prefix = linked, clean_existing = False,
-        verbose = True, pretend_run = True, exit_on_failure = True)
-
-    _, kwargs = fake_sandbox["calls"][0]
-    assert kwargs["clean_existing"] is False
-    assert kwargs["verbose"] is True
-    assert kwargs["pretend_run"] is True
-    assert kwargs["exit_on_failure"] is True
-
-
-@pytest.mark.parametrize("linked", [False, True])
-def test_a_failed_creation_is_reported(fake_sandbox, linked):
-    fake_sandbox["result"] = False
-
-    assert create(build(), linked_prefix = linked) is False
-
-
-def test_a_prefix_without_a_profile_is_not_created(fake_sandbox):
-    fake_sandbox["profile"].rmdir()
-
-    assert create(build()) is False
-
-
-def test_a_prefix_without_a_c_drive_is_not_created(fake_sandbox):
-    fake_sandbox["c_drive"].rmdir()
-
-    assert create(build()) is False

@@ -1,0 +1,41 @@
+# Help text for the boot_vm_image command, read by joybox/arguments.py
+
+description = "Boot an installer image in a throwaway machine, the way the target will."
+details = """
+Runs qemu directly with UEFI firmware (OVMF), a blank qcow2 disk and the image in the
+drive, so an image from `build_autoinstall_iso` can be watched installing before it
+goes anywhere near real hardware. Qemu exits when the installer powers off or
+reboots, which is how you know it finished: the image is still in the drive, and a
+machine that carried on would boot it and start the install over. Run it again
+without `--iso` to boot what was installed.
+
+Each machine keeps `<name>.qcow2` and its own copy of the firmware variables,
+`<name>-vars.fd`, in `[UserData.VM] vm_dir` (`$HOME/VirtualMachines` by default), so
+several images can be tried side by side. Memory, processors, disk size and SSH port
+default to `vm_memory`, `vm_vcpus`, `vm_disk_size` and `vm_ssh_port` in the same
+section (6144 MB, 4, 60 GB and 2222 when unset). A value given on the command line
+wins, including `0`.
+
+Nothing here needs root or libvirt. The machine gets user-mode networking with the
+SSH port forwarded, so reach it with `ssh -p 2222 <user>@localhost`."""
+section = "Servers & Machines"
+see_also = [
+    "build_autoinstall_iso",
+    "testvm",
+]
+notes = [
+    "Needs `qemu-system-x86_64`, `qemu-img` and OVMF firmware (the `ovmf` package) on this machine.",
+    "Without access to `/dev/kvm` the machine still runs, but an install takes hours; the command warns when it starts.",
+    "Installing onto an existing disk without `--reset` installs over it, with a warning.",
+    "`--headless` is only useful with an image built with `--serial_console`; otherwise the terminal shows nothing after the boot menu.",
+    "The server image unpacks into memory, so 4096 MB is tight.",
+    "No GPU is passed through, so driver installs and GPU work are only exercised on real hardware.",
+]
+examples = [
+    ["Install from an image onto a fresh disk", "boot_vm_image -n llm -i ~/Images/llm.iso"],
+    ["Boot what it installed", "boot_vm_image -n llm"],
+    ["Install again from scratch", "boot_vm_image -n llm -i ~/Images/llm.iso -r"],
+    ["Install with no window, console on this terminal", "boot_vm_image -n llm -i ~/Images/llm.iso -e"],
+    ["Install with no window, console to a file", "boot_vm_image -n llm -i ~/Images/llm.iso -e -l ~/llm-console.log"],
+    ["Dry run without creating the disk or starting qemu", "boot_vm_image -n llm -i ~/Images/llm.iso -p -v"],
+]

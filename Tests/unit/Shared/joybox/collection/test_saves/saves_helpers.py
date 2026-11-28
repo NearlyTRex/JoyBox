@@ -1,6 +1,5 @@
 # Imports
 import os
-import types
 
 # Local imports
 from joybox import config
@@ -122,6 +121,11 @@ class FakeLocker:
             "locker_type": locker_type, "existed": os.path.exists(src), **kwargs})
         return self.result
 
+    def backup_if_absent(self, src, dest_rel_path, locker_type = None, **kwargs):
+        return self.backup(
+            src, dest_rel_path, locker_type,
+            show_progress = True, skip_existing = True, skip_identical = True, **kwargs)
+
 
 class FakeHashing:
 
@@ -135,20 +139,12 @@ class FakeHashing:
 
 
 def make_catalog(monkeypatch, games):
-    # games maps a game name to its FakeGameInfo, all under Nintendo SNES
-    built = []
+    # games maps a game name to its FakeGameInfo; returns the flags each walk was given
+    walks = []
 
-    def find_json_game_names(supercategory, category, subcategory):
-        if category == config.Category.NINTENDO and subcategory == config.Subcategory.NINTENDO_SNES:
-            return list(games)
-        return []
+    def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
+        walks.append({"verbose": verbose, "exit_on_failure": exit_on_failure})
+        yield from games.values()
 
-    def game_info_factory(game_name, **kwargs):
-        built.append((game_name, kwargs))
-        return games[game_name]
-
-    monkeypatch.setattr(saves, "gamecollection", types.SimpleNamespace(
-        find_json_game_names = find_json_game_names))
-    monkeypatch.setattr(saves, "gameinfo", types.SimpleNamespace(
-        GameInfo = game_info_factory))
-    return built
+    monkeypatch.setattr(saves.gamecollection, "iterate_rom_game_infos", iterate_rom_game_infos)
+    return walks

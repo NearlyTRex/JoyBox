@@ -1,12 +1,12 @@
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   audiobookshelf:
     image: ${AUDIOBOOKSHELF_IMAGE}
@@ -24,7 +24,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 AUDIOBOOKSHELF_PORT_HTTP={port_http}
 AUDIOBOOKSHELF_AUDIO_DIR={audio_dir}
 """
@@ -49,9 +49,9 @@ class Audiobookshelf(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.nginx_config_template = installer_dockerapp.nginx_http_websocket_config_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.nginx_config_template = installer_dockerapp.NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "audio_dir"]
@@ -68,6 +68,8 @@ class Audiobookshelf(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Audiobookshelf"
         self.backup_volumes = ["config_data"]
 
+    # Create the configured root user through the API of a server not yet
+    # initialised; skipped with a warning when no admin password is set
     def post_install(self):
 
         # Without a password the first visitor to the site creates the root user

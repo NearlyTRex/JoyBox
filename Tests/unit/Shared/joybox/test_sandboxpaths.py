@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import config, filebulk, fileops, sandbox, sandboxpaths
+from joybox import prefixlayout
 from sandbox_helpers import options, WINE, NEITHER, sandboxie
 
 
@@ -16,7 +17,7 @@ from sandbox_helpers import options, WINE, NEITHER, sandboxie
 def test_a_path_inside_the_prefix_keeps_its_drive_letter(wine_prefix):
     real = os.path.join(wine_prefix.get_prefix_dir(), "drive_c", "Games", "save.dat")
 
-    info = sandbox.get_prefix_path_info(real, wine_prefix, is_real_path = True)
+    info = prefixlayout.get_prefix_path_info(real, wine_prefix, is_real_path = True)
 
     assert info["letter"] == "c"
     assert info["offset"] == os.path.join("Games", "save.dat")
@@ -25,7 +26,7 @@ def test_a_path_inside_the_prefix_keeps_its_drive_letter(wine_prefix):
 def test_a_secondary_drive_inside_the_prefix_is_recognised(wine_prefix):
     real = os.path.join(wine_prefix.get_prefix_dir(), "dosdevices", "d:", "Games", "save.dat")
 
-    info = sandbox.get_prefix_path_info(real, wine_prefix, is_real_path = True)
+    info = prefixlayout.get_prefix_path_info(real, wine_prefix, is_real_path = True)
 
     assert info["letter"] == "d"
     assert info["offset"] == os.path.join("Games", "save.dat")
@@ -34,7 +35,7 @@ def test_a_secondary_drive_inside_the_prefix_is_recognised(wine_prefix):
 def test_a_path_outside_the_prefix_is_reached_through_the_z_drive(wine_prefix):
     # Wine maps the host filesystem onto Z:, and building that mapping used to
     # raise instead of returning a path.
-    info = sandbox.get_prefix_path_info("/home/user/saves/file.sav", wine_prefix, is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/home/user/saves/file.sav", wine_prefix, is_real_path = True)
 
     assert info["letter"] == "z"
     assert info["virtual"].startswith("Z:")
@@ -264,13 +265,13 @@ def test_a_real_path_is_untouched_without_a_prefix():
 
 
 def test_a_path_must_be_either_virtual_or_real():
-    assert sandbox.get_prefix_path_info("C:/a", WINE()) is None
-    assert sandbox.get_prefix_path_info("C:/a", WINE(), is_virtual_path = True, is_real_path = True) is None
+    assert prefixlayout.get_prefix_path_info("C:/a", WINE()) is None
+    assert prefixlayout.get_prefix_path_info("C:/a", WINE(), is_virtual_path = True, is_real_path = True) is None
 
 
 def test_a_non_prefix_does_not_parse_drives_inside_its_directory(monkeypatch):
     monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: True)
 
-    info = sandbox.get_prefix_path_info("/prefixes/game/drive_c/a", NEITHER(), is_real_path = True)
+    info = prefixlayout.get_prefix_path_info("/prefixes/game/drive_c/a", NEITHER(), is_real_path = True)
 
     assert info["virtual"] == "Z:/prefixes/game/drive_c/a"

@@ -43,7 +43,7 @@ def get_config_value(values, section, key):
         return values[section][key]
     return str(default_settings.ini_defaults.get(section, {}).get(key, ""))
 
-# Set a value
+# Store a value under its section in the answers being collected, adding the section when absent
 def set_config_value(values, section, key, value):
     values.setdefault(section, {})[key] = value
 

@@ -369,10 +369,12 @@ def test_unmounting_reports_a_failed_unmount(monkeypatch):
 @pytest.fixture
 def archive_seams(monkeypatch):
     state = {"tmp": (True, "/tmp/chdmount"), "mount": True, "archive": True,
-             "removed_files": [], "removed_dirs": [], "archived": []}
+             "removed_files": [], "removed_dirs": [], "archived": [], "unmounted": []}
     monkeypatch.setattr(chd.fileops, "create_temporary_directory",
                         lambda **kwargs: state["tmp"])
     monkeypatch.setattr(chd, "mount_disc_chd", lambda **kwargs: state["mount"])
+    monkeypatch.setattr(chd, "unmount_disc_chd",
+                        lambda chd_file, mount_dir, **kwargs: state["unmounted"].append(mount_dir))
 
     def create_archive_from_folder(archive_file, source_dir, **kwargs):
         state["archived"].append((archive_file, source_dir))
@@ -390,13 +392,36 @@ def archive_seams(monkeypatch):
 def test_archiving_zips_the_mounted_contents(archive_seams):
     assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip") is True
     assert archive_seams["archived"] == [("/out/Game.zip", "/tmp/chdmount")]
+    assert archive_seams["unmounted"] == ["/tmp/chdmount"]
     assert archive_seams["removed_dirs"] == ["/tmp/chdmount"]
-    assert archive_seams["removed_files"] == []
+    assert "/in/Game.chd" not in archive_seams["removed_files"]
+
+
+@pytest.mark.parametrize("failure", [{}, {"mount": False}, {"archive": False}])
+def test_archiving_deletes_the_extracted_iso_and_toc(archive_seams, failure):
+    archive_seams.update(failure)
+
+    chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip")
+    assert archive_seams["removed_files"] == ["/in/Game.iso", "/in/Game.toc"]
+
+
+def test_archiving_unmounts_when_the_archive_fails(archive_seams):
+    archive_seams["archive"] = False
+
+    assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip") is False
+    assert archive_seams["unmounted"] == ["/tmp/chdmount"]
+
+
+def test_archiving_does_not_unmount_what_never_mounted(archive_seams):
+    archive_seams["mount"] = False
+
+    assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip") is False
+    assert archive_seams["unmounted"] == []
 
 
 def test_archiving_deletes_the_chd_when_asked(archive_seams):
     assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip", delete_original = True) is True
-    assert archive_seams["removed_files"] == ["/in/Game.chd"]
+    assert "/in/Game.chd" in archive_seams["removed_files"]
 
 
 @pytest.mark.parametrize("failure", [
@@ -408,7 +433,7 @@ def test_archiving_stops_at_the_first_failure_and_keeps_the_chd(archive_seams, f
     archive_seams.update(failure)
 
     assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip", delete_original = True) is False
-    assert archive_seams["removed_files"] == []
+    assert "/in/Game.chd" not in archive_seams["removed_files"]
 
 
 ###########################################################
@@ -641,3 +666,8 @@ def test_pretending_a_conversion_passes_pretend_through(installed, recording_com
 
     assert converter["calls"][0][2] is True
     assert recording_command.calls[0]["kwargs"].get("pretend_run") is True
+
+
+@pytest.mark.parametrize("path, expected", [("/in/Game.chd", True), ("/in/Game.iso", False), ("/in/Game.chd.txt", False)])
+def test_a_chd_file_is_told_by_its_extension(path, expected):
+    assert chd.is_chd_file(path) is expected

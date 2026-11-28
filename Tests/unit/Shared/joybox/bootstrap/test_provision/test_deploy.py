@@ -74,7 +74,7 @@ def mkcert_entry(deploy_env, entry, monkeypatch):
 
 
 def test_mkcert_not_installed_stops_the_deploy(mkcert_entry, monkeypatch):
-    monkeypatch.setattr(provision.command, "is_runnable_command", lambda cmd: False)
+    monkeypatch.setattr(provision.paths, "is_runnable_command", lambda cmd: False)
 
     assert build(World({})).run_deploy() is False
     assert mkcert_entry.events == []
@@ -82,7 +82,7 @@ def test_mkcert_not_installed_stops_the_deploy(mkcert_entry, monkeypatch):
 
 def test_mkcert_is_trusted_before_deploying(mkcert_entry, monkeypatch):
     ran = []
-    monkeypatch.setattr(provision.command, "is_runnable_command", lambda cmd: True)
+    monkeypatch.setattr(provision.paths, "is_runnable_command", lambda cmd: True)
     monkeypatch.setattr(provision.command, "run_interactive_command", lambda cmd: ran.append(cmd) or 0)
 
     assert build(World({})).run_deploy() is True
@@ -91,7 +91,7 @@ def test_mkcert_is_trusted_before_deploying(mkcert_entry, monkeypatch):
 
 
 def test_mkcert_that_cannot_be_trusted_stops_the_deploy(mkcert_entry, monkeypatch):
-    monkeypatch.setattr(provision.command, "is_runnable_command", lambda cmd: True)
+    monkeypatch.setattr(provision.paths, "is_runnable_command", lambda cmd: True)
     monkeypatch.setattr(provision.command, "run_interactive_command", lambda cmd: 1)
 
     assert build(World({})).run_deploy() is False

@@ -222,7 +222,7 @@ It also holds `Shared/` and `Scripts/` to the library standards: a comment above
 public definition that says more than its name, in at most three lines; file, JSON and
 subprocess work through `fileops`, `serialization` and `command`; no printing or exiting
 outside `cli/`; and no mutable defaults, narration, commented-out code, functions past 40
-lines or three levels of nesting, or modules past 900 lines. The library had findings
+lines or three levels of nesting, modules past 900 lines, or import cycles. The library had findings
 under most of these when they were adopted, so `[tool.testrex.baseline]` records how many
 each rule may have. A fix fails the suite until its baseline is lowered to match, so the
 counts only fall; a new finding anywhere fails it at once.

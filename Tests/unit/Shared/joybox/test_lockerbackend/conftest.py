@@ -1,4 +1,5 @@
 # Imports
+import inspect
 import os
 import sys
 
@@ -24,8 +25,12 @@ def remote(monkeypatch):
     state = {"calls": [], "result": True, "exists": True, "contains": True,
              "listing": {"Game.zip": {"hash": "aaaa"}}, "results": {}}
 
+    # Each fake takes the real function's signature, so an argument it lacks fails the call.
     def record(name, result_key = "result"):
+        signature = inspect.signature(getattr(sync_owner(name), name))
+
         def run(*args, **kwargs):
+            signature.bind(*args, **kwargs)
             # The file list is a temporary file the caller deletes afterwards,
             # so its contents are read while the call is still in progress.
             if kwargs.get("files_from") and os.path.isfile(kwargs["files_from"]):

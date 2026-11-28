@@ -1,8 +1,8 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # dconf/gsettings settings to apply (desktop only)
 # Each setting has: schema, key, value (GVariant text), description
@@ -15,7 +15,7 @@ DCONF_SETTINGS = [
     },
 ]
 
-# Dconf
+# Applies the desktop gsettings in DCONF_SETTINGS
 class Dconf(installer.Installer):
     def __init__(
         self,
@@ -24,17 +24,21 @@ class Dconf(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # gsettings list-schemas output; empty when gsettings gives nothing
     def get_available_schemas(self):
         return self.connection.run_output(["gsettings", "list-schemas"]) or ""
 
+    # Whether a schema name appears in list-schemas output
     def is_schema_present(self, schemas_text, schema):
         return schema in (schemas_text or "").split()
 
+    # Whether every setting whose schema exists holds its value; False when gsettings lists no schemas
     def is_installed(self):
         schemas = self.get_available_schemas()
         if not schemas:
@@ -48,6 +52,8 @@ class Dconf(installer.Installer):
                 return False
         return True
 
+    # gsettings set each setting whose schema exists, skipping the rest; False when
+    # gsettings is unavailable or a set fails
     def install(self):
 
         # Start install
@@ -79,6 +85,7 @@ class Dconf(installer.Installer):
         logger.log_info("Dconf settings applied successfully")
         return True
 
+    # gsettings reset each setting whose schema exists
     def uninstall(self):
 
         # Start uninstall

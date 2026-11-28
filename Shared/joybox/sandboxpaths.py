@@ -14,18 +14,19 @@ from joybox import commandbase
 from joybox import programs
 from joybox import paths
 from joybox import sandbox
+from joybox import prefixlayout
 
 ###########################################################
 
-# Get program prefix name
+# Prefix type for a program: TOOL or EMULATOR by which catalog it is in; None otherwise
 def get_program_prefix_name(program_name):
     if programs.is_program_name_tool(program_name):
         return config.PrefixType.TOOL
-    elif programs.is_program_name_emulator(program_name):
+    if programs.is_program_name_emulator(program_name):
         return config.PrefixType.EMULATOR
     return None
 
-# Translate path if necessary
+# The path as the program sees it inside its Wine or Sandboxie prefix; the path unchanged for native programs
 def translate_path_if_necessary(path, program_exe, program_name):
 
     # Check params
@@ -50,7 +51,7 @@ def translate_path_if_necessary(path, program_exe, program_name):
         path = path,
         options = options)
 
-# Translate virtual path to real path
+# Host path for a path seen inside the prefix; the path unchanged for non-prefix options, None when unresolvable
 def translate_virtual_path_to_real_path(
     path,
     options):
@@ -65,12 +66,12 @@ def translate_virtual_path_to_real_path(
     # Check prefix
     if not options.get_prefix_dir():
         options = options.copy()
-        options.set_prefix_dir(sandbox.get_prefix(options))
+        options.set_prefix_dir(prefixlayout.get_prefix(options))
     if not options.get_prefix_dir():
         return None
 
     # Get path info
-    path_info = sandbox.get_prefix_path_info(
+    path_info = prefixlayout.get_prefix_path_info(
         path = path,
         options = options,
         is_virtual_path = True,
@@ -81,7 +82,7 @@ def translate_virtual_path_to_real_path(
     # Return real path
     return path_info["real"]
 
-# Translate real path to virtual path
+# Path inside the prefix for a host path; the path unchanged for non-prefix options, None when unresolvable
 def translate_real_path_to_virtual_path(
     path,
     options):
@@ -96,12 +97,12 @@ def translate_real_path_to_virtual_path(
     # Check prefix
     if not options.get_prefix_dir():
         options = options.copy()
-        options.set_prefix_dir(sandbox.get_prefix(options))
+        options.set_prefix_dir(prefixlayout.get_prefix(options))
     if not options.get_prefix_dir():
         return None
 
     # Get path info
-    path_info = sandbox.get_prefix_path_info(
+    path_info = prefixlayout.get_prefix_path_info(
         path = path,
         options = options,
         is_virtual_path = False,
@@ -112,7 +113,8 @@ def translate_real_path_to_virtual_path(
     # Return virtual path
     return path_info["virtual"]
 
-# Transfer from sandbox
+# Move what the sandbox wrote at its real path back to path, or copy it when keep_in_sandbox
+# Skipped when the path does not translate or nothing exists there
 def transfer_from_sandbox(
     path,
     options,
@@ -141,32 +143,40 @@ def transfer_from_sandbox(
 
     # Transfer from sandbox
     if keep_in_sandbox:
-        if paths.is_path_directory(real_path):
-            filebulk.copy_contents(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            fileops.copy_file_or_directory(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        _copy_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure)
     else:
-        if paths.is_path_directory(real_path):
-            filebulk.move_contents(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            fileops.move_file_or_directory(
-                src = real_path,
-                dest = path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        _move_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure)
+
+# Copy real_path to path, copying a directory's contents rather than the directory itself
+def _copy_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure):
+    if paths.is_path_directory(real_path):
+        filebulk.copy_contents(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        fileops.copy_file_or_directory(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Move real_path to path, moving a directory's contents rather than the directory itself
+def _move_out_of_sandbox(real_path, path, verbose, pretend_run, exit_on_failure):
+    if paths.is_path_directory(real_path):
+        filebulk.move_contents(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        fileops.move_file_or_directory(
+            src = real_path,
+            dest = path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

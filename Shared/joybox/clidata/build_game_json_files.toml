@@ -1,0 +1,46 @@
+# Help text for the build_game_json_files command, read by joybox/arguments.py
+
+description = "Create or update the JSON file of each game found in a locker."
+details = """
+Lists the game folders in the locker for the selected categories and, for each one,
+creates its JSON file in the game metadata repository if missing, then fills it from
+the game's files: the file list (with real names when the locker is encrypted), the
+DLC, update, extra and dependency files kept in those subfolders, the most likely
+launch or transform file, and for store games the store's latest app data.
+
+JSON files live under `Json/<supercategory>/<category>/<subcategory>/` in the metadata
+repository, with an extra first-letter folder on platforms that use one. Values that
+are filled once are kept when already present, so re-running updates rather than
+replaces a file. Only the `Roms`, `DLC` and `Updates` supercategories have JSON files.
+
+The game directory is `-i` if given, otherwise the game's place under `-b`, otherwise
+the gaming folder of the `-l` locker (the Local locker when `-l` is omitted).
+
+With `--create_playlists`, before listing a `Roms` game's files, writes
+`<game name>.m3u` in its folder when it has two or more disc images marked `(Disc N)`,
+`(Disk N)`, `(Disc N of M)`, `(Disc A)` or by role, such as `(Game Disc)` and
+`(Bonus Disc)`, and no playlist yet. Numbered discs come first in number order, then
+lettered ones, then labelled ones with the game disc first. The playlist becomes the
+game's launch or transform file."""
+section = "Game Collection"
+see_also = [
+    "upload_game_files",
+    "clean_game_json_files",
+    "analyze_game_json_files",
+    "build_game_metadata_files",
+    "build_game_hash_files",
+]
+notes = [
+    "Run this for a game newly added to a locker when `upload_game_files` reports that it cannot find the game's JSON file.",
+    "`-n` must name a game folder that exists in the locker; games are always listed from the locker, even with `-i`.",
+    "`-i` is used as the directory of every selected game, so use it together with `-n`.",
+    "The supercategory defaults to `Roms`; pass `-u` for DLC or updates.",
+    "No disc playlist is made when two images are the same disc, or when the locker is encrypted, since the disc names are then hidden.",
+]
+examples = [
+    ["Build JSON for one new update from the local locker", "build_game_json_files -u Updates -c Nintendo -s \"Nintendo Switch\" -n \"Pokemon Legends Z-A (World)\" -l Local"],
+    ["Build JSON for a whole platform from a remote locker", "build_game_json_files -c Nintendo -s \"Nintendo Switch\" -l Hetzner"],
+    ["Build JSON for all DLC", "build_game_json_files -u DLC -l Local"],
+    ["Build one game's JSON from files in another directory", "build_game_json_files -i /path/to/game/files -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\" -l Local"],
+    ["Show what would be built without writing", "build_game_json_files -c Nintendo -s \"Nintendo Switch\" -l Local -p -v"],
+]

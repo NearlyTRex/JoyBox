@@ -1,0 +1,65 @@
+# Ghidra: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Ghidra]
+program = { windows = "Ghidra/lib/ghidraRun.bat", linux = "Ghidra/lib/ghidraRun" }
+package_dir = "Ghidra/lib/Ghidra/Features/PyGhidra/pypkg/src"
+package_name = "pyghidra"
+
+[config.GhidraHeadless]
+program = { windows = "Ghidra/lib/support/analyzeHeadless.bat", linux = "Ghidra/lib/support/analyzeHeadless" }
+
+[config.GhidraSleigh]
+program = { windows = "Ghidra/lib/support/sleigh.bat", linux = "Ghidra/lib/support/sleigh" }
+
+[[config_files]]
+path = "Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec"
+template = "x86watcom.cspec"
+
+[[config_files]]
+path = "Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs"
+template = "x86watcom.ldefs"
+
+[[config_files]]
+path = "Ghidra/lib/Ghidra/Processors/x86/data/patterns/patternconstraints.xml"
+template = "patternconstraints.xml"
+
+[[config_files]]
+path = "Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patterns.xml"
+template = "x86watcomcpp_patterns.xml"
+
+[[setup]]
+kind = "binary_build"
+platform = "lib"
+for = "library"
+host = "windows"
+release_url = "https://github.com/NearlyTRex/Ghidra.git"
+release_branch = "dev-testing"
+output_file = ".zip"
+output_dir = "build/dist"
+search_file = "ghidraRun"
+build_cmd = [
+    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle", "&&",
+    "gradlew.bat", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test",
+]
+
+[[setup]]
+kind = "binary_build"
+platform = "lib"
+for = "library"
+host = "linux"
+release_url = "https://github.com/NearlyTRex/Ghidra.git"
+release_branch = "dev-testing"
+output_file = ".zip"
+output_dir = "build/dist"
+search_file = "ghidraRun"
+build_cmd = [
+    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle", "&&",
+    "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test",
+]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"
+search_file = "ghidraRun"

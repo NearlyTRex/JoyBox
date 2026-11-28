@@ -1,0 +1,18 @@
+# Sandboxie: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+only_on = "sandboxie"
+program_unknown_when_unset = true
+
+[config.Sandboxie]
+program = "{path_setting:Tools.Sandboxie.sandboxie_install_dir}/{setting:Tools.Sandboxie.sandboxie_exe}"
+sandbox_dir = "{path_setting:Tools.Sandboxie.sandboxie_sandbox_dir}"
+
+[config.SandboxieIni]
+program = "{path_setting:Tools.Sandboxie.sandboxie_install_dir}/{setting:Tools.Sandboxie.sandboxie_ini_exe}"
+
+[config.SandboxieRpcss]
+program = "{path_setting:Tools.Sandboxie.sandboxie_install_dir}/{setting:Tools.Sandboxie.sandboxie_rpcss_exe}"
+
+[config.SandboxieDcomlaunch]
+program = "{path_setting:Tools.Sandboxie.sandboxie_install_dir}/{setting:Tools.Sandboxie.sandboxie_dcomlaunch_exe}"

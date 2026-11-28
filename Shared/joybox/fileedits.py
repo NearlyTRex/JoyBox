@@ -38,25 +38,28 @@ def apply_replacements(contents, replacements):
             contents = contents.replace(entry["from"], entry["to"])
     return contents
 
-# Replace strings in file
+# Rewrite the file with each from/to replacement applied; False when it isn't a file,
+# can't be read, or a replacement lacks a key
 def replace_strings_in_file(src, replacements = (), verbose = False, pretend_run = False, exit_on_failure = False):
-    try:
-        if not os.path.isfile(src):
-            if verbose:
-                logger.log_info("Path %s is not a file" % src)
-            return False
+    if not os.path.isfile(src):
         if verbose:
-            logger.log_info("Replacing lines in file %s" % src)
-        if pretend_run:
-            return True
-        src_contents = serialization.read_text_file(src, exit_on_failure = exit_on_failure)
-        if src_contents is None:
-            return False
-        return serialization.write_text_file(src, apply_replacements(src_contents, replacements), exit_on_failure = exit_on_failure)
-    except Exception as e:
-        return fileops.report_failure("Unable to replace strings in file %s" % src, e, exit_on_failure)
+            logger.log_info("Path %s is not a file" % src)
+        return False
+    if verbose:
+        logger.log_info("Replacing lines in file %s" % src)
+    if pretend_run:
+        return True
+    src_contents = serialization.read_text_file(src, exit_on_failure = exit_on_failure)
+    if src_contents is None:
+        return False
+    try:
+        new_contents = apply_replacements(src_contents, replacements)
+    except KeyError as e:
+        return fileops.report_failure("Unable to replace strings in file %s, a replacement lacks %s" % (src, e), e, exit_on_failure)
+    return serialization.write_text_file(src, new_contents, exit_on_failure = exit_on_failure)
 
-# Append line to file
+# Add the line at the end unless the file already has it, keeping the file's own line
+# endings; False when it isn't a file or isn't UTF-8
 def append_line_to_file(src, line, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not os.path.isfile(src):
@@ -77,10 +80,10 @@ def append_line_to_file(src, line, verbose = False, pretend_run = False, exit_on
             return serialization.write_binary_file(
                 src, src_bytes + separator + (line + "\n").encode("utf-8"), exit_on_failure = exit_on_failure)
         return True
-    except Exception as e:
+    except UnicodeDecodeError as e:
         return fileops.report_failure("Unable to add line '%s' to file %s" % (line, src), e, exit_on_failure)
 
-# Sort file contents
+# Rewrite the file with its lines in sorted order, each ending in a newline
 def sort_file_contents(src, verbose = False, pretend_run = False, exit_on_failure = False):
     if not os.path.isfile(src):
         if verbose:

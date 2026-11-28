@@ -1,50 +1,26 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.metadata as metadata
-import joybox.environment as environment
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
+from joybox import config
+from joybox import system
+from joybox import metadata
+from joybox import environment
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import paths
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Rewrite every platform's Pegasus metadata file with its entries in sorted order.",
-        details = (
-            "For each category and subcategory, reads the metadata file\n"
-            "`Pegasus/Roms/<category>/<subcategory>/metadata.pegasus.txt` in the game metadata\n"
-            "repository, if it exists, and writes it back with entries sorted by name and the\n"
-            "collection header and launch command regenerated.\n"
-            "\n"
-            "`sort_game_metadata` does the same for every metadata file it finds under `Pegasus/`,\n"
-            "including ones outside the known subcategories."),
-        examples = [
-            ("Sort every metadata file", "clean_game_metadata_files"),
-            ("Sort without the confirmation prompt", "clean_game_metadata_files --no-preview"),
-        ],
-        notes = [
-            "There are no selection options; every known subcategory is processed.",
-        ],
-        see_also = ["sort_game_metadata", "build_game_metadata_files", "clean_game_json_files", "clean_game_hash_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "clean_game_metadata_files")
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite the Pegasus metadata file of each known category and subcategory in sorted order
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Collect metadata files to process
     metadata_files_to_process = []
@@ -58,11 +34,9 @@ def main():
             metadata_files_to_process.append((game_category, game_subcategory, metadata_file))
 
     # Show preview
-    if not args.no_preview:
-        details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
-        if not prompts.prompt_for_preview("Clean game metadata files (sort entries)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
+    if not prompts.confirm_preview(args.no_preview, "Clean game metadata files (sort entries)", details):
+        return
 
     # Sort metadata files
     for game_category, game_subcategory, metadata_file in metadata_files_to_process:

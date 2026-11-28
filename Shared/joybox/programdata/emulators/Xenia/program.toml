@@ -1,0 +1,37 @@
+# Xenia: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["MICROSOFT_XBOX_360", "MICROSOFT_XBOX_360_GOD", "MICROSOFT_XBOX_360_XBLA", "MICROSOFT_XBOX_360_XIG"]
+
+[config.Xenia]
+program = { windows = "Xenia/windows/xenia.exe", linux = "Xenia/windows/xenia.exe" }
+save_dir = { windows = "Xenia/windows/content", linux = "Xenia/windows/content" }
+config_file = { windows = "Xenia/windows/xenia.config.toml", linux = "Xenia/windows/xenia.config.toml" }
+run_sandboxed = { windows = false, linux = true }
+
+[[config_files]]
+path = "Xenia/windows/portable.txt"
+
+[[config_files]]
+path = "Xenia/windows/xenia.config.toml"
+template = "xenia.config.toml"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "xenia-project"
+github_repo = "release-builds-windows"
+starts_with = "xenia_master"
+ends_with = "master.zip"
+search_file = "xenia.exe"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "xenia.exe"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["--fullscreen=true"]

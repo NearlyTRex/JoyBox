@@ -4,6 +4,7 @@ import subprocess
 
 # Third-party imports
 import pytest
+from pytest_testrex.seal import SealedProgramError
 
 # Local imports
 from joybox import secretstore, settings
@@ -50,12 +51,13 @@ def test_an_ordinary_program_still_runs():
 
 
 def test_a_secret_reference_never_reaches_the_vault(monkeypatch):
-    # Even with the tool found, resolving goes through a refused subprocess
-    # and comes back empty rather than prompting to unlock.
+    # Even with the tool found, resolving reaches a refused subprocess rather
+    # than the vault, so it can never prompt to unlock.
     monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
     secretstore.clear_resolved_secrets()
 
-    assert secretstore.resolve_secret_reference("op://Vault/Item/field") is None
+    with pytest.raises(SealedProgramError):
+        secretstore.resolve_secret_reference("op://Vault/Item/field")
 
 
 ###########################################################

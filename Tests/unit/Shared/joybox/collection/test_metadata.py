@@ -55,7 +55,7 @@ def load(metadata_root):
 
 def platform_of():
     from joybox import gamenaming
-    return gamenaming.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
+    return gamenaming.derive_game_platform_from_categories(SUBCATEGORY)
 
 
 def create(metadata_root, **kwargs):
@@ -210,6 +210,27 @@ def test_a_category_without_metadata_writes_nothing(metadata_root):
 
     assert create(metadata_root, game_supercategory = saves) is True
     assert not metadata_file(metadata_root).exists()
+
+
+def test_a_missing_metadata_file_loads_empty(metadata_root):
+    assert metadata.load_metadata_file(str(metadata_file(metadata_root))).get_sorted_platforms() == []
+
+
+def test_a_written_metadata_file_loads_back(metadata_root):
+    obj = metadata_module.Metadata()
+    obj.set_game(platform_of(), GAME, metadata.build_new_game_entry(ROMS, CATEGORY, SUBCATEGORY, GAME))
+
+    metadata.write_metadata_file(obj, str(metadata_file(metadata_root)))
+
+    assert metadata.load_metadata_file(str(metadata_file(metadata_root))).has_game(platform_of(), GAME)
+
+
+def test_a_new_entry_points_at_its_json_file_with_defaults(metadata_root):
+    entry = metadata.build_new_game_entry(ROMS, CATEGORY, SUBCATEGORY, GAME, game_url = "https://store.example/hl2")
+
+    assert entry.get_file() == "%s/%s/%s.json" % (CATEGORY, SUBCATEGORY, GAME)
+    assert (entry.get_players(), entry.get_coop(), entry.get_playable()) == ("1", "No", "Yes")
+    assert entry.get_url() == "https://store.example/hl2"
 
 
 ###########################################################
@@ -367,8 +388,8 @@ def test_a_published_page_is_a_whole_document(metadata_root, published):
     publish(metadata_root)
     contents = published_file(published).read_text()
 
-    assert contents.startswith(config.publish_html_header % CATEGORY)
-    assert contents.endswith(config.publish_html_footer)
+    assert contents.startswith(config.PUBLISH_HTML_HEADER % CATEGORY)
+    assert contents.endswith(config.PUBLISH_HTML_FOOTER)
 
 
 def test_a_category_with_no_metadata_still_publishes_a_page(metadata_root, published):
@@ -385,8 +406,8 @@ def test_published_rows_alternate(metadata_root, published):
     publish(metadata_root)
     contents = published_file(published).read_text()
 
-    odd_marker = config.publish_html_entry_odd.split("%s", maxsplit = 1)[0]
-    even_marker = config.publish_html_entry_even.split("%s", maxsplit = 1)[0]
+    odd_marker = config.PUBLISH_HTML_ENTRY_ODD.split("%s", maxsplit = 1)[0]
+    even_marker = config.PUBLISH_HTML_ENTRY_EVEN.split("%s", maxsplit = 1)[0]
     assert odd_marker in contents
     assert even_marker in contents
 
@@ -401,7 +422,7 @@ def test_initial_values_override_the_defaults(metadata_root):
 def test_an_update_limited_to_present_keys_is_skipped(metadata_root, scraping):
     create(metadata_root)
 
-    assert update(metadata_root, keys = [config.metadata_key_players]) is True
+    assert update(metadata_root, keys = [config.METADATA_KEY_PLAYERS]) is True
     assert scraping["collected"] == []
 
 
@@ -439,6 +460,30 @@ def test_a_store_game_is_updated_from_its_store(metadata_root, scraping, monkeyp
     assert load(metadata_root).get_game(platform_of(), GAME).get_developer() == "Valve"
 
 
+def test_a_store_game_without_json_data_is_asked_without_an_identifier(metadata_root, scraping):
+    create(metadata_root)
+    scraping["store"] = FakeStore(None)
+
+    assert update(metadata_root) is True
+    assert scraping["store"].asked == [None]
+
+
+def test_latest_metadata_comes_from_the_store(scraping):
+    scraping["store"] = FakeStore(scraped(developer = "Valve"))
+
+    latest = metadata.fetch_latest_game_metadata(FakeJson(), platform_of(), GAME)
+
+    assert latest.get_developer() == "Valve"
+    assert scraping["store"].asked == ["steam/appurl"]
+
+
+def test_latest_metadata_without_a_store_is_collected(scraping):
+    scraping["latest"] = scraped(developer = "Valve")
+
+    assert metadata.fetch_latest_game_metadata(None, platform_of(), GAME).get_developer() == "Valve"
+    assert scraping["collected"][0]["game_name"] == GAME
+
+
 ###########################################################
 # Building entries
 ###########################################################
@@ -447,8 +492,8 @@ def test_a_store_game_is_updated_from_its_store(metadata_root, scraping, monkeyp
 def building(monkeypatch):
     state = {"created": [], "updated": [], "create_ok": True, "update_ok": True}
 
-    def create_game_metadata_entry(**kwargs):
-        state["created"].append(kwargs["game_name"])
+    def create_game_metadata_entry(game_supercategory, game_category, game_subcategory, game_name, **kwargs):
+        state["created"].append(game_name)
         return state["create_ok"]
 
     def update_game_metadata_entry(**kwargs):

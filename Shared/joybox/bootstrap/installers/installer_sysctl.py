@@ -1,8 +1,8 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Sysctl settings to install
 # Each setting has: key, value, description
@@ -12,9 +12,19 @@ SYSCTL_SETTINGS = [
         "value": "1024",
         "description": "Raise inotify instance limit (GitKraken/editors exhaust the default 128 when switching repos)",
     },
+    {
+        "key": "vm.swappiness",
+        "value": "180",
+        "description": "Swap eagerly, since zram swap is far cheaper than dropping file cache",
+    },
+    {
+        "key": "vm.page-cluster",
+        "value": "0",
+        "description": "Read swap one page at a time (zram has no seek cost to amortize)",
+    },
 ]
 
-# Sysctl
+# Writes the kernel settings in SYSCTL_SETTINGS to /etc/sysctl.d/99-joybox.conf
 class Sysctl(installer.Installer):
     def __init__(
         self,
@@ -26,6 +36,7 @@ class Sysctl(installer.Installer):
         # Path to the sysctl drop-in file
         self.conf_path = "/etc/sysctl.d/99-joybox.conf"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
@@ -38,12 +49,14 @@ class Sysctl(installer.Installer):
             lines.append(f"{setting['key']} = {setting['value']}")
         return "\n".join(lines) + "\n"
 
+    # Whether the drop-in exists and matches what the settings would write
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.conf_path):
             return False
         current = self.connection.read_file(self.conf_path, sudo=True)
         return current == self._build_contents()
 
+    # Write the drop-in as root and apply it with sysctl --system; False when either fails
     def install(self):
 
         # Start install
@@ -68,6 +81,7 @@ class Sysctl(installer.Installer):
         logger.log_info("Sysctl settings installed successfully")
         return True
 
+    # Delete the drop-in and reload sysctl; removed values revert at the next reboot
     def uninstall(self):
 
         # Start uninstall

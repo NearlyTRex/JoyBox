@@ -1,0 +1,34 @@
+# ChromeDriver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ChromeDriver]
+program = { windows = "ChromeDriver/windows/chromedriver.exe", linux = "ChromeDriver/linux/chromedriver" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/"
+webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public"
+starts_with = "https://storage.googleapis.com/chrome-for-testing-public"
+ends_with = "win64/chromedriver-win64.zip"
+search_file = "chromedriver.exe"
+
+[[setup]]
+kind = "webpage_release"
+platform = "linux"
+webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/"
+webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public"
+starts_with = "https://storage.googleapis.com/chrome-for-testing-public"
+ends_with = "linux64/chromedriver-linux64.zip"
+search_file = "chromedriver"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "chromedriver.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "chromedriver"

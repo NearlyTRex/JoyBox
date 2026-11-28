@@ -2,11 +2,15 @@
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.strings as strings
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import strings
+from joybox import logger
+from joybox import paths
 from joybox import serialization
+
+# Check if a file is a playlist
+def is_playlist_file(path):
+    return path.endswith(".m3u")
 
 # Read playlist file
 def read_playlist(
@@ -35,6 +39,31 @@ def write_playlist(
         return serialization.write_text_file(output_file, contents, exit_on_failure = exit_on_failure)
     return True
 
+# Matching files anywhere under source_dir, as paths or bare file names when only_keep_ends
+def list_tree_playlist_entries(source_dir, extensions, only_keep_ends):
+    playlist_contents = []
+    for file in paths.build_file_list_by_extensions(source_dir, extensions = extensions):
+        if only_keep_ends:
+            playlist_contents.append(paths.get_filename_file(file))
+        else:
+            playlist_contents.append(file)
+    return playlist_contents
+
+# Matching files directly in source_dir, as paths or bare names when only_keep_ends
+def list_directory_playlist_entries(source_dir, extensions, only_keep_ends):
+    playlist_contents = []
+    for obj in paths.get_directory_contents(source_dir):
+        obj_path = paths.join_paths(source_dir, obj)
+        if not paths.is_path_file(obj_path):
+            continue
+        if not paths.does_filename_match_extensions(obj_path, extensions):
+            continue
+        if only_keep_ends:
+            playlist_contents.append(obj)
+        else:
+            playlist_contents.append(obj_path)
+    return playlist_contents
+
 # Generate playlist file
 def generate_playlist(
     source_dir,
@@ -52,27 +81,15 @@ def generate_playlist(
     extensions = [] if extensions is None else extensions
 
     # Generate playlist contents
-    playlist_contents = []
     if recursive:
-        for file in paths.build_file_list_by_extensions(source_dir, extensions = extensions):
-            if only_keep_ends:
-                playlist_contents.append(paths.get_filename_file(file))
-            else:
-                playlist_contents.append(file)
+        playlist_contents = list_tree_playlist_entries(source_dir, extensions, only_keep_ends)
     else:
-        for obj in paths.get_directory_contents(source_dir):
-            obj_path = paths.join_paths(source_dir, obj)
-            if paths.is_path_file(obj_path):
-                if paths.does_filename_match_extensions(obj_path, extensions):
-                    if only_keep_ends:
-                        playlist_contents.append(obj)
-                    else:
-                        playlist_contents.append(obj_path)
+        playlist_contents = list_directory_playlist_entries(source_dir, extensions, only_keep_ends)
 
     # Check length
     if not allow_empty_lists and len(playlist_contents) == 0:
         return True
-    elif not allow_single_lists and len(playlist_contents) == 1:
+    if not allow_single_lists and len(playlist_contents) == 1:
         return True
 
     # Write playlist
@@ -104,7 +121,7 @@ def generate_tree_playlist(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Generate local playlists
+# Write a <dirname>.m3u of bare file names into each directory under source_dir that directly holds matching files
 def generate_local_playlists(
     source_dir,
     extensions = None,

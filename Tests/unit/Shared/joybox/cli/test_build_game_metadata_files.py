@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
-from joybox import config
+from joybox import collection, config, environment
 from joybox.cli import build_game_metadata_files
 
 
@@ -32,9 +32,9 @@ def tool(monkeypatch):
         lambda parser, generation_mode: iter([(ROMS, NINTENDO, SWITCH), (ROMS, NINTENDO, WII)]))
     monkeypatch.setattr(build_game_metadata_files.gamecollection, "find_json_game_names",
         lambda supercategory, category, subcategory: list(names[subcategory]))
-    monkeypatch.setattr(build_game_metadata_files.environment, "get_game_metadata_file",
+    monkeypatch.setattr(environment, "get_game_metadata_file",
         lambda category, subcategory: "/metadata/%s.txt" % subcategory)
-    monkeypatch.setattr(build_game_metadata_files.collection, "build_game_metadata_entry", build)
+    monkeypatch.setattr(collection.metadata, "build_game_metadata_entry", build)
     return harness
 
 

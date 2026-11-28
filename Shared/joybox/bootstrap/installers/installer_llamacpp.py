@@ -2,10 +2,10 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # llama.cpp, built from source for hardware-specific flags. Unlike ollama it has the
 # grammars, fixed seeds, prompt caching and tokenizer endpoint promptc needs for
@@ -25,14 +25,17 @@ class LlamaCpp(installer.Installer):
         # no ROCm; hip AMD through ROCm
         self.backend = "vulkan"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/local/bin/llama-server exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.server_binary_path)
 
+    # llama-server, llama-cli and llama-bench as installed or missing in /usr/local/bin
     def get_package_status(self):
         installed = []
         missing = []
@@ -44,12 +47,14 @@ class LlamaCpp(installer.Installer):
                 missing.append(name)
         return {"installed": installed, "missing": missing}
 
+    # The apt packages the build needs, with the Vulkan headers and tools for that backend
     def get_build_dependencies(self):
         packages = ["build-essential", "cmake", "git", "libssl-dev"]
         if self.backend == "vulkan":
             packages += ["libvulkan-dev", "glslc", "spirv-headers", "vulkan-tools"]
         return packages
 
+    # CMake flags for a Release build into /usr/local with the chosen GGML backend
     def get_cmake_flags(self):
         flags = ["-DCMAKE_BUILD_TYPE=Release",
                  f"-DCMAKE_INSTALL_PREFIX={self.install_prefix}"]
@@ -61,6 +66,8 @@ class LlamaCpp(installer.Installer):
             flags.append("-DGGML_HIP=ON")
         return flags
 
+    # apt-get the build deps, clone or pull ~/Tools/llama.cpp, then cmake build and
+    # install into /usr/local; False when a step fails
     def install(self):
 
         # Start install
@@ -75,6 +82,25 @@ class LlamaCpp(installer.Installer):
             return False
 
         # Fetch or update the source tree
+        if not self._fetch_source():
+            return False
+
+        # Configure, build and install
+        if not self._build_and_install():
+            return False
+
+        # Verify installation
+        logger.log_info("Verifying installation")
+        if not self.is_installed():
+            logger.log_error("llama.cpp installation verification failed")
+            return False
+
+        # All done
+        logger.log_info("llama.cpp installed successfully")
+        return True
+
+    # Pull an existing checkout fast-forward only, or shallow clone a fresh one
+    def _fetch_source(self):
         if self.connection.does_file_or_directory_exist(os.path.join(self.source_dir, ".git")):
             logger.log_info("Updating existing llama.cpp checkout")
             code = self.connection.run_blocking([self.git_tool, "-C", self.source_dir, "pull", "--ff-only"])
@@ -86,6 +112,10 @@ class LlamaCpp(installer.Installer):
         if code != 0:
             logger.log_error("Failed to fetch llama.cpp source")
             return False
+        return True
+
+    # CMake configure with the backend flags, build Release, then install as root
+    def _build_and_install(self):
 
         # Configure
         build_dir = os.path.join(self.source_dir, "build")
@@ -111,17 +141,9 @@ class LlamaCpp(installer.Installer):
         if code != 0:
             logger.log_error("Install step failed")
             return False
-
-        # Verify installation
-        logger.log_info("Verifying installation")
-        if not self.is_installed():
-            logger.log_error("llama.cpp installation verification failed")
-            return False
-
-        # All done
-        logger.log_info("llama.cpp installed successfully")
         return True
 
+    # Delete the llama binaries from /usr/local/bin, keeping the source checkout
     def uninstall(self):
 
         # Start uninstall

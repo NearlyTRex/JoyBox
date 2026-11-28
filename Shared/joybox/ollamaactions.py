@@ -5,6 +5,7 @@ import re
 
 # Local imports
 from joybox import command
+from joybox import dispatch
 from joybox import hardware
 from joybox import logger
 from joybox import network
@@ -18,8 +19,8 @@ from joybox import terminal
 ###########################################################
 # Actions
 #
-# Every action takes the same keyword signature so the CLI can dispatch without
-# knowing which options a given action cares about.
+# Each action names only the options it reads; run_action offers them all and
+# passes each action the ones it names.
 ###########################################################
 
 # Whether a tag is a base or text model, which continues text rather than follows a
@@ -66,7 +67,7 @@ def pull_with_quantization(model_name):
     return pull_and_report(chosen)
 
 # List installed models
-def action_list(model_name = None, purpose = None, harness = None, show_all = False):
+def action_list():
     if not ollama.ensure_running():
         return False
     models = ollama.list_installed_models()
@@ -81,32 +82,92 @@ def action_list(model_name = None, purpose = None, harness = None, show_all = Fa
     logger.log_info("Total: %d models" % len(models))
     return True
 
+# Ask which purpose to list models for, offering all purposes first; None when declined
+def prompt_for_purpose():
+    purpose_options = [{"key": p, "label": "%s - %s" % (p, ollamacatalog.PURPOSE_DESCRIPTIONS[p])} for p in ollamacatalog.ALL_PURPOSES]
+    purpose_options.insert(0, {"key": None, "label": "All purposes"})
+    return prompts.prompt_for_selection(
+        "Select a purpose:",
+        purpose_options,
+        display_func = lambda x: x["label"]
+    )
+
+# Names of the models installed on the server; empty when it is not running
+def get_installed_model_names():
+    if ollama.is_running():
+        return {m["name"] for m in ollama.list_installed_models()}
+    return set()
+
+# Listing marker for a model: installed, fits GPU, CPU offload, cloud or too large
+def get_available_model_marker(model, installed_names):
+    if model["name"] in installed_names:
+        return "*"
+    if model["fit"] == ollamacatalog.FIT_GPU:
+        return "+"
+    if model["fit"] == ollamacatalog.FIT_OFFLOAD:
+        return "~"
+    if model["fit"] == ollamacatalog.FIT_CLOUD:
+        return "C"
+    return "-"
+
+# Log one model's listing lines: marker and size, description, and pull command unless cloud-hosted
+def log_available_model(model, installed_names):
+    prefix = get_available_model_marker(model, installed_names)
+    if model["fit"] == ollamacatalog.FIT_CLOUD:
+        logger.log_info("  [%s] %s (cloud-hosted)" % (prefix, model["display"]))
+    else:
+        vram_gb = model["vram_mb"] / 1024
+        speed_note = " (CPU offload, slower)" if model["fit"] == ollamacatalog.FIT_OFFLOAD else ""
+        logger.log_info("  [%s] %s (%s, ~%.1f GB)%s" % (prefix, model["display"], model["params"], vram_gb, speed_note))
+    logger.log_info("      %s" % model["description"])
+    if model["fit"] != ollamacatalog.FIT_CLOUD:
+        logger.log_info("      ollama pull %s" % model["name"])
+
+# Log the listing of models for the purpose under a header with the server's memory and a legend
+def log_available_model_list(purpose, hw, display_models, installed_names):
+    logger.log_info("")
+    purpose_label = purpose if purpose else "all purposes"
+    logger.log_info("Available models for %s (VRAM: %d MB total, %d MB free, RAM: %d MB):" % (
+        purpose_label, hw["gpu_vram_total_mb"], hw["gpu_vram_free_mb"], hw["system_ram_mb"]))
+    logger.log_info("[+] fits GPU  [~] CPU offload (slower)  [C] cloud-hosted  [-] too large  [*] installed")
+    logger.log_info("-" * 70)
+    for model in display_models:
+        log_available_model(model, installed_names)
+    logger.log_info("-" * 70)
+
+# Offer to pull one of the listed models that is neither installed, cloud-hosted nor too large; False when the pull fails
+def offer_available_model_pull(display_models, installed_names):
+    pullable = [m for m in display_models if m["name"] not in installed_names and m["fit"] not in (ollamacatalog.FIT_NONE, ollamacatalog.FIT_CLOUD)]
+    if not pullable:
+        return True
+    logger.log_info("")
+    if not prompts.prompt_for_confirmation("Would you like to pull a model?", default_yes = False):
+        return True
+    selected = prompts.prompt_for_selection(
+        "Select a model to pull:",
+        pullable,
+        display_func = lambda m: "%s (%s, ~%.1f GB)" % (m["display"], m["params"], m["vram_mb"] / 1024)
+    )
+    if selected and not pull_with_quantization(selected["name"]):
+        return False
+    return True
+
 # Show available models with recommendations
-def action_available(model_name = None, purpose = None, harness = None, show_all = False):
+def action_available(purpose = None, show_all = False):
     hw = ollama.get_server_hardware()
     hardware.print_hardware_summary(hw)
     logger.log_info("")
 
     # Determine purpose filter
     if not purpose:
-        purpose_options = [{"key": p, "label": "%s - %s" % (p, ollamacatalog.PURPOSE_DESCRIPTIONS[p])} for p in ollamacatalog.ALL_PURPOSES]
-        purpose_options.insert(0, {"key": None, "label": "All purposes"})
-        selected = prompts.prompt_for_selection(
-            "Select a purpose:",
-            purpose_options,
-            display_func = lambda x: x["label"]
-        )
+        selected = prompt_for_purpose()
         if selected is None:
             return True
         purpose = selected["key"]
 
-    # Get recommendations
-    vram_mb = hw["gpu_vram_total_mb"]
-    ram_mb = hw["system_ram_mb"]
-
-    # Include unfit + cloud so we can categorize and count them here
+    # Get recommendations, including unfit + cloud so we can categorize and count them here
     models = ollamacatalog.get_recommended_models(
-        purpose = purpose, vram_mb = vram_mb, ram_mb = ram_mb,
+        purpose = purpose, vram_mb = hw["gpu_vram_total_mb"], ram_mb = hw["system_ram_mb"],
         include_unfit = True, include_cloud = True)
     if not models:
         logger.log_info("No models found for the selected criteria")
@@ -119,65 +180,20 @@ def action_available(model_name = None, purpose = None, harness = None, show_all
     no_fit_models = [m for m in models if m["fit"] == ollamacatalog.FIT_NONE]
 
     # Filter display unless show_all
-    if not show_all:
-        display_models = gpu_models + offload_models + cloud_models
-    else:
-        display_models = models
-
-    # Check what's already installed
-    installed_names = set()
-    if ollama.is_running():
-        installed_names = {m["name"] for m in ollama.list_installed_models()}
+    display_models = models if show_all else gpu_models + offload_models + cloud_models
+    installed_names = get_installed_model_names()
 
     # Display
-    logger.log_info("")
-    purpose_label = purpose if purpose else "all purposes"
-    vram_free = hw["gpu_vram_free_mb"]
-    logger.log_info("Available models for %s (VRAM: %d MB total, %d MB free, RAM: %d MB):" % (purpose_label, vram_mb, vram_free, ram_mb))
-    logger.log_info("[+] fits GPU  [~] CPU offload (slower)  [C] cloud-hosted  [-] too large  [*] installed")
-    logger.log_info("-" * 70)
-    for model in display_models:
-        if model["name"] in installed_names:
-            prefix = "*"
-        elif model["fit"] == ollamacatalog.FIT_GPU:
-            prefix = "+"
-        elif model["fit"] == ollamacatalog.FIT_OFFLOAD:
-            prefix = "~"
-        elif model["fit"] == ollamacatalog.FIT_CLOUD:
-            prefix = "C"
-        else:
-            prefix = "-"
-        if model["fit"] == ollamacatalog.FIT_CLOUD:
-            logger.log_info("  [%s] %s (cloud-hosted)" % (prefix, model["display"]))
-        else:
-            vram_gb = model["vram_mb"] / 1024
-            speed_note = " (CPU offload, slower)" if model["fit"] == ollamacatalog.FIT_OFFLOAD else ""
-            logger.log_info("  [%s] %s (%s, ~%.1f GB)%s" % (prefix, model["display"], model["params"], vram_gb, speed_note))
-        logger.log_info("      %s" % model["description"])
-        if model["fit"] != ollamacatalog.FIT_CLOUD:
-            logger.log_info("      ollama pull %s" % model["name"])
-    logger.log_info("-" * 70)
+    log_available_model_list(purpose, hw, display_models, installed_names)
     logger.log_info("%d fit GPU, %d with CPU offload, %d cloud, %d too large" % (len(gpu_models), len(offload_models), len(cloud_models), len(no_fit_models)))
     if not show_all and no_fit_models:
         logger.log_info("Use --all to see models that exceed your system")
 
     # Offer to pull (GPU + offload models are pullable; cloud/too-large are not)
-    pullable = [m for m in display_models if m["name"] not in installed_names and m["fit"] not in (ollamacatalog.FIT_NONE, ollamacatalog.FIT_CLOUD)]
-    if pullable:
-        logger.log_info("")
-        if prompts.prompt_for_confirmation("Would you like to pull a model?", default_yes = False):
-            selected = prompts.prompt_for_selection(
-                "Select a model to pull:",
-                pullable,
-                display_func = lambda m: "%s (%s, ~%.1f GB)" % (m["display"], m["params"], m["vram_mb"] / 1024)
-            )
-            if selected:
-                if not pull_with_quantization(selected["name"]):
-                    return False
-    return True
+    return offer_available_model_pull(display_models, installed_names)
 
 # Pull a model
-def action_pull(model_name = None, purpose = None, harness = None, show_all = False):
+def action_pull(model_name = None, purpose = None, show_all = False):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -185,7 +201,7 @@ def action_pull(model_name = None, purpose = None, harness = None, show_all = Fa
     return pull_with_quantization(model_name)
 
 # Delete a model
-def action_delete(model_name = None, purpose = None, harness = None, show_all = False):
+def action_delete(model_name = None):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -210,13 +226,12 @@ def action_delete(model_name = None, purpose = None, harness = None, show_all = 
         if ollama.delete_model(model_name):
             logger.log_info("Successfully deleted %s" % model_name)
             return True
-        else:
-            logger.log_error("Failed to delete %s" % model_name)
-            return False
+        logger.log_error("Failed to delete %s" % model_name)
+        return False
     return True
 
 # Show model info
-def action_info(model_name = None, purpose = None, harness = None, show_all = False):
+def action_info(model_name = None):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -237,19 +252,55 @@ def action_info(model_name = None, purpose = None, harness = None, show_all = Fa
         logger.log_info("Model info for %s:" % model_name)
         terminal.write(info + "\n")
         return True
-    else:
-        logger.log_error("Could not get info for %s (is it installed?)" % model_name)
+    logger.log_error("Could not get info for %s (is it installed?)" % model_name)
+    return False
+
+# Whether a harness key is known, logging the available ones when it is not
+def is_known_harness(harness):
+    if harness not in ollamaagents.HARNESSES:
+        logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(ollamaagents.get_harness_keys())))
         return False
+    return True
+
+# Offer to pull a model the harness was asked for but is not installed, in a chat-capable quantization
+# Returns the pulled model's name, or the result action_harness gives when nothing was pulled.
+def pull_missing_harness_model(model_name, installed_names):
+    logger.log_error("Model '%s' is not installed" % model_name)
+    logger.log_info("Installed models: %s" % ", ".join(sorted(installed_names)))
+    if not prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
+        return False
+    chosen = choose_quantization(model_name, chat_only = True)
+    if chosen is None:
+        return True
+    if not pull_and_report(chosen):
+        return False
+    return chosen
+
+# The installed model to launch a harness with: the one named, pulled first when missing, or
+# else one the user picks; the result action_harness gives when there is none to launch
+def resolve_harness_model(model_name, models, harness_name):
+    if not model_name:
+        selected = prompts.prompt_for_selection(
+            "Select a model for %s:" % harness_name,
+            models,
+            display_func = ollamacatalog.format_installed_model_display
+        )
+        if selected is None:
+            return True
+        return selected["name"]
+    installed_names = {m["name"] for m in models}
+    if model_name not in installed_names:
+        return pull_missing_harness_model(model_name, installed_names)
+    return model_name
 
 # Launch a coding-agent harness with an Ollama model as the backend
-def action_harness(model_name = None, purpose = None, harness = None, show_all = False):
+def action_harness(model_name = None, harness = None):
     if not ollama.ensure_running():
         return False
 
     # Resolve the harness
     harness = harness or ollamaagents.DEFAULT_HARNESS
-    if harness not in ollamaagents.HARNESSES:
-        logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(ollamaagents.get_harness_keys())))
+    if not is_known_harness(harness):
         return False
     harness_name = ollamaagents.HARNESSES[harness]["name"]
 
@@ -258,41 +309,21 @@ def action_harness(model_name = None, purpose = None, harness = None, show_all =
     if not models:
         logger.log_info("No models installed. Run 'ollama_tool available' to find models.")
         return False
-    installed_names = {m["name"] for m in models}
-    if not model_name:
-
-        # Let user select from installed models
-        selected = prompts.prompt_for_selection(
-            "Select a model for %s:" % harness_name,
-            models,
-            display_func = ollamacatalog.format_installed_model_display
-        )
-        if selected is None:
-            return True
-        model_name = selected["name"]
-    elif model_name not in installed_names:
-        logger.log_error("Model '%s' is not installed" % model_name)
-        logger.log_info("Installed models: %s" % ", ".join(sorted(installed_names)))
-        if not prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
-            return False
-        chosen = choose_quantization(model_name, chat_only = True)
-        if chosen is None:
-            return True
-        if not pull_and_report(chosen):
-            return False
-        model_name = chosen
+    resolved = resolve_harness_model(model_name, models, harness_name)
+    if isinstance(resolved, bool):
+        return resolved
+    model_name = resolved
 
     # Warn if the model's context window is too small for this harness
-    if not ollamaagents.check_context_window(model_name, harness):
-        if not prompts.prompt_for_confirmation("Launch anyway?", default_yes = False):
-            return True
+    if not ollamaagents.check_context_window(model_name, harness) and not prompts.prompt_for_confirmation("Launch anyway?", default_yes = False):
+        return True
 
     # Launch the harness against the model
     logger.log_info("Launching %s with model: %s" % (harness_name, model_name))
     return ollamaagents.launch_harness(model_name, harness)
 
 # Recommend the best model for the current hardware and purpose
-def action_best(model_name = None, purpose = None, harness = None, show_all = False):
+def action_best(purpose = None):
     hw = ollama.get_server_hardware()
     purpose = purpose or ollamacatalog.PURPOSE_TOOLS
     best = ollamacatalog.get_best_model(
@@ -319,7 +350,7 @@ def action_best(model_name = None, purpose = None, harness = None, show_all = Fa
 
 # Start a coding agent in the current directory on the best coding model for the
 # server, picking, pulling and sizing it first
-def action_code(model_name = None, purpose = None, harness = None, show_all = False):
+def action_code(model_name = None, harness = None):
     harness = harness or ollamaagents.DEFAULT_HARNESS
     if harness not in ollamaagents.HARNESSES:
         logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(ollamaagents.get_harness_keys())))
@@ -348,7 +379,7 @@ def get_server_version():
     return (network.get_remote_json(ollama.get_api_base() + "/api/version") or {}).get("version")
 
 # Update ollama on the server by rerunning its installer there over SSH
-def action_update(model_name = None, purpose = None, harness = None, show_all = False):
+def action_update():
     host = ollama.get_ssh_host()
     if not host:
         logger.log_error("Updating needs the server's SSH destination in [Tools.Ollama] ollama_ssh_host")
@@ -389,7 +420,8 @@ def run_action(action, model_name = None, purpose = None, harness = None, show_a
     if action not in ACTIONS:
         logger.log_error("Unknown action '%s'. Valid actions: %s" % (action, ", ".join(get_action_keys())))
         return False
-    return ACTIONS[action](
+    return dispatch.call_with_options(
+        ACTIONS[action],
         model_name = model_name,
         purpose = purpose,
         harness = harness,

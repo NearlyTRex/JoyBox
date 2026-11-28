@@ -1,16 +1,41 @@
-# Imports
-import datetime
-
 # Local imports
 from joybox import systemtools as tools
-import joybox.bootstrap.constants as constants
+from joybox.connection import ConnectionSSH
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
 from joybox import platform_info
 from joybox import programs
 from joybox import settings
 
-# Installer
+# The identifier of a package list entry: the entry itself when a string, else its "id"
+def get_package_id(pkg):
+    if isinstance(pkg, str):
+        return pkg
+    return pkg.get("id", "")
+
+# The id, name, description and category of a package list entry, a string entry
+# naming itself with no description or category
+def get_package_info(pkg):
+    if isinstance(pkg, str):
+        return {"id": pkg, "name": pkg, "description": "", "category": ""}
+    return {
+        "id": pkg.get("id", ""),
+        "name": pkg.get("name", pkg.get("id", "")),
+        "description": pkg.get("description", ""),
+        "category": pkg.get("category", "")
+    }
+
+# The display names of a package list split by whether is_installed(pkg) holds,
+# as the {"installed": [...], "missing": [...]} status an installer reports
+def split_package_status(pkgs, is_installed):
+    status = {"installed": [], "missing": []}
+    for pkg in pkgs:
+        status["installed" if is_installed(pkg) else "missing"].append(get_package_info(pkg)["name"])
+    return status
+
+# Base for a bootstrap component: holds the connection and tool paths and
+# defines the install, uninstall and status contract subclasses override
 class Installer:
     def __init__(
         self,
@@ -50,12 +75,15 @@ class Installer:
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
         self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
 
+    # Record the environment type in the UserData.General settings
     def set_environment_type(self, environment_type):
         settings.set_value("UserData.General", "environment_type", environment_type)
 
+    # The environment type recorded in the UserData.General settings
     def get_environment_type(self):
         return settings.get_value("UserData.General", "environment_type")
 
+    # The environment types the component runs on; the base allows every local and remote type
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
@@ -64,11 +92,13 @@ class Installer:
             constants.EnvironmentType.REMOTE_WINDOWS,
         ]
 
+    # Whether the component runs on the given environment type, the recorded one when None
     def supports_environment(self, env_type=None):
         if env_type is None:
             env_type = self.get_environment_type()
         return env_type in self.get_supported_environments()
 
+    # The target's home directory, asked of its shell once and cached; a literal $HOME when it cannot say
     def get_remote_home(self):
 
         # Resolve the remote home directory once and cache it.
@@ -82,9 +112,6 @@ class Installer:
             self.remote_home = resolved
         return self.remote_home
 
-    def get_app_dir(self):
-        return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
-
     # Write a file only its owner can read, created that way before anything is
     # in it so the contents are never readable by anyone else
     def write_secret_file(self, path, contents):
@@ -92,66 +119,63 @@ class Installer:
             return False
         return self.connection.write_file(path, contents)
 
+    # Write the contents to /tmp/<file_name>, run the nginx manager action on it
+    # and delete it; False, logged, when that file cannot be written
+    def run_nginx_manager_on_file(self, action, file_name, contents):
+        tmp_path = f"/tmp/{file_name}"
+        if not self.connection.write_file(tmp_path, contents):
+            logger.log_error(f"Unable to write {tmp_path} for the nginx manager")
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, action, tmp_path], sudo = True)
+        self.connection.remove_file_or_directory(tmp_path)
+        return True
+
+    # Have the nginx manager install and enable a site config; False, logged,
+    # when its staging file cannot be written
+    def install_nginx_conf(self, conf_name, contents):
+        if not self.run_nginx_manager_on_file("install_conf", conf_name, contents):
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, "link_conf", conf_name], sudo = True)
+        return True
+
+    # Have the nginx manager install a snippet; False, logged, when its staging
+    # file cannot be written. Snippets are included by server blocks owned by
+    # other components, so ownership can move without a second server_name.
     def install_nginx_snippet(self, snippet_name, contents):
+        return self.run_nginx_manager_on_file("install_snippet", snippet_name, contents)
 
-        # Snippets are included by server blocks owned by other components,
-        # so ownership of the included file can change hands without two
-        # server blocks ever claiming the same server_name.
-        snippet_tmp_path = f"/tmp/{snippet_name}"
-        if self.connection.write_file(snippet_tmp_path, contents):
-            self.connection.run_checked([self.nginx_manager_tool, "install_snippet", snippet_tmp_path], sudo = True)
-            self.connection.remove_file_or_directory(snippet_tmp_path)
-        return True
+    # Whether the target is reached over SSH rather than being this machine
+    def is_remote_target(self):
+        return isinstance(self.connection, ConnectionSSH)
 
-    def compose_down(self):
-
-        # Stop the compose project. Volumes are preserved unless --purge-data
-        # was passed; "down -v" destroys databases and app data.
-        app_dir = self.get_app_dir()
-        down_command = self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "down"]
-        if self.flags.purge_data:
-            logger.log_warning(f"Purging data: deleting container volumes for {self.app_name}")
-            down_command += ["-v"]
-        else:
-            logger.log_info(f"Keeping container volumes for {self.app_name} (use --purge-data to delete)")
-        self.connection.set_current_working_directory(app_dir)
-        self.connection.run_checked(down_command)
-        self.connection.set_current_working_directory(None)
-        return True
-
-    def retire_app_dir(self):
-
-        # Bind-mounted app data lives inside the app directory, so removing it
-        # destroys that data even when the volumes were kept. Rename instead.
-        app_dir = self.get_app_dir()
-        if self.flags.purge_data:
-            logger.log_warning(f"Purging data: removing {app_dir}")
-            self.connection.remove_file_or_directory(app_dir)
-            return True
-        retired_dir = "%s.removed-%s" % (app_dir, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
-        logger.log_info(f"Preserving app directory, moving to {retired_dir}")
-        self.connection.move_file_or_directory(app_dir, retired_dir)
-        return True
-
+    # Whether the component is present on the target; the base says False
     def is_installed(self):
         return False
 
+    # A status detail for the status report; the base has None
     def get_package_status(self):
         return None
 
+    # Put the component on the target; the base does nothing and returns False
     def install(self):
         return False
 
+    # Take the component off the target; the base does nothing and returns False
     def uninstall(self):
         return False
 
+    # Save the component's data; the base has nothing to save and returns True
     def backup(self, tag = ""):
+        del tag
         return True
 
+    # Bring back the component's data; the base only logs that it has none
     def restore(self):
         logger.log_info(f"No restore implemented for {self.__class__.__name__}")
         return True
 
+    # Download an installer script to /tmp, run it with the given runner and
+    # arguments, then delete it; False on a nonzero exit
     def install_from_script(self, url, tmp_name, runner = "sh", args = None):
         tmp_path = f"/tmp/{tmp_name}"
         logger.log_info(f"Downloading installer from {url}")

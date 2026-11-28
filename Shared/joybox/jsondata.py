@@ -2,9 +2,9 @@
 import copy
 
 # Local imports
-import joybox.config as config
-import joybox.datautils as datautils
-import joybox.platforms as platforms
+from joybox import config
+from joybox import datautils
+from joybox import platforms
 
 # General json data class
 class JsonData:
@@ -14,31 +14,31 @@ class JsonData:
         self.json_data = json_data if json_data is not None else {}
         self.json_platform = json_platform
 
-    # Copy method
+    # Deep copy of the whole object, data and platform
     def copy(self):
         return copy.deepcopy(self)
 
-    # Get data
+    # The wrapped dict itself, so changes to it change this object
     def get_data(self):
         return self.json_data
 
-    # Get data copy
+    # Deep copy of the wrapped dict, safe to modify
     def get_data_copy(self):
         return copy.deepcopy(self.json_data)
 
-    # Get platform
+    # Platform whose key rules decide how fill_value treats each key
     def get_platform(self):
         return self.json_platform
 
-    # Set data
+    # Replace the wrapped dict
     def set_data(self, json_data):
         self.json_data = json_data
 
-    # Set platform
+    # Replace the platform whose key rules fill_value applies
     def set_platform(self, json_platform):
         self.json_platform = json_platform
 
-    # Get keys
+    # Top-level key view of the wrapped dict
     def get_keys(self):
         return self.json_data.keys()
 
@@ -56,21 +56,21 @@ class JsonData:
         except (KeyError, IndexError, TypeError, AttributeError):
             return False
 
-    # Get value
+    # Top-level value for a key, or the default when absent or the data is not indexable
     def get_value(self, key, default_value = None):
         try:
             return self.json_data[key]
         except (KeyError, IndexError, TypeError):
             return default_value
 
-    # Get subvalue
+    # Nested value data[key][subkey], or the default when either level is absent
     def get_subvalue(self, key, subkey, default_value = None):
         try:
             return self.json_data[key][subkey]
         except (KeyError, IndexError, TypeError):
             return default_value
 
-    # Set value
+    # Store a top-level value; False when the data cannot take it
     def set_value(self, key, value):
         try:
             self.json_data[key] = value
@@ -78,7 +78,7 @@ class JsonData:
         except (TypeError, AttributeError):
             return False
 
-    # Set subvalue
+    # Store data[key][subkey], creating the key's dict when absent; False when the data cannot take it
     def set_subvalue(self, key, subkey, value):
         try:
             if not self.has_key(key):
@@ -88,7 +88,7 @@ class JsonData:
         except (KeyError, IndexError, TypeError, AttributeError):
             return False
 
-    # Fill value
+    # Set, set-if-absent or additively merge a value, as the platform marks the key autofill, fill-once or merge; other keys are left alone
     def fill_value(self, key, value):
         if platforms.is_autofill_json_key(self.json_platform, key):
             self.set_value(key, value)
@@ -101,7 +101,7 @@ class JsonData:
                 data2 = value,
                 merge_type = config.MergeType.SAFE_ADDITIVE))
 
-    # Fill subvalue
+    # Set, set-if-absent or additively merge data[key][subkey] by the platform's rule for the subkey; other subkeys are left alone
     def fill_subvalue(self, key, subkey, value):
         if platforms.is_autofill_json_key(self.json_platform, subkey):
             self.set_subvalue(key, subkey, value)

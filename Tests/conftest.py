@@ -278,6 +278,13 @@ def recording_command(monkeypatch):
     return RecordingCommand(monkeypatch)
 
 
+@pytest.fixture
+def processes(monkeypatch):
+    # Stands in for the child processes commands launch, for the runner's own tests.
+    from command_helpers import FakeProcesses
+    return FakeProcesses(monkeypatch)
+
+
 ###########################################################
 # Required programs
 #

@@ -70,89 +70,93 @@ from .xorriso import XorrISO
 from .ytdlp import YtDlp
 from .zoomplatformsh import ZoomPlatformSH
 
-# Get tool map
+# Every tool class, in registration order
+TOOL_CLASSES = (
+    AppImageTool,
+    BalenaEtcher,
+    Bchunk,
+    Brave,
+    CDecrypt,
+    Chrome,
+    ChromeDriver,
+    Cmake,
+    Curl,
+    DXVK,
+    ExifTool,
+    ExtractXIso,
+    FFMpeg,
+    Firefox,
+    FuseISO,
+    GeckoDriver,
+    Ghidra,
+    Git,
+    GoldbergEmu,
+    Gpg,
+    HacTool,
+    Heirloom,
+    HeroicGogDL,
+    HumbleBundleManager,
+    ItchDL,
+    JDupes,
+    Mkpl,
+    Legendary,
+    LGOGDownloader,
+    Ludusavi,
+    LudusaviManifest,
+    MameTools,
+    Moonlight,
+    Mutagen,
+    NDecrypt,
+    NirCmd,
+    Nile,
+    Pegasus,
+    Perl,
+    ProjectCTR,
+    PS3Dec,
+    PSNGetPkgInfo,
+    PSVStrip,
+    PSVTools,
+    PyLnk,
+    PySimpleGUI,
+    PySteamGridDB,
+    Python,
+    RClone,
+    Sandboxie,
+    SevenZip,
+    Sigtop,
+    Steam,
+    SteamAppIDList,
+    SteamCMD,
+    SteamDepotDownloader,
+    Steamless,
+    Sunshine,
+    Tar,
+    ThreeDSRomTool,
+    Unar,
+    Unrar,
+    Unzip,
+    VKD3D,
+    Wad2Bin,
+    Wine,
+    XCITrimmer,
+    XorrISO,
+    YtDlp,
+    ZoomPlatformSH,
+)
+
+# One instance of every tool class, keyed by its registered name
 def get_tool_map():
     instances = {}
-    def add_instance(class_name):
+    for class_name in TOOL_CLASSES:
         instance = class_name()
         instances[instance.get_name()] = instance
-    add_instance(AppImageTool)
-    add_instance(BalenaEtcher)
-    add_instance(Bchunk)
-    add_instance(Brave)
-    add_instance(CDecrypt)
-    add_instance(Chrome)
-    add_instance(ChromeDriver)
-    add_instance(Cmake)
-    add_instance(Curl)
-    add_instance(DXVK)
-    add_instance(ExifTool)
-    add_instance(ExtractXIso)
-    add_instance(FFMpeg)
-    add_instance(Firefox)
-    add_instance(FuseISO)
-    add_instance(GeckoDriver)
-    add_instance(Ghidra)
-    add_instance(Git)
-    add_instance(GoldbergEmu)
-    add_instance(Gpg)
-    add_instance(HacTool)
-    add_instance(Heirloom)
-    add_instance(HeroicGogDL)
-    add_instance(HumbleBundleManager)
-    add_instance(ItchDL)
-    add_instance(JDupes)
-    add_instance(Mkpl)
-    add_instance(Legendary)
-    add_instance(LGOGDownloader)
-    add_instance(Ludusavi)
-    add_instance(LudusaviManifest)
-    add_instance(MameTools)
-    add_instance(Moonlight)
-    add_instance(Mutagen)
-    add_instance(NDecrypt)
-    add_instance(NirCmd)
-    add_instance(Nile)
-    add_instance(Pegasus)
-    add_instance(Perl)
-    add_instance(ProjectCTR)
-    add_instance(PS3Dec)
-    add_instance(PSNGetPkgInfo)
-    add_instance(PSVStrip)
-    add_instance(PSVTools)
-    add_instance(PyLnk)
-    add_instance(PySimpleGUI)
-    add_instance(PySteamGridDB)
-    add_instance(Python)
-    add_instance(RClone)
-    add_instance(Sandboxie)
-    add_instance(SevenZip)
-    add_instance(Sigtop)
-    add_instance(Steam)
-    add_instance(SteamAppIDList)
-    add_instance(SteamCMD)
-    add_instance(SteamDepotDownloader)
-    add_instance(Steamless)
-    add_instance(Sunshine)
-    add_instance(Tar)
-    add_instance(ThreeDSRomTool)
-    add_instance(Unar)
-    add_instance(Unrar)
-    add_instance(Unzip)
-    add_instance(VKD3D)
-    add_instance(Wad2Bin)
-    add_instance(Wine)
-    add_instance(XCITrimmer)
-    add_instance(XorrISO)
-    add_instance(YtDlp)
-    add_instance(ZoomPlatformSH)
     return instances
 
-# Get tool list
+# Every tool instance, in registration order
 def get_tool_list():
     return get_tool_map().values()
 
-# Get tool by name
+# The tool registered under a name; None when none matches
 def get_tool_by_name(tool_name):
     for instance in get_tool_list():
         if instance.get_name() == tool_name:

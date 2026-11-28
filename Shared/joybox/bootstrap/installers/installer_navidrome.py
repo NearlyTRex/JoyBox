@@ -1,12 +1,12 @@
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   navidrome:
     image: ${NAVIDROME_IMAGE}
@@ -25,7 +25,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 NAVIDROME_PORT_HTTP={port_http}
 NAVIDROME_MUSIC_DIR={music_dir}
 """
@@ -50,8 +50,8 @@ class Navidrome(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "music_dir"]
@@ -68,6 +68,8 @@ class Navidrome(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Navidrome"
         self.backup_volumes = ["config_data"]
 
+    # Create the configured first admin through Navidrome's API; skipped with a
+    # warning when no admin password is set, and True when an admin exists
     def post_install(self):
 
         # Without a password the first visitor to the site creates the admin

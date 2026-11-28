@@ -1,0 +1,28 @@
+# ZoomPlatformSH: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ZoomPlatformSH]
+program = "ZoomPlatformSH/lib/zoom-platform.sh"
+
+[[setup]]
+kind = "github_release"
+platform = "lib"
+for = "library"
+github_user = "ZOOM-Platform"
+github_repo = "zoom-platform.sh"
+starts_with = "zoom-platform"
+ends_with = ".sh"
+search_file = "zoom-platform.sh"
+install_files = ["zoom-platform.sh"]
+release_type = "PROGRAM"
+chmod_files = [{ file = "zoom-platform.sh", perms = 755 }]
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "lib"
+for = "library"
+search_file = "zoom-platform.sh"
+install_files = ["zoom-platform.sh"]
+release_type = "PROGRAM"
+chmod_files = [{ file = "zoom-platform.sh", perms = 755 }]

@@ -213,7 +213,7 @@ def test_a_ps3_disc_is_decrypted_with_its_key(ps3_tools, tmp_path):
 
     assert success is True
     assert ps3_tools["iso"][0]["dkey"] == key
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
 
 
 def test_a_ps3_transform_leaves_an_index_behind(ps3_tools, tmp_path):
@@ -223,7 +223,7 @@ def test_a_ps3_transform_leaves_an_index_behind(ps3_tools, tmp_path):
 
     transform.transform_ps3_disc_image(source, "/keys/Game.dkey", output)
 
-    assert os.path.isfile(os.path.join(output, config.raw_files_index))
+    assert os.path.isfile(os.path.join(output, config.RAW_FILES_INDEX))
 
 
 def test_a_failed_ps3_decryption_reports_its_reason(monkeypatch, tmp_path):
@@ -273,6 +273,17 @@ def test_a_disc_package_is_unpacked_beside_itself(ps3_tools, tmp_path):
     assert ps3_tools["pkg"][0]["dir"] == str(output / "PS3_EXTRA" / "bonus")
 
 
+def test_each_disc_package_of_a_playlist_is_unpacked_once(ps3_tools, tmp_path):
+    source = write(tmp_path / "discs" / "Game.m3u", "Game (Disc 1).iso\nGame (Disc 2).iso\n")
+    output = tmp_path / "out"
+    write(output / "PS3_EXTRA" / "bonus.pkg")
+
+    transform.transform_ps3_disc_image(source, "/keys/Game.dkey", str(output))
+
+    assert len(ps3_tools["iso"]) == 2
+    assert [call["pkg"] for call in ps3_tools["pkg"]] == [str(output / "PS3_EXTRA" / "bonus.pkg")]
+
+
 def test_a_failed_disc_package_extract_reports_its_reason(ps3_tools, monkeypatch, tmp_path):
     monkeypatch.setattr(transform.playstation, "extract_psn_pkg", lambda **kwargs: False)
     source = write(tmp_path / "discs" / "Game.iso")
@@ -315,7 +326,7 @@ def test_a_ps3_package_is_unpacked(psn_tools, tmp_path):
 
     assert success is True
     assert psn_tools["pkg"][0] == {"pkg": source, "dir": output}
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
 
 
 def test_a_licence_is_renamed_to_its_content_id(psn_tools, monkeypatch, tmp_path):
@@ -375,7 +386,7 @@ def test_a_vita_package_keeps_its_licence_as_work_bin(psn_tools, tmp_path):
     success, result = transform.transform_psv_network_package(source, output)
 
     assert success is True
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
     assert psn_tools["copied"] == [(
         str(tmp_path / "downloads" / "Game.work.bin"),
         os.path.join(output, "work.bin"))]
@@ -400,7 +411,7 @@ def test_a_network_transform_leaves_an_index_behind(psn_tools, tmp_path, builder
 
     builder(source, output)
 
-    assert os.path.isfile(os.path.join(output, config.raw_files_index))
+    assert os.path.isfile(os.path.join(output, config.RAW_FILES_INDEX))
 
 
 ###########################################################
@@ -449,6 +460,19 @@ def test_a_split_prepackaged_archive_is_found(computer_tools, tmp_path):
     transform.transform_computer_programs(FakeGameInfo(), source, str(tmp_path / "out"))
 
     assert computer_tools["extracted"] == [first_part]
+
+
+def test_a_whole_prepackaged_archive_is_preferred_to_a_split_one(tmp_path):
+    whole = write(tmp_path / "A Game.7z")
+    write(tmp_path / "A Game.7z.001")
+
+    assert transform.find_prepackaged_archive(str(tmp_path / "setup.exe"), "A Game") == whole
+
+
+def test_a_self_extracting_archive_is_the_last_resort(tmp_path):
+    found = transform.find_prepackaged_archive(str(tmp_path / "setup.exe"), "A Game")
+
+    assert found == os.path.join(str(tmp_path), "A Game.exe")
 
 
 def test_an_installer_is_run_when_nothing_is_prepackaged(computer_tools, tmp_path):
@@ -514,4 +538,4 @@ def test_a_computer_transform_leaves_an_index_behind(computer_tools, tmp_path):
 
     assert success is True
     assert os.path.isfile(result)
-    assert result.endswith(config.raw_files_index)
+    assert result.endswith(config.RAW_FILES_INDEX)

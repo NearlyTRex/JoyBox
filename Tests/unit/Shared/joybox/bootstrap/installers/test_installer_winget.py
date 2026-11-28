@@ -44,14 +44,15 @@ def test_the_package_list_follows_the_environment_type(isolated_settings, monkey
 def test_installed_needs_every_package(isolated_settings, monkeypatch):
     winget, connection = make(isolated_settings, monkeypatch)
     assert winget.is_installed()
-    assert connection.ran(winget.winget_tool, "list --name Git.Git")
+    assert connection.ran(winget.winget_tool, "list --id Git.Git -e")
+    assert not connection.ran("--name")
 
-    winget, _ = make(isolated_settings, monkeypatch, return_codes = {"--name 7zip.7zip": 1})
+    winget, _ = make(isolated_settings, monkeypatch, return_codes = {"list --id 7zip.7zip": 1})
     assert not winget.is_installed()
 
 
 def test_package_status_splits_installed_and_missing(isolated_settings, monkeypatch):
-    winget, _ = make(isolated_settings, monkeypatch, return_codes = {"--name Git.Git": 1})
+    winget, _ = make(isolated_settings, monkeypatch, return_codes = {"list --id Git.Git": 1})
     assert winget.get_package_status() == {"installed": ["7zip.7zip"], "missing": ["Git.Git"]}
 
 

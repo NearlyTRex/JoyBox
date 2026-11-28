@@ -14,11 +14,11 @@ from webpage_helpers import FakeDriver
 ###########################################################
 
 LIMITS = [
-    pytest.param(webpage.get_element_wait_seconds, "element_wait_seconds", webpage.default_element_wait_seconds, 1, id = "element-wait"),
-    pytest.param(webpage.get_fetch_retries, "fetch_retries", webpage.default_fetch_retries, 1, id = "retries"),
-    pytest.param(webpage.get_fetch_retry_delay_seconds, "fetch_retry_delay_seconds", webpage.default_fetch_retry_delay_seconds, 0, id = "retry-delay"),
-    pytest.param(webpage.get_min_match_score, "min_match_score", webpage.default_min_match_score, 0, id = "match-score"),
-    pytest.param(webpage.get_page_load_interval_seconds, "page_load_interval_seconds", webpage.default_page_load_interval_seconds, 0, id = "page-interval"),
+    pytest.param(webpage.get_element_wait_seconds, "element_wait_seconds", webpage.DEFAULT_ELEMENT_WAIT_SECONDS, 1, id = "element-wait"),
+    pytest.param(webpage.get_fetch_retries, "fetch_retries", webpage.DEFAULT_FETCH_RETRIES, 1, id = "retries"),
+    pytest.param(webpage.get_fetch_retry_delay_seconds, "fetch_retry_delay_seconds", webpage.DEFAULT_FETCH_RETRY_DELAY_SECONDS, 0, id = "retry-delay"),
+    pytest.param(webpage.get_min_match_score, "min_match_score", webpage.DEFAULT_MIN_MATCH_SCORE, 0, id = "match-score"),
+    pytest.param(webpage.get_page_load_interval_seconds, "page_load_interval_seconds", webpage.DEFAULT_PAGE_LOAD_INTERVAL_SECONDS, 0, id = "page-interval"),
 ]
 
 
@@ -57,6 +57,22 @@ def test_a_wait_without_a_timeout_uses_the_configured_one(isolated_settings, wai
     assert waits["timeouts"] == [40]
 
 
+@pytest.mark.parametrize("waiter", [webpage.wait_for_all_elements, webpage.wait_for_any_element])
+def test_a_group_wait_without_a_timeout_uses_the_configured_one(isolated_settings, waits, waiter):
+    isolated_settings.set_value("UserData.Scraping", "element_wait_seconds", "40")
+
+    waiter(FakeDriver(), [webpage.ElementLocator({"id": "x"})])
+
+    assert waits["timeouts"] == [40]
+
+
+@pytest.mark.parametrize("waiter", [webpage.wait_for_all_elements, webpage.wait_for_any_element])
+def test_a_group_wait_keeps_a_given_timeout(isolated_settings, waits, waiter):
+    waiter(FakeDriver(), [webpage.ElementLocator({"id": "x"})], wait_time = 5)
+
+    assert waits["timeouts"] == [5]
+
+
 def test_a_scrape_is_retried_with_the_configured_attempts_and_delay(isolated_settings, monkeypatch):
     isolated_settings.set_value("UserData.Scraping", "fetch_retries", "5")
     isolated_settings.set_value("UserData.Scraping", "fetch_retry_delay_seconds", "9")
@@ -75,4 +91,5 @@ def test_a_scrape_is_retried_with_the_configured_attempts_and_delay(isolated_set
 
     assert webpage.retry_scrape(fetch, cleanup, verbose = True, operation_name = "Fetch") == "result"
     assert calls == [{"func": fetch, "cleanup_func": cleanup, "max_retries": 5, "initial_delay": 9,
-        "backoff_factor": 2, "verbose": True, "operation_name": "Fetch"}]
+        "backoff_factor": 2, "verbose": True, "operation_name": "Fetch",
+        "retry_on": (webpage.ScrapeFailed, webpage.get_selenium_errors().WebDriverException)}]

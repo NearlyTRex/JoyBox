@@ -83,7 +83,7 @@ def test_an_imported_entry_carries_the_store_data(collection):
     run_import()
 
     initial = collection["created_json"][0]["initial_data"]
-    assert initial["fakestore"][config.json_key_store_appid] == "220"
+    assert initial["fakestore"][config.JSON_KEY_STORE_APPID] == "220"
 
 
 def test_an_imported_entry_gets_a_metadata_entry(collection):
@@ -196,7 +196,7 @@ def test_a_missing_store_url_is_looked_up(collection):
     run_import()
 
     initial = collection["created_json"][0]["initial_data"]
-    assert initial["fakestore"][config.json_key_store_appurl] == \
+    assert initial["fakestore"][config.JSON_KEY_STORE_APPURL] == \
         "https://store.example/app/220"
 
 
@@ -208,7 +208,7 @@ def test_a_store_url_that_is_already_known_is_kept(collection):
     run_import()
 
     initial = collection["created_json"][0]["initial_data"]
-    assert initial["fakestore"][config.json_key_store_appurl] == \
+    assert initial["fakestore"][config.JSON_KEY_STORE_APPURL] == \
         "https://store.example/known"
 
 
@@ -262,7 +262,7 @@ def test_a_purchase_offered_by_appname_is_imported(collection):
     collection["store"] = FakeStore(
         purchases = [a_purchase(
             appid = None, appname = "hl2", appurl = "https://store.example/hl2")],
-        identifier_key = config.json_key_store_appname)
+        identifier_key = config.JSON_KEY_STORE_APPNAME)
 
     assert run_import() is True
     assert len(collection["created_json"]) == 1
@@ -293,4 +293,4 @@ def test_a_purchase_without_a_name_is_not_looked_up_by_name(collection):
     run_import()
 
     initial = collection["created_json"][0]["initial_data"]
-    assert initial["fakestore"][config.json_key_store_appurl] is None
+    assert initial["fakestore"][config.JSON_KEY_STORE_APPURL] is None

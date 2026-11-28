@@ -3,23 +3,23 @@ import re
 import struct
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 
 # Alcohol 120% media descriptor (.mds) beside its data file (.mdf), read as
 # libmirage reads it; only version 1 descriptors have a known layout
-mds_signature = b"MEDIA DESCRIPTOR"
-mds_version_major = 1
+MDS_SIGNATURE = b"MEDIA DESCRIPTOR"
+MDS_VERSION_MAJOR = 1
 
 # Medium types
 mds_cd_media = (0x00, 0x01, 0x02)
 mds_dvd_media = (0x10, 0x12)
 
 # Header fields
-mds_medium_offset = 0x12
-mds_sessions_offset = 0x50
+MDS_MEDIUM_OFFSET = 0x12
+MDS_SESSIONS_OFFSET = 0x50
 
 # Blocks
 mds_session_block = struct.Struct("<iiHBBHHII")
@@ -28,9 +28,9 @@ mds_extra_block = struct.Struct("<II")
 mds_footer_block = struct.Struct("<IIII")
 
 # Interleaved PW subchannel follows the main data of every sector
-mds_subchannel_none = 0x00
-mds_subchannel_pw = 0x08
-mds_subchannel_size = 96
+MDS_SUBCHANNEL_NONE = 0x00
+MDS_SUBCHANNEL_PW = 0x08
+MDS_SUBCHANNEL_SIZE = 96
 
 # Track modes; Alcohol reads only the low three bits
 mds_track_modes = {
@@ -59,10 +59,10 @@ cue_track_types = {
 }
 
 # Two seconds of pregap lead every disc and a cue leaves them implicit
-standard_first_pregap = 150
+STANDARD_FIRST_PREGAP = 150
 
 # Frames per second of cd time
-cd_frames_per_second = 75
+CD_FRAMES_PER_SECOND = 75
 
 ###########################################################
 
@@ -103,11 +103,11 @@ def resolve_mdf_file(mds_file, declared_name):
 
 # Parse the header, returning whether the medium is a dvd
 def parse_mds_header(data):
-    if data[:len(mds_signature)] != mds_signature:
+    if data[:len(MDS_SIGNATURE)] != MDS_SIGNATURE:
         raise MdsError("not a media descriptor")
-    if data[16] != mds_version_major:
+    if data[16] != MDS_VERSION_MAJOR:
         raise MdsError("version %d.%d descriptors are not supported" % (data[16], data[17]))
-    medium_type, num_sessions = struct.unpack_from("<HH", data, mds_medium_offset)
+    medium_type, num_sessions = struct.unpack_from("<HH", data, MDS_MEDIUM_OFFSET)
     if medium_type not in mds_cd_media + mds_dvd_media:
         raise MdsError("medium type 0x%02X is not supported" % medium_type)
     if num_sessions != 1:
@@ -119,7 +119,7 @@ def get_mds_track_layout(point, mode, subchannel, sector_size, is_dvd):
     track_mode = mds_track_modes.get(mode & 0x07)
     if track_mode is None:
         raise MdsError("track %d has unknown mode 0x%02X" % (point, mode))
-    subchannel_sizes = {mds_subchannel_none: 0, mds_subchannel_pw: mds_subchannel_size}
+    subchannel_sizes = {MDS_SUBCHANNEL_NONE: 0, MDS_SUBCHANNEL_PW: MDS_SUBCHANNEL_SIZE}
     if subchannel not in subchannel_sizes:
         raise MdsError("track %d has unknown subchannel type 0x%02X" % (point, subchannel))
     main_size = sector_size - subchannel_sizes[subchannel]
@@ -142,19 +142,34 @@ def get_mds_track_length(data, point, extra_offset, data_file, start_offset, sec
         raise MdsError("track %d is empty" % point)
     return pregap, length
 
-# Parse a track block, or None for a block that describes the lead-in
-def parse_mds_track(data, block_offset, mds_file, is_dvd):
-    fields = mds_track_block.unpack_from(data, block_offset)
-    mode, subchannel, point = fields[0], fields[1], fields[4]
-    extra_offset, sector_size, _, start_offset, number_of_files, footer_offset = fields[12:18]
-    if not 1 <= point <= 99:
-        return None
-    track_mode, cue_type, main_size, subchannel_size = get_mds_track_layout(point, mode, subchannel, sector_size, is_dvd)
+# The data file holding a track's sectors, named in its footer block; a track split over
+# several files is refused
+def get_mds_track_data_file(data, mds_file, point, number_of_files, footer_offset):
     if number_of_files != 1:
         raise MdsError("track %d is split over %d data files, which is not supported" % (point, number_of_files))
     filename_offset, widechar, _, _ = mds_footer_block.unpack_from(data, footer_offset)
-    data_file = resolve_mdf_file(mds_file, read_mds_filename(data, filename_offset, widechar))
+    return resolve_mdf_file(mds_file, read_mds_filename(data, filename_offset, widechar))
+
+# Where a track's sectors are, from the block's (extra, sector size, -, start, file count,
+# footer) fields: its start offset, length, pregap and data file
+def locate_mds_track_data(data, mds_file, point, location_fields, is_dvd):
+    extra_offset, sector_size, _, start_offset, number_of_files, footer_offset = location_fields
+    data_file = get_mds_track_data_file(data, mds_file, point, number_of_files, footer_offset)
     pregap, length = get_mds_track_length(data, point, extra_offset, data_file, start_offset, sector_size, is_dvd)
+    return {
+        "start_offset": start_offset,
+        "length": length,
+        "pregap": pregap,
+        "data_file": data_file,
+    }
+
+# Parse a track block, or None for a block that describes the lead-in
+def parse_mds_track(data, block_offset, mds_file, is_dvd):
+    fields = mds_track_block.unpack_from(data, block_offset)
+    mode, subchannel, point, sector_size = fields[0], fields[1], fields[4], fields[13]
+    if not 1 <= point <= 99:
+        return None
+    track_mode, cue_type, main_size, subchannel_size = get_mds_track_layout(point, mode, subchannel, sector_size, is_dvd)
     return {
         "number": point,
         "mode": track_mode,
@@ -162,16 +177,13 @@ def parse_mds_track(data, block_offset, mds_file, is_dvd):
         "sector_size": sector_size,
         "main_size": main_size,
         "subchannel_size": subchannel_size,
-        "start_offset": start_offset,
-        "length": length,
-        "pregap": pregap,
-        "data_file": data_file,
+        **locate_mds_track_data(data, mds_file, point, fields[12:18], is_dvd),
     }
 
 # Parse a descriptor into its medium and tracks
 def parse_mds_descriptor(data, mds_file):
     is_dvd = parse_mds_header(data)
-    (sessions_offset,) = struct.unpack_from("<I", data, mds_sessions_offset)
+    (sessions_offset,) = struct.unpack_from("<I", data, MDS_SESSIONS_OFFSET)
     session_fields = mds_session_block.unpack_from(data, sessions_offset)
     num_all_blocks, tracks_offset = session_fields[3], session_fields[8]
     tracks = []
@@ -217,8 +229,8 @@ def can_read_mdf_in_place(descriptor):
 
 # Format frames as cue time
 def format_cue_time(frames):
-    minutes, frames = divmod(frames, 60 * cd_frames_per_second)
-    seconds, frames = divmod(frames, cd_frames_per_second)
+    minutes, frames = divmod(frames, 60 * CD_FRAMES_PER_SECOND)
+    seconds, frames = divmod(frames, CD_FRAMES_PER_SECOND)
     return "%02d:%02d:%02d" % (minutes, seconds, frames)
 
 # Build a cue sheet from (file name, index frames) per track
@@ -232,7 +244,7 @@ def build_cue_sheet(descriptor, track_sources):
         lines.append("  TRACK %02d %s" % (track["number"], track["cue_type"]))
         pregap = track["pregap"]
         if position == 0:
-            pregap -= standard_first_pregap
+            pregap -= STANDARD_FIRST_PREGAP
         if pregap > 0:
             lines.append("    PREGAP %s" % format_cue_time(pregap))
         lines.append("    INDEX 01 %s" % format_cue_time(index_frames))

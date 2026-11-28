@@ -49,12 +49,12 @@ def test_an_interrupt_exits_with_the_sigint_status(logged):
     assert logged["warning"]
 
 
-def test_an_exception_is_logged_and_exits_nonzero(logged):
+def test_an_exception_is_left_to_show_its_traceback(logged):
+    # A bug surfaces where it happened rather than as a one line message
     def broken():
         raise RuntimeError("boom")
 
-    with pytest.raises(SystemExit) as raised:
+    with pytest.raises(RuntimeError, match = "boom"):
         system.run_main(broken)
 
-    assert raised.value.code == 1
-    assert logged["error"] == ["Script failed with exception: boom"]
+    assert logged["error"] == []

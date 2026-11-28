@@ -4,6 +4,7 @@
 # Imports
 import os
 import os.path
+import posixpath
 import sqlite3
 import concurrent.futures
 import contextlib
@@ -14,9 +15,14 @@ from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
+from joybox import lockerinfo
+from joybox import reports
+from joybox import runtime
 from joybox import sqlitedb
 from joybox import sync
+from joybox import synclisting
+from joybox import syncremotes
 
 # Constants
 HASH_DATABASE_FILE = ".locker_hashes.db"
@@ -25,7 +31,7 @@ HASH_DATABASE_FILE = ".locker_hashes.db"
 LARGE_DIRECTORY_FILE_COUNT = 500
 LARGE_DIRECTORY_SIZE = 10 * 1024 * 1024 * 1024
 
-# Download files from remote
+# Copy remote files into local_path, or onto it with copyto when it names a single file
 def download_files_from_remote(
     remote_name,
     remote_type,
@@ -34,6 +40,7 @@ def download_files_from_remote(
     excludes = None,
     files_from = None,
     interactive = False,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -45,6 +52,7 @@ def download_files_from_remote(
             subcommand = "copyto",
             transfer_paths = [remote_full, local_path],
             remote_names = [remote_name],
+            progress = show_progress,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -57,11 +65,13 @@ def download_files_from_remote(
         excludes = excludes,
         files_from = files_from,
         interactive = interactive,
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Upload files to remote
+# Copy local files to the remote, optionally skipping existing ones, then add them to the hash sidecar under local_root
+# A sidecar that cannot be updated only warns
 def upload_files_to_remote(
     remote_name,
     remote_type,
@@ -73,6 +83,7 @@ def upload_files_to_remote(
     skip_existing = False,
     interactive = False,
     update_sidecar = True,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -86,6 +97,7 @@ def upload_files_to_remote(
         files_from = files_from,
         extra_flags = ["--ignore-existing"] if skip_existing else [],
         interactive = interactive,
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure):
@@ -114,15 +126,12 @@ def update_uploaded_sidecar(remote_name, remote_type, remote_path, local_path, l
 # or None when the directory cannot be made; the directory is removed afterwards
 @contextlib.contextmanager
 def temporary_hash_database(verbose = False):
-    success, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-    if not success:
-        logger.log_error("Failed to create temp directory for hash database")
-        yield None
-        return
-    try:
+    with fileops.temporary_directory(verbose = verbose) as temp_dir:
+        if not temp_dir:
+            logger.log_error("Failed to create temp directory for hash database")
+            yield None
+            return
         yield paths.join_paths(temp_dir, HASH_DATABASE_FILE)
-    finally:
-        fileops.remove_directory(src = temp_dir, verbose = verbose, exit_on_failure = False)
 
 # An open hash database, closed afterwards. Its tables are created first when initializing.
 @contextlib.contextmanager
@@ -155,7 +164,6 @@ def list_files_with_hashes_from_sidecar(
     remote_type,
     remote_path,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     with temporary_hash_database() as temp_db_path:
         if not temp_db_path:
@@ -188,13 +196,13 @@ def list_files_with_hashes_from_sidecar(
         logger.log_info("Loaded %d file hashes from database" % len(hash_map))
     return hash_map
 
-# Get hash database path
+# Path of the hash sidecar database under a remote root, with forward slashes
 def get_hash_database_path(remote_path = ""):
     return paths.join_paths(remote_path, HASH_DATABASE_FILE).replace("\\", "/")
 
 # Get the hash data a sidecar keeps for a file, or None when it cannot be hashed
 def get_file_hash_data(file_path, pretend_run = False):
-    file_hash = hashing.calculate_file_md5(src = file_path, verbose = False, pretend_run = pretend_run)
+    file_hash = hashutil.calculate_file_md5(src = file_path, verbose = False, pretend_run = pretend_run)
     if not file_hash:
         return None
     return {
@@ -281,23 +289,30 @@ def build_hash_sidecar_directory_list(
 # Get a remote path relative to a remote root, or None when it is outside it
 def get_remote_relative_path(remote_path, remote_root):
     root = remote_root.rstrip("/")
-    if remote_path == root or remote_path == remote_root:
+    if remote_path in (root, remote_root):
         return ""
     if remote_path.startswith(root + "/"):
         return remote_path[len(root) + 1:]
     return None
 
-# Clear hash sidecar files
+# Delete the hash sidecar database at the remote root, or with subpath only the entries
+# for that file or the files under it, keeping the rest of the database
 def clear_hash_sidecar_files(
     remote_name,
     remote_type,
     remote_path,
+    subpath = "",
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Delete the hash database file
+    # A subpath keeps the entries outside it
     db_path = get_hash_database_path(remote_path)
+    subpath = (subpath or "").replace("\\", "/").strip("/")
+    if subpath:
+        return clear_hash_sidecar_entries(remote_name, remote_type, db_path, subpath, verbose, pretend_run, exit_on_failure)
+
+    # Delete the hash database file
     return sync.delete_file_on_remote(
         remote_name = remote_name,
         remote_type = remote_type,
@@ -305,6 +320,21 @@ def clear_hash_sidecar_files(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+
+# Remove the entries for subpath and the files under it from the remote hash database,
+# uploading it back; nothing to do when the remote has no database
+def clear_hash_sidecar_entries(remote_name, remote_type, remote_db_path, subpath, verbose, pretend_run, exit_on_failure):
+    with temporary_hash_database(verbose = verbose) as temp_db_path:
+        if not temp_db_path or not fetch_existing_hash_database(
+            remote_name, remote_type, remote_db_path, temp_db_path, verbose, pretend_run, exit_on_failure):
+            return False
+        if not paths.is_path_file(temp_db_path):
+            return True
+        logger.log_info("Removing hash entries under %s..." % subpath)
+        with opened_hash_database(temp_db_path) as hash_db:
+            hash_db.delete_hash(subpath)
+            hash_db.delete_hashes_by_prefix(subpath + "/")
+        return store_hash_database(remote_name, remote_type, remote_db_path, temp_db_path, [], verbose, pretend_run, exit_on_failure)
 
 # Download the existing hash database before adding to it. Carrying on without it would
 # upload a database holding only the new files over the full one.
@@ -350,6 +380,15 @@ def get_hash_sidecar_units(local_path, remote_path, excludes):
         return (dir_info["path"], paths.join_paths(remote_path, dir_rel).replace("\\", "/"), dir_info["files"])
     return [to_unit(dir_info) for dir_info in small_dirs], [to_unit(dir_info) for dir_info in large_dirs]
 
+# Database entries, keyed by their path under dir_rel, for the hashed files the database does not already hold
+def get_new_sidecar_entries(hash_data, dir_rel, existing_paths):
+    entries = []
+    for rel_file, file_info in hash_data.items():
+        file_path = paths.join_paths(dir_rel, rel_file).replace("\\", "/")
+        if file_path not in existing_paths:
+            entries.append(dict(file_info, file_path = file_path))
+    return entries
+
 # Hash one unit of a sidecar upload, returning whether every file hashed and the database
 # entries for the files the database does not already hold
 def hash_sidecar_unit(unit, local_root, existing_paths, parallel_files, pretend_run, verbose):
@@ -366,11 +405,7 @@ def hash_sidecar_unit(unit, local_root, existing_paths, parallel_files, pretend_
     dir_rel = get_remote_relative_path(current_remote, local_root)
     if dir_rel is None:
         dir_rel = current_remote.lstrip("/")
-    entries = []
-    for rel_file, file_info in hash_data.items():
-        file_path = paths.join_paths(dir_rel, rel_file).replace("\\", "/")
-        if file_path not in existing_paths:
-            entries.append(dict(file_info, file_path = file_path))
+    entries = get_new_sidecar_entries(hash_data, dir_rel, existing_paths)
 
     # A file that could not be hashed is missing from the sidecar
     expected_count = 1 if current_files is None else len(current_files)
@@ -425,7 +460,32 @@ def store_hash_database(remote_name, remote_type, remote_db_path, temp_db_path, 
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Upload hash sidecar files
+# Hash the units of local_path with hash_unit and add their entries to the fetched database
+# at temp_db_path, uploading it to remote_db_path; True with nothing uploaded when there are no units
+def hash_into_sidecar_database(
+    remote_name,
+    remote_type,
+    remote_db_path,
+    temp_db_path,
+    local_path,
+    remote_path,
+    excludes,
+    hash_unit,
+    parallel_dirs,
+    verbose,
+    pretend_run,
+    exit_on_failure):
+    small_units, large_units = get_hash_sidecar_units(local_path, remote_path, excludes)
+    if not small_units and not large_units:
+        return True
+    result = collect_sidecar_entries(hash_sidecar_units(large_units, small_units, hash_unit, parallel_dirs), exit_on_failure)
+    if result is None:
+        return False
+    return store_hash_database(
+        remote_name, remote_type, remote_db_path, temp_db_path, result[1], verbose, pretend_run, exit_on_failure) and result[0]
+
+# Hash the files under local_path and merge them into the sidecar database at the local_root remote root
+# skip_existing leaves already-listed files unhashed; False when the database cannot be fetched or stored
 def upload_hash_sidecar_files(
     remote_name,
     remote_type,
@@ -444,22 +504,200 @@ def upload_hash_sidecar_files(
         if not temp_db_path or not fetch_existing_hash_database(
             remote_name, remote_type, remote_db_path, temp_db_path, verbose, pretend_run, exit_on_failure):
             return False
-        existing_paths = read_hash_database_paths(temp_db_path) if skip_existing else set()
-
-        # Hash every unit, nothing to do without any
-        small_units, large_units = get_hash_sidecar_units(local_path, remote_path, excludes or [])
-        if not small_units and not large_units:
-            return True
         hash_unit = functools.partial(
             hash_sidecar_unit,
             local_root = local_root,
-            existing_paths = existing_paths,
+            existing_paths = read_hash_database_paths(temp_db_path) if skip_existing else set(),
             parallel_files = parallel_files,
             pretend_run = pretend_run,
             verbose = verbose)
-        result = collect_sidecar_entries(hash_sidecar_units(large_units, small_units, hash_unit, parallel_dirs), exit_on_failure)
-        if result is None:
-            return False
-        uploaded = store_hash_database(
-            remote_name, remote_type, remote_db_path, temp_db_path, result[1], verbose, pretend_run, exit_on_failure)
-        return result[0] and uploaded
+        return hash_into_sidecar_database(
+            remote_name, remote_type, remote_db_path, temp_db_path, local_path, remote_path,
+            excludes or [], hash_unit, parallel_dirs, verbose, pretend_run, exit_on_failure)
+
+###########################################################
+# Missing hash sidecar entries
+###########################################################
+
+# The remote files under the path, quitting when they cannot be listed
+def _list_remote_files_for_sidecar_check(remote_name, remote_type, remote_path, verbose = False, exit_on_failure = False):
+    logger.log_info("Listing remote files...")
+    remote_files = synclisting.list_files_with_hashes(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        excludes = [HASH_DATABASE_FILE],
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if remote_files is None:
+        logger.log_error("Could not list files on %s" % remote_name, quit_program = True)
+    logger.log_info("Found %d files on remote" % len(remote_files))
+    return remote_files
+
+# The files the locker's hash sidecar covers, always read from the locker root; quits when it
+# cannot be read
+def _list_sidecar_files_for_sidecar_check(remote_name, remote_type, locker_root, verbose = False, exit_on_failure = False):
+    logger.log_info("Listing hash sidecars...")
+    sidecar_files = list_files_with_hashes_from_sidecar(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = locker_root,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if sidecar_files is None:
+        logger.log_error("Could not read the hash sidecar on %s" % remote_name, quit_program = True)
+    logger.log_info("Found %d files in sidecars" % len(sidecar_files))
+    return sidecar_files
+
+# Log the remote files that have no sidecar entry, writing the full list to the report file
+# when one is given
+def _report_missing_sidecar_files(missing, report_file = None, verbose = False, pretend_run = False):
+    if not missing:
+        logger.log_info("All files have hash sidecars")
+        return
+    logger.log_warning("Files missing hash sidecars:")
+    reports.write_list_report(
+        items = sorted(missing),
+        max_display = 20,
+        report_file = report_file if report_file else None,
+        verbose = verbose,
+        pretend_run = pretend_run)
+
+# The listed remote files, relative to subpath when given, that the sidecar files do not cover
+def get_files_missing_from_sidecar(remote_files, sidecar_files, subpath):
+    missing = []
+    for rel_path in remote_files:
+        full_rel_path = paths.join_paths(subpath, rel_path).replace("\\", "/") if subpath else rel_path
+        if full_rel_path not in sidecar_files:
+            missing.append(rel_path)
+    return missing
+
+# List the remote locker's files, under the subpath relative to its root if given, that have
+# no entry in its hash sidecar database; quits when the remote is not configured
+def find_missing_hash_sidecars(locker_type, subpath = "", report_file = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    remote_info = lockerinfo.LockerInfo(locker_type)
+    remote_name = remote_info.get_name()
+    remote_type = remote_info.get_type()
+    locker_root = remote_info.get_remote_path() or ""
+    remote_path = locker_root
+    subpath = subpath or ""
+    if subpath:
+        remote_path = paths.join_paths(locker_root, subpath).replace("\\", "/")
+    if not syncremotes.is_remote_configured(remote_name, remote_type):
+        logger.log_error("Remote '%s' is not configured" % remote_name, quit_program = True)
+    logger.log_info("Checking for missing hash sidecars on %s" % locker_type)
+    logger.log_info("Remote path: %s:%s" % (remote_name, remote_path))
+
+    # Compare the listing against the sidecar, prefixing listed paths with the subpath
+    remote_files = _list_remote_files_for_sidecar_check(remote_name, remote_type, remote_path, verbose = verbose, exit_on_failure = exit_on_failure)
+    sidecar_files = _list_sidecar_files_for_sidecar_check(remote_name, remote_type, locker_root, verbose = verbose, exit_on_failure = exit_on_failure)
+    missing = get_files_missing_from_sidecar(remote_files, sidecar_files, subpath)
+    _report_missing_sidecar_files(missing, report_file = report_file, verbose = verbose, pretend_run = pretend_run)
+
+###########################################################
+# Rebuilding hash sidecars
+###########################################################
+
+# The source path, destination remote and excludes a sidecar rebuild works with, narrowed
+# to subpath when given; quits when the subpath leaves the locker root, the source is
+# missing or the remote is not configured
+def get_sidecar_rebuild_target(source_locker, dest_locker, subpath = None):
+    subpath = posixpath.normpath("./" + (subpath or "").replace("\\", "/"))
+    if subpath == ".." or subpath.startswith("../"):
+        logger.log_error("Path must be inside the locker root: %s" % subpath, quit_program = True)
+    subpath = "" if subpath == "." else subpath
+    source_info = lockerinfo.LockerInfo(source_locker)
+    dest_info = lockerinfo.LockerInfo(dest_locker)
+    source_root = source_info.get_mount_path()
+    dest_name = dest_info.get_name()
+    dest_type = dest_info.get_type()
+    dest_root = dest_info.get_remote_path() or ""
+    target = {
+        "source_path": source_root,
+        "dest_name": dest_name,
+        "dest_type": dest_type,
+        "dest_root": dest_root,
+        "dest_path": dest_root,
+        "subpath": subpath,
+        "excludes": dest_info.get_excluded_dirs()}
+    if subpath:
+        target["source_path"] = paths.join_paths(source_root, subpath)
+        target["dest_path"] = paths.join_paths(dest_root, subpath).replace("\\", "/")
+    if not paths.does_path_exist(target["source_path"]):
+        logger.log_error("Source path not accessible: %s" % target["source_path"], quit_program = True)
+    if not syncremotes.is_remote_configured(dest_name, dest_type):
+        logger.log_error("Remote '%s' is not configured" % dest_name, quit_program = True)
+    return target
+
+# Preview lines for a sidecar rebuild: its source and sidecar database, parallelism and
+# the memory it can use, then its excludes and options when set
+def get_sidecar_rebuild_preview(target, parallel_dirs, parallel_files, clear = False, skip_existing = False):
+    db_path = get_hash_database_path(target["dest_root"])
+    max_memory_bytes = parallel_dirs * parallel_files * config.HASH_CHUNK_SIZE
+    max_memory_mb = max_memory_bytes / (1024 * 1024)
+    details = [
+        "Source: %s" % target["source_path"],
+        "Destination: %s:%s" % (target["dest_name"], db_path),
+        "Parallel dirs: %d, Parallel files: %d" % (parallel_dirs, parallel_files),
+        "Max memory usage: %.0f MB (%d × %d × %d MB chunk)" % (
+            max_memory_mb, parallel_dirs, parallel_files,
+            config.HASH_CHUNK_SIZE // (1024 * 1024))
+    ]
+    if target["excludes"]:
+        details.append("Excluded dirs: %s" % ", ".join(target["excludes"]))
+    if clear:
+        details.append("Clear existing sidecars: Yes")
+    if skip_existing:
+        details.append("Skip existing sidecars: Yes")
+    return details
+
+# Clear a target's sidecar entries under its destination path, logging it; quits with status 1 when that fails
+def _clear_target_sidecars(target, verbose, pretend_run, exit_on_failure):
+    logger.log_info("Clearing existing sidecars...")
+    if not clear_hash_sidecar_files(
+        remote_name = target["dest_name"],
+        remote_type = target["dest_type"],
+        remote_path = target["dest_root"],
+        subpath = target["subpath"],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        logger.log_error("Failed to clear sidecars")
+        runtime.quit_program(1)
+
+# Hash a target's source into fresh sidecars on its destination, first clearing the
+# existing ones when asked, logging the outcome; quits with status 1 when either step fails
+def rebuild_hash_sidecars(
+    target,
+    parallel_dirs,
+    parallel_files,
+    clear = False,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if clear:
+        _clear_target_sidecars(target, verbose, pretend_run, exit_on_failure)
+
+    # A single file is hashed into the directory that holds it
+    remote_path = target["dest_path"]
+    if paths.is_path_file(target["source_path"]):
+        remote_path = remote_path.rpartition("/")[0]
+    success = upload_hash_sidecar_files(
+        remote_name = target["dest_name"],
+        remote_type = target["dest_type"],
+        remote_path = remote_path,
+        local_path = target["source_path"],
+        local_root = target["dest_root"],
+        excludes = target["excludes"],
+        skip_existing = skip_existing,
+        parallel_dirs = parallel_dirs,
+        parallel_files = parallel_files,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if success:
+        logger.log_info("Rebuild complete")
+    else:
+        logger.log_error("Rebuild failed")
+        runtime.quit_program(1)

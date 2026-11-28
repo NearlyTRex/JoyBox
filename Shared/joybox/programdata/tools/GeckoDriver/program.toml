@@ -1,0 +1,38 @@
+# GeckoDriver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.GeckoDriver]
+program = { windows = "GeckoDriver/windows/geckodriver.exe", linux = "GeckoDriver/linux/geckodriver" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "mozilla"
+github_repo = "geckodriver"
+starts_with = "geckodriver"
+ends_with = "win32.zip"
+search_file = "geckodriver.exe"
+install_files = ["geckodriver.exe"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "mozilla"
+github_repo = "geckodriver"
+starts_with = "geckodriver"
+ends_with = "linux64.tar.gz"
+search_file = "geckodriver"
+install_files = ["geckodriver"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "geckodriver.exe"
+install_files = ["geckodriver.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "geckodriver"
+install_files = ["geckodriver"]

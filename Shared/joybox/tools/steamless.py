@@ -1,76 +1,8 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.release as release
-import joybox.programs as programs
-import joybox.toolbase as toolbase
+from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Steamless tool
 class Steamless(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Steamless"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Steamless": {
-                "program": {
-                    "windows": "Steamless/windows/Steamless.CLI.exe",
-                    "linux": "Steamless/windows/Steamless.CLI.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
-
-    # Setup
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Steamless", "windows"):
-            success = release.download_github_release(
-                github_user = "atom0s",
-                github_repo = "Steamless",
-                starts_with = "Steamless",
-                ends_with = ".zip",
-                search_file = "Steamless.CLI.exe",
-                install_name = "Steamless",
-                install_dir = programs.get_program_install_dir("Steamless", "windows"),
-                backups_dir = programs.get_program_backup_dir("Steamless", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Steamless")
-                return False
-        return True
-
-    # Setup offline
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Steamless", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Steamless", "windows"),
-                install_name = "Steamless",
-                install_dir = programs.get_program_install_dir("Steamless", "windows"),
-                search_file = "Steamless.CLI.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Steamless")
-                return False
-        return True
+    NAME = "Steamless"

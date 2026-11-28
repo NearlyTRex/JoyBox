@@ -1,40 +1,42 @@
 # Imports
 import os
 import os.path
+import posixpath
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.rcloneremotes as rcloneremotes
-import joybox.strings as strings
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import command
+from joybox import commandbase
+from joybox import programs
+from joybox import rcloneremotes
+from joybox import strings
+from joybox import logger
+from joybox import paths
 
 # Check if tool is installed
 def is_tool_installed():
     return programs.is_tool_installed("RClone")
 
-# Get unencrypted remote name
+# Remote name with a trailing Enc removed, naming the remote an encrypted one wraps
 def get_unencrypted_remote_name(remote_name):
     if remote_name.endswith("Enc"):
         return remote_name[:-len("Enc")]
     return remote_name
 
-# Get remote raw type
+# Remote type as the lowercase name rclone uses
 def get_remote_raw_type(remote_type):
     return config.RemoteType.to_lower_string(remote_type)
 
-# Get remote connection path
+# rclone path for a remote location; B2 paths are prefixed with the bucket named after the unencrypted remote
 def get_remote_connection_path(remote_name, remote_type, remote_path):
     if remote_type == config.RemoteType.B2:
         return "%s:%s%s" % (remote_name, get_unencrypted_remote_name(remote_name), remote_path)
-    else:
-        return "%s:%s" % (remote_name, remote_path)
+    return "%s:%s" % (remote_name, remote_path)
 
-# Get common remote flags
-def get_common_remote_flags(remote_name, remote_type, remote_action_type, tps_limit = 10, transfers = 1):
+# rclone flags every transfer uses: fast list, rate and transfer limits, smallest first
+# plus rename tracking for syncs, empty dirs for changes and Drive quota flags
+def get_common_remote_flags(remote_type, remote_action_type, tps_limit = 10, transfers = 1):
     flags = [
         "--fast-list",
         "--tpslimit", str(tps_limit),
@@ -58,7 +60,7 @@ def get_common_remote_flags(remote_name, remote_type, remote_action_type, tps_li
         ]
     return flags
 
-# Get exclude flags
+# --exclude flags for a pattern or list of patterns, skipping empty ones
 def get_exclude_flags(excludes):
     flags = []
     if isinstance(excludes, list):
@@ -98,15 +100,6 @@ def get_excludes_with(excludes, pattern):
     if pattern not in excludes:
         excludes.append(pattern)
     return excludes
-
-# Get the rclone program, or None, logging that it is missing unless told not to
-def get_rclone_tool(log_missing = True):
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool and log_missing:
-        logger.log_error("RClone was not found")
-    return rclone_tool
 
 # Get the flags for a dry run, an interactive run and a verbose run, verbose ones showing progress unless told not to
 def get_run_flags(pretend_run = False, interactive = False, verbose = False, progress = True):
@@ -152,13 +145,12 @@ def run_transfer(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool or not is_file_list_readable(files_from):
         return False
     cmd = [rclone_tool, subcommand] + list(transfer_paths)
     if remote_action_type:
         cmd += get_common_remote_flags(
-            remote_name = remote_names[0],
             remote_type = remote_type,
             remote_action_type = remote_action_type)
     cmd += get_exclude_flags(excludes)
@@ -183,7 +175,7 @@ def run_remote_query(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
     return run_query_command(
@@ -203,7 +195,7 @@ def get_hash_entry(file_path, file_hash, size, mtime):
         "mtime": mtime or 0
     }
 
-# Get path MD5
+# MD5 hex digest of a remote file from rclone md5sum; None when the query fails or prints none
 def get_path_md5(
     remote_name,
     remote_type,
@@ -309,12 +301,12 @@ def does_file_exist(
     verbose = False):
 
     # Get tool
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return False
 
     # Run lsjson, which succeeds only when the file exists
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_suppress_output(True)
     return run_rclone_command(
         cmd = [rclone_tool, "lsjson", get_remote_connection_path(remote_name, remote_type, remote_path)],
@@ -368,7 +360,7 @@ def does_path_contain_files(
         return False
     return len(result[0].strip()) > 0
 
-# Create directory on remote
+# Make a directory on the remote with rclone mkdir; True when it already exists, False without rclone
 def create_remote_directory(
     remote_name,
     remote_type,
@@ -377,7 +369,7 @@ def create_remote_directory(
     pretend_run = False):
 
     # Get tool
-    rclone_tool = get_rclone_tool(log_missing = False)
+    rclone_tool = programs.find_tool_program("RClone", log_missing = False)
     if not rclone_tool:
         return False
 
@@ -393,7 +385,7 @@ def create_remote_directory(
     # Run command, keeping stderr to tell an existing directory from a failure
     output, code = run_query_command(
         cmd = mkdir_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name], command.create_command_options(include_stderr = True)),
+        options = rcloneremotes.get_rclone_options([remote_name], commandbase.create_command_options(include_stderr = True)),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = False)
@@ -401,7 +393,7 @@ def create_remote_directory(
         return True
     return "already exist" in output.lower()
 
-# Sync files to remote
+# Make the remote path match the local path with rclone sync, deleting remote extras
 def sync_files_to_remote(
     remote_name,
     remote_type,
@@ -420,7 +412,7 @@ def sync_files_to_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Move files on remote
+# Move files between two paths on the same remote, limited to files_from when given
 def move_files_on_remote(
     remote_name,
     remote_type,
@@ -442,7 +434,7 @@ def move_files_on_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Purge path on remote
+# Delete a remote path and everything under it with rclone purge
 def purge_path_on_remote(
     remote_name,
     remote_type,
@@ -475,6 +467,15 @@ def delete_file_on_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# The recycle bin path under remote_path, or None, logging an error, when the recycle folder
+# is empty or does not name a folder inside remote_path
+def get_recycle_bin_path(remote_path, recycle_folder):
+    folder = posixpath.normpath((recycle_folder or "").replace("\\", "/"))
+    if folder in (".", "..") or folder.startswith(("/", "../")):
+        logger.log_error("Recycle folder must name a folder inside %s, not '%s'" % (remote_path, recycle_folder))
+        return None
+    return os.path.join(remote_path, folder).replace("\\", "/")
+
 # Move files to recycle bin on remote
 def recycle_files_on_remote(
     remote_name,
@@ -492,7 +493,9 @@ def recycle_files_on_remote(
         return False
 
     # Get recycle bin path on remote
-    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+    recycle_bin_path = get_recycle_bin_path(remote_path, recycle_folder)
+    if not recycle_bin_path:
+        return False
 
     # Move files to recycle bin
     return move_files_on_remote(
@@ -516,7 +519,9 @@ def empty_recycle_bin(
     exit_on_failure = False):
 
     # Get recycle bin path on remote
-    recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
+    recycle_bin_path = get_recycle_bin_path(remote_path, recycle_folder)
+    if not recycle_bin_path:
+        return False
 
     # Purge recycle bin
     return purge_path_on_remote(
@@ -527,7 +532,7 @@ def empty_recycle_bin(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Pull files from remote
+# Make the local path match the remote with rclone sync, deleting local extras
 def pull_files_from_remote(
     remote_name,
     remote_type,
@@ -550,7 +555,7 @@ def pull_files_from_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Push files to remote
+# Make the remote match the local path with rclone sync, deleting remote extras
 def push_files_to_remote(
     remote_name,
     remote_type,
@@ -573,7 +578,7 @@ def push_files_to_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Merge files both ways
+# Two-way rclone bisync between local and remote, requiring check-access files; resync rebuilds its state
 def merge_files_both_ways(
     remote_name,
     remote_type,
@@ -598,7 +603,7 @@ def merge_files_both_ways(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Copy file from one remote to another
+# Copy a file from one remote to another; verbose runs show rclone progress unless show_progress is off
 def copy_remote_to_remote(
     src_remote_name,
     src_remote_type,
@@ -606,6 +611,7 @@ def copy_remote_to_remote(
     dest_remote_name,
     dest_remote_type,
     dest_remote_path,
+    show_progress = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -616,6 +622,7 @@ def copy_remote_to_remote(
             get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
         ],
         remote_names = [src_remote_name, dest_remote_name],
+        progress = show_progress,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

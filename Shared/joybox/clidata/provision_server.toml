@@ -1,0 +1,50 @@
+# Help text for the provision_server command, read by joybox/arguments.py
+
+description = "Take a server entry from nothing to deployed, hardened and verified."
+details = """
+Runs every step of setting up a server from `[UserData.Servers]` in `~/JoyBox.ini`,
+from this machine over SSH. The same stages run against a real host and against the
+local test guest; each one checks what is already done, so running it again resumes
+after a failure rather than starting over.
+
+Stages, in order:
+
+- `vm`: only when the entry names a test guest (`server_<n>_vm`). Builds it with
+  `testvm`'s defaults at the entry's address, or starts it; waits for first boot and
+  snapshots it as `provision-fresh`; points the domain and its subdomains at it in
+  `/etc/hosts`.
+- `login`: if the account cannot log in with the entry's key, logs in as root with
+  that key, creates the account with root's authorised keys, and sets its password
+  from `server_<n>_pass` when there is one.
+- `day0`: copies `Bootstrap/scripts` and `Bootstrap/managers` from this checkout and
+  runs, as root, the sudoers, docker, nginx and htpasswd setup, then the Storage Box
+  mount when `server_<n>_storage_user` and `_host` are set, or local storage when
+  not. Skipped once root login is closed.
+- `deploy`: the same as `bootstrap.py -a setup -t remote_ubuntu -s <n>`, for
+  `--components` or every component. Trusts mkcert's local authority first when the
+  entry uses `tls_mode = mkcert`.
+- `sshd`: proves the account's key login, snapshots a test guest as `pre-sshd`, runs
+  the sshd hardening that closes root and password login, then proves the key login
+  again. A test guest that loses it is reverted.
+- `verify`: the `verify_server` checks, as the account.
+
+Secrets come from the entry, so they can be `op://` references: `_htpasswd_pass` for
+the admin pages, `_storage_pass` for the Storage Box, and `_pass` for the account.
+They reach the server as files only root can read, and are removed after use."""
+section = "Servers & Machines"
+see_also = [
+    "testvm",
+    "verify_server",
+]
+notes = [
+    "Needs paramiko on this machine; `python3 bootstrap.py -a setup -t local_ubuntu --components python` installs it.",
+    "A real host must accept root with the entry's key on first contact, as a freshly ordered server does when given that key.",
+    "Root login is closed by the `sshd` stage, so on a hardened server the `login` and `day0` stages only confirm the account and move on.",
+    "The exit code is 0 on success, the number of failed checks when only `verify` fails, and 1 when an earlier stage fails.",
+]
+examples = [
+    ["Provision the local test guest in server entry 1", "provision_server --server 1"],
+    ["Provision a real server with only some components", "provision_server -s 0 --components nginx certbot wordpress fitlog"],
+    ["Redeploy and re-verify without the earlier stages", "provision_server -s 1 --stages deploy verify"],
+    ["Show what would run", "provision_server -s 1 -p"],
+]

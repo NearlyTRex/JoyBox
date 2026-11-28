@@ -13,6 +13,13 @@ from joybox import logger
 from joybox import paths
 from joybox import platforms
 
+# The weight of the first gametype suffix the file ends with, else the fallback weight
+def _get_game_file_weight(file):
+    for key, weight in config.gametype_weights.items():
+        if file.endswith(key):
+            return weight
+    return config.GAMETYPE_WEIGHT_ELSE
+
 # Find best suited game file
 def find_best_game_file(game_files):
 
@@ -22,11 +29,7 @@ def find_best_game_file(game_files):
         for file in game_files:
             game_file_entry = {}
             game_file_entry["file"] = os.path.abspath(file)
-            game_file_entry["weight"] = config.gametype_weight_else
-            for key in config.gametype_weights.keys():
-                if file.endswith(key):
-                    game_file_entry["weight"] = config.gametype_weights[key]
-                    break
+            game_file_entry["weight"] = _get_game_file_weight(file)
             game_file_entries.append(game_file_entry)
 
     # Use this to get the best file
@@ -36,14 +39,15 @@ def find_best_game_file(game_files):
         break
     return game_file
 
-# Find all game names
+# Sorted names of the game folders under base_dir for a category, reading through the
+# first-letter folders on letter platforms
 def find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory):
 
     # Get base path
     base_path = paths.join_paths(base_dir, game_supercategory, game_category, game_subcategory)
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Collect game names
     game_names = []
@@ -65,7 +69,8 @@ def find_json_game_names(game_supercategory, game_category, game_subcategory, lo
         game_names = [game_name for game_name in game_names if game_name in locker_game_names]
     return game_names
 
-# Find locker game names
+# Names of the games stored in a locker's Gaming tree for a category, or under the given
+# base directory's Gaming folder instead
 def find_locker_game_names(game_supercategory, game_category, game_subcategory, locker_type = None, locker_base_dir = None):
     if locker_base_dir:
         base_dir = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING)
@@ -73,7 +78,70 @@ def find_locker_game_names(game_supercategory, game_category, game_subcategory, 
         base_dir = environment.get_locker_gaming_root_dir(locker_type)
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
-# Iterate selected game categories
+# Iterate every rom category, as (supercategory, category, subcategory)
+def iterate_rom_categories():
+    for game_category in config.Category.members():
+        for game_subcategory in config.subcategory_map[game_category]:
+            yield config.Supercategory.ROMS, game_category, game_subcategory
+
+# Iterate the info of every rom game with json metadata
+def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
+    for game_supercategory, game_category, game_subcategory in iterate_rom_categories():
+        for game_name in find_json_game_names(game_supercategory, game_category, game_subcategory):
+            yield gameinfo.GameInfo(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+
+# The given game root when it is a directory, else the game's files dir in the locker
+def resolve_game_root(game_supercategory, game_category, game_subcategory, game_name, game_root = None, locker_type = None):
+    if paths.is_path_directory(game_root):
+        return game_root
+    return environment.get_locker_gaming_files_dir(
+        game_supercategory = game_supercategory,
+        game_category = game_category,
+        game_subcategory = game_subcategory,
+        game_name = game_name,
+        locker_type = locker_type)
+
+# Log an error against the game's supercategory, category and subcategory
+def log_game_error(game_info, message):
+    logger.log_error(
+        message = message,
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory())
+
+# Log an error against the game and its categories, then quit
+def log_game_error_and_quit(game_info, message):
+    logger.log_error(
+        message = message,
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory(),
+        game_name = game_info.get_name(),
+        quit_program = True)
+
+# Run an action on the info of every rom game with json metadata, passing over games include
+# rejects; stops at the first game the action fails
+def run_on_all_rom_games(action, include = None, verbose = False, pretend_run = False, exit_on_failure = False, **action_args):
+    for game_info in iterate_rom_game_infos(verbose, exit_on_failure):
+        if include and not include(game_info):
+            continue
+        if not action(
+            game_info = game_info,
+            **action_args,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            return False
+    return True
+
+# Yield (supercategory, category, subcategory) the parser selected: the one named in its
+# arguments in custom mode, else every selected combination in sorted order
 def iterate_selected_game_categories(
     parser,
     generation_mode = None,
@@ -81,7 +149,7 @@ def iterate_selected_game_categories(
     game_subcategory_map = None):
 
     # Determine generation mode
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     if generation_mode is None:
         generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
 
@@ -104,7 +172,80 @@ def iterate_selected_game_categories(
             for game_subcategory in sorted(game_subcategories):
                 yield (game_supercategory, game_category, game_subcategory)
 
-# Iterate selected game infos
+# The GameInfo the custom-mode arguments name; ValueError when category, subcategory or
+# name is missing
+def _create_custom_game_info(args, verbose, exit_on_failure):
+    if not args.game_category:
+        raise ValueError("Game category is required for custom mode")
+    if not args.game_subcategory:
+        raise ValueError("Game subcategory is required for custom mode")
+    if not args.game_name:
+        raise ValueError("Game name is required for custom mode")
+    return gameinfo.GameInfo(
+        game_supercategory = args.game_supercategory,
+        game_category = args.game_category,
+        game_subcategory = args.game_subcategory,
+        game_name = args.game_name,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+
+# A category's game names from the locker when one is given, else from JSON metadata,
+# narrowed to game_name_filter when set
+def _find_selected_game_names(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    locker_type,
+    locker_base_dir,
+    game_name_filter):
+    if locker_type is not None or locker_base_dir is not None:
+        game_names = find_locker_game_names(
+            game_supercategory,
+            game_category,
+            game_subcategory,
+            locker_type,
+            locker_base_dir)
+    else:
+        game_names = find_json_game_names(
+            game_supercategory,
+            game_category,
+            game_subcategory)
+    if game_name_filter:
+        game_names = [g for g in game_names if g == game_name_filter]
+    return game_names
+
+# Yield a GameInfo for each selected game of a category, warning about and skipping any
+# whose JSON can't be loaded
+def _iterate_category_game_infos(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    locker_type,
+    locker_base_dir,
+    game_name_filter,
+    verbose,
+    exit_on_failure):
+    game_names = _find_selected_game_names(
+        game_supercategory,
+        game_category,
+        game_subcategory,
+        locker_type,
+        locker_base_dir,
+        game_name_filter)
+    for game_name in game_names:
+        try:
+            yield gameinfo.GameInfo(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+        except (OSError, ValueError) as e:
+            logger.log_warning("Skipping '%s': %s" % (game_name, str(e)))
+
+# Yield a GameInfo for each selected game: the one named in custom mode, else every game with
+# JSON metadata, or locker files when a locker is given, optionally matched to one name
 def iterate_selected_game_infos(
     parser,
     generation_mode = None,
@@ -114,30 +255,16 @@ def iterate_selected_game_infos(
     game_subcategory_map = None,
     game_name_filter = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Determine generation mode
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     if generation_mode is None:
         generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
 
     # Custom mode - yield single GameInfo from explicit args
     if generation_mode == config.GenerationModeType.CUSTOM:
-        if not args.game_category:
-            raise ValueError("Game category is required for custom mode")
-        if not args.game_subcategory:
-            raise ValueError("Game subcategory is required for custom mode")
-        if not args.game_name:
-            raise ValueError("Game name is required for custom mode")
-        yield gameinfo.GameInfo(
-            game_supercategory = args.game_supercategory,
-            game_category = args.game_category,
-            game_subcategory = args.game_subcategory,
-            game_name = args.game_name,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        yield _create_custom_game_info(args, verbose, exit_on_failure)
         return
 
     # Standard mode - iterate filesystem
@@ -148,29 +275,26 @@ def iterate_selected_game_infos(
         generation_mode = generation_mode,
         game_supercategories = game_supercategories,
         game_subcategory_map = game_subcategory_map):
-        if locker_type is not None or locker_base_dir is not None:
-            game_names = find_locker_game_names(
-                game_supercategory,
-                game_category,
-                game_subcategory,
-                locker_type,
-                locker_base_dir)
-        else:
-            game_names = find_json_game_names(
-                game_supercategory,
-                game_category,
-                game_subcategory)
-        if game_name_filter:
-            game_names = [g for g in game_names if g == game_name_filter]
-        for game_name in game_names:
-            try:
-                yield gameinfo.GameInfo(
-                    game_supercategory = game_supercategory,
-                    game_category = game_category,
-                    game_subcategory = game_subcategory,
-                    game_name = game_name,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            except Exception as e:
-                logger.log_warning("Skipping '%s': %s" % (game_name, str(e)))
+        yield from _iterate_category_game_infos(
+            game_supercategory,
+            game_category,
+            game_subcategory,
+            locker_type,
+            locker_base_dir,
+            game_name_filter,
+            verbose,
+            exit_on_failure)
+
+# Iterate every category, as (supercategory, category, subcategory)
+def iterate_all_categories():
+    for game_supercategory in config.Supercategory.members():
+        for game_category in config.Category.members():
+            for game_subcategory in config.subcategory_map[game_category]:
+                yield game_supercategory, game_category, game_subcategory
+
+# Iterate every game with json metadata in every category, as (supercategory, category,
+# subcategory, name)
+def iterate_all_json_game_names():
+    for game_supercategory, game_category, game_subcategory in iterate_all_categories():
+        for game_name in find_json_game_names(game_supercategory, game_category, game_subcategory):
+            yield game_supercategory, game_category, game_subcategory, game_name

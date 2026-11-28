@@ -124,7 +124,6 @@ def test_find_images_builds_an_encoded_search_url(search_credentials, monkeypatc
         image_type = config.ImageFileType.JPEG,
         image_size = config.SizeType.LARGE,
         verbose = True,
-        pretend_run = True,
         exit_on_failure = True)
     query = remote.query()
     assert query["q"] == ["Super Game: Part 2"]
@@ -134,7 +133,7 @@ def test_find_images_builds_an_encoded_search_url(search_credentials, monkeypatc
     assert "cx" not in query and "key" not in query
     assert remote.calls[0]["kwargs"] == {
         "params": {"cx": "engine id", "key": "key&x"},
-        "verbose": True, "pretend_run": True, "exit_on_failure": True}
+        "verbose": True, "exit_on_failure": True}
 
 
 def test_find_images_accepts_type_and_size_names(search_credentials, monkeypatch):
@@ -357,6 +356,17 @@ def test_playlist_treats_ytdlp_missing_field_marker_as_absent(ytdlp, recording_c
 def test_playlist_with_no_output_returns_empty_list(ytdlp, recording_command, output):
     recording_command.output = output
     assert google.get_playlist_video_ids("https://www.youtube.com/@chan") == []
+
+def test_playlist_lines_parse_into_unique_ids_and_urls():
+    output = "a\thttps://x/a\nb\t%s\na\thttps://x/a2\n%s\thttps://x/n\n\nc\n" % (
+        google.YTDLP_MISSING_FIELD, google.YTDLP_MISSING_FIELD)
+
+    assert google.parse_playlist_video_ids(output) == [("a", "https://x/a"), ("b", ""), ("c", "")]
+
+
+def test_no_playlist_output_parses_to_nothing():
+    assert google.parse_playlist_video_ids(None) == []
+
 
 ###########################################################
 # download_video

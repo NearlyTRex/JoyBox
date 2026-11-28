@@ -15,7 +15,7 @@ def build(client = None, **flag_overrides):
         flags = flags,
         options = runoptions.RunOptions())
     if client is not None:
-        connection_ssh.ConnectionSSH.ssh_client = client
+        connection.ssh_client = client
     return connection
 
 
@@ -62,11 +62,14 @@ class AcceptingClient(RefusingClient):
 
 def fake_paramiko(monkeypatch, client, **members):
     class Module:
+        class SSHException(Exception):
+            pass
+
         @staticmethod
         def SSHClient():
             return client
 
     for name, value in members.items():
         setattr(Module, name, value)
-    monkeypatch.setattr(connection_ssh, "paramiko", Module)
+    monkeypatch.setattr(connection_ssh, "_get_paramiko", lambda: Module)
     return client

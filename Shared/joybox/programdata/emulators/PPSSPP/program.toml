@@ -1,0 +1,68 @@
+# PPSSPP: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_NETWORK_PSP", "SONY_PLAYSTATION_NETWORK_PSPM", "SONY_PLAYSTATION_PORTABLE"]
+
+[config.PPSSPP]
+program = { windows = "PPSSPP/windows/PPSSPPWindows64.exe", linux = "PPSSPP/linux/PPSSPP.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.PPSSPP.save_dir]
+windows = "PPSSPP/windows/memstick/PSP/SAVEDATA"
+linux = "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SAVEDATA"
+
+[config.PPSSPP.config_file]
+windows = "PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"
+linux = "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
+
+[[config_files]]
+path = "PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"
+
+[[config_files]]
+path = "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://www.ppsspp.org/download"
+webpage_base_url = "https://www.ppsspp.org"
+starts_with = "https://www.ppsspp.org/files/"
+ends_with = "ppsspp_win.zip"
+search_file = "PPSSPPWindows64.exe"
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/PPSSPP.git"
+output_file = "PPSSPPSDL-x86_64.AppImage"
+build_cmd = [
+    "cmake",
+    "..",
+    "-DLINUX_LOCAL_DEV=true",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "&&",
+    "make",
+    "-j",
+    "4",
+]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/PPSSPP/Build/PPSSPPSDL", to = "AppImage/usr/bin/PPSSPPSDL" },
+    { from = "Source/PPSSPP/Build/assets", to = "AppImage/usr/bin/assets" },
+    { from = "Source/PPSSPP/Build/ppsspp.desktop", to = "AppImage/ppsspp.desktop" },
+    { from = "Source/PPSSPP/icons/icon-512.svg", to = "AppImage/ppsspp.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/PPSSPPSDL", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "PPSSPPWindows64.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]

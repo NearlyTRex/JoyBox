@@ -3,6 +3,7 @@ import os
 
 # Local imports
 from joybox import config, sandbox, sandboxdrives
+from joybox import prefixlayout
 
 
 ###########################################################
@@ -14,7 +15,7 @@ from joybox import config, sandbox, sandboxdrives
 ###########################################################
 
 def drive(prefix_options, letter):
-    return sandbox.get_real_drive_path(prefix_options, letter)
+    return prefixlayout.get_real_drive_path(prefix_options, letter)
 
 
 def test_the_first_free_drive_letter_is_offered(wine_prefix):

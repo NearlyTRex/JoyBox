@@ -462,3 +462,23 @@ def test_a_missing_directory_is_refused(library, tmp_path, exit_on_failure):
     else:
         assert audible.decrypt_aax_directory(missing) is False
     assert library["batches"] == []
+
+
+def test_finding_books_skips_subdirectories_by_default(library):
+    root = library["root"]
+
+    assert sorted(audible.find_aax_files(root)) == sorted([root + "/one.aax", root + "/two.AA"])
+
+
+def test_finding_books_recursively_includes_subdirectories(library):
+    root = library["root"]
+
+    assert root + "/series/three.aax" in audible.find_aax_files(root, recursive = True)
+
+
+def test_a_decrypted_book_is_named_after_its_input_in_the_output_directory():
+    assert audible.get_m4a_output_file("/books/one.aax", "/out") == "/out/one.m4a"
+
+
+def test_without_an_output_directory_there_is_no_output_file():
+    assert audible.get_m4a_output_file("/books/one.aax", None) is None

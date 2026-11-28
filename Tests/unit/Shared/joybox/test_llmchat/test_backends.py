@@ -6,12 +6,51 @@ import urllib.error
 import pytest
 
 # Local imports
-from joybox import llmchat
+from joybox import dispatch, llmchat
 
 
 ###########################################################
 # Backend selection
 ###########################################################
+
+@pytest.fixture
+def offered(monkeypatch, backend):
+    made = []
+
+    def make_backend(kind, endpoint = None, api_key = "", model = None):
+        made.append((kind, endpoint, api_key, model))
+        return backend
+
+    monkeypatch.setattr(llmchat, "make_backend", make_backend)
+    return made
+
+
+def test_a_connection_defaults_to_the_first_offered_model(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, endpoint = "http://box:11434") == (backend, "small")
+    assert offered == [(llmchat.BACKEND_OLLAMA, "http://box:11434", "", None)]
+
+
+def test_a_connection_keeps_an_offered_model(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, model = "large") == (backend, "large")
+
+
+def test_a_connection_refuses_a_model_not_offered(offered):
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA, model = "huge") is None
+
+
+def test_claude_takes_a_model_it_does_not_list(offered, backend):
+    assert llmchat.connect_backend(llmchat.BACKEND_CLAUDE, model = "huge") == (backend, "huge")
+
+
+def test_a_backend_offering_no_models_cannot_connect(offered, backend):
+    backend.model_names = []
+
+    assert llmchat.connect_backend(llmchat.BACKEND_OLLAMA) is None
+
+
+def test_an_unknown_backend_cannot_connect():
+    assert llmchat.connect_backend("not-a-backend") is None
+
 
 def test_every_backend_key_builds_its_backend():
     built = {key: type(llmchat.make_backend(key)) for key in llmchat.get_backend_keys()}
@@ -93,8 +132,9 @@ def sent(request):
 
 def stream(backend, on_text = None, model = "m", num_ctx = 0):
     pieces = []
-    text = backend.stream(model, [{"role": "user", "content": "hi"}], 0.5, 64, num_ctx,
-                          on_text or pieces.append)
+    text = dispatch.call_with_options(
+        backend.stream, model = model, messages = [{"role": "user", "content": "hi"}], temperature = 0.5,
+        max_tokens = 64, num_ctx = num_ctx, on_text = on_text or pieces.append)
     return text, pieces
 
 
@@ -334,7 +374,7 @@ def test_claude_uses_the_session_model(claude):
 def test_claude_passes_the_system_prompt(claude):
     llmchat.ClaudeBackend().stream("m", [{"role": "system", "content": "Be terse."},
                                          {"role": "user", "content": "hi"}],
-                                   0.5, 64, 0, lambda text: None)
+                                   64, lambda text: None)
 
     assert claude["calls"][0]["system_prompt"] == "Be terse."
 
@@ -346,7 +386,7 @@ def test_claude_raises_when_no_reply_came(claude):
 
     with pytest.raises(llmchat.RequestFailed):
         llmchat.ClaudeBackend().stream("m", [{"role": "user", "content": "hi"}],
-                                       0.5, 64, 0, pieces.append)
+                                       64, pieces.append)
     assert pieces == []
 
 

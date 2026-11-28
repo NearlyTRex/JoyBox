@@ -93,7 +93,7 @@ def test_configure_passes_the_setup_params_through(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Xenia", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Xenia", config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flags(seams):

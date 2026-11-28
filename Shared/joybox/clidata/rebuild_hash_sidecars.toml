@@ -1,0 +1,44 @@
+# Help text for the rebuild_hash_sidecars command, read by joybox/arguments.py
+
+description = "Rebuild a remote locker's hash sidecar database from local content."
+details = """
+The hash sidecar is a SQLite database, `.locker_hashes.db`, at the root of a remote
+locker. It records the path, MD5, size and modification time of each file as it is on
+the local side (before any encryption). Remotes that cannot hash files themselves,
+such as the SFTP-based Hetzner locker, rely on it: `locker_sync_tool` and
+`master_backup` read it instead of asking the remote, so it has to be current for
+their comparisons to be right.
+
+The tool downloads the existing database if there is one, hashes the source locker's
+files (or the `--path` subtree), writes the new entries over any existing ones for the
+same paths, and uploads the database back to the destination locker's root. Hidden
+directories and the destination locker's configured `excluded_dirs` are skipped.
+Directories with more than 500 files or 10 GB are hashed one at a time first; the
+rest are hashed `--parallel_dirs` at a time.
+
+`--skip_existing` is keyed on path, not content: a file that already has an entry
+keeps its old row even if the file has changed. Every file is still hashed; only the
+database write is skipped. Use it to add new files quickly, and run without it when
+files may have changed. If a database exists but cannot be downloaded, the run fails
+rather than upload one holding only the newly hashed files."""
+section = "Backups & Lockers"
+see_also = [
+    "find_missing_hash_sidecars",
+    "master_backup",
+    "locker_sync_tool",
+    "sync_tool",
+]
+notes = [
+    "Entries for files that were deleted locally stay in the database until it is rebuilt with `-c`.",
+    "`-c` deletes the whole database at the destination root, even when `--path` limits the rehash to a subtree, so combine them only when you mean to drop every other entry.",
+    "Peak memory is about `parallel_dirs` x `parallel_files` x the hashing chunk size; the preview shows the figure.",
+    "Hetzner's SFTP shell has no usable `md5sum`, so an rclone remote with `md5sum_command` set fails to verify the upload, reports `corrupted on transfer`, and deletes the uploaded database. Set `disable_hashcheck = true` on that remote and remove any `md5sum_command`/`sha1sum_command`; the Hetzner template in the rclone setup already does this.",
+    "`master_backup` refreshes the sidecar after each backup, so this tool is mainly for repairs and first-time setup.",
+]
+examples = [
+    ["Rebuild the Hetzner sidecar from the local locker", "rebuild_hash_sidecars -l Local -d Hetzner -v"],
+    ["Show what would be hashed without uploading anything", "rebuild_hash_sidecars -p -v"],
+    ["Add entries only for files not yet in the database", "rebuild_hash_sidecars -s -v"],
+    ["Rehash one subtree", "rebuild_hash_sidecars --path \"Gaming/Roms\" -v"],
+    ["Start from an empty database and rehash the whole locker", "rebuild_hash_sidecars -c -v"],
+]

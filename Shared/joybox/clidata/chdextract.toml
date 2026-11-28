@@ -1,0 +1,37 @@
+# Help text for the chdextract command, read by joybox/arguments.py
+
+description = "Extract CD disc images from CHD files with chdman."
+details = """
+Finds every `.chd` file under the input path (or takes the one file given) and runs
+`chdman extractcd` on it, writing the disc next to it in the format `-f` picks:
+
+- `CUE`: a CUE sheet `<name>.cue` and the track data `<name>.bin`
+- `GDI`: a GDI sheet `<name>.gdi` and its tracks, for Dreamcast discs
+- `TOC`: a cdrdao TOC `<name>.toc` and the track data `<name>.bin`
+- `ISO`: an ISO image `<name>.iso`
+
+`-b` changes the `.bin` extension of the sheet formats.
+
+`ISO` extracts the CHD to CUE/BIN in a temporary folder and splits it with `bchunk`.
+A disc that is one 2048-byte data track (a CHD made from an ISO) is already an ISO
+and skips bchunk. A disc with more than one track keeps bchunk's numbered names
+(`<name>01.iso`, `<name>02.cdr`, ...).
+
+A CHD is skipped when any of its output files already exists."""
+section = "Game ROMs & Images"
+see_also = [
+    "chdconvert",
+    "chdverify",
+    "chdzip",
+    "isoextract",
+]
+notes = [
+    "chdman (MameChdman) must be installed as a JoyBox tool.",
+    "`ISO` also needs bchunk (Bchunk).",
+]
+examples = [
+    ["Extract every CHD in a folder to CUE/BIN", "chdextract -i /path/to/chds"],
+    ["Extract to CUE/BIN and delete the CHDs, previewing first", "chdextract -i /path/to/chds -d -p -v"],
+    ["Extract a Dreamcast CHD with a GDI sheet", "chdextract -i \"/path/to/Game (USA).chd\" -f GDI"],
+    ["Extract every CHD in a folder to ISO", "chdextract -i /path/to/chds -f ISO"],
+]

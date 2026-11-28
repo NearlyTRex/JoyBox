@@ -20,6 +20,8 @@ def parse_selection(text, names):
         includes = list(names)
     return [name for name in names if name in includes and name not in excludes]
 
+# The names one selection token stands for: all, a name, a number or a range
+# of numbers; raises ValueError when it matches none
 def resolve_token(token, names):
     if token.lower() == "all":
         return list(names)
@@ -33,6 +35,7 @@ def resolve_token(token, names):
         return names[first - 1:last]
     return [names[resolve_number(token, names) - 1]]
 
+# A 1-based component number from a token; raises ValueError when not a number or out of range
 def resolve_number(token, names):
     if not token.isdigit():
         raise ValueError(f"'{token}' is not a component number or name")

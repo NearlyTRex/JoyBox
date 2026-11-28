@@ -6,6 +6,7 @@ The `dotfiles` component manages your shell config **non-destructively**:
 
 - It installs the JoyBox shell config into `~/.joybox/` (`shell.sh`, `aliases.sh`,
   `functions.sh`, `completions.sh`).
+
 - It injects a single marker-delimited block into `~/.bashrc` / `~/.bash_profile` that
   sources those files. Everything outside the block (your own edits, things added by other
   installers such as the `deno` and rustup `.cargo/env` lines) is left untouched:
@@ -16,6 +17,9 @@ The `dotfiles` component manages your shell config **non-destructively**:
   case $- in *i*) ... source ~/.joybox/*.sh ... esac
   # <<< JOYBOX MANAGED BLOCK <<<
   ```
+
+  `JOYBOX_ROOT` points at this checkout and is only exported on a local target; a remote
+  server has no checkout, so its block leaves it out.
 
   The first time it touches an existing `~/.bashrc`/`~/.bash_profile` it keeps a one-shot
   copy at `*.joybox.backup`.

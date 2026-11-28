@@ -1,0 +1,32 @@
+# BigPEmu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["OTHER_ATARI_JAGUAR", "OTHER_ATARI_JAGUAR_CD"]
+
+[config.BigPEmu]
+program = { windows = "BigPEmu/windows/BigPEmu.exe", linux = "BigPEmu/windows/BigPEmu.exe" }
+save_dir = { windows = "BigPEmu/windows/UserData", linux = "BigPEmu/windows/UserData" }
+config_file = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = true }
+
+[[config_files]]
+path = "BigPEmu/windows/placeholder.txt"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download"
+webpage_base_url = "https://www.richwhitehouse.com"
+starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v"
+ends_with = "[0-9].zip"
+search_file = "BigPEmu.exe"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "BigPEmu.exe"
+
+[launch]
+args = ["{game_file}", "-localdata"]

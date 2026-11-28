@@ -1,0 +1,37 @@
+# SheepShaver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.SheepShaver]
+run_sandboxed = { windows = false, linux = false }
+
+[config.SheepShaver.program]
+windows = "SheepShaver/windows/SheepShaver.exe"
+linux = "SheepShaver/linux/SheepShaver.AppImage"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "MacEmu"
+starts_with = "SheepShaver-Windows"
+ends_with = ".zip"
+search_file = "SheepShaver.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "Korkman"
+github_repo = "macemu-appimage-builder"
+starts_with = "SheepShaver-x86_64"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "SheepShaver.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

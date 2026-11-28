@@ -1,0 +1,46 @@
+# Help text for the master_backup command, read by joybox/arguments.py
+
+description = "Back up the local locker to one or more remote lockers in one unattended run."
+details = """
+Treats the source locker (normally `Local`) as the authoritative copy and pushes new
+and changed files to each destination locker, by default `Hetzner` and `Gdrive`. It
+asks for one confirmation and then runs without prompting. It is additive by default:
+files that exist only on a destination are kept unless `--recycle_orphans` is given.
+
+For each destination it:
+
+1. Builds an MD5 hash map of the source and of the destination and compares them by
+   relative path. Local lockers are hashed on disk; remotes are listed with
+   `rclone lsjson --hash`, and SFTP remotes such as Hetzner are read from their
+   `.locker_hashes.db` sidecar instead.
+2. Uploads files missing from the destination or whose hash differs. Plain files go up
+   in one `rclone copy --files-from`. For a destination marked `encrypted` in its
+   locker settings, files are encrypted into a staging tree in the cache directory and
+   uploaded in batches of about 4 GiB.
+3. Refreshes the destination's hash sidecar from the local content, once, when the
+   source is a local locker and the destination is an SFTP remote.
+
+Each destination's configured `excluded_dirs` are left out of both the comparison and
+the upload. This is the unattended form of `locker_sync_tool`."""
+section = "Backups & Lockers"
+see_also = [
+    "locker_sync_tool",
+    "rebuild_hash_sidecars",
+    "find_missing_hash_sidecars",
+    "sync_tool",
+    "backup_tool",
+]
+notes = [
+    "Hash maps are cached per locker for 24 hours, including the source's. Files changed locally since the cached map was built are not seen until it expires, so use `--skip_cache` after recent changes.",
+    "A pretend run still hashes local lockers and writes their cache, so the real run that follows can reuse it.",
+    "`--recycle_orphans` moves orphans into the destination's `.recycle_bin`; nothing is hard-deleted. The recycle bin itself is never compared.",
+    "The sidecar refresh is skipped for a destination when any of its uploads failed, so the next run finds and retries the missing files.",
+    "The Hetzner rclone remote needs `disable_hashcheck = true`, since SFTP cannot run `md5sum` to verify transfers; the rclone config JoyBox generates sets it.",
+]
+examples = [
+    ["Back up the local locker to Hetzner and Gdrive", "master_backup"],
+    ["Show what would be uploaded without uploading anything", "master_backup -p -v"],
+    ["Back up to Hetzner only", "master_backup -r Hetzner"],
+    ["Also move remote files that no longer exist locally into the recycle bin", "master_backup --recycle_orphans"],
+    ["Rehash everything instead of using the cached hash maps", "master_backup --skip_cache"],
+]

@@ -1,23 +1,28 @@
 # Imports
 import base64
+import importlib
 
 # Local imports
-import joybox.config as config
+from joybox import config
 from joybox import fileops
 from joybox import filebulk
 from joybox import serialization
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import logger
+from joybox import paths
 from joybox import runtime
 
-# Get image format
+# Get PIL.Image, imported on first use
+def _get_pil_image():
+    return importlib.import_module("PIL.Image")
+
+# Image file type read by Pillow for an existing file, or guessed from a jpg/png extension otherwise; None when unknown
 def get_image_format(image_file):
     if paths.is_path_file(image_file):
+        pil_image = _get_pil_image()
         try:
-            from PIL import Image
-            with Image.open(image_file) as img:
+            with pil_image.open(image_file) as img:
                 return config.ImageFileType.from_string(img.format)
-        except Exception:
+        except OSError:
             return None
     else:
         image_ext = paths.get_filename_extension(image_file).lower()
@@ -29,7 +34,7 @@ def get_image_format(image_file):
 
 # Detect if image is a certain format
 def is_image_format(image_file, image_format):
-    return (get_image_format(image_file) == image_format)
+    return get_image_format(image_file) == image_format
 
 # Detect if image is jpeg
 def is_image_jpeg(image_file):
@@ -43,7 +48,16 @@ def is_image_png(image_file):
         image_file = image_file,
         image_format = config.ImageFileType.PNG)
 
-# Convert image
+# The JPEG or PNG format a destination's extension names; None for any other extension
+def get_image_format_from_extension(image_dest):
+    image_ext = paths.get_filename_extension(image_dest).lower()
+    if image_ext in [".jpg", ".jpeg"]:
+        return config.ImageFileType.JPEG
+    if image_ext in [".png"]:
+        return config.ImageFileType.PNG
+    return None
+
+# Save the first frame of an image as RGB in the given format, or the one its destination extension names; True on a pretend run, False on failure
 def convert_image(
     image_src,
     image_dest,
@@ -51,32 +65,32 @@ def convert_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    pil_image = _get_pil_image()
     try:
         if verbose:
             logger.log_info("Converting image %s to %s" % (image_src, image_dest))
-        if not pretend_run:
-            from PIL import Image
-            src_image = Image.open(image_src)
-            if getattr(src_image, "is_animated", False):
-                src_image.seek(0)
-            rgb_image = src_image.convert("RGB")
-            if not image_format:
-                image_ext = paths.get_filename_extension(image_dest).lower()
-                if image_ext in [".jpg", ".jpeg"]:
-                    image_format = config.ImageFileType.JPEG
-                elif image_ext in [".png"]:
-                    image_format = config.ImageFileType.PNG
-            rgb_image.save(image_dest, image_format.val())
-            return paths.does_path_exist(image_dest)
-        return False
-    except Exception as e:
+        if pretend_run:
+            return True
+        src_image = pil_image.open(image_src)
+        if getattr(src_image, "is_animated", False):
+            src_image.seek(0)
+        rgb_image = src_image.convert("RGB")
+        if not image_format:
+            image_format = get_image_format_from_extension(image_dest)
+        if not image_format:
+            if exit_on_failure:
+                logger.log_error("Unable to tell which image format to convert %s to" % image_dest)
+            return False
+        rgb_image.save(image_dest, image_format.val())
+        return paths.does_path_exist(image_dest)
+    except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))
             logger.log_error(e)
             runtime.quit_program()
         return False
 
-# Convert image to jpeg
+# Copy an image that is already JPEG, otherwise convert it to JPEG
 def convert_image_to_jpeg(
     image_src,
     image_dest,
@@ -99,7 +113,7 @@ def convert_image_to_jpeg(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Convert image to png
+# Copy an image that is already PNG, otherwise convert it to PNG
 def convert_image_to_png(
     image_src,
     image_dest,

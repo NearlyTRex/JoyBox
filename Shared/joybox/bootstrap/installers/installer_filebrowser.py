@@ -6,16 +6,17 @@ import re
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
+from . import installer_nginx
 
 # Nginx config template
 #
 # FileBrowser Quantum's own accounts are the login, so there is no basic auth.
 # Its login throttling is keyed by client IP, read from X-Real-IP, which nginx
 # always overwrites so a client cannot choose it.
-nginx_config_template = r"""
+NGINX_CONFIG_TEMPLATE = r"""
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -30,18 +31,7 @@ server {{
         return 301 https://{subdomain}.{domain}$request_uri;
     }}
 }}
-
-server {{
-    listen 443 ssl;
-    server_name {subdomain}.{domain};
-
-    # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
-
-    # Include configurations
-    include /etc/nginx/snippets/ssl-params.conf;
-
+""" + installer_nginx.build_ssl_server_head("SSL Configuration", "Include configurations") + r"""
     location / {{
 
         # Opening a folder fetches a thumbnail per file; the rate stays the same
@@ -86,7 +76,7 @@ server {{
 # Other accounts are managed in the app. Every account must add an
 # authenticator code, whose seeds are stored encrypted with the TOTP secret. The config is inline so compose fills
 # it from .env like the rest of the file.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   filebrowser:
     image: ${FILEBROWSER_IMAGE}
@@ -132,7 +122,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 FILEBROWSER_PORT_HTTP={port_http}
 FILEBROWSER_ROOT={user_root}
 FILEBROWSER_HOST={subdomain}.{domain}
@@ -186,9 +176,9 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.nginx_config_template = nginx_config_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.nginx_config_template = NGINX_CONFIG_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "user_root", "admin_user", "admin_pass", "totp_secret"]
@@ -198,6 +188,8 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "FileBrowser"
         self.backup_volumes = ["data"]
 
+    # The base checks, plus an admin user of safe characters, a long enough admin
+    # password and a valid TOTP secret
     def check_required_settings(self):
         if not super().check_required_settings():
             return False

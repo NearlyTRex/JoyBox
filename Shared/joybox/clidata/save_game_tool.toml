@@ -1,0 +1,45 @@
+# Help text for the save_game_tool command, read by joybox/arguments.py
+
+description = "Archive, restore and back up game saves."
+details = """
+Works on each selected game that has a JSON entry. Two directories are involved: the
+live save directory in the cache (`Wine` or `Sandboxie` below it for `Computer` games,
+depending on the host), and the save archive directory in the local locker,
+`Gaming/Saves/<category>/<subcategory>/<game>`.
+
+Actions:
+
+- `Pack`: zip the live save directory, test the zip, and skip it if an identical
+  archive is already in the save archive directory. Otherwise copy it to that path,
+  as `<game>_<timestamp>.zip`, in the local locker and each locker selected by `-l`.
+- `Unpack`: extract the newest archive from the save archive directory into the live
+  save directory.
+- `Export`: for store games, copy the save files from the store's save paths on this
+  machine (as recorded in the game's JSON entry) into a temporary tree and pack that.
+  For other games, the same as `Pack`.
+- `Import`: for non-store games, the same as `Unpack` when there is an archive to
+  unpack. For store games, nothing.
+- `ImportSavePaths`: for store games, list the files inside the save archives,
+  convert them to tokenized store paths, and merge them into the game's JSON entry.
+
+Games are selected with `-c`, `-s` and `-n`; any that is omitted matches everything,
+so with none of them the action runs over every game."""
+section = "Save Games"
+see_also = [
+    "backup_tool",
+    "upload_game_files",
+]
+notes = [
+    "`Pack` archives what is already in the live save directory; to capture fresh saves from an installed store game use `Export`.",
+    "Every pack or export writes a new timestamped archive rather than replacing an old one, unless an identical archive already exists.",
+    "Archives are copied to the lockers as plain zip files, without encryption.",
+    "`Pack` skips games with an empty live save directory; `Unpack` skips games with no archive or a non-empty live save directory.",
+    "The first game that fails stops the run.",
+]
+examples = [
+    ["Capture the current saves of an installed Steam game", "save_game_tool -a Export -c Computer -s Steam -n \"Hades (World)\" -l Local"],
+    ["Preview exporting every store game's saves", "save_game_tool -a Export -c Computer -p -v"],
+    ["Pack a Switch game's saves into every configured locker", "save_game_tool -a Pack -c Nintendo -s \"Nintendo Switch\" -n \"Game Name\""],
+    ["Restore the newest save archive into place", "save_game_tool -a Unpack -c Computer -s Steam -n \"Hades (World)\""],
+    ["Record save paths for all Steam games from their archives", "save_game_tool -a ImportSavePaths -c Computer -s Steam"],
+]

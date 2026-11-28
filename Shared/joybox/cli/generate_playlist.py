@@ -1,39 +1,14 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.playlist as playlist
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import config
+from joybox import system
+from joybox import playlist
+from joybox import arguments
+from joybox import setup
+from joybox import logger
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Write `.m3u` playlists for the media files in a directory tree.",
-        details = (
-            "Two playlist types:\n"
-            "\n"
-            "- `Tree` (default): one playlist at `-o` listing every matching file anywhere under\n"
-            "  the input directory, by absolute path.\n"
-            "- `Local`: for the input directory and each directory below it that directly holds\n"
-            "  matching files, a playlist named `<directory name>.m3u` inside that directory,\n"
-            "  listing those files by name only.\n"
-            "\n"
-            "Entries are ordered by length and then alphabetically. Playlists that would be empty\n"
-            "or hold a single entry are not written unless `--allow_empty_lists` or\n"
-            "`--allow_single_lists` is given."),
-        examples = [
-            ("Write one playlist for a whole music folder", "generate_playlist -t Tree -i \"/path/to/music\" -o \"/path/to/music/all.m3u\" -f \".mp3,.flac\""),
-            ("Write a playlist inside each album folder", "generate_playlist -t Local -i \"/path/to/music\" -f \".mp3\""),
-            ("Include several media types", "generate_playlist -t Tree -i \"/path/to/media\" -o \"/path/to/media/playlist.m3u\" -f \".mp3,.m4a,.flac,.ogg\""),
-            ("Also write empty and single-entry playlists", "generate_playlist -t Local -i \"/path/to/music\" -f \".mp3\" --allow_empty_lists --allow_single_lists"),
-            ("Show which playlists would be written without writing them", "generate_playlist -t Local -i \"/path/to/music\" -f \".mp3\" -p -v"),
-        ],
-        notes = [
-            "An existing playlist at the same path is overwritten.",
-        ],
-        see_also = ["download_audio_files", "tag_audio_files", "audio_metadata_tool"],
-        section = "Audio & Video")
+    parser = arguments.ArgumentParser(command = "generate_playlist")
     parser.add_group("Input/Output")
     parser.add_input_path_argument(description = "Directory to scan; must exist")
     parser.add_output_path_argument(description = "Playlist file to write for `Tree`; not used by `Local`")
@@ -45,23 +20,17 @@ def build_parser():
         default = config.PlaylistType.TREE,
         description = "`Tree` writes one playlist for the whole tree; `Local` writes one inside each directory that holds matching files")
     parser.add_group("Behavior")
-    parser.add_boolean_argument(args = ("--allow_empty_lists"), description = "Write playlists that have no entries instead of skipping them")
-    parser.add_boolean_argument(args = ("--allow_single_lists"), description = "Write playlists that have a single entry instead of skipping them")
+    parser.add_boolean_argument(args = ("--allow_empty_lists",), description = "Write playlists that have no entries instead of skipping them")
+    parser.add_boolean_argument(args = ("--allow_single_lists",), description = "Write playlists that have a single entry instead of skipping them")
     parser.add_common_arguments()
     return parser
 
-# Main
+# Write one tree playlist of every matching media file under the input, or a local playlist inside each dir holding them
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()

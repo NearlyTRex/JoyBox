@@ -41,6 +41,14 @@ def test_install_sets_up_the_debsig_policy_and_the_signed_repository(isolated_se
     assert connection.ran("install -y 1password 1password-cli")
 
 
+def test_an_unwritable_source_fails_the_install(isolated_settings, monkeypatch):
+    onepassword, connection = make()
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert onepassword.install() is False
+    assert not connection.ran("install -y")
+
+
 def test_uninstall_removes_the_packages_the_repository_and_the_policy(isolated_settings):
     onepassword, connection = make()
 

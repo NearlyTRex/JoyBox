@@ -1,0 +1,20 @@
+# CxBxReloaded: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.CxBxReloaded]
+program = { windows = "CxBxReloaded/windows/cxbx.exe", linux = "CxBxReloaded/windows/cxbx.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "Cxbx-Reloaded"
+github_repo = "Cxbx-Reloaded"
+starts_with = "CxbxReloaded-Release"
+ends_with = ".zip"
+search_file = "cxbx.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "cxbx.exe"

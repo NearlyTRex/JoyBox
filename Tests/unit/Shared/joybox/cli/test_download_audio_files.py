@@ -72,7 +72,7 @@ def test_a_failed_download_exits_with_an_error(tool, genre, message):
     tool.result = False
 
     assert tool.exit_code("-g", genre) == 1
-    assert tool.errors == [message]
+    assert tool.errors == [message, "Script completed with errors"]
 
 
 @pytest.mark.parametrize("flags", [[], ["-g", "Classical"]])

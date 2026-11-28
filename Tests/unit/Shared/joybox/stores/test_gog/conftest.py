@@ -50,10 +50,11 @@ def no_manifest(monkeypatch):
 @pytest.fixture
 def temp_dir(monkeypatch, tmp_path):
     # The single temporary directory a call creates, at a known path
-    state = {"path": tmp_path / "gog-temp", "ok": True, "created": 0}
+    state = {"path": tmp_path / "gog-temp", "ok": True, "created": 0, "kwargs": []}
 
     def create_temporary_directory(**kwargs):
         state["created"] += 1
+        state["kwargs"].append(kwargs)
         if not state["ok"]:
             return (False, "no")
         state["path"].mkdir()

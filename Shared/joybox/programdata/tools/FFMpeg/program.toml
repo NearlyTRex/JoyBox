@@ -1,0 +1,38 @@
+# FFMpeg: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.FFMpeg]
+program = { windows = "FFMpeg/windows/ffmpeg.exe", linux = "FFMpeg/linux/ffmpeg" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "BtbN"
+github_repo = "FFmpeg-Builds"
+starts_with = "ffmpeg-master-latest"
+ends_with = "win64-gpl.zip"
+search_file = "ffmpeg.exe"
+install_files = ["ffmpeg.exe"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "BtbN"
+github_repo = "FFmpeg-Builds"
+starts_with = "ffmpeg-master-latest"
+ends_with = "linux64-gpl.tar.xz"
+search_file = "ffmpeg"
+install_files = ["ffmpeg"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "ffmpeg.exe"
+install_files = ["ffmpeg.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "ffmpeg"
+install_files = ["ffmpeg"]

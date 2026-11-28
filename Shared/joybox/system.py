@@ -1,12 +1,12 @@
 # Local imports
-import joybox.logger as logger
+from joybox import logger
 from joybox import runtime
 
 ###########################################################
 # Program control
 ###########################################################
 
-# Run main function
+# Run a script's main, logging success or exiting 1 on a False result and 130 on Ctrl-C
 def run_main(main_func):
     try:
         success = main_func()
@@ -19,6 +19,3 @@ def run_main(main_func):
     except KeyboardInterrupt:
         logger.log_warning("\nOperation cancelled by user")
         runtime.quit_program(130)
-    except Exception as e:
-        logger.log_error(f"Script failed with exception: {e}")
-        runtime.quit_program(1)

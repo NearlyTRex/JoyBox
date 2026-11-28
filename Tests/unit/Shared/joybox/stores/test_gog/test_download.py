@@ -182,3 +182,9 @@ def test_a_download_needs_lgogdownloader(gog_store, lgog, tools, temp_dir, tmp_p
 def test_an_invalid_download_identifier_runs_nothing(gog_store, lgog, tmp_path):
     assert gog_store.download("", str(tmp_path / "out")) is False
     assert lgog["calls"] == []
+
+
+def test_a_pretend_download_makes_no_real_temp_directory(gog_store, lgog, temp_dir, tmp_path):
+    gog_store.download("the_witcher", str(tmp_path / "out"), pretend_run = True)
+
+    assert temp_dir["kwargs"][0]["pretend_run"] is True

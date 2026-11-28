@@ -7,6 +7,8 @@ import pytest
 
 # Local imports
 from joybox import command
+from joybox import commandrun
+from joybox import commandbase
 
 
 ###########################################################
@@ -35,6 +37,17 @@ def test_a_missing_options_object_falls_back_to_defaults(processes):
     processes.stdout = "out\n"
 
     assert run(options = None) == ("out", 0)
+
+
+def test_each_run_without_options_gets_its_own(monkeypatch):
+    # Options built once as a default would carry one run's changes into the next.
+    seen = []
+    monkeypatch.setattr(commandrun, "run_prepared_command", lambda cmd, options, **kwargs: seen.append(options) or ("", 0))
+
+    command.run_command(["/usr/bin/tool"])
+    command.run_command(["/usr/bin/tool"])
+
+    assert seen[0] is not seen[1]
 
 
 ###########################################################
@@ -86,7 +99,7 @@ def test_reading_stops_at_the_end_of_the_stream(processes):
 
 
 def test_the_working_directory_and_environment_are_passed(processes):
-    options = command.create_command_options(cwd = "/work")
+    options = commandbase.create_command_options(cwd = "/work")
     options.set_env_var("JOYBOX_TEST", "1")
 
     run(options = options)
@@ -98,7 +111,7 @@ def test_the_working_directory_and_environment_are_passed(processes):
 
 
 def test_a_shell_command_is_launched_as_one_string(processes):
-    options = command.create_command_options(is_shell = True)
+    options = commandbase.create_command_options(is_shell = True)
 
     run(["echo", "a b"], options = options)
 
@@ -109,7 +122,7 @@ def test_a_shell_command_is_launched_as_one_string(processes):
 
 def test_a_verbose_run_prints_the_command(processes, monkeypatch):
     printed = []
-    monkeypatch.setattr(command, "print_command", printed.append)
+    monkeypatch.setattr(commandrun, "print_command", printed.append)
 
     run(verbose = True)
 
@@ -128,7 +141,7 @@ def test_stdin_is_not_piped_by_default(processes):
 
 def test_stdin_input_is_written_to_the_process_and_closed(processes):
     # Secrets go in this way so they never appear in argv or the logged command.
-    options = command.create_command_options(stdin_input = "secret")
+    options = commandbase.create_command_options(stdin_input = "secret")
 
     run(options = options)
 
@@ -141,7 +154,7 @@ def test_stdin_input_is_written_to_the_process_and_closed(processes):
 def test_a_process_that_ignores_stdin_still_runs(processes):
     processes.stdin_broken = True
     processes.stdout = "out\n"
-    options = command.create_command_options(stdin_input = "secret")
+    options = commandbase.create_command_options(stdin_input = "secret")
 
     assert run(options = options) == ("out", 0)
 
@@ -156,7 +169,7 @@ def test_stderr_goes_to_the_terminal_by_default(processes):
 def test_included_stderr_is_merged_into_the_output(processes):
     processes.stdout = "out\n"
     processes.stderr = "err\n"
-    options = command.create_command_options(include_stderr = True)
+    options = commandbase.create_command_options(include_stderr = True)
 
     output, _ = run(options = options)
 
@@ -166,7 +179,7 @@ def test_included_stderr_is_merged_into_the_output(processes):
 
 def test_included_stderr_is_kept_even_when_it_is_also_logged(processes, logged):
     processes.stderr = "err\n"
-    options = command.create_command_options(include_stderr = True)
+    options = commandbase.create_command_options(include_stderr = True)
 
     output, _ = run(options = options, log_stderr = True)
 
@@ -191,7 +204,7 @@ def test_logged_stderr_is_not_captured_unless_included(processes, logged):
 def test_stdout_and_stderr_are_written_to_their_files(processes, tmp_path):
     processes.stdout = "out\n"
     processes.stderr = "err\n"
-    options = command.create_command_options(
+    options = commandbase.create_command_options(
         stdout = str(tmp_path / "out.log"),
         stderr = str(tmp_path / "err.log"))
 
@@ -215,7 +228,7 @@ def test_an_output_file_is_closed_when_the_launch_fails(processes, tmp_path, mon
 
     monkeypatch.setattr("builtins.open", tracking_open)
     processes.error = OSError("no such program")
-    options = command.create_command_options(stdout = str(tmp_path / "out.log"))
+    options = commandbase.create_command_options(stdout = str(tmp_path / "out.log"))
 
     assert run(options = options) == ("", 1)
     assert opened and all(handle.closed for handle in opened)
@@ -226,7 +239,7 @@ def test_an_output_file_is_closed_when_the_launch_fails(processes, tmp_path, mon
 ###########################################################
 
 def test_blocking_processes_are_waited_for_before_postprocessing(processes):
-    options = command.create_command_options(blocking_processes = ["wineserver"])
+    options = commandbase.create_command_options(blocking_processes = ["wineserver"])
 
     run(options = options)
 
@@ -252,7 +265,7 @@ def test_a_run_without_processing_is_neither_pre_nor_postprocessed(processes, mo
         raise AssertionError("processing was turned off")
 
     monkeypatch.setattr(command, "preprocess_command", fail)
-    options = command.create_command_options(allow_processing = False)
+    options = commandbase.create_command_options(allow_processing = False)
 
     run(options = options)
 
@@ -275,7 +288,7 @@ def test_the_preprocessed_command_is_what_runs(processes, monkeypatch):
 
 def test_a_passthrough_run_inherits_the_terminal(processes):
     processes.returncode = 4
-    options = command.create_command_options(passthrough = True, cwd = "/work")
+    options = commandbase.create_command_options(passthrough = True, cwd = "/work")
 
     assert run(options = options) == ("", 4)
     assert processes.launched == []
@@ -283,7 +296,7 @@ def test_a_passthrough_run_inherits_the_terminal(processes):
 
 
 def test_a_passthrough_run_is_finished_like_any_other(processes):
-    options = command.create_command_options(passthrough = True, blocking_processes = ["wineserver"])
+    options = commandbase.create_command_options(passthrough = True, blocking_processes = ["wineserver"])
 
     run(options = options)
 
@@ -292,7 +305,7 @@ def test_a_passthrough_run_is_finished_like_any_other(processes):
 
 
 def test_a_daemon_is_detached_and_not_waited_for(processes):
-    options = command.create_command_options(is_daemon = True, blocking_processes = ["wineserver"])
+    options = commandbase.create_command_options(is_daemon = True, blocking_processes = ["wineserver"])
 
     assert run(options = options) == ("", 0)
 
@@ -308,7 +321,7 @@ def test_a_daemon_is_detached_and_not_waited_for(processes):
 def test_a_daemon_is_not_cleaned_up_after_launch(processes):
     # Postprocessing kills the wine server and moves output files, which
     # would take a still-running daemon down with it.
-    options = command.create_command_options(is_daemon = True)
+    options = commandbase.create_command_options(is_daemon = True)
 
     run(options = options)
 
@@ -317,7 +330,7 @@ def test_a_daemon_is_not_cleaned_up_after_launch(processes):
 
 
 def test_a_daemon_keeps_its_creation_flags(processes):
-    options = command.create_command_options(is_daemon = True, creationflags = 8)
+    options = commandbase.create_command_options(is_daemon = True, creationflags = 8)
 
     run(options = options)
 
@@ -326,7 +339,7 @@ def test_a_daemon_keeps_its_creation_flags(processes):
 
 def test_a_suppressed_run_discards_both_streams(processes):
     processes.returncode = 2
-    options = command.create_command_options(
+    options = commandbase.create_command_options(
         suppress_output = True, blocking_processes = ["wineserver"])
 
     assert run(options = options) == ("", 2)
@@ -418,7 +431,7 @@ def warnings(monkeypatch):
 
 
 def timed_options(timeout, suppress_output = False):
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_allow_processing(False)
     options.set_timeout(timeout)
     options.set_suppress_output(suppress_output)

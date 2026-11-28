@@ -83,7 +83,7 @@ def test_a_fragmented_catalog_reads_its_overflow_extents(builder, extract):
 
 
 def test_a_large_file_is_written_in_chunks(monkeypatch, builder, extract):
-    monkeypatch.setattr(hfs, "hfsplus_chunk_size", 1000)
+    monkeypatch.setattr(hfs, "HFSPLUS_CHUNK_SIZE", 1000)
     builder.add_file(2, 16, "movie.mov", data = BIG_DATA, fragments = 3)
 
     _, output = extract(builder)
@@ -119,8 +119,8 @@ def test_finder_info_and_resource_fork_go_to_appledouble(builder, extract):
     _, output = extract(builder)
 
     _, _, entries = read_appledouble_entries((output / "._Start").read_bytes())
-    assert entries[hfs.appledouble_entry_finder_info] == APPLICATION_INFO
-    assert entries[hfs.appledouble_entry_resource_fork] == b"resources"
+    assert entries[hfs.APPLEDOUBLE_ENTRY_FINDER_INFO] == APPLICATION_INFO
+    assert entries[hfs.APPLEDOUBLE_ENTRY_RESOURCE_FORK] == b"resources"
     assert not (output / "._Read Me").exists()
 
 
@@ -129,7 +129,7 @@ def test_the_modified_date_is_kept(builder, extract):
 
     _, output = extract(builder)
 
-    assert os.path.getmtime(str(output / "Read Me")) == NEW_YEAR_2005 - hfs.hfs_to_unix_seconds
+    assert os.path.getmtime(str(output / "Read Me")) == NEW_YEAR_2005 - hfs.HFS_TO_UNIX_SECONDS
 
 
 def test_the_executable_bit_is_kept(builder, extract):
@@ -156,7 +156,7 @@ def test_a_symlink_is_made_a_symlink(builder, extract):
 ###########################################################
 
 def add_private_folder(builder):
-    builder.add_folder(2, PRIVATE_FOLDER_ID, hfs.hfsplus_private_data_name)
+    builder.add_folder(2, PRIVATE_FOLDER_ID, hfs.HFSPLUS_PRIVATE_DATA_NAME)
     builder.add_file(PRIVATE_FOLDER_ID, 31, "iNode42", data = b"shared contents", dates = (0, NEW_YEAR_2005, 0))
 
 
@@ -167,7 +167,7 @@ def test_a_hard_link_takes_its_target_contents(builder, extract):
     _, output = extract(builder)
 
     assert (output / "Linked").read_bytes() == b"shared contents"
-    assert os.path.getmtime(str(output / "Linked")) == NEW_YEAR_2005 - hfs.hfs_to_unix_seconds
+    assert os.path.getmtime(str(output / "Linked")) == NEW_YEAR_2005 - hfs.HFS_TO_UNIX_SECONDS
 
 
 def test_a_hard_link_without_a_target_is_skipped(builder, extract, caplog):
@@ -196,7 +196,7 @@ def test_volume_internals_at_the_root_are_skipped(builder, extract):
 
 
 def test_a_compressed_file_is_skipped(builder, extract, caplog):
-    builder.add_file(2, 16, "Packed", data = b"zlib", owner_flags = hfs.hfsplus_compressed_flag)
+    builder.add_file(2, 16, "Packed", data = b"zlib", owner_flags = hfs.HFSPLUS_COMPRESSED_FLAG)
     builder.add_file(2, 17, "Kept", data = b"x")
 
     _, output = extract(builder)
@@ -240,7 +240,7 @@ def test_a_fork_past_the_end_of_the_image_reports_failure(tmp_path):
     fork = {"size": 512, "blocks": 1, "extents": [(10, 1)]}
 
     with pytest.raises(ValueError, match = "past the end"):
-        hfs.read_hfsplus_fork(volume, 16, hfs.hfsplus_data_fork, fork)
+        hfs.read_hfsplus_fork(volume, 16, hfs.HFSPLUS_DATA_FORK, fork)
 
 
 @pytest.mark.parametrize("catalog_tree, message", [

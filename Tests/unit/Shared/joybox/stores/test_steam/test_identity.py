@@ -8,7 +8,7 @@ import pytest
 from joybox import config
 from joybox.stores import steam
 from steam_helpers import ACCOUNT, STEAMID64
-from stores_helpers import STEAM_APPID
+from steamapp_helpers import STEAM_APPID
 
 
 ###########################################################

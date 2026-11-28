@@ -3,16 +3,16 @@ import os
 import uuid
 
 # Local imports
-import joybox.bootstrap.constants as constants
+from joybox.bootstrap import constants
 from joybox import settings
 from joybox import serverinfo
-from joybox import connection
-from . import installer
+from joybox.connection import ConnectionLocal
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Nginx config template
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -46,7 +46,8 @@ server {{
 }}
 """
 
-# Certbot
+# Installs certbot and the TLS certificate for the domain and its app subdomains,
+# from Let's Encrypt, mkcert or a self-signed cert as tls_mode says
 class Certbot(installer.Installer):
     def __init__(
         self,
@@ -73,27 +74,32 @@ class Certbot(installer.Installer):
             "domain": self.domain_name
         }
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether /usr/bin/certbot exists and the certbot manager finds a cert for the domain
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist("/usr/bin/certbot"):
             return False
         return self.connection.run_return_code(
             [self.cert_manager_tool, "check", self.domain_name], sudo = True) == 0
 
+    # The letsencrypt live directory the domain's certificate goes in
     def get_cert_dir(self):
         return f"/etc/letsencrypt/live/{self.domain_name}"
 
+    # Issue a cert for every domain with mkcert on the workstation and copy it to
+    # the target; False when mkcert fails or produces nothing
     def install_mkcert_cert(self):
 
         # mkcert has to run on the workstation, not the target: it signs with the
         # local CA that "mkcert -install" put in this machine's trust store, which
         # is what stops the browser warning. The target only receives the leaf.
         logger.log_info("Issuing a mkcert certificate on the local machine")
-        local_connection = connection.ConnectionLocal(self.flags, self.options)
+        local_connection = ConnectionLocal(self.flags, self.options)
         local_dir = local_connection.make_temporary_directory()
         if not local_dir:
             logger.log_error("Could not create a temporary directory for mkcert")
@@ -118,6 +124,7 @@ class Certbot(installer.Installer):
             return False
         return self.write_cert_pair(cert_contents, key_contents)
 
+    # Have the certbot manager self-sign a cert for every domain on the target
     def install_selfsigned_cert(self):
 
         # No local dependency, but nothing trusts the result - browsers warn once.
@@ -127,6 +134,8 @@ class Certbot(installer.Installer):
             [self.cert_manager_tool, "selfsign"] + self.fully_qualified_domains, sudo = True)
         return True
 
+    # Stage a cert and key in a private /tmp dir on the target and have the certbot
+    # manager install them; False when staging fails
     def write_cert_pair(self, cert_contents, key_contents):
 
         # Staged in a directory only the account can enter, then installed by the
@@ -151,6 +160,9 @@ class Certbot(installer.Installer):
         logger.log_info(f"Installed certificate to {self.get_cert_dir()}")
         return True
 
+    # apt-get install certbot and its nginx plugin, issue the cert per tls_mode
+    # (adding a renew cron for Let's Encrypt), write the default nginx entry, restart nginx;
+    # False when a step fails
     def install(self):
 
         # Install certbot
@@ -159,9 +171,26 @@ class Certbot(installer.Installer):
         self.connection.run_checked([self.aptget_tool, "install", "-y", "certbot"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "python3-certbot-nginx"], sudo = True)
 
-        # Issue the certificate. Let's Encrypt cannot validate a domain that only
-        # resolves on this workstation, so the local modes substitute a cert at the
-        # same path rather than changing what the app templates point at.
+        # Issue the certificate
+        if not self._issue_certificate():
+            return False
+
+        # Update default entry
+        logger.log_info("Creating default entry")
+        if not self.install_nginx_conf("default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
+            return False
+
+        # Restart nginx
+        logger.log_info("Restarting nginx")
+        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
+        return True
+
+    # Issue the cert the tls_mode asks for; False on a failure or an unknown mode
+    def _issue_certificate(self):
+
+        # Let's Encrypt cannot validate a domain that only resolves on this
+        # workstation, so the local modes substitute a cert at the same path
+        # rather than changing what the app templates point at.
         if self.tls_mode == "letsencrypt":
             if not self.domain_contact:
                 logger.log_error("Let's Encrypt needs a contact address (server_N_domain_contact)")
@@ -172,28 +201,15 @@ class Certbot(installer.Installer):
             # Add cert renewal
             logger.log_info("Adding cert renewal")
             self.connection.add_to_crontab(f"0 3 * * * {self.cert_manager_tool} renew")
-        elif self.tls_mode == "mkcert":
-            if not self.install_mkcert_cert():
-                return False
-        elif self.tls_mode == "selfsigned":
-            if not self.install_selfsigned_cert():
-                return False
-        else:
-            logger.log_error(f"Unknown tls_mode '{self.tls_mode}' (expected letsencrypt, mkcert or selfsigned)")
-            return False
+            return True
+        if self.tls_mode == "mkcert":
+            return self.install_mkcert_cert()
+        if self.tls_mode == "selfsigned":
+            return self.install_selfsigned_cert()
+        logger.log_error(f"Unknown tls_mode '{self.tls_mode}' (expected letsencrypt, mkcert or selfsigned)")
+        return False
 
-        # Update default entry
-        logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
-            self.connection.remove_file_or_directory("/tmp/default")
-
-        # Restart nginx
-        logger.log_info("Restarting nginx")
-        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-        return True
-
+    # Drop the renew cron in letsencrypt mode, then apt-get remove certbot and its nginx plugin
     def uninstall(self):
 
         # Remove cert renewal (only the letsencrypt mode ever adds one)

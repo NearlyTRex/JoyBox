@@ -68,6 +68,7 @@ def test_the_server_version_is_read_from_the_api(monkeypatch):
 @pytest.fixture
 def puller(monkeypatch):
     state = {"options": [], "selection": None, "pulled": [], "result": True, "shown": []}
+    monkeypatch.setattr(ollama, "read_helper_report", lambda: None)
     monkeypatch.setattr(ollama.hardware, "get_hardware_summary", lambda: {
         "gpu_vram_total_mb": 8000, "system_ram_mb": 32000})
     monkeypatch.setattr(ollamacatalog, "get_quantization_options", lambda name: state["options"])

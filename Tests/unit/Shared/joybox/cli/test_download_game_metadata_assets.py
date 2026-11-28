@@ -18,7 +18,7 @@ def tool(monkeypatch, isolated_settings):
     def fake_download(game_info, asset_type, **kwargs):
         harness.calls.append((game_info.get_name(), asset_type, kwargs))
         return harness.results.get(game_info.get_name(), True)
-    monkeypatch.setattr(tool_module.collection, "download_metadata_asset", fake_download)
+    monkeypatch.setattr(tool_module.collection.asset, "download_metadata_asset", fake_download)
     return harness
 
 

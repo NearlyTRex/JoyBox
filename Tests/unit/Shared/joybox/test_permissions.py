@@ -49,6 +49,16 @@ def test_windows_root_asks_pyuac(windows, monkeypatch, admin):
     assert permissions.is_user_root() is admin
 
 
+def test_windows_that_cannot_answer_is_not_root(windows, monkeypatch):
+    module = fake_pyuac(monkeypatch, admin = True)
+
+    def refuse():
+        raise OSError("shell32 unavailable")
+    module.isUserAdmin = refuse
+
+    assert permissions.is_user_root() is False
+
+
 def test_windows_without_pyuac_is_not_root(windows, monkeypatch):
     monkeypatch.setitem(sys.modules, "pyuac", None)
 

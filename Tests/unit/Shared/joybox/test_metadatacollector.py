@@ -272,7 +272,7 @@ def test_tgdb_skips_empty_unknown_and_unparsable_details(browser):
 
     entry = metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME)
 
-    assert entry.game_entry == {config.metadata_key_developer: "Nintendo EAD"}
+    assert entry.game_entry == {config.METADATA_KEY_DEVELOPER: "Nintendo EAD"}
 
 
 def test_tgdb_game_page_without_details_gives_an_empty_entry(browser):
@@ -370,7 +370,7 @@ def test_gamefaqs_skips_empty_unknown_and_unparsable_details(browser):
 
     entry = metadatacollector.collect_metadata_from_gamefaqs(PLATFORM, GAME_NAME)
 
-    assert entry.game_entry == {config.metadata_key_publisher: "Nintendo"}
+    assert entry.game_entry == {config.METADATA_KEY_PUBLISHER: "Nintendo"}
 
 
 def test_gamefaqs_expands_a_truncated_description(browser):
@@ -678,38 +678,38 @@ def test_all_sources_passes_the_callers_flags_to_each_source(monkeypatch):
     fake_source(monkeypatch, "tgdb", calls)
 
     metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable,
-        verbose = True, pretend_run = True, exit_on_failure = True)
+        verbose = True, pretend_run = True)
 
     expected = {"game_platform": PLATFORM, "game_name": GAME_NAME, "stats": None,
-        "verbose": True, "pretend_run": True, "exit_on_failure": True}
+        "verbose": True, "pretend_run": True}
     assert calls == [("gamefaqs", expected), ("tgdb", expected)]
 
 
 def test_all_sources_fills_gaps_from_tgdb_without_overwriting_gamefaqs(monkeypatch):
     calls = []
-    fake_source(monkeypatch, "gamefaqs", calls, **{config.metadata_key_developer: "Nintendo EAD"})
-    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_developer: "Someone Else", config.metadata_key_players: "1"})
+    fake_source(monkeypatch, "gamefaqs", calls, **{config.METADATA_KEY_DEVELOPER: "Nintendo EAD"})
+    fake_source(monkeypatch, "tgdb", calls, **{config.METADATA_KEY_DEVELOPER: "Someone Else", config.METADATA_KEY_PLAYERS: "1"})
 
     entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable)
 
-    assert entry.game_entry == {config.metadata_key_developer: "Nintendo EAD", config.metadata_key_players: "1"}
+    assert entry.game_entry == {config.METADATA_KEY_DEVELOPER: "Nintendo EAD", config.METADATA_KEY_PLAYERS: "1"}
 
 
 def test_all_sources_uses_tgdb_when_gamefaqs_gives_nothing(monkeypatch):
     calls = []
     fake_source(monkeypatch, "gamefaqs", calls)
-    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "1"})
+    fake_source(monkeypatch, "tgdb", calls, **{config.METADATA_KEY_PLAYERS: "1"})
 
     entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable)
 
-    assert entry.game_entry == {config.metadata_key_players: "1"}
+    assert entry.game_entry == {config.METADATA_KEY_PLAYERS: "1"}
 
 
 def test_all_sources_skips_tgdb_once_gamefaqs_fills_every_key(monkeypatch):
     calls = []
     stats = metadatacollector.CollectionStats()
     fake_source(monkeypatch, "gamefaqs", calls, **COMPLETE)
-    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "4"})
+    fake_source(monkeypatch, "tgdb", calls, **{config.METADATA_KEY_PLAYERS: "4"})
 
     entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable, stats = stats)
 
@@ -722,8 +722,8 @@ def test_all_sources_skips_tgdb_once_gamefaqs_fills_every_key(monkeypatch):
 
 @pytest.mark.parametrize("gamefaqs_values, tgdb_values, outcome", [
     ({}, {}, "nothing found"),
-    ({config.metadata_key_developer: "Nintendo EAD"}, {}, "partial"),
-    ({config.metadata_key_developer: "Nintendo EAD"}, COMPLETE, "complete"),
+    ({config.METADATA_KEY_DEVELOPER: "Nintendo EAD"}, {}, "partial"),
+    ({config.METADATA_KEY_DEVELOPER: "Nintendo EAD"}, COMPLETE, "complete"),
 ], ids = ["nothing", "partial", "complete"])
 def test_all_sources_tallies_how_complete_each_game_came_back(monkeypatch, gamefaqs_values, tgdb_values, outcome):
     stats = metadatacollector.CollectionStats()
@@ -830,7 +830,7 @@ def test_a_source_blocked_games_in_a_row_is_given_up_with_one_warning(monkeypatc
     warnings = []
     monkeypatch.setattr(metadatacollector.logger, "log_warning", warnings.append)
 
-    for _ in range(metadatacollector.blocked_streak_limit + 1):
+    for _ in range(metadatacollector.BLOCKED_STREAK_LIMIT + 1):
         metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
 
     assert metadatacollector.is_given_up("GameFAQs")
@@ -839,7 +839,7 @@ def test_a_source_blocked_games_in_a_row_is_given_up_with_one_warning(monkeypatc
 
 
 def test_a_fetch_that_gets_through_resets_the_streak():
-    for _ in range(metadatacollector.blocked_streak_limit - 1):
+    for _ in range(metadatacollector.BLOCKED_STREAK_LIMIT - 1):
         metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
     metadatacollector.finish_source_fetch(None, "GameFAQs", None)
     metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
@@ -851,11 +851,11 @@ def test_all_sources_stops_asking_a_given_up_source(monkeypatch):
     calls = []
     stats = metadatacollector.CollectionStats()
     fake_source(monkeypatch, "gamefaqs", calls)
-    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "1"})
-    metadatacollector.blocked_streaks["GameFAQs"] = metadatacollector.blocked_streak_limit
+    fake_source(monkeypatch, "tgdb", calls, **{config.METADATA_KEY_PLAYERS: "1"})
+    metadatacollector.blocked_streaks["GameFAQs"] = metadatacollector.BLOCKED_STREAK_LIMIT
 
     entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable, stats = stats)
 
     assert [name for name, kwargs in calls] == ["tgdb"]
-    assert entry.game_entry == {config.metadata_key_players: "1"}
+    assert entry.game_entry == {config.METADATA_KEY_PLAYERS: "1"}
     assert stats.sources == {"GameFAQs": {"given up": 1}}

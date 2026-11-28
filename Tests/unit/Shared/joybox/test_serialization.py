@@ -307,6 +307,20 @@ def test_failures_without_exit_return_the_empty_value(tmp_path):
     assert serialization.read_toml_file(os.path.join(base, "absent.toml")) == {}
 
 
+def test_a_file_matching_several_values_is_found_once(collection):
+    found = serialization.search_json_files(
+        collection, search_values = ["Killing Time", "killing_time"])
+
+    assert [os.path.basename(path) for path in found] == ["alpha.json"]
+
+
+def test_cleaning_a_top_level_list_keeps_its_items(tmp_path):
+    target = write_json(str(tmp_path / "list.json"), ["", None, "kept"])
+
+    assert serialization.clean_json_file(target, remove_empty_values = True) is True
+    assert read_json(target) == ["", None, "kept"]
+
+
 def test_cleaning_a_null_document_leaves_it_untouched(tmp_path):
     target = str(tmp_path / "null.json")
     with open(target, "w", encoding = "utf-8") as handle:

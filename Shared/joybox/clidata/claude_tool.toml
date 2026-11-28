@@ -1,0 +1,38 @@
+# Help text for the claude_tool command, read by joybox/arguments.py
+
+description = "Run every file in a directory through Claude with a prompt template."
+details = """
+Walks the input directory, fills the prompt template with each file's content, sends
+it to the Anthropic API, and writes the reply to the same relative path under the
+output directory, so the output mirrors the input tree. Files are sent one at a time.
+It suits bulk rewrites such as cleaning up decompiled code, generating documentation,
+or converting formats.
+
+The prompt file is plain text or markdown. These placeholders are replaced for each
+file: `{file_content}` (the whole file), `{filename}` (e.g. `main.cpp`),
+`{file_basename}` (`main`), `{file_extension}` (`.cpp`), `{input_file}` (full path),
+`{input_dir}` and `{output_dir}` (the directories given with `-i` and `-o`).
+
+The API key is read from `[UserData.Anthropic] anthropic_api_key` in `~/JoyBox.ini`.
+A file that fails is counted as an error and processing moves on; the run ends with a
+count of successes, skips and errors."""
+section = "AI"
+see_also = [
+    "decompiler_tool",
+    "llm_chat",
+    "ollama_tool",
+]
+notes = [
+    "API usage is billed per token; check the file count in the preview before confirming.",
+    "Replies are written as-is, so ask the prompt for output without explanations or markdown fences if the result should be a source file.",
+    "Large files may need a higher `--max_tokens`, or the reply is cut off.",
+    "The `anthropic` Python package must be installed; the bootstrap's Python packages include it.",
+    "A dry run does not need an API key.",
+]
+examples = [
+    ["Process every file in a directory", "claude_tool -i ./input -o ./output -f prompt.md"],
+    ["Clean up Ghidra C++ output only", "claude_tool -i ./src -o ./cleaned -f ghidra_cleanup.md -w \".cpp,.h,.c\""],
+    ["Use a specific model with a longer reply limit", "claude_tool -i ./input -o ./output -f prompt.md -m claude-sonnet-4-20250514 -t 16384"],
+    ["Resume an interrupted run, skipping files already written", "claude_tool -i ./input -o ./output -f prompt.md -e"],
+    ["List what would be processed without calling the API", "claude_tool -i ./input -o ./output -f prompt.md -p -v"],
+]

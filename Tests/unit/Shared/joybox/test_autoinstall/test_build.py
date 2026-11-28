@@ -135,6 +135,43 @@ def test_an_earlier_download_is_discarded_when_nothing_is_published(release, tmp
     assert release["verified_files"] == []
 
 
+def test_a_release_image_is_downloaded_unchecked_when_asked(release, tmp_path):
+    output_file = str(tmp_path / "stock.iso")
+
+    assert autoinstall.download_release_image(output_file, "24.04", verify = False) == output_file
+    assert release["downloaded"] == ["https://releases.ubuntu.com/24.04/" + IMAGE]
+    assert release["verified_files"] == []
+
+
+def test_a_release_image_that_does_not_verify_is_not_kept(release, tmp_path):
+    release["verified"] = False
+
+    assert autoinstall.download_release_image(str(tmp_path / "stock.iso"), "24.04") is None
+    assert not (tmp_path / "stock.iso").exists()
+
+
+###########################################################
+# Reading a supplied seed
+###########################################################
+
+def test_a_user_data_file_is_read_whole(tmp_path):
+    user_data_file = tmp_path / "user-data"
+    user_data_file.write_text("#cloud-config\nmine: true\n")
+
+    assert autoinstall.read_user_data_file(str(user_data_file)) == "#cloud-config\nmine: true\n"
+
+
+def test_a_missing_user_data_file_reads_as_nothing(tmp_path):
+    assert autoinstall.read_user_data_file(str(tmp_path / "absent")) is None
+
+
+def test_an_empty_user_data_file_reads_as_nothing(tmp_path):
+    user_data_file = tmp_path / "user-data"
+    user_data_file.write_text("")
+
+    assert autoinstall.read_user_data_file(str(user_data_file)) is None
+
+
 ###########################################################
 # Building the image
 ###########################################################
@@ -208,7 +245,7 @@ def test_an_image_is_built_from_the_stock_one(stock, tmp_path):
     work_dir = str(stock["work_dir"])
     assert created["iso_file"] == str(tmp_path / "out" / "autoinstall.iso")
     assert created["volume_name"] == "Ubuntu-Server 24.04"
-    assert created["bios_boot_image"] == autoinstall.bios_boot_image
+    assert created["bios_boot_image"] == autoinstall.BIOS_BOOT_IMAGE
     assert created["efi_boot_image"] == os.path.join(work_dir, "efi.img")
     assert created["mbr_image"] == os.path.join(work_dir, "mbr.img")
     assert created["user_data"].startswith("#cloud-config\n")

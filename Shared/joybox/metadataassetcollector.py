@@ -1,20 +1,18 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.prompts as prompts
+from joybox import config
+from joybox import logger
+from joybox import prompts
 from joybox import gamenaming
-import joybox.google as google
-from joybox.stores import steamlookups
+from joybox import google
+from joybox import steamlookups
 
 ############################################################
 
-# Find metadata assets from google images
+# Google Images results sized for box fronts; empty for any other asset type
 def find_metadata_assets_from_google_images(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow BoxFront
@@ -26,14 +24,12 @@ def find_metadata_assets_from_google_images(
         search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ############################################################
 
-# Find metadata asset from YouTube
+# YouTube results for the game's trailer; empty for any asset type but video
 def find_metadata_assets_from_youtube(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
@@ -53,9 +49,8 @@ def find_metadata_assets_from_youtube(
 
 ############################################################
 
-# Find metadata assets from Steam
+# Steam store box fronts or videos for the game; empty for other asset types
 def find_metadata_assets_from_steam(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
@@ -76,13 +71,11 @@ def find_metadata_assets_from_steam(
 
 ############################################################
 
-# Find metadata assets from SteamGridDB
+# SteamGridDB covers sized for box fronts; empty for any other asset type
 def find_metadata_assets_from_steamgriddb(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow BoxFront
@@ -95,14 +88,12 @@ def find_metadata_assets_from_steamgriddb(
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ############################################################
 
-# Find metadata asset
-def find_metadata_asset(
-    game_platform,
+# Candidates from Google Images, YouTube, Steam and SteamGridDB, in that order
+def gather_metadata_asset_candidates(
     game_name,
     asset_type,
     verbose = False,
@@ -114,16 +105,13 @@ def find_metadata_asset(
 
     # Try searching Google Images
     search_results += find_metadata_assets_from_google_images(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Try searching YouTube
     search_results += find_metadata_assets_from_youtube(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
@@ -132,7 +120,6 @@ def find_metadata_asset(
 
     # Try searching Steam
     search_results += find_metadata_assets_from_steam(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
@@ -141,14 +128,14 @@ def find_metadata_asset(
 
     # Try searching SteamGridDB
     search_results += find_metadata_assets_from_steamgriddb(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    return search_results
 
-    # Show possible assets to the user
+# Log the numbered candidate list for manual selection
+def log_metadata_asset_candidates(game_platform, game_name, asset_type, search_results):
     logger.log_info("")
     logger.log_info("=" * 80)
     logger.log_info("MANUAL ASSET SELECTION REQUIRED")
@@ -162,6 +149,24 @@ def find_metadata_asset(
         logger.log_info("      URL: %s" % search_result.get_url())
     logger.log_info("=" * 80)
     logger.log_info("")
+
+# Gather candidates from every source and have the user pick one by index or paste a URL; None when skipped
+def find_metadata_asset(
+    game_platform,
+    game_name,
+    asset_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Show possible assets to the user
+    search_results = gather_metadata_asset_candidates(
+        game_name = game_name,
+        asset_type = asset_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    log_metadata_asset_candidates(game_platform, game_name, asset_type, search_results)
 
     # Ask them which one they want to use
     value = prompts.prompt_for_value("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))

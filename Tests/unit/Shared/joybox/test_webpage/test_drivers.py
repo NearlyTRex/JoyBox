@@ -5,6 +5,8 @@ import pytest
 from joybox import webpage
 from webpage_helpers import FakeDriver
 
+exceptions = pytest.importorskip("selenium.common.exceptions")
+
 webdriver = pytest.importorskip("selenium.webdriver")
 chrome_service = pytest.importorskip("selenium.webdriver.chrome.service")
 chrome_options = pytest.importorskip("selenium.webdriver.chrome.options")
@@ -109,7 +111,7 @@ def test_chrome_without_a_driver_is_not_created(browsers, missing):
     if missing == "tool":
         del browsers["installed"]["ChromeDriver"]
     else:
-        browsers["manager_error"] = RuntimeError("offline")
+        browsers["manager_error"] = ConnectionError("offline")
 
     assert webpage.create_chrome_web_driver() is None
     assert browsers["created"] == []
@@ -164,13 +166,13 @@ def test_pretending_creates_no_chrome(browsers):
 
 
 def test_a_chrome_that_fails_to_start_is_absent(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     assert webpage.create_chrome_web_driver(verbose = True) is None
 
 
 def test_a_chrome_that_fails_to_start_can_quit_the_program(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     with pytest.raises(SystemExit):
         webpage.create_chrome_web_driver(exit_on_failure = True)
@@ -192,7 +194,7 @@ def test_firefox_without_a_driver_is_not_created(browsers, missing):
     if missing == "tool":
         del browsers["installed"]["GeckoDriver"]
     else:
-        browsers["manager_error"] = RuntimeError("offline")
+        browsers["manager_error"] = ConnectionError("offline")
 
     assert webpage.create_firefox_web_driver() is None
     assert browsers["created"] == []
@@ -245,13 +247,13 @@ def test_pretending_creates_no_firefox(browsers):
 
 
 def test_a_firefox_that_fails_to_start_is_absent(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     assert webpage.create_firefox_web_driver(verbose = True) is None
 
 
 def test_a_firefox_that_fails_to_start_can_quit_the_program(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     with pytest.raises(SystemExit):
         webpage.create_firefox_web_driver(exit_on_failure = True)
@@ -325,6 +327,57 @@ def test_an_unsupported_driver_type_creates_nothing(chosen):
     assert chosen == []
 
 
+def test_a_given_driver_type_wins_over_the_settings(isolated_settings):
+    isolated_settings.set_value("UserData.Scraping", "web_driver_type", "chrome")
+
+    assert webpage.resolve_driver_type(webpage.config.WebDriverType.BRAVE) == webpage.config.WebDriverType.BRAVE
+
+
+def test_the_driver_type_comes_from_the_settings_when_none_is_given(isolated_settings):
+    isolated_settings.set_value("UserData.Scraping", "web_driver_type", "chrome")
+
+    assert webpage.resolve_driver_type() == webpage.config.WebDriverType.CHROME
+
+
+###########################################################
+# Browser options
+###########################################################
+
+def test_chrome_options_take_each_existing_location(browsers, tmp_path):
+    options = webpage.get_chrome_options(
+        download_dir = str(tmp_path), profile_dir = str(tmp_path), binary_location = str(tmp_path), make_headless = True)
+
+    assert options.experimental["prefs"]["download.default_directory"] == str(tmp_path)
+    assert "--user-data-dir=%s" % tmp_path in options.arguments
+    assert "--headless" in options.arguments
+    assert options.binary_location == str(tmp_path)
+
+
+def test_chrome_options_leave_out_missing_locations(browsers, tmp_path):
+    options = webpage.get_chrome_options(download_dir = str(tmp_path / "absent"))
+
+    assert options.experimental == {}
+    assert "--headless" not in options.arguments
+    assert options.binary_location is None
+
+
+def test_firefox_options_take_each_existing_location(browsers, tmp_path):
+    options = webpage.get_firefox_options(
+        download_dir = str(tmp_path), profile_dir = str(tmp_path), binary_location = str(tmp_path), make_headless = True)
+
+    assert options.preferences["browser.download.dir"] == str(tmp_path)
+    assert options.profile == str(tmp_path)
+    assert options.arguments == ["--headless"]
+    assert options.binary_location == str(tmp_path)
+
+
+def test_firefox_options_leave_out_missing_locations(browsers, tmp_path):
+    options = webpage.get_firefox_options(profile_dir = str(tmp_path / "absent"))
+
+    assert options.preferences == {}
+    assert options.profile is None
+
+
 ###########################################################
 # Teardown
 ###########################################################
@@ -348,7 +401,7 @@ def test_pretending_destroys_nothing():
 def test_a_failed_teardown_can_quit_the_program():
     class Stubborn(FakeDriver):
         def quit(self):
-            raise RuntimeError("already gone")
+            raise exceptions.InvalidSessionIdException("already gone")
 
     with pytest.raises(SystemExit):
         webpage.destroy_web_driver(Stubborn(), verbose = True, exit_on_failure = True)

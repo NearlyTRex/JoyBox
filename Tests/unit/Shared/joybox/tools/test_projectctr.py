@@ -2,6 +2,8 @@
 import pytest
 
 # Local imports
+from joybox import release
+from joybox import programs
 from joybox import config
 from joybox.tools import projectctr
 
@@ -30,9 +32,9 @@ class Recorder:
 @pytest.fixture
 def installed(monkeypatch):
     wanted = set(ORDER)
-    monkeypatch.setattr(projectctr.programs, "should_program_be_installed", lambda name, platform: (name, platform) in wanted)
-    monkeypatch.setattr(projectctr.programs, "get_program_install_dir", lambda name, platform: "/install/%s/%s" % (name, platform))
-    monkeypatch.setattr(projectctr.programs, "get_program_backup_dir", lambda name, platform: "/backup/%s/%s" % (name, platform))
+    monkeypatch.setattr(programs, "should_program_be_installed", lambda name, platform: (name, platform) in wanted)
+    monkeypatch.setattr(programs, "get_program_install_dir", lambda name, platform: "/install/%s/%s" % (name, platform))
+    monkeypatch.setattr(programs, "get_program_backup_dir", lambda name, platform: "/backup/%s/%s" % (name, platform))
     return wanted
 
 
@@ -55,7 +57,7 @@ def test_config_covers_both_programs():
 
 def test_setup_downloads_every_program(monkeypatch, installed):
     download = Recorder()
-    monkeypatch.setattr(projectctr.release, "download_github_release", download)
+    monkeypatch.setattr(release, "download_github_release", download)
 
     assert projectctr.ProjectCTR().setup()
 
@@ -68,7 +70,7 @@ def test_setup_downloads_every_program(monkeypatch, installed):
 def test_setup_skips_programs_not_installed(monkeypatch, installed):
     installed.clear()
     download = Recorder()
-    monkeypatch.setattr(projectctr.release, "download_github_release", download)
+    monkeypatch.setattr(release, "download_github_release", download)
 
     assert projectctr.ProjectCTR().setup(config.SetupParams())
     assert download.calls == []
@@ -77,7 +79,7 @@ def test_setup_skips_programs_not_installed(monkeypatch, installed):
 @pytest.mark.parametrize("failing", range(len(ORDER)))
 def test_setup_stops_on_a_failed_download(monkeypatch, installed, failing):
     download = Recorder([True] * failing + [False])
-    monkeypatch.setattr(projectctr.release, "download_github_release", download)
+    monkeypatch.setattr(release, "download_github_release", download)
 
     assert not projectctr.ProjectCTR().setup()
     assert len(download.calls) == failing + 1
@@ -85,7 +87,7 @@ def test_setup_stops_on_a_failed_download(monkeypatch, installed, failing):
 
 def test_setup_offline_installs_every_program(monkeypatch, installed):
     stored = Recorder()
-    monkeypatch.setattr(projectctr.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert projectctr.ProjectCTR().setup_offline()
 
@@ -96,8 +98,8 @@ def test_setup_offline_installs_every_program(monkeypatch, installed):
 def test_setup_offline_linux_matches_the_online_install(monkeypatch, installed):
     download = Recorder()
     stored = Recorder()
-    monkeypatch.setattr(projectctr.release, "download_github_release", download)
-    monkeypatch.setattr(projectctr.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "download_github_release", download)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
     tool = projectctr.ProjectCTR()
 
     assert tool.setup()
@@ -112,7 +114,7 @@ def test_setup_offline_linux_matches_the_online_install(monkeypatch, installed):
 def test_setup_offline_skips_programs_not_installed(monkeypatch, installed):
     installed.clear()
     stored = Recorder()
-    monkeypatch.setattr(projectctr.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert projectctr.ProjectCTR().setup_offline(config.SetupParams())
     assert stored.calls == []
@@ -121,7 +123,7 @@ def test_setup_offline_skips_programs_not_installed(monkeypatch, installed):
 @pytest.mark.parametrize("failing", range(len(ORDER)))
 def test_setup_offline_stops_on_a_failed_install(monkeypatch, installed, failing):
     stored = Recorder([True] * failing + [False])
-    monkeypatch.setattr(projectctr.release, "setup_stored_release", stored)
+    monkeypatch.setattr(release, "setup_stored_release", stored)
 
     assert not projectctr.ProjectCTR().setup_offline()
     assert len(stored.calls) == failing + 1

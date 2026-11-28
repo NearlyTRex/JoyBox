@@ -30,6 +30,15 @@ def build_m4a():
     return box(b"ftyp", b"M4A \0\0\0\0M4A isom") + moov + box(b"mdat")
 
 
+# A raw ADTS stream of silent AAC-LC frames (44.1 kHz, stereo), with no ID3
+# header and no MP4 container: what a stream rip saves as .aac.
+def build_adts(frames = 10, payload = b"\0" * 20):
+    length = 7 + len(payload)
+    header = bytes([
+        0xff, 0xf1, 0x50, 0x80 | (length >> 11), (length >> 3) & 0xff, ((length & 7) << 5) | 0x1f, 0xfc])
+    return (header + payload) * frames
+
+
 def artwork(data = PNG_PIXEL, mime = "image/png", desc = "cover"):
     return {
         "data": base64.b64encode(data).decode("ascii"),

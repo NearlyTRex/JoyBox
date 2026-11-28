@@ -94,7 +94,7 @@ def test_flags_do_not_share_a_key():
 
 
 def test_a_program_is_built_from_existing_json():
-    entry = computer.Program({config.program_key_exe: "game.exe"})
+    entry = computer.Program({config.PROGRAM_KEY_EXE: "game.exe"})
 
     assert entry.get_exe() == "game.exe"
 

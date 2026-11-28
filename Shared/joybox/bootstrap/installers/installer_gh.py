@@ -1,8 +1,8 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # GitHub CLI
 class Gh(installer.Installer):
@@ -18,14 +18,17 @@ class Gh(installer.Installer):
         self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/bin/gh exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/gh")
 
+    # gh as installed or missing, by /usr/bin/gh
     def get_package_status(self):
         installed = []
         missing = []
@@ -35,6 +38,7 @@ class Gh(installer.Installer):
             missing.append("gh")
         return {"installed": installed, "missing": missing}
 
+    # Add GitHub's apt keyring and source, apt-get install gh, then check /usr/bin/gh
     def install(self):
 
         # Start install
@@ -46,10 +50,11 @@ class Gh(installer.Installer):
 
         # Add apt repository
         logger.log_info("Adding GitHub CLI apt repository")
-        self.connection.write_file(
-            f"/tmp/{self.sources_list}",
-            f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url} stable main\n"
-        )
+        if not self.connection.write_file(
+                f"/tmp/{self.sources_list}",
+                f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url} stable main\n"):
+            logger.log_error(f"Unable to write /tmp/{self.sources_list}")
+            return False
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo=True)
 
         # Update and install
@@ -66,6 +71,7 @@ class Gh(installer.Installer):
         logger.log_info("GitHub CLI installed successfully")
         return True
 
+    # apt-get remove gh and delete its apt source and keyring
     def uninstall(self):
 
         # Start uninstall

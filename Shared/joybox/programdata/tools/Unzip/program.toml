@@ -1,0 +1,5 @@
+# Unzip: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Unzip]
+program = "{path_setting:Tools.Unzip.unzip_install_dir}/{setting:Tools.Unzip.unzip_exe}"

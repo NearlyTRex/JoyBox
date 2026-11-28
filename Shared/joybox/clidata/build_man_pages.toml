@@ -1,0 +1,23 @@
+# Help text for the build_man_pages command, read by joybox/arguments.py
+
+description = "Generate the command reference in Docs from every command's help text."
+details = """
+Builds the parser of each command in `[project.scripts]` and renders a page from it:
+the description, every option with its default and allowed values, and the details,
+examples, notes and see-also the command declares. The pages are never edited by
+hand, so the help text is the only thing to maintain.
+
+Parsers are built against a throwaway home directory holding only the default
+JoyBox.ini, so nothing from your own configuration ends up in a default shown on a page."""
+section = "Development"
+see_also = [
+    "setup_tools",
+]
+notes = [
+    "A page for a command that no longer exists is removed.",
+    "`--check` exits non-zero and writes nothing, which makes it usable in a hook or CI.",
+]
+examples = [
+    ["Regenerate every page", "build_man_pages"],
+    ["Fail if a page is out of date or a command's help text is incomplete", "build_man_pages --check"],
+]

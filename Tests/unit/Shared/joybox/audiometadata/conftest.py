@@ -21,12 +21,8 @@ if _here not in sys.path:
 def metadata(monkeypatch):
     # The class loads mutagen from the tool registry, which a hermetic home
     # has no copy of; the installed package stands in for it.
-    loaded = iter([
-        importlib.import_module(name)
-        for name in ("mutagen", "mutagen.mp3", "mutagen.id3", "mutagen.mp4")
-    ])
     monkeypatch.setattr(modules, "import_python_module_package",
-        lambda module_path, module_name: next(loaded))
+        lambda module_path, module_name: importlib.import_module(module_name))
     return audiometadata.AudioMetadata()
 
 
@@ -43,4 +39,12 @@ def m4a_file(tmp_path):
     from audiometadata_helpers import build_m4a
     target = tmp_path / "track.m4a"
     target.write_bytes(build_m4a())
+    return str(target)
+
+
+@pytest.fixture
+def adts_file(tmp_path):
+    from audiometadata_helpers import build_adts
+    target = tmp_path / "track.aac"
+    target.write_bytes(build_adts())
     return str(target)

@@ -1,0 +1,39 @@
+# CDecrypt: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.CDecrypt]
+program = { windows = "CDecrypt/windows/cdecrypt.exe", linux = "CDecrypt/linux/CDecrypt.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "VitaSmith"
+github_repo = "cdecrypt"
+starts_with = "cdecrypt"
+ends_with = ".zip"
+search_file = "cdecrypt.exe"
+install_files = ["cdecrypt.exe"]
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/CDecrypt.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["make", "-j", "4"]
+internal_copies = [
+    { from = "Source/CDecrypt/cdecrypt", to = "AppImage/usr/bin/cdecrypt" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/cdecrypt", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "cdecrypt.exe"
+install_files = ["cdecrypt.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

@@ -51,8 +51,8 @@ def test_the_preview_lists_the_settings_and_a_decline_compresses_nothing(tool, t
 
     tool.run("-i", str(tmp_path), "-t", ".iso")
 
-    assert tool.previews == [("Compress files", ["Path: %s" % tmp_path, "Archive type: ZIP",
-        "File types: .iso", "Delete originals: False"])]
+    assert tool.previews == [("Compress files", ["Path: %s" % tmp_path, "File types: .iso",
+        "Archive type: ZIP", "Delete originals: False"])]
     assert tool.created.calls == []
     assert tool.warnings == ["Operation cancelled by user"]
 

@@ -1,0 +1,45 @@
+# XorrISO: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.XorrISO]
+program = { windows = "XorrISO/windows/xorriso.exe", linux = "XorrISO/linux/XorrISO.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_repository"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "XorrISOWindows"
+github_branch = "{program_config:github_branch}"
+recursive = true
+clean = true
+
+[[setup]]
+kind = "github_archive"
+platform = "windows"
+github_user = "NearlyTRex"
+github_repo = "XorrISOWindows"
+github_branch = "{program_config:github_branch}"
+recursive = true
+clean = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.2.tar.gz"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["cd", "xorriso-1.5.2", "&&", "./configure", "&&", "make", "-j", "4"]
+internal_copies = [
+    { from = "Source/xorriso-1.5.2/xorriso-1.5.2/xorriso/xorriso", to = "AppImage/usr/bin/xorriso" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/xorriso", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

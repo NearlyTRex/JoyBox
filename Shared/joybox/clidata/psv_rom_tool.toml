@@ -1,0 +1,32 @@
+# Help text for the psv_rom_tool command, read by joybox/arguments.py
+
+description = "Strip, unstrip, trim, untrim or verify PlayStation Vita cartridge dumps (.psv)."
+details = """
+Finds every `.psv` file under the input path (or takes the one file given) and applies
+one action to each. New files are written next to the source:
+
+- `-s` strips the dump with PSVStrip into `<name>_stripped.psv`.
+- `-u` rebuilds a full dump from a stripped one and the `<name>.psve` file next to it
+  with PSVStrip, into `<name>_unstripped.psv`.
+- `-t` trims the unused space with PSVTools into `<name>_trimmed.psv`.
+- `-n` expands a trimmed dump back to full size with PSVTools into
+  `<name>_untrimmed.psv`.
+- `-e` runs the PSVTools check on each dump and writes nothing.
+
+With `-d` the source `.psv` is deleted after each successful strip, unstrip, trim or
+untrim."""
+section = "Game ROMs & Images"
+see_also = [
+    "psn_rom_tool",
+]
+notes = [
+    "Give one action. When several are given, only the first in the order `-s`, `-u`, `-t`, `-n`, `-e` is used.",
+    "Output files are also `.psv`, so running the tool again on the same folder processes them too.",
+    "PSVStrip, and PSVTools with the JoyBox Python environment, must be installed as JoyBox tools.",
+]
+examples = [
+    ["Verify every dump in a folder", "psv_rom_tool -i /path/to/psv -e"],
+    ["Trim every dump and delete the untrimmed originals", "psv_rom_tool -i /path/to/psv -t -d"],
+    ["Preview the trim without changing anything", "psv_rom_tool -i /path/to/psv -t -d -p -v"],
+    ["Rebuild a full dump from a stripped one and its .psve", "psv_rom_tool -i \"/path/to/Game (USA).psv\" -u"],
+]

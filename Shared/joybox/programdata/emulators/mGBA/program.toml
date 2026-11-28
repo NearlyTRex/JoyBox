@@ -1,0 +1,74 @@
+# mGBA: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["NINTENDO_GAME_BOY_ADVANCE", "NINTENDO_GAME_BOY_ADVANCE_EREADER", "NINTENDO_GAME_BOY", "NINTENDO_GAME_BOY_COLOR", "NINTENDO_SUPER_GAME_BOY", "NINTENDO_SUPER_GAME_BOY_COLOR"]
+
+[config.mGBA]
+program = { windows = "mGBA/windows/mGBA.exe", linux = "mGBA/linux/mGBA.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+setup_dir = { windows = "mGBA/windows", linux = "mGBA/linux/mGBA.AppImage.home/.config/mgba" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.mGBA.config_file]
+windows = "mGBA/windows/config.ini"
+linux = "mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"
+
+[[config_files]]
+path = "mGBA/windows/portable.ini"
+
+[[config_files]]
+path = "mGBA/windows/config.ini"
+template = "config.ini"
+
+[[config_files]]
+path = "mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"
+template = "config.ini"
+
+[[system_files]]
+path = "bios/gbc_bios.bin"
+md5 = "dbfce9db9deaa2567f6a84fde55f9680"
+
+[[system_files]]
+path = "bios/sgb_bios.bin"
+md5 = "d574d4f9c12f305074798f54c091a8b4"
+
+[[system_files]]
+path = "bios/gba_bios.bin"
+md5 = "a860e8c0b6d573d191e4ec7db1b1e4f6"
+
+[[system_files]]
+path = "bios/gb_bios.bin"
+md5 = "32fbbd84168d3482956eb3c5051637f5"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "mgba-emu"
+github_repo = "mgba"
+starts_with = "mGBA"
+ends_with = "win64.7z"
+search_file = "mGBA.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "mgba-emu"
+github_repo = "mgba"
+starts_with = "mGBA"
+ends_with = ".appimage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "mGBA.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["--fullscreen"]

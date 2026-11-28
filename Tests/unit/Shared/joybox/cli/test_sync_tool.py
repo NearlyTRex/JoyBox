@@ -4,6 +4,8 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
+from joybox import lockerinfo
+from joybox import sync
 from joybox.cli import sync_tool
 from sync_helpers import sync_owner
 
@@ -50,6 +52,8 @@ class FakeLockerInfo:
         return []
 
 
+EMPTY_RECYCLE_BIN = sync.empty_recycle_bin
+
 ACTIONS = {
     config.RemoteActionType.INIT: "setup_remote",
     config.RemoteActionType.DOWNLOAD: "download_files_from_remote",
@@ -77,7 +81,7 @@ def tool(monkeypatch, tmp_path, isolated_settings):
     harness.result = True
     harness.called = []
     harness.kwargs = []
-    monkeypatch.setattr(sync_tool.lockerinfo, "LockerInfo", FakeLockerInfo)
+    monkeypatch.setattr(lockerinfo, "LockerInfo", FakeLockerInfo)
     for name in ACTIONS.values():
         def action(name = name, **kwargs):
             harness.called.append(name)
@@ -151,6 +155,16 @@ def test_diffs_exclude_the_recycle_folder(tool, action):
     tool.run(*sync_args(action, "--recycle_folder", ""))
 
     assert [call["excludes"] for call in tool.kwargs] == [[".recycle_bin/**"], []]
+
+
+@pytest.mark.parametrize("recycle_folder", ["", "/", ".."])
+def test_emptying_a_recycle_folder_outside_the_locker_purges_nothing(tool, monkeypatch, recycle_folder):
+    purged = []
+    monkeypatch.setattr(sync, "empty_recycle_bin", EMPTY_RECYCLE_BIN)
+    monkeypatch.setattr(sync, "purge_path_on_remote", lambda **kwargs: purged.append(kwargs) or True)
+
+    assert tool.exit_code(*sync_args(config.RemoteActionType.EMPTYRECYCLE, "--recycle_folder", recycle_folder)) == 1
+    assert purged == []
 
 
 def test_the_preview_lists_only_the_paths_that_are_set(tool, monkeypatch, tmp_path):

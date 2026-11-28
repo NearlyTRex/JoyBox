@@ -3,7 +3,9 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import command
 from joybox import config
+from joybox import environment
 from joybox.cli import run_presets
 
 
@@ -13,12 +15,12 @@ def tool(monkeypatch, tmp_path, isolated_settings):
     harness.codes = []
     harness.commands = []
     harness.output = str(tmp_path)
-    monkeypatch.setattr(run_presets.environment, "get_command_path", lambda name: f"/bin/{name}")
+    monkeypatch.setattr(environment, "get_command_path", lambda name: f"/bin/{name}")
 
     def fake_run(cmd, verbose = False, pretend_run = False, exit_on_failure = False):
         harness.commands.append(cmd)
         return harness.codes.pop(0) if harness.codes else 0
-    monkeypatch.setattr(run_presets.command, "run_returncode_command", fake_run)
+    monkeypatch.setattr(command, "run_returncode_command", fake_run)
     return harness
 
 

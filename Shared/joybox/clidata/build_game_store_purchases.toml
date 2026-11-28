@@ -1,0 +1,35 @@
+# Help text for the build_game_store_purchases command, read by joybox/arguments.py
+
+description = "Import the games you own on a store as JSON and metadata entries, and refresh the existing ones."
+details = """
+Picks the store by category and subcategory (for example `-c Computer -s Steam`);
+subcategories without a store that can list purchases are skipped. For each store it
+fetches your current purchase list and runs two passes.
+
+Import: every purchase with no matching JSON file and not on the store's ignore list is
+shown and you are asked whether to import it (`y`), skip it (`n`) or ignore it for good
+(`i`). On import you choose the entry name, suggested from the store's title, and a
+JSON file seeded with the purchase data is created along with a metadata entry that
+carries the store URL when one is known.
+
+Update: every purchase that matches an existing JSON file has that file refreshed from
+the store, and its metadata entry filled in if it is missing downloadable fields."""
+section = "Game Collection"
+see_also = [
+    "login_game_stores",
+    "build_game_json_files",
+    "build_game_metadata_files",
+    "scan_game_files",
+]
+notes = [
+    "The import pass is interactive: expect a prompt per new purchase, then one for its entry name.",
+    "Ignored purchases are recorded in the subcategory's `ignores.json` next to its JSON files and are not offered again.",
+    "Stores sit under the `Roms` supercategory, which is the default, so `-u` is not needed.",
+    "Log in with `login_game_stores` first if the store session has expired.",
+]
+examples = [
+    ["Import Steam purchases", "build_game_store_purchases -c Computer -s Steam"],
+    ["Import Epic Games purchases", "build_game_store_purchases -c Computer -s \"Epic Games\""],
+    ["Reconcile purchases across every store", "build_game_store_purchases"],
+    ["Dry run for the computer stores", "build_game_store_purchases -c Computer -p -v"],
+]

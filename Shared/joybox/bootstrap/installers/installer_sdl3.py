@@ -1,8 +1,8 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # SDL3 and SDL3_ttf, built from source since Ubuntu/Mint do not package them yet,
 # for emulators ported off SDL2 such as PPSSPP master; installed to /usr/local so
@@ -27,11 +27,13 @@ class Sdl3(installer.Installer):
         self.sdl_ttf_src = "/tmp/sdl3_ttf_src"
         self.sdl_ttf_build = "/tmp/sdl3_ttf_src/build"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether pkg-config finds both sdl3 and sdl3-ttf
     def is_installed(self):
         return (
             self.connection.run_return_code(["pkg-config", "--exists", "sdl3"]) == 0 and
@@ -48,6 +50,8 @@ class Sdl3(installer.Installer):
         self.connection.run_checked([self.cmake_tool, "--install", build], sudo = True)
         self.connection.remove_file_or_directory(src)
 
+    # Clone, build and install the pinned SDL3 then SDL3_ttf releases into
+    # /usr/local, then run ldconfig
     def install(self):
 
         # Start install
@@ -74,6 +78,8 @@ class Sdl3(installer.Installer):
         logger.log_info("SDL3 installed successfully")
         return True
 
+    # Delete the SDL3 and SDL3_ttf headers, libraries, CMake and pkg-config files
+    # from /usr/local, then run ldconfig
     def uninstall(self):
 
         # Start uninstall
@@ -85,10 +91,13 @@ class Sdl3(installer.Installer):
             "/usr/local/lib/cmake/SDL3_ttf",
             "/usr/local/include/SDL3",
             "/usr/local/lib/pkgconfig/sdl3.pc",
-            "/usr/local/lib/pkgconfig/sdl3-ttf.pc",
-            "/usr/local/lib/libSDL3*",
-            "/usr/local/lib/libSDL3_ttf*"]:
+            "/usr/local/lib/pkgconfig/sdl3-ttf.pc"]:
             self.connection.remove_file_or_directory(path, sudo = True)
+
+        # Remove the libSDL3 and libSDL3_ttf libraries and symlinks; commands run
+        # without a shell, so find matches the pattern
+        self.connection.run_checked([
+            "find", "/usr/local/lib", "-maxdepth", "1", "-name", "libSDL3*", "-delete"], sudo = True)
 
         # Refresh the shared library cache
         logger.log_info("Refreshing shared library cache")

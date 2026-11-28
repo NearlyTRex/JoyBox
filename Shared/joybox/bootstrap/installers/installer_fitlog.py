@@ -1,9 +1,9 @@
 # Local imports
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
 
 # Docker compose template
 #
@@ -12,7 +12,7 @@ from joybox import logger
 # container cannot write host directories, while a new volume takes the
 # ownership the image gives its mount point. On first start the app clones the
 # catalog into its volume, then pulls it on a timer.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   fitlog:
     build:
@@ -40,7 +40,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 FITLOG_REPOSITORY={repository}
 FITLOG_CATALOG_BRANCH={catalog_branch}
 FITLOG_PORT_HTTP={port_http}
@@ -62,20 +62,11 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
             "subdomain": settings.get_value("UserData.FitLog", "fitlog_subdomain"),
             "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http")
         }
-        self.env_values = {
-            "repository": "https://github.com/NearlyTRex/FitLog.git",
-            "catalog_branch": settings.get_value("UserData.FitLog", "fitlog_catalog_branch",
-                default_value = "main", throw_exception = False),
-            "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http"),
-            "timezone": settings.get_value("UserData.FitLog", "fitlog_timezone",
-                default_value = "Etc/UTC", throw_exception = False),
-            "pull_minutes": settings.get_value("UserData.FitLog", "fitlog_pull_minutes",
-                default_value = "10", throw_exception = False)
-        }
+        self.env_values = self._get_env_values()
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "timezone"]
@@ -92,6 +83,21 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "FitLog"
         self.backup_volumes = ["fitlog_state"]
 
+    # The .env template values, from UserData.FitLog with defaults for the optional ones
+    def _get_env_values(self):
+        return {
+            "repository": "https://github.com/NearlyTRex/FitLog.git",
+            "catalog_branch": settings.get_value("UserData.FitLog", "fitlog_catalog_branch",
+                default_value = "main", throw_exception = False),
+            "port_http": settings.get_value("UserData.FitLog", "fitlog_port_http"),
+            "timezone": settings.get_value("UserData.FitLog", "fitlog_timezone",
+                default_value = "Etc/UTC", throw_exception = False),
+            "pull_minutes": settings.get_value("UserData.FitLog", "fitlog_pull_minutes",
+                default_value = "10", throw_exception = False)
+        }
+
+    # Create the configured FitLog login through the app's CLI once it is healthy;
+    # skipped when no login is set, and kept when one already exists
     def post_install(self):
 
         # Without a login in the ini, it is created by hand
@@ -105,6 +111,11 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         if not self.wait_for_service_health("fitlog"):
             logger.log_error("FitLog did not start, so the login was not created")
             return False
+        return self._create_login()
+
+    # Run the app's user-create CLI with the configured login and report the
+    # outcome; an existing login is kept
+    def _create_login(self):
 
         # The CLI reads the password and its confirmation from stdin
         logger.log_info(f"Creating the FitLog login for {self.login_user}")

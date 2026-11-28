@@ -137,15 +137,15 @@ def test_a_download_clears_what_was_there_before(downloads):
 
 @pytest.fixture
 def all_downloads(monkeypatch):
-    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True}
+    state = {"names": ["Half-Life 2"], "platforms": {}, "downloaded": [], "ok": True}
 
     monkeypatch.setattr(
-        purchase.gamecollection, "find_json_game_names",
-        lambda supercategory, category, subcategory: (
-            state["names"] if category == config.Category.COMPUTER else []))
+        purchase.gamecollection, "iterate_rom_game_infos",
+        lambda verbose = False, pretend_run = False, exit_on_failure = False: (
+            FakeGameInfo(name = name, platform = state["platforms"].get(name, "Computer"))
+            for name in state["names"]))
     monkeypatch.setattr(
-        purchase.gameinfo, "GameInfo",
-        lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))
+        purchase.stores, "is_store_platform", lambda platform: platform == "Computer")
 
     def download_game_store_purchase(game_info, **kwargs):
         state["downloaded"].append(game_info.get_name())
@@ -159,8 +159,7 @@ def test_every_game_in_the_collection_is_downloaded(all_downloads):
     all_downloads["names"] = ["Half-Life 2", "Portal"]
 
     assert purchase.download_all_game_store_purchases() is True
-    subcategories = len(config.subcategory_map[config.Category.COMPUTER])
-    assert all_downloads["downloaded"] == ["Half-Life 2", "Portal"] * subcategories
+    assert all_downloads["downloaded"] == ["Half-Life 2", "Portal"]
 
 
 def test_downloading_everything_stops_at_the_first_failure(all_downloads):
@@ -168,3 +167,38 @@ def test_downloading_everything_stops_at_the_first_failure(all_downloads):
 
     assert purchase.download_all_game_store_purchases() is False
     assert all_downloads["downloaded"] == ["Half-Life 2"]
+
+
+def test_games_on_platforms_without_a_store_are_skipped(all_downloads):
+    all_downloads["names"] = ["Chrono Trigger", "Half-Life 2"]
+    all_downloads["platforms"] = {"Chrono Trigger": "Nintendo SNES"}
+
+    assert purchase.download_all_game_store_purchases() is True
+    assert all_downloads["downloaded"] == ["Half-Life 2"]
+
+
+def test_a_purchase_output_dir_defaults_to_the_locker(downloads, tmp_path):
+    assert purchase.get_purchase_output_dir(FakeGameInfo()) == str(tmp_path / "locker" / "Half-Life 2")
+
+
+def test_a_purchase_output_dir_mirrors_the_locker_layout(downloads, tmp_path):
+    assert purchase.get_purchase_output_dir(FakeGameInfo(), str(tmp_path / "out")) == \
+        str(tmp_path / "out" / "Computer" / "Half-Life 2")
+
+
+def test_the_latest_store_build_is_downloaded_with_its_version(downloads, tmp_path):
+    store = FakeStore(latest_version = "3.1")
+
+    assert purchase.download_latest_store_build(store, FakeGameInfo(), str(tmp_path / "out")) is True
+    assert store.downloads[0]["output_dir"] == str(tmp_path / "out")
+    assert store.downloads[0]["output_name"] == "Half-Life 2 (3.1)"
+
+
+@pytest.mark.parametrize("found, can_import, importable", [(True, True, True), (True, False, False), (False, True, False)])
+def test_only_a_store_that_imports_purchases_is_importable(monkeypatch, found, can_import, importable):
+    store = FakeStore(can_import = can_import)
+    monkeypatch.setattr(purchase.stores, "get_store_by_categories", lambda *args: store if found else None)
+
+    result = purchase.get_importable_store(config.Supercategory.ROMS, config.Category.COMPUTER, config.subcategory_map[config.Category.COMPUTER][0])
+
+    assert result is (store if importable else None)

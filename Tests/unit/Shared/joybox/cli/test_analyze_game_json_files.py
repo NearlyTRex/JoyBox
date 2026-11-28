@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
-from joybox import config
+from joybox import config, gamecollection, gameinfo
 from joybox.cli import analyze_game_json_files
 
 
@@ -49,8 +49,8 @@ def tool(monkeypatch, isolated_settings):
             return list(GAMES)
         return []
 
-    monkeypatch.setattr(analyze_game_json_files.gamecollection, "find_json_game_names", find_json_game_names)
-    monkeypatch.setattr(analyze_game_json_files.gameinfo, "GameInfo", FakeGameInfo)
+    monkeypatch.setattr(gamecollection, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(gameinfo, "GameInfo", FakeGameInfo)
     return command
 
 

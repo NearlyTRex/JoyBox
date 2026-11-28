@@ -2,8 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config
-from joybox.stores import itchio
+from joybox import config, storebase
 from itchio_helpers import FakeElement, GAME_URL, game_cell
 
 COVER = "https://img.itch.zone/cover.png"
@@ -95,7 +94,7 @@ def test_the_video_is_the_embedded_youtube_link(itchio_store, browser, monkeypat
     def get_matching_url(**kwargs):
         seen.update(kwargs)
         return "https://www.youtube.com/embed/abc"
-    monkeypatch.setattr(itchio.webfetch, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(storebase.store.webfetch, "get_matching_url", get_matching_url)
 
     url = itchio_store.get_latest_asset_url(GAME_URL, config.AssetType.VIDEO)
 

@@ -34,7 +34,7 @@ def test_a_refused_program_does_not_reach_the_launcher(monkeypatch):
     def fail(*args, **kwargs):
         raise AssertionError("nothing should be launched")
 
-    monkeypatch.setattr(computer.command, "run_capture_command", fail)
+    monkeypatch.setattr(computer.capture, "run_capture_command", fail)
 
     assert computer.Program().run(FakeOptions(), {}) is False
 
@@ -45,7 +45,7 @@ def test_an_emulated_program_needs_no_executable(setter, monkeypatch):
     # guard must not reject them for having no windows executable.
     captured = []
     monkeypatch.setattr(
-        computer.command, "run_capture_command",
+        computer.capture, "run_capture_command",
         lambda **kwargs: captured.append(kwargs) or True)
     monkeypatch.setattr(
         computer.display, "restore_default_screen_resolution", lambda **kwargs: True)
@@ -79,7 +79,7 @@ def launcher(monkeypatch):
         return lambda **kwargs: calls[name].append(kwargs) or value
 
     monkeypatch.setattr(
-        computer.command, "run_capture_command",
+        computer.capture, "run_capture_command",
         lambda **kwargs: calls["capture"].append(kwargs) or results["capture"])
     monkeypatch.setattr(
         computer.display, "restore_default_screen_resolution",
@@ -169,6 +169,19 @@ def test_a_win31_program_runs_under_dosbox(launcher):
     assert launcher["dos"] == []
 
 
+def test_win31_program_arguments_reach_the_launch_command(launcher, monkeypatch):
+    received = []
+
+    def get_win31_launch_command(options, start_program = None, start_args = None, start_letter = "c", start_offset = None, fullscreen = False):
+        received.append(start_args)
+        return ["dosbox", "win31"]
+
+    monkeypatch.setattr(computer.command, "get_win31_launch_command", get_win31_launch_command)
+
+    assert program(exe = "GAME.EXE", cwd = "GAME", args = ["/S"], is_win31 = True).run(FakeOptions(), TOKEN_MAP) is True
+    assert received == [["/S"]]
+
+
 def test_a_scumm_program_runs_under_scummvm(launcher):
     options = FakeOptions()
 
@@ -189,3 +202,109 @@ def test_a_resolution_that_cannot_be_restored_is_reported(launcher):
     launcher["results"]["restore"] = False
 
     assert program(exe = "game.exe").run(FakeOptions(), TOKEN_MAP) is False
+
+
+###########################################################
+# Running as an installer
+#
+# A setup program that cannot run stops the setup. Wine and old installers
+# often exit non-zero after installing correctly, so a non-zero exit only
+# warns unless the entry sets check_exit_code, and a resolution that cannot be
+# restored afterwards never fails the install.
+###########################################################
+
+@pytest.fixture
+def installer(monkeypatch, tmp_path):
+    state = {"code": 0, "restore": True, "runs": [], "restores": [], "warnings": [], "errors": []}
+    (tmp_path / "drive_c" / "Game").mkdir(parents = True)
+    (tmp_path / "drive_c" / "Game" / "SETUP.EXE").write_text("")
+
+    def run_returncode_command(cmd, options = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        state["runs"].append({"cmd": cmd, "options": options, "verbose": verbose,
+                              "pretend_run": pretend_run, "exit_on_failure": exit_on_failure})
+        return state["code"]
+
+    def restore_default_screen_resolution(verbose = False, pretend_run = False, exit_on_failure = False):
+        state["restores"].append(exit_on_failure)
+        return state["restore"]
+
+    monkeypatch.setattr(computer.command, "run_returncode_command", run_returncode_command)
+    monkeypatch.setattr(computer.display, "restore_default_screen_resolution", restore_default_screen_resolution)
+    monkeypatch.setattr(computer.logger, "log_warning", state["warnings"].append)
+    monkeypatch.setattr(
+        computer.logger, "log_error",
+        lambda message, quit_program = False: state["errors"].append((message, quit_program)))
+    monkeypatch.setattr(
+        computer.programs, "get_emulator_program", lambda name: "/tools/" + name)
+    monkeypatch.setattr(
+        computer.command, "get_dos_launch_command", lambda **kwargs: ["dosbox", "dos"])
+    options = FakeOptions()
+    options.get_prefix_c_drive_real = lambda: str(tmp_path / "drive_c")
+    state["options"] = options
+    return state
+
+
+def test_an_installer_that_exits_cleanly_succeeds(installer):
+    entry = program(exe = "setup.exe", cwd = "Game", args = ["/S"])
+
+    assert entry.run_setup(installer["options"], {}) is True
+    assert installer["runs"][0]["cmd"][1:] == ["/S"]
+    assert installer["warnings"] == []
+
+
+def test_an_installer_that_cannot_be_found_is_not_started(installer):
+    entry = program(exe = "missing.exe", cwd = "Game")
+
+    assert entry.run_setup(installer["options"], {}, exit_on_failure = True) is False
+    assert installer["runs"] == []
+    assert installer["errors"][0][1] is True
+
+
+def test_a_pretend_run_does_not_need_the_installer(installer):
+    entry = program(exe = "missing.exe", cwd = "Game")
+
+    assert entry.run_setup(installer["options"], {}, pretend_run = True) is True
+    assert installer["runs"][0]["pretend_run"] is True
+
+
+def test_an_installer_with_nothing_to_run_is_refused(installer):
+    assert computer.Program().run_setup(installer["options"], {}) is False
+    assert installer["runs"] == []
+
+
+def test_a_non_zero_exit_is_tolerated_with_a_warning(installer):
+    installer["code"] = 1
+
+    assert program(exe = "setup.exe", cwd = "Game").run_setup(installer["options"], {}) is True
+    assert "code 1" in installer["warnings"][0]
+    assert installer["errors"] == []
+
+
+def test_a_strict_installer_fails_on_a_non_zero_exit(installer):
+    installer["code"] = 2
+    entry = program(exe = "setup.exe", cwd = "Game", check_exit_code = True)
+
+    assert entry.should_check_exit_code() is True
+    assert entry.run_setup(installer["options"], {}, exit_on_failure = True) is False
+    assert installer["errors"] == [(installer["errors"][0][0], True)]
+    assert "code 2" in installer["errors"][0][0]
+    assert installer["restores"] == []
+
+
+def test_an_unrestored_resolution_does_not_fail_the_install(installer):
+    installer["restore"] = False
+
+    assert program(exe = "setup.exe", cwd = "Game").run_setup(installer["options"], {}, exit_on_failure = True) is True
+    assert installer["restores"] == [False]
+    assert installer["warnings"]
+
+
+def test_an_emulated_installer_is_not_looked_up_on_the_windows_drive(installer):
+    entry = program(exe = "INSTALL.EXE", cwd = "GAME", is_dos = True)
+
+    assert entry.run_setup(installer["options"], {}) is True
+    assert installer["runs"][0]["cmd"] == ["dosbox", "dos"]
+
+
+def test_installer_exit_codes_are_tolerated_by_default():
+    assert computer.Program().should_check_exit_code() is False

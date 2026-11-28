@@ -1,6 +1,6 @@
 # Local imports
-import joybox.config as config
-import joybox.settings as settings
+from joybox import config
+from joybox import settings
 
 # Locker info
 class LockerInfo:
@@ -37,56 +37,69 @@ class LockerInfo:
             default_value = False,
             throw_exception = False)
 
+    # Remote type from the locker_<name>_type setting; None for local and external lockers
     def get_type(self):
         return self.type
 
+    # Remote name from the locker_<name>_name setting; None for local and external lockers
     def get_name(self):
         return self.name
 
+    # Path within the remote, from the locker_<name>_remote_path setting; None for local and external lockers
     def get_remote_path(self):
         return self.remote_path
 
+    # The locker_<name>_config setting; None for local and external lockers
     def get_config(self):
         return self.config
 
+    # The locker_<name>_token setting; None for local and external lockers
     def get_token(self):
         return self.token
 
+    # Where the locker is mounted, from the locker_<name>_mount_path setting
     def get_mount_path(self):
         return self.mount_path
 
+    # Mount options from the comma-separated locker_<name>_mount_flags setting; empty for local and external lockers
     def get_mount_flags(self):
         return self.mount_flags
 
+    # The locker's own passphrase setting, falling back to the shared locker passphrase
     def get_passphrase(self):
         return self.passphrase
 
+    # Folders left out of syncs, from the comma-separated locker_<name>_excluded_dirs setting
     def get_excluded_dirs(self):
         return self.excluded_dirs
 
+    # Whether files on the locker are stored encrypted; False unless the setting says so
     def is_encrypted(self):
         return self.encrypted
 
+    # True when no remote type is configured
     def is_local_only(self):
         return self.type is None
 
+    # External for the external locker, local when no remote type is set, otherwise remote
     def get_backend_type(self):
         if self.locker_type == config.LockerType.EXTERNAL:
             return config.BackendType.EXTERNAL
-        elif self.type is None:
+        if self.type is None:
             return config.BackendType.LOCAL
-        else:
-            return config.BackendType.REMOTE
+        return config.BackendType.REMOTE
 
+    # The mount path when set, otherwise the remote path
     def get_locker_root_path(self):
         if self.mount_path:
             return self.mount_path
         return self.remote_path
 
+    # The locker type's display value
     def get_locker_name(self):
         return self.locker_type.val() if hasattr(self.locker_type, 'val') else str(self.locker_type)
 
-# Get the primary remote locker type
+# Locker type named by the primary_remote_locker setting; Hetzner when unset or unmatched
 def get_primary_remote_locker_type():
     primary_remote = settings.get_value("UserData.Share", "primary_remote_locker")
     if primary_remote:

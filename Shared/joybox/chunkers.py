@@ -1,9 +1,10 @@
 # Imports
 import os
 import re
+from abc import ABC, abstractmethod
 
 # Local imports
-import joybox.logger as logger
+from joybox import logger
 from joybox import serialization
 
 ###########################################################
@@ -19,20 +20,21 @@ from joybox import serialization
 #   marks(lines)    -> [(line_number, label)]     the map
 #   regions(lines)  -> {name: (start, end)}       addressable spans
 #
-# Register a new one by subclassing Chunker and listing its extensions.
+# Register a new one by subclassing Chunker, implementing marks and listing its extensions.
 
 # Maximum marks in an outline before it is thinned; an outline is a map,
 # not a transcript.
 MAX_MARKS = 120
 
 # Base chunker
-class Chunker:
+class Chunker(ABC):
     name = "text"
     extensions = ()
 
     # Structural points of interest, as (line_number, label)
+    @abstractmethod
     def marks(self, lines):
-        return []
+        ...
 
     # Named spans, as {name: (start_line, end_line)}, both inclusive
     def regions(self, lines):
@@ -76,6 +78,7 @@ class AsmChunker(Chunker):
         re.IGNORECASE)
     XREF = re.compile(r";\s*XREF.*?(LAB_[0-9A-Fa-f]+)")
 
+    # Labels, XREF targets and CALL/JMP targets as (line, label), plus a marker where the header comments end
     def marks(self, lines):
         found = []
         in_header = True
@@ -117,6 +120,7 @@ class CChunker(Chunker):
     TYPE = re.compile(r"^\s*(?:typedef\s+)?(struct|union|enum|class)\s+([A-Za-z_]\w*)")
     LABEL_COMMENT = re.compile(r"^\s*//\s*(Name|Signature|Address|Convention):\s*(.+)$")
 
+    # Ghidra Name/Signature/Address/Convention comments, column-zero function heads and struct/union/enum/class declarations
     def marks(self, lines):
         found = []
         for number, line in enumerate(lines, start = 1):
@@ -145,6 +149,7 @@ class JsonChunker(Chunker):
 
     KEY = re.compile(r'^(\s*)"([^"]+)"\s*:')
 
+    # Shape of a JSON value for the outline, such as "object, 3 keys" or its Python type name
     def describe(self, value):
         if isinstance(value, dict):
             return f"object, {len(value)} keys"
@@ -154,6 +159,7 @@ class JsonChunker(Chunker):
             return f"string, {len(value)} chars"
         return type(value).__name__
 
+    # Each top-level key once, at its first line, annotated with its value's shape when the text parses
     def marks(self, lines):
         text = "\n".join(lines)
         data = serialization.parse_json_or_none(text)
@@ -190,6 +196,7 @@ class MarkdownChunker(Chunker):
 
     HEADING = re.compile(r"^(#{1,6})\s+(.+?)(?:\s+#+)?\s*$")
 
+    # Headings outside code fences, indented two spaces per level below the first
     def marks(self, lines):
         found = []
         in_fence = False
@@ -214,6 +221,7 @@ class PythonChunker(Chunker):
 
     DEF = re.compile(r"^(\s*)(async\s+def|def|class)\s+([A-Za-z_]\w*)")
 
+    # Every def, async def and class line, indented when nested
     def marks(self, lines):
         found = []
         for number, line in enumerate(lines, start = 1):
@@ -235,6 +243,7 @@ class LineChunker(Chunker):
     extensions = ()
     WINDOW = 200
 
+    # Fixed 200-line windows labelled by their line range
     def marks(self, lines):
         found = []
         for start in range(1, len(lines) + 1, self.WINDOW):

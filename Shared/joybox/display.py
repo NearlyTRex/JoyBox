@@ -1,26 +1,17 @@
 # Local imports
-import joybox.command as command
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.settings as settings
+from joybox import command
+from joybox import commandbase
+from joybox import gui
+from joybox import logger
+from joybox import programs
+from joybox import settings
 
-# Get current screen resolution
-def get_current_screen_resolution():
-    import screeninfo
-    for monitor in screeninfo.get_monitors():
-        if monitor.is_primary:
-            return (monitor.width, monitor.height)
-    return (0, 0)
-
-# Set screen resolution
+# Switch the display mode through NirCmd setdisplay; False when NirCmd is missing or exits non-zero
 def set_screen_resolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
-    nircmd_tool = None
-    if programs.is_tool_installed("NirCmd"):
-        nircmd_tool = programs.get_tool_program("NirCmd")
+    nircmd_tool = programs.find_tool_program("NirCmd")
     if not nircmd_tool:
-        logger.log_error("NirCmd was not found")
         return False
 
     # Get resolution command
@@ -33,16 +24,20 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
     ]
 
     # Set resolution
-    command.run_returncode_command(
+    code = command.run_returncode_command(
         cmd = resolution_cmd,
-        options = command.create_command_options(
-            shell = True),
+        options = commandbase.create_command_options(
+            is_shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        if verbose or exit_on_failure:
+            logger.log_error("Unable to set screen resolution to %sx%s, NirCmd exited with code %s" % (width, height, code), quit_program = exit_on_failure)
+        return False
     return True
 
-# Restore default screen resolution
+# Return to the resolution the UserData.Resolution settings name, unless the screen is already at it
 def restore_default_screen_resolution(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get resolution info
@@ -51,9 +46,9 @@ def restore_default_screen_resolution(verbose = False, pretend_run = False, exit
     screen_resolution_c = settings.get_integer_value("UserData.Resolution", "screen_resolution_c")
 
     # Ignore if already at the default resolution
-    current_w, current_h = get_current_screen_resolution()
-    is_default_w = (current_w == screen_resolution_w)
-    is_default_h = (current_h == screen_resolution_h)
+    current_w, current_h = gui.get_current_screen_resolution()
+    is_default_w = current_w == screen_resolution_w
+    is_default_h = current_h == screen_resolution_h
     if is_default_w and is_default_h:
         return True
 

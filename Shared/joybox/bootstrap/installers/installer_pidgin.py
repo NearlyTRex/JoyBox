@@ -2,10 +2,10 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Pidgin AIM/ICQ plugins
 # Pidgin itself comes from apt. Upstream dropped the OSCAR protocol after
@@ -66,6 +66,8 @@ OSCAR_CONFIG_HEADER = """\
 #define SIZEOF_TIME_T 8
 """
 
+# Builds Pidgin 2.14.2's AIM and ICQ plugins from source against the installed
+# libpurple and puts them in ~/.purple/plugins
 class Pidgin(installer.Installer):
     def __init__(
         self,
@@ -78,25 +80,31 @@ class Pidgin(installer.Installer):
         self.archive_path = f"/tmp/pidgin-{self.oscar_version}.tar.bz2"
         self.build_dir = "/tmp/pidgin_oscar_build"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # SourceForge URL of the pinned Pidgin source tarball
     def get_source_url(self):
         return (
             f"https://downloads.sourceforge.net/project/pidgin/Pidgin/"
             f"{self.oscar_version}/pidgin-{self.oscar_version}.tar.bz2")
 
+    # The per-user plugin directory, ~/.purple/plugins
     def get_plugin_dir(self):
         return os.path.join(os.path.expanduser("~"), ".purple", "plugins")
 
+    # Where each protocol's lib<protocol>.so goes in the plugin directory
     def get_plugin_paths(self):
         return [os.path.join(self.get_plugin_dir(), f"lib{protocol}.so") for protocol in OSCAR_PROTOCOLS]
 
+    # Whether both the AIM and ICQ plugin files exist
     def is_installed(self):
         return all(self.connection.does_file_or_directory_exist(path) for path in self.get_plugin_paths())
 
+    # pidgin-aim and pidgin-icq as installed or missing, by their plugin files
     def get_package_status(self):
         installed = []
         missing = []
@@ -107,16 +115,20 @@ class Pidgin(installer.Installer):
                 missing.append(f"pidgin-{protocol}")
         return {"installed": installed, "missing": missing}
 
+    # Whether the downloaded tarball matches its pinned sha256; always True in a pretend run
     def is_archive_verified(self):
         if self.flags.pretend_run:
             return True
         output = self.connection.run_output(["sha256sum", self.archive_path])
         return output.split(" ")[0] == self.oscar_sha256
 
+    # Delete the downloaded tarball and the build directory in /tmp
     def clean_build(self):
         self.connection.remove_file_or_directory(self.archive_path)
         self.connection.remove_file_or_directory(self.build_dir)
 
+    # Compile one protocol's shared library with gcc from the OSCAR sources; its
+    # path, or None when gcc fails
     def build_plugin(self, protocol, source_dir, include_dir, cflags, libs):
         output_path = os.path.join(self.build_dir, f"lib{protocol}.so")
         sources = [os.path.join(source_dir, name) for name in OSCAR_SOURCES + [f"lib{protocol}.c"]]
@@ -130,6 +142,8 @@ class Pidgin(installer.Installer):
             return None
         return output_path
 
+    # Download and verify the source, compile both plugins against libpurple's
+    # headers and move them into the plugin dir; False when libpurple-dev is missing or a step fails
     def install(self):
 
         # Start install
@@ -140,7 +154,38 @@ class Pidgin(installer.Installer):
             logger.log_error("libpurple headers not found; install pidgin and libpurple-dev with the aptget component")
             return False
 
-        # Download and verify the source
+        # Download, verify and extract the source
+        if not self._fetch_source():
+            return False
+
+        # Private headers that libpurple-dev does not ship
+        source_root = os.path.join(self.build_dir, f"pidgin-{self.oscar_version}")
+        source_dir = os.path.join(source_root, "libpurple", "protocols", "oscar")
+        include_dir = os.path.join(self.build_dir, "include")
+        if not self._write_private_headers(source_root, include_dir):
+            return False
+
+        # Build each protocol plugin
+        built = self._build_plugins(source_dir, include_dir)
+        if built is None:
+            return False
+
+        # Install into the per-user plugin directory
+        self._install_plugins(built)
+
+        # Verify installation
+        logger.log_info("Verifying installation")
+        if not self.is_installed():
+            logger.log_error("Pidgin plugin installation verification failed")
+            return False
+
+        # All done
+        logger.log_info("Pidgin AIM/ICQ plugins installed successfully")
+        return True
+
+    # Download the source archive, check its checksum and extract it into the build
+    # dir; False after cleaning the build when a step fails
+    def _fetch_source(self):
         self.clean_build()
         self.connection.download_file(self.get_source_url(), self.archive_path)
         if not self.is_archive_verified():
@@ -156,20 +201,23 @@ class Pidgin(installer.Installer):
             logger.log_error("Failed to extract the Pidgin source archive")
             self.clean_build()
             return False
+        return True
 
-        # Private headers that libpurple-dev does not ship
-        source_root = os.path.join(self.build_dir, f"pidgin-{self.oscar_version}")
-        source_dir = os.path.join(source_root, "libpurple", "protocols", "oscar")
-        include_dir = os.path.join(self.build_dir, "include")
+    # Copy internal.h and write config.h into include_dir; False after cleaning the build when the write fails
+    def _write_private_headers(self, source_root, include_dir):
         self.connection.make_directory(include_dir)
         self.connection.copy_file_or_directory(
             os.path.join(source_root, "libpurple", "internal.h"),
             os.path.join(include_dir, "internal.h"))
-        self.connection.write_file(
-            os.path.join(include_dir, "config.h"),
-            OSCAR_CONFIG_HEADER.format(version = self.oscar_version))
+        config_header_path = os.path.join(include_dir, "config.h")
+        if not self.connection.write_file(config_header_path, OSCAR_CONFIG_HEADER.format(version = self.oscar_version)):
+            logger.log_error(f"Unable to write {config_header_path}")
+            self.clean_build()
+            return False
+        return True
 
-        # Build each protocol plugin
+    # Compile each protocol plugin against libpurple; their paths, None after cleaning the build on a failure
+    def _build_plugins(self, source_dir, include_dir):
         cflags = self.connection.run_output(["pkg-config", "--cflags", "purple"]).split()
         libs = self.connection.run_output(["pkg-config", "--libs", "glib-2.0"]).split()
         built = []
@@ -177,26 +225,19 @@ class Pidgin(installer.Installer):
             output_path = self.build_plugin(protocol, source_dir, include_dir, cflags, libs)
             if not output_path:
                 self.clean_build()
-                return False
+                return None
             built.append(output_path)
+        return built
 
-        # Install into the per-user plugin directory
+    # Move the built plugins into the per-user plugin dir as 644, then clean the build
+    def _install_plugins(self, built):
         self.connection.make_directory(self.get_plugin_dir())
         for output_path, plugin_path in zip(built, self.get_plugin_paths(), strict=True):
             self.connection.move_file_or_directory(output_path, plugin_path)
             self.connection.change_permission(plugin_path, "644")
         self.clean_build()
 
-        # Verify installation
-        logger.log_info("Verifying installation")
-        if not self.is_installed():
-            logger.log_error("Pidgin plugin installation verification failed")
-            return False
-
-        # All done
-        logger.log_info("Pidgin AIM/ICQ plugins installed successfully")
-        return True
-
+    # Delete the AIM and ICQ plugin files
     def uninstall(self):
 
         # Start uninstall

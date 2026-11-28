@@ -2,11 +2,12 @@
 import urllib.parse
 
 # Local imports
-import joybox.command as command
-import joybox.hardware as hardware
-import joybox.logger as logger
-import joybox.network as network
-import joybox.settings as settings
+from joybox import command
+from joybox import commandbase
+from joybox import hardware
+from joybox import logger
+from joybox import network
+from joybox import settings
 from joybox import runtime
 
 ###########################################################
@@ -45,7 +46,7 @@ def is_local_server():
 # Options for the ollama command, aimed at the configured server
 # The command ignores the setting and reads OLLAMA_HOST instead.
 def create_client_options():
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_env_var("OLLAMA_HOST", get_api_base())
     return options
 
@@ -115,7 +116,7 @@ def start_serve():
             logger.log_info("It is reached through an SSH tunnel to %s; check it with: systemctl --user status ollama-tunnel" % get_ssh_host())
         return False
     logger.log_info("Starting Ollama server...")
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_is_daemon(True)
     command.run_returncode_command(["ollama", "serve"], options = options)
     for _ in range(10):
@@ -132,7 +133,7 @@ def ensure_running():
         return True
     return start_serve()
 
-# List installed models
+# Models the Ollama server reports through /api/tags, with size and details, sorted by name; empty when unreachable
 def list_installed_models():
     result = network.get_remote_json(get_api_base() + "/api/tags")
     if not result or "models" not in result:
@@ -161,7 +162,7 @@ def pull_model(model_name):
         options = options)
     return code == 0
 
-# Delete a model
+# Remove a model from the configured Ollama server with ollama rm; True on success
 def delete_model(model_name):
     code = command.run_returncode_command(
         ["ollama", "rm", model_name],

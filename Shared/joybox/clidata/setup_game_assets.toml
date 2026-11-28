@@ -1,0 +1,27 @@
+# Help text for the setup_game_assets command, read by joybox/arguments.py
+
+description = "Link the Pegasus frontend's asset folders to the artwork in the locker."
+details = """
+Walks every game category and subcategory and, for each asset type (box art,
+screenshots, backgrounds and so on), creates a symlink from the Pegasus metadata
+asset directory to the matching artwork directory in the locker. A locker artwork
+directory that does not exist yet is created first, so every link has a target.
+
+Run it after building game metadata, or whenever the asset directory layout changes.
+It takes only the common options."""
+section = "Setup & Installation"
+see_also = [
+    "download_game_metadata_assets",
+    "build_game_metadata_files",
+    "setup_tools",
+    "setup_game_emulators",
+]
+notes = [
+    "Symlinks must be supported on the system; the requirement check exits otherwise.",
+    "Missing artwork directories are created, so the command is safe to re-run.",
+    "It stops at the first symlink that cannot be created.",
+]
+examples = [
+    ["Create all asset symlinks", "setup_game_assets -v"],
+    ["Preview without making changes", "setup_game_assets -p -v"],
+]

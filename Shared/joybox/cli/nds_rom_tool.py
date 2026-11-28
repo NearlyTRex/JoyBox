@@ -1,32 +1,13 @@
 # Imports
-import joybox.system as system
+from joybox import system
 from joybox.nintendo import ds
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
+from joybox import arguments
+from joybox import setup
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Decrypt or encrypt Nintendo DS ROMs in place with NDecrypt.",
-        details = (
-            "Finds every `.nds` file under the input path (or takes the one file given) and runs\n"
-            "NDecrypt on it: `-d` decrypts the secure area, `-e` encrypts it again. NDecrypt\n"
-            "rewrites each file in place, so no new files are created unless `-g` is given, which\n"
-            "has NDecrypt write the file's size and hashes to a companion file."),
-        examples = [
-            ("Decrypt every DS ROM in a folder", "nds_rom_tool -i /path/to/nds -d"),
-            ("Preview the decryption without changing anything", "nds_rom_tool -i /path/to/nds -d -p -v"),
-            ("Encrypt one ROM and record its hashes", "nds_rom_tool -i \"/path/to/Game (USA).nds\" -e -g"),
-        ],
-        notes = [
-            "Without `-d` or `-e` nothing is done. If both are given, `-d` wins.",
-            "NDecrypt must be installed as a JoyBox tool.",
-        ],
-        see_also = ["3ds_rom_tool"],
-        section = "Game ROMs & Images")
+    parser = arguments.ArgumentParser(command = "nds_rom_tool")
     parser.add_input_path_argument(description = "An `.nds` file, or a directory searched recursively for them; must exist")
     parser.add_boolean_argument(args = ("-d", "--decrypt"), description = "Decrypt each ROM in place")
     parser.add_boolean_argument(args = ("-e", "--encrypt"), description = "Encrypt each ROM in place")
@@ -34,18 +15,12 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, decrypt or encrypt the secure area of each NDS ROM under the input in place with NDecrypt
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
@@ -54,36 +29,22 @@ def main():
     action = "Decrypt" if args.decrypt else "Encrypt" if args.encrypt else None
 
     # Show preview
-    if not args.no_preview:
-        details = [
-            "Path: %s" % input_path,
-            "Action: %s" % action
-        ]
-        if not prompts.prompt_for_preview("NDS ROM tool", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [
+        "Path: %s" % input_path,
+        "Action: %s" % action
+    ]
+    if not prompts.confirm_preview(args.no_preview, "NDS ROM tool", details):
+        return
 
-    # Find rom files
-    for file in paths.build_file_list_by_extensions(input_path, extensions = [".nds"]):
-        current_file = file
-
-        # Decrypt NDS file
-        if args.decrypt:
-            ds.decrypt_nds_rom(
-                nds_file = current_file,
-                generate_hash = args.generate_hash,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Encrypt NDS file
-        elif args.encrypt:
-            ds.encrypt_nds_rom(
-                nds_file = current_file,
-                generate_hash = args.generate_hash,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
+    # Decrypt or encrypt the roms
+    ds.process_nds_roms(
+        input_path = input_path,
+        decrypt = args.decrypt,
+        encrypt = args.encrypt,
+        generate_hash = args.generate_hash,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

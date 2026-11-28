@@ -2,8 +2,10 @@
 import pytest
 
 # Local imports
+from joybox import release
 from joybox import config
 from joybox.emulators import cemu
+from emulator_helpers import Release
 
 
 ###########################################################
@@ -15,16 +17,6 @@ from joybox.emulators import cemu
 ###########################################################
 
 PLATFORMS = ["windows", "linux"]
-
-
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
 
 
 @pytest.fixture
@@ -44,14 +36,7 @@ def program_paths(monkeypatch):
 @pytest.fixture
 def download(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(cemu.release, "download_github_release", fake)
-    return fake
-
-
-@pytest.fixture
-def stored(monkeypatch, program_paths):
-    fake = Release()
-    monkeypatch.setattr(cemu.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "download_github_release", fake)
     return fake
 
 
@@ -68,7 +53,7 @@ def test_the_config_files_match_the_configured_paths():
     entry = cemu.Cemu().get_config()["Cemu"]
     configured = {entry[key][platform] for key in ("config_file", "keys_file") for platform in PLATFORMS}
 
-    assert configured == set(cemu.config_files)
+    assert configured == set(cemu.Cemu().get_config_files())
 
 
 def test_saves_live_inside_the_setup_dir():
@@ -164,15 +149,15 @@ def touched(monkeypatch):
         calls.append((src, contents, kwargs))
         return state["ok"]
 
-    monkeypatch.setattr(cemu.environment, "get_emulators_root_dir", lambda: "/emulators")
-    monkeypatch.setattr(cemu.fileops, "touch_file", touch)
+    monkeypatch.setattr(cemu.emulatorbase.environment, "get_emulators_root_dir", lambda: "/emulators")
+    monkeypatch.setattr(cemu.emulatorbase.fileops, "touch_file", touch)
     return {"calls": calls, "state": state}
 
 
 def test_configure_writes_every_config_file(touched):
     assert cemu.Cemu().configure() is True
 
-    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in cemu.config_files]
+    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in cemu.Cemu().get_config_files()]
     assert {contents for _, contents, _ in touched["calls"]} == {""}
 
 
@@ -180,7 +165,7 @@ def test_configure_passes_the_setup_params_through(touched):
     cemu.Cemu().configure(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
     assert [kwargs for _, _, kwargs in touched["calls"]] == [
-        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(cemu.config_files)
+        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(cemu.Cemu().get_config_files())
 
 
 def test_configure_stops_when_a_config_file_cannot_be_written(touched):
@@ -283,7 +268,7 @@ def launcher(monkeypatch, tmp_path):
         lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
     monkeypatch.setattr(cemu.programs, "get_emulator_program", lambda name: "/bin/cemu")
     monkeypatch.setattr(cemu.wiiu, "update_wiiu_keys", update_keys)
-    monkeypatch.setattr(cemu.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(cemu.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "keys": keys, "cache": tmp_path, "state": state}
 
 
@@ -293,7 +278,7 @@ def test_launch_runs_the_game_file(launcher):
     assert cemu.Cemu().launch(game, capture_type = "video", capture_file = "/cap.mp4", verbose = True) is True
 
     launched = launcher["launched"]
-    assert launched["launch_cmd"] == ["/bin/cemu", "-g", config.token_game_file]
+    assert launched["launch_cmd"] == ["/bin/cemu", "-g", config.TOKEN_GAME_FILE]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"], launched["verbose"]) == ("video", "/cap.mp4", True)
     assert launcher["keys"] == []

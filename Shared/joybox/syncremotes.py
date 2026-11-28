@@ -5,7 +5,8 @@
 import re
 
 # Local imports
-from joybox import command
+from joybox import commandbase
+from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
 from joybox import logger
@@ -21,7 +22,7 @@ def get_configured_remotes(
     exit_on_failure = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return {}
 
@@ -117,7 +118,7 @@ def authorize_remote(
     pretend_run = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
 
@@ -126,7 +127,7 @@ def authorize_remote(
     authorize_cmd = [rclone_tool, "authorize", raw_type]
     if not open_browser:
         authorize_cmd += ["--auth-no-open-browser"]
-    authorize_options = command.create_command_options()
+    authorize_options = commandbase.create_command_options()
     authorize_options.set_env_var("RCLONE_%s_CLIENT_ID" % raw_type.upper(), client_id)
     authorize_options.set_env_var("RCLONE_%s_CLIENT_SECRET" % raw_type.upper(), client_secret)
 
@@ -157,7 +158,7 @@ def count_remote_entries(
     exit_on_failure = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
 

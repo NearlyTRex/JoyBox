@@ -18,7 +18,7 @@ def host(monkeypatch):
     state = {"windows": False, "linux": True, "symlinks": True, "ini": True}
     monkeypatch.setattr(setup.platform_info, "is_windows_platform", lambda: state["windows"])
     monkeypatch.setattr(setup.platform_info, "is_linux_platform", lambda: state["linux"])
-    monkeypatch.setattr(setup.environment, "are_symlinks_supported", lambda: state["symlinks"])
+    monkeypatch.setattr(setup.fileops, "are_symlinks_supported", lambda: state["symlinks"])
     monkeypatch.setattr(setup.settings, "is_present", lambda: state["ini"])
     return state
 
@@ -48,6 +48,21 @@ def test_an_old_python_exits(host, monkeypatch):
 
     with pytest.raises(SystemExit):
         setup.check_requirements()
+
+
+def test_starting_a_command_parses_checks_and_sets_up_logging(monkeypatch):
+    steps = []
+
+    class Parser:
+        def parse_known_args(self):
+            steps.append("parse")
+            return "parsed", ["--unknown"]
+
+    monkeypatch.setattr(setup, "check_requirements", lambda: steps.append("check"))
+    monkeypatch.setattr(setup.logger, "setup_logging", lambda: steps.append("logging"))
+
+    assert setup.start_command(Parser()) == "parsed"
+    assert steps == ["parse", "check", "logging"]
 
 
 @pytest.mark.parametrize("change", [
@@ -129,6 +144,20 @@ def test_configure_runs_after_each_setup(tmp_path):
 
     assert actions(first) == actions(second) == ["setup", "configure"]
     assert {passed for package in (first, second) for _, passed in package.calls} == {params}
+
+
+def test_one_package_is_set_up_then_configured():
+    package = Package("Only")
+
+    assert setup.install_package(package, offline = True, configure = True) is True
+    assert actions(package) == ["setup_offline", "configure"]
+
+
+def test_a_package_that_fails_setup_is_not_configured():
+    package = Package("Only", setup_ok = False)
+
+    assert setup.install_package(package, configure = True) is False
+    assert actions(package) == ["setup"]
 
 
 def test_failed_backups_are_listed_once_the_run_is_done(tmp_path, monkeypatch):
@@ -226,8 +255,8 @@ def test_force_with_nothing_installed_still_sets_up(tmp_path):
 
 
 @pytest.mark.parametrize("entry,lister,root_getter,package_type", [
-    ("setup_tools", "get_tools", "get_tools_root_dir", "tool"),
-    ("setup_emulators", "get_emulators", "get_emulators_root_dir", "emulator"),
+    ("setup_tools", ("tools", "get_tool_list"), "get_tools_root_dir", "tool"),
+    ("setup_emulators", ("emulators", "get_emulator_list"), "get_emulators_root_dir", "emulator"),
 ])
 def test_tools_and_emulators_use_their_own_list_and_root(monkeypatch, entry, lister, root_getter, package_type):
     received = {}
@@ -238,7 +267,7 @@ def test_tools_and_emulators_use_their_own_list_and_root(monkeypatch, entry, lis
         received.update(kwargs)
         return True
 
-    monkeypatch.setattr(setup.programs, lister, lambda: package_list)
+    monkeypatch.setattr(getattr(setup, lister[0]), lister[1], lambda: package_list)
     monkeypatch.setattr(setup.environment, root_getter, lambda: "/root/" + package_type)
     monkeypatch.setattr(setup, "setup_packages", setup_packages)
 
@@ -332,3 +361,17 @@ def test_assets_stop_at_the_first_failed_link(asset_dirs, monkeypatch):
     assert setup.setup_assets(verbose = True, pretend_run = True, exit_on_failure = True) is False
     assert len(links) == 1
     assert (links[0]["verbose"], links[0]["pretend_run"], links[0]["exit_on_failure"]) == (True, True, True)
+
+
+def test_one_subcategory_links_each_asset_type(asset_dirs, monkeypatch):
+    links = []
+
+    def create_symlink(src, dest, cwd, **kwargs):
+        links.append(dest)
+        return True
+
+    monkeypatch.setattr(setup.fileops, "create_symlink", create_symlink)
+    category, subcategory, _ = next(every_asset_dir())
+
+    assert setup.link_subcategory_assets(category, subcategory) is True
+    assert len(links) == len(config.AssetType.members())

@@ -1,46 +1,22 @@
 # Imports
-import joybox.system as system
-import joybox.asset as asset
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import system
+from joybox import asset
+from joybox import arguments
+from joybox import setup
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Strip all EXIF and other embedded metadata from image files.",
-        details = (
-            "Runs ExifTool with `-All=` over the input, removing every writable metadata tag\n"
-            "(camera, GPS location, timestamps, thumbnails and so on). A directory is processed\n"
-            "recursively. Files are rewritten in place with `-overwrite_original`, so no backup\n"
-            "copies are left behind."),
-        examples = [
-            ("Strip metadata from one photo", "clean_exif_data -i ~/Pictures/photo.jpg"),
-            ("Strip metadata from every file in a directory tree", "clean_exif_data -i ~/Pictures/ToShare"),
-            ("Dry run, leaving every file untouched", "clean_exif_data -i ~/Pictures/ToShare -p -v"),
-        ],
-        notes = [
-            "The change cannot be undone; copy anything whose metadata you want to keep first.",
-            "ExifTool must be installed with `setup_tools -k ExifTool`.",
-        ],
-        see_also = ["setup_tools"],
-        section = "Files & Archives")
+    parser = arguments.ArgumentParser(command = "clean_exif_data")
     parser.add_input_path_argument(description = "Image file, or directory to process recursively; it must exist")
     parser.add_common_arguments()
     return parser
 
-# Main
+# Strip every EXIF and embedded metadata tag from the input image or directory in place with ExifTool
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()

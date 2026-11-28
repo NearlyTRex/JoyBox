@@ -1,33 +1,130 @@
 # Imports
+import types
 import os
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.logger as logger
-import joybox.fileops as fileops
+from joybox import config
+from joybox import command
+from joybox import commandbase
+from joybox import programs
+from joybox import serialization
+from joybox import logger
+from joybox import fileops
 from joybox import filebulk
-import joybox.network as network
-import joybox.paths as paths
-import joybox.settings as settings
-import joybox.jsondata as jsondata
-import joybox.webpage as webpage
-from joybox import webfetch
-import joybox.storebase as storebase
-import joybox.strings as strings
-import joybox.metadataentry as metadataentry
-import joybox.metadataassetcollector as metadataassetcollector
-import joybox.manifest as manifest
+from joybox import network
+from joybox import paths
+from joybox import settings
+from joybox import jsondata
+from joybox import webpage
+from joybox import storebase
+from joybox import strings
+from joybox import metadataentry
+from joybox import manifest
 
 # GOG platform names as gogdl spells them
 gogdl_platforms = {
     "mac": "osx"
 }
 
+# Set developer/publisher, release date or genre from one "details__row" text on the game page
+def _read_detail_row(element_detail_text, metadata_entry):
+
+    # Developer/Publisher
+    if strings.does_string_start_with_substring(element_detail_text, "Company:"):
+        company_text = strings.trim_substring_from_start(element_detail_text, "Company:").strip()
+        company_parts = company_text.split("/")
+        metadata_entry.set_developer(company_parts[0].strip())
+        if len(company_parts) > 1:
+            metadata_entry.set_publisher(company_parts[1].strip())
+
+    # Release
+    elif strings.does_string_start_with_substring(element_detail_text, "Release date:"):
+        release_text = strings.trim_substring_from_start(element_detail_text, "Release date:").strip()
+        release_text = strings.convert_date_string(release_text, "%B %d, %Y", "%Y-%m-%d")
+        if release_text:
+            metadata_entry.set_release(release_text)
+
+    # Genre
+    elif strings.does_string_start_with_substring(element_detail_text, "Genre:"):
+        genre_text = strings.trim_substring_from_start(element_detail_text, "Genre:").strip().replace(" - ", ";")
+        metadata_entry.set_genre(genre_text)
+
+# HeroicGogDL's program and auth json paths; Nones, logged, when either is missing
+def find_gogdl_script():
+    gogdl_script = None
+    auth_json = None
+    if programs.is_tool_installed("HeroicGogDL"):
+        gogdl_script = programs.get_tool_program("HeroicGogDL")
+        auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
+    if not gogdl_script or not auth_json:
+        logger.log_error("HeroicGogDL was not found")
+        return None, None
+    return gogdl_script, auth_json
+
+# Move dlc/extra into the download's extra folder, keeping files already there
+def _merge_dlc_extras(download_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    tmp_dir_extra = paths.join_paths(download_dir, "extra")
+    tmp_dir_dlc = paths.join_paths(download_dir, "dlc")
+    tmp_dir_dlc_extra = paths.join_paths(tmp_dir_dlc, "extra")
+    if paths.does_directory_contain_files(tmp_dir_dlc_extra):
+        filebulk.move_contents(
+            src = tmp_dir_dlc_extra,
+            dest = tmp_dir_extra,
+            skip_existing = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        fileops.remove_directory(
+            src = tmp_dir_dlc_extra,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Move the downloaded files into output_dir, emptying it first when clean_output is set
+def _move_to_output(
+    download_dir, output_dir,
+    clean_output = False, show_progress = False, skip_existing = False, skip_identical = False,
+    verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Clean output
+    if clean_output:
+        fileops.remove_directory_contents(
+            src = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Move downloaded files
+    return filebulk.move_contents(
+        src = download_dir,
+        dest = output_dir,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
 # GOG store
 class GOG(storebase.StoreBase):
+
+    TYPE = config.StoreType.GOG
+    PLATFORM = config.Platform.COMPUTER_GOG
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_GOG
+    KEY = config.JSON_KEY_GOG
+    PAGE_VIDEO_BASE_URL = storebase.YOUTUBE_EMBED_URL
+    PAGE_VIDEO_ENDS_WITH = "enablejsapi=1"
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME,
+    })
 
     # Constructor
     def __init__(self):
@@ -55,69 +152,23 @@ class GOG(storebase.StoreBase):
         self.excludes = settings.get_value("UserData.GOG", "gog_excludes")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.GOG", "gog_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.GOG", "gog_install_dir")
 
     ############################################################
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.GOG.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.GOG
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_GOG
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_GOG
-
-    # Get key
-    def get_key(self):
-        return config.json_key_gog
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appid,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
-            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appname
-        }
-
-    # Get preferred platform
+    # The GOG installer OS (windows, linux, mac) from the settings, used to pick builds and downloads
     def get_preferred_platform(self):
         return self.platform
 
-    # Get user name
+    # The GOG username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
 
-    # Get email
+    # The GOG account email from the settings; the constructor refuses to build without one
     def get_email(self):
         return self.email
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -157,11 +208,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get tool
-        gog_tool = None
-        if programs.is_tool_installed("LGOGDownloader"):
-            gog_tool = programs.get_tool_program("LGOGDownloader")
+        gog_tool = programs.find_tool_program("LGOGDownloader")
         if not gog_tool:
-            logger.log_error("LGOGDownloader was not found")
             return False
 
         # Get login command
@@ -173,12 +221,12 @@ class GOG(storebase.StoreBase):
         # Run login command
         code = command.run_interactive_command(
             cmd = login_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     # Login HeroicGogDL
     def login_heroic_gogdl(
@@ -188,11 +236,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -218,9 +263,9 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
-    # Login
+    # Sign in to both LGOGDownloader and HeroicGogDL interactively; True only when both succeed
     def login(
         self,
         verbose = False,
@@ -255,7 +300,7 @@ class GOG(storebase.StoreBase):
     # Page
     ############################################################
 
-    # Get latest url
+    # The gog.com game page for a slug, built from the identifier without checking it exists
     def get_latest_url(
         self,
         identifier,
@@ -276,7 +321,7 @@ class GOG(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games with slug, product id, page and title, from a cache under a day old or else LGOGDownloader's JSON list
     def get_latest_purchases(
         self,
         verbose = False,
@@ -287,155 +332,82 @@ class GOG(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_manifest = paths.join_paths(cache_dir, "gog_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_manifest):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_manifest)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached GOG purchases data (%.1f hours old)" % cache_age_hours)
-
         # Load from cache if available
-        if use_cache:
-            gog_json = serialization.read_json_file(
-                src = cache_file_manifest,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
-                if verbose:
-                    logger.log_warning("Failed to load GOG cache, will fetch fresh data")
-                use_cache = False
+        gog_json = self.read_purchases_cache(cache_file_manifest, "GOG", verbose = verbose)
 
         # Fetch fresh data if not using cache
-        if not use_cache:
-            # Get tool
-            gog_tool = None
-            if programs.is_tool_installed("LGOGDownloader"):
-                gog_tool = programs.get_tool_program("LGOGDownloader")
-            if not gog_tool:
-                logger.log_error("LGOGDownloader was not found")
+        if gog_json is None:
+            gog_json = self._list_owned_games(verbose = verbose, exit_on_failure = exit_on_failure)
+            if gog_json is None:
                 return None
-
-            # Create temporary directory
-            tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-            if not tmp_dir_success:
-                return None
-
-            # Get temporary paths
-            tmp_file_manifest = paths.join_paths(tmp_dir_result, "manifest.json")
-
-            # Get list command
-            list_cmd = [
-                gog_tool,
-                "--list", "j"
-            ]
-
-            try:
-
-                # Run list command
-                code = command.run_returncode_command(
-                    cmd = list_cmd,
-                    options = command.create_command_options(
-                        stdout = tmp_file_manifest),
-                    verbose = False,
-                    exit_on_failure = exit_on_failure)
-                if code != 0:
-                    logger.log_error("Unable to find gog purchases")
-                    return None
-
-                # Get gog json
-                gog_json = serialization.read_json_file(
-                    src = tmp_file_manifest,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
-                    logger.log_error("Unable to parse gog game list")
-                    return None
-            finally:
-
-                # Delete temporary directory
-                fileops.remove_directory(
-                    src = tmp_dir_result,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-
-            # Save to cache
-            fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-            success = serialization.write_json_file(
-                src = cache_file_manifest,
-                json_data = gog_json,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if success and verbose:
-                logger.log_info("Saved GOG purchases data to cache")
-            elif not success and verbose:
-                logger.log_warning("Failed to save GOG cache")
+            self.write_purchases_cache(cache_dir, cache_file_manifest, gog_json, "GOG", verbose = verbose, pretend_run = pretend_run)
 
         # Parse json
-        purchases = []
-        for entry in gog_json:
+        return [self._create_purchase(entry) for entry in gog_json]
 
-            # Gather info
-            line_appname = str(entry.get("gamename", ""))
-            line_appid = str(entry.get("product_id", ""))
-            line_title = str(entry.get("title", ""))
+    # LGOGDownloader's JSON game list, read back from a temporary file; None, logged, when it fails
+    def _list_owned_games(self, verbose = False, exit_on_failure = False):
 
-            # Create purchase
-            purchase = jsondata.JsonData(
-                json_data = {},
-                json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, self.get_latest_url(line_appname))
-            purchase.set_value(config.json_key_store_name, line_title)
-            purchases.append(purchase)
-        return purchases
+        # Get tool
+        gog_tool = programs.find_tool_program("LGOGDownloader")
+        if not gog_tool:
+            return None
+
+        # List purchases into a temporary manifest
+        with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+            if not tmp_dir_result:
+                return None
+            tmp_file_manifest = paths.join_paths(tmp_dir_result, "manifest.json")
+
+            # Run list command
+            code = command.run_returncode_command(
+                cmd = [
+                    gog_tool,
+                    "--list", "j"
+                ],
+                options = commandbase.create_command_options(
+                    stdout = tmp_file_manifest),
+                verbose = False,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                logger.log_error("Unable to find gog purchases")
+                return None
+
+            # Get gog json
+            gog_json = serialization.read_json_file(
+                src = tmp_file_manifest,
+                verbose = verbose,
+                exit_on_failure = False)
+            if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
+                logger.log_error("Unable to parse gog game list")
+                return None
+            return gog_json
+
+    # Purchase with slug, product id, page and title for one game list entry
+    def _create_purchase(self, entry):
+        line_appname = str(entry.get("gamename", ""))
+        line_appid = str(entry.get("product_id", ""))
+        line_title = str(entry.get("title", ""))
+        purchase = jsondata.JsonData(
+            json_data = {},
+            json_platform = self.get_platform())
+        purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+        purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+        purchase.set_value(config.JSON_KEY_STORE_APPURL, self.get_latest_url(line_appname))
+        purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
+        return purchase
 
     ############################################################
     # Json
     ############################################################
 
-    # Augment jsondata
-    def augment_jsondata(
-        self,
-        json_data,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # The manifest entry matched by GOG product id, rooted at the game install dir, then the base's
+    def get_manifest_matches(self, json_data, identifier):
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(gogid = identifier)
+        return [(manifest_entry, config.TOKEN_GAME_INSTALL_DIR)] + super().get_manifest_matches(json_data, identifier)
 
-        # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.json_key_store_paths))
-        game_keys = list(json_data.get_value(config.json_key_store_keys))
-
-        # Augment by manifest
-        manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(
-            gogid = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if manifest_entry:
-            manifest_paths = manifest_entry.get_paths(config.token_game_install_dir)
-            game_paths = list(set(game_paths).union(manifest_paths))
-            game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
-
-        # Apply base path cleaning logic
-        json_data.set_value(config.json_key_store_paths, game_paths)
-        json_data.set_value(config.json_key_store_keys, game_keys)
-        return super().augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Get latest jsondata
-    def get_latest_jsondata(
+    # Slug, title, page and the preferred-OS installer version from the GOG products API; None when unreachable
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -443,12 +415,8 @@ class GOG(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get gog url
+        del branch, pretend_run
         gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
         if not network.is_url_reachable(gog_url):
             return None
@@ -457,7 +425,6 @@ class GOG(storebase.StoreBase):
         gog_json = network.get_remote_json(
             url = gog_url,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not gog_json:
             logger.log_error("Unable to find gog release information from '%s'" % gog_url)
@@ -465,193 +432,81 @@ class GOG(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_appname, str(gog_json.get("slug", "")))
-        json_data.set_value(config.json_key_store_name, str(gog_json.get("title", "")).strip())
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, str(gog_json.get("slug", "")))
+        json_data.set_value(config.JSON_KEY_STORE_NAME, str(gog_json.get("title", "")).strip())
+        self._set_installer_buildid(json_data, gog_json)
+        self._set_product_url(json_data, gog_json)
+        return json_data
+
+    # Set the build id from the first installer for the preferred OS, the default when its version is empty
+    def _set_installer_buildid(self, json_data, gog_json):
         for installer in gog_json.get("downloads", {}).get("installers", []):
-            if installer.get("os") == self.get_preferred_platform():
-                installer_version = installer.get("version", config.default_buildid)
-                if not installer_version:
-                    installer_version = config.default_buildid
-                json_data.set_value(config.json_key_store_buildid, installer_version)
-                break
+            if installer.get("os") != self.get_preferred_platform():
+                continue
+            installer_version = installer.get("version", config.DEFAULT_BUILDID)
+            if not installer_version:
+                installer_version = config.DEFAULT_BUILDID
+            json_data.set_value(config.JSON_KEY_STORE_BUILDID, installer_version)
+            return
+
+    # Set the store page url: the product card when reachable, else the slug's page when that is
+    def _set_product_url(self, json_data, gog_json):
         appurl = gog_json.get("links", {}).get("product_card", "")
         if not network.is_url_reachable(appurl):
             appurl = self.get_latest_url(str(gog_json.get("slug", "")))
         if network.is_url_reachable(appurl):
-            json_data.set_value(config.json_key_store_appurl, appurl)
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            json_data.set_value(config.JSON_KEY_STORE_APPURL, appurl)
 
     ############################################################
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Description, developer, publisher, release date and genres scraped from the game's GOG page, with retries
     def get_latest_metadata(
         self,
         identifier,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del exit_on_failure
+        return self.scrape_latest_metadata(
+            identifier = identifier,
+            scrape_func = lambda web_driver: self._scrape_metadata_page(web_driver, identifier, verbose = verbose),
+            store_label = "GOG",
+            verbose = verbose,
+            pretend_run = pretend_run)
 
-        # Check identifier
-        if not self.is_valid_metadata_identifier(identifier):
-            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
-            return None
+    # Load the game page and read its description and detail rows into a metadata entry
+    def _scrape_metadata_page(self, web_driver, identifier, verbose = False):
 
-        # Store web driver for cleanup
-        web_driver = None
+        # Load url
+        self.load_scrape_page(web_driver, identifier)
+        metadata_entry = metadataentry.MetadataEntry()
 
-        # Cleanup function
-        def cleanup_driver():
-            nonlocal web_driver
-            if web_driver:
-                self.web_disconnect(
-                    web_driver = web_driver,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                web_driver = None
+        # Look for game description
+        game_description = self.wait_for_page_text(web_driver, {"class": "description"}, verbose = verbose)
+        if game_description:
+            metadata_entry.set_description(game_description)
 
-        # Fetch function
-        def attempt_metadata_fetch():
-            nonlocal web_driver
-
-            # Connect to web
-            web_driver = self.web_connect(
-                headless = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if not web_driver:
-                if pretend_run:
-                    return None
-                raise Exception("Failed to connect to web driver")
-
-            # Load url
-            success = webpage.load_url(web_driver, identifier)
-            if not success:
-                raise Exception("Failed to load URL: %s" % identifier)
-
-            # Create metadata entry
-            metadata_entry = metadataentry.MetadataEntry()
-
-            # Look for game description (now with improved error handling in webpage module)
-            element_game_description = webpage.wait_for_element(
-                driver = web_driver,
-                locator = webpage.ElementLocator({"class": "description"}),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if element_game_description:
-                raw_game_description = webpage.get_element_children_text(element_game_description)
-                if raw_game_description:
-                    metadata_entry.set_description(raw_game_description)
-
-            # Look for game details (now with improved error handling in webpage module)
-            elements_details = webpage.get_element(
-                parent = web_driver,
-                locator = webpage.ElementLocator({"class": "details__row"}),
-                all_elements = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if elements_details:
-                for elements_detail in elements_details:
-                    element_detail_text = webpage.get_element_children_text(elements_detail)
-                    if element_detail_text:
-                        element_detail_text = element_detail_text.strip()
-
-                        # Developer/Publisher
-                        if strings.does_string_start_with_substring(element_detail_text, "Company:"):
-                            company_text = strings.trim_substring_from_start(element_detail_text, "Company:").strip()
-                            for index, company_part in enumerate(company_text.split("/")):
-                                if index == 0:
-                                    metadata_entry.set_developer(company_part.strip())
-                                elif index == 1:
-                                    metadata_entry.set_publisher(company_part.strip())
-
-                        # Release
-                        elif strings.does_string_start_with_substring(element_detail_text, "Release date:"):
-                            release_text = strings.trim_substring_from_start(element_detail_text, "Release date:").strip()
-                            release_text = strings.convert_date_string(release_text, "%B %d, %Y", "%Y-%m-%d")
-                            if release_text:
-                                metadata_entry.set_release(release_text)
-
-                        # Genre
-                        elif strings.does_string_start_with_substring(element_detail_text, "Genre:"):
-                            genre_text = strings.trim_substring_from_start(element_detail_text, "Genre:").strip().replace(" - ", ";")
-                            metadata_entry.set_genre(genre_text)
-            return metadata_entry
-
-        # Use retry function with cleanup
-        try:
-            return webpage.retry_scrape(
-                func = attempt_metadata_fetch,
-                cleanup_func = cleanup_driver,
-                verbose = verbose,
-                operation_name = "GOG metadata fetch for '%s'" % identifier)
-        finally:
-
-            # Final cleanup
-            cleanup_driver()
-
-    ############################################################
-    # Assets
-    ############################################################
-
-    # Get latest asset url
-    def get_latest_asset_url(
-        self,
-        identifier,
-        asset_type,
-        game_name = None,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Check identifier
-        if not self.is_valid_asset_identifier(identifier):
-            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
-            return None
-
-        # Latest asset url
-        latest_asset_url = None
-
-        # BoxFront
-        if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = metadataassetcollector.find_metadata_asset(
-                game_platform = self.get_platform(),
-                game_name = game_name if game_name else identifier,
-                asset_type = asset_type,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Video
-        elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webfetch.get_matching_url(
-                url = identifier,
-                base_url = "https://www.youtube.com/embed",
-                starts_with = "https://www.youtube.com/embed",
-                ends_with = "enablejsapi=1",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Return latest asset url
-        return latest_asset_url
+        # Look for game details
+        elements_details = webpage.get_element(
+            parent = web_driver,
+            locator = webpage.ElementLocator({"class": "details__row"}),
+            all_elements = True,
+            verbose = verbose,
+            exit_on_failure = False)
+        for elements_detail in elements_details or []:
+            element_detail_text = webpage.get_element_children_text(elements_detail)
+            if element_detail_text:
+                _read_detail_row(element_detail_text.strip(), metadata_entry)
+        return metadata_entry
 
     ############################################################
     # Install
     ############################################################
 
-    # Get install path
+    # Where the game with this product id installs: its own folder under the store install dir
     def get_install_path(self, identifier):
         return paths.join_paths(self.get_install_dir(), identifier)
 
@@ -666,7 +521,7 @@ class GOG(storebase.StoreBase):
             return False
         return paths.does_directory_contain_files(self.get_install_path(identifier))
 
-    # Install
+    # Install the game into its install path with HeroicGogDL for the preferred OS; True when the tool exits cleanly
     def install(
         self,
         identifier,
@@ -680,25 +535,29 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
-        gogdl_script = None
-        auth_json = None
-        if programs.is_tool_installed("HeroicGogDL"):
-            gogdl_script = programs.get_tool_program("HeroicGogDL")
-            auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
-        if not gogdl_script or not auth_json:
-            logger.log_error("HeroicGogDL was not found")
+        gogdl_script, auth_json = find_gogdl_script()
+        if not gogdl_script:
             return False
 
         # Get install command
-        install_cmd = [
+        install_cmd = self._get_gogdl_install_cmd(python_tool, gogdl_script, auth_json, identifier)
+
+        # Run install command
+        code = command.run_returncode_command(
+            cmd = install_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
+
+    # HeroicGogDL download command for the preferred OS, as gogdl names it, into the game's install path
+    def _get_gogdl_install_cmd(self, python_tool, gogdl_script, auth_json, identifier):
+        return [
             python_tool,
             gogdl_script,
             "--auth-config-path",
@@ -709,19 +568,11 @@ class GOG(storebase.StoreBase):
             "--path", self.get_install_path(identifier)
         ]
 
-        # Run install command
-        code = command.run_returncode_command(
-            cmd = install_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return (code == 0)
-
     ############################################################
     # Download
     ############################################################
 
-    # Download
+    # Fetch installers, extras and DLC with LGOGDownloader, fold DLC extras into extra, and move it all into output_dir
     def download(
         self,
         identifier,
@@ -742,22 +593,29 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get tool
-        gog_tool = None
-        if programs.is_tool_installed("LGOGDownloader"):
-            gog_tool = programs.get_tool_program("LGOGDownloader")
+        gog_tool = programs.find_tool_program("LGOGDownloader")
         if not gog_tool:
-            logger.log_error("LGOGDownloader was not found")
             return False
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
+        # Download into a temporary directory and move it to the output
+        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
 
-        # Get temporary paths
-        tmp_dir_extra = paths.join_paths(tmp_dir_result, "extra")
-        tmp_dir_dlc = paths.join_paths(tmp_dir_result, "dlc")
-        tmp_dir_dlc_extra = paths.join_paths(tmp_dir_dlc, "extra")
+            # Download game files
+            if not self._fetch_lgog_download(gog_tool, identifier, tmp_dir_result, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                return False
+
+            # Move downloaded files
+            if not _move_to_output(tmp_dir_result, output_dir, clean_output = clean_output, show_progress = show_progress, skip_existing = skip_existing, skip_identical = skip_identical,
+                verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                return False
+
+        # Check result
+        return paths.does_directory_contain_files(output_dir)
+
+    # Fetch installers, extras and DLC into download_dir with LGOGDownloader, then fold DLC extras into extra
+    def _fetch_lgog_download(self, gog_tool, identifier, download_dir, verbose = False, pretend_run = False, exit_on_failure = False):
 
         # Get download command
         download_cmd = [
@@ -765,7 +623,7 @@ class GOG(storebase.StoreBase):
             "--download",
             "--game=^%s$" % identifier,
             "--platform=%s" % self.get_preferred_platform(),
-            "--directory=%s" % tmp_dir_result,
+            "--directory=%s" % download_dir,
             "--check-free-space",
             "--threads=1",
             "--subdir-game=.",
@@ -781,64 +639,19 @@ class GOG(storebase.StoreBase):
                 "--exclude=%s" % self.excludes
             ]
 
-        try:
+        # Run download command
+        code = command.run_returncode_command(
+            cmd = download_cmd,
+            options = commandbase.create_command_options(
+                blocking_processes = [gog_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
-            # Run download command
-            code = command.run_returncode_command(
-                cmd = download_cmd,
-                options = command.create_command_options(
-                    blocking_processes = [gog_tool]),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
-                return False
-
-            # Move dlc extra into main extra
-            if paths.does_directory_contain_files(tmp_dir_dlc_extra):
-                filebulk.move_contents(
-                    src = tmp_dir_dlc_extra,
-                    dest = tmp_dir_extra,
-                    skip_existing = True,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                fileops.remove_directory(
-                    src = tmp_dir_dlc_extra,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-
-            # Clean output
-            if clean_output:
-                fileops.remove_directory_contents(
-                    src = output_dir,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-
-            # Move downloaded files
-            success = filebulk.move_contents(
-                src = tmp_dir_result,
-                dest = output_dir,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-
-        # Check result
-        return paths.does_directory_contain_files(output_dir)
+        # Move dlc extra into main extra
+        _merge_dlc_extras(download_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        return True
 
     ############################################################

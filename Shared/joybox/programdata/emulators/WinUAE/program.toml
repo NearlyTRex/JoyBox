@@ -1,0 +1,20 @@
+# WinUAE: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.WinUAE]
+program = { windows = "WinUAE/windows/winuae64.exe", linux = "WinUAE/windows/winuae64.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://www.winuae.net/download"
+webpage_base_url = "https://www.winuae.net"
+starts_with = "https://download.abime.net/winuae/releases/WinUAE"
+ends_with = "x64.zip"
+search_file = "winuae64.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "winuae64.exe"

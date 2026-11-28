@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
-from joybox import config
+from joybox import config, environment, gamecollection, serialization
 from joybox.cli import clean_game_json_files
 
 
@@ -17,7 +17,6 @@ from joybox.cli import clean_game_json_files
 def tool(monkeypatch, isolated_settings, tmp_path):
     harness = CommandHarness(monkeypatch, clean_game_json_files)
     harness.cleaned = []
-    module = clean_game_json_files
     present = tmp_path / "Alpha.json"
     present.write_text("{}")
     harness.present = str(present)
@@ -32,9 +31,9 @@ def tool(monkeypatch, isolated_settings, tmp_path):
             return str(tmp_path / ("%s.json" % game_name))
         return str(tmp_path / "other" / ("%s.json" % game_name))
 
-    monkeypatch.setattr(module.gamecollection, "find_json_game_names", find_names)
-    monkeypatch.setattr(module.environment, "get_game_json_metadata_file", json_file)
-    monkeypatch.setattr(module.serialization, "clean_json_file", lambda **kwargs: harness.cleaned.append(kwargs))
+    monkeypatch.setattr(gamecollection, "find_json_game_names", find_names)
+    monkeypatch.setattr(environment, "get_game_json_metadata_file", json_file)
+    monkeypatch.setattr(serialization, "clean_json_file", lambda **kwargs: harness.cleaned.append(kwargs))
     return harness
 
 

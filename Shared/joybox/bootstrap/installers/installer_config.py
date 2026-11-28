@@ -1,12 +1,11 @@
 # Local imports
-import joybox.bootstrap.constants as constants
 from joybox import default_settings
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
+from . import installer
 
-# Config
+# Writes a default JoyBox.ini to the home settings path when none exists
 class Config(installer.Installer):
     def __init__(
         self,
@@ -26,21 +25,16 @@ class Config(installer.Installer):
             "Tools.Git",
         ]
 
+    # Default ini text for the given sections, the minimal set when none, or every section when full
     def generate_config_content(self, sections=None, full=False):
         target_sections = None if full else (sections if sections else self.minimal_sections)
         return default_settings.generate_default_config_content(sections=target_sections)
 
-    def get_supported_environments(self):
-        return [
-            constants.EnvironmentType.LOCAL_UBUNTU,
-            constants.EnvironmentType.LOCAL_WINDOWS,
-            constants.EnvironmentType.REMOTE_UBUNTU,
-            constants.EnvironmentType.REMOTE_WINDOWS,
-        ]
-
+    # Whether the home JoyBox.ini exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.config_path)
 
+    # Write the minimal default JoyBox.ini, never overwriting one; False when the write fails
     def install(self):
 
         # Start install
@@ -66,6 +60,7 @@ class Config(installer.Installer):
         logger.log_info("Configuration file installation failed")
         return False
 
+    # Write a JoyBox.ini with every default section, never overwriting one; False when the write fails
     def install_full(self):
 
         # Start install
@@ -86,6 +81,7 @@ class Config(installer.Installer):
         logger.log_info("Configuration file installation failed")
         return False
 
+    # Copy JoyBox.ini to JoyBox.ini.backup, then delete it
     def uninstall(self):
 
         # Start uninstall

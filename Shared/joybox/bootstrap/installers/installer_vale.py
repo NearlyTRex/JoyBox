@@ -2,10 +2,10 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Vale, a rule-based prose linter with no model, so deterministic in CI; promptc
 # uses it for the vocabulary and banned-phrase checks behind PC104
@@ -19,14 +19,17 @@ class Vale(installer.Installer):
         self.vale_version = "3.9.1"
         self.vale_binary_path = "/usr/local/bin/vale"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/local/bin/vale exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.vale_binary_path)
 
+    # vale as installed or missing, by /usr/local/bin/vale
     def get_package_status(self):
         installed = []
         missing = []
@@ -36,11 +39,14 @@ class Vale(installer.Installer):
             missing.append("vale")
         return {"installed": installed, "missing": missing}
 
+    # GitHub release URL of the pinned Vale Linux 64-bit tarball
     def get_release_url(self):
         return (
             f"https://github.com/errata-ai/vale/releases/download/"
             f"v{self.vale_version}/vale_{self.vale_version}_Linux_64-bit.tar.gz")
 
+    # Download the pinned release, extract it in /tmp and move the binary into
+    # /usr/local/bin; False when extraction fails or the binary is missing after
     def install(self):
 
         # Start install
@@ -80,6 +86,7 @@ class Vale(installer.Installer):
         logger.log_info("Vale installed successfully")
         return True
 
+    # Delete /usr/local/bin/vale
     def uninstall(self):
 
         # Start uninstall

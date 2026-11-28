@@ -48,7 +48,7 @@ def test_the_store_describes_itself(humble_store):
     assert humble_store.get_supercategory() == config.Supercategory.ROMS
     assert humble_store.get_category() == config.Category.COMPUTER
     assert humble_store.get_subcategory() == config.Subcategory.COMPUTER_HUMBLE_BUNDLE
-    assert humble_store.get_key() == config.json_key_humble
+    assert humble_store.get_key() == config.JSON_KEY_HUMBLE
     assert humble_store.can_import_purchases() and humble_store.can_download_purchases()
 
 
@@ -59,8 +59,8 @@ def test_names_find_assets_and_appnames_find_everything_else(humble_store):
     by_appname = [config.StoreIdentifierType.INFO, config.StoreIdentifierType.INSTALL,
                   config.StoreIdentifierType.LAUNCH, config.StoreIdentifierType.DOWNLOAD,
                   config.StoreIdentifierType.PAGE]
-    assert all(keys[kind] == config.json_key_store_name for kind in by_name)
-    assert all(keys[kind] == config.json_key_store_appname for kind in by_appname)
+    assert all(keys[kind] == config.JSON_KEY_STORE_NAME for kind in by_name)
+    assert all(keys[kind] == config.JSON_KEY_STORE_APPNAME for kind in by_appname)
     assert len(keys) == len(by_name) + len(by_appname)
 
 

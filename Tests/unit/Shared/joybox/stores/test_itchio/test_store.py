@@ -31,7 +31,7 @@ def test_the_store_describes_itself(itchio_store):
     assert itchio_store.get_supercategory() == config.Supercategory.ROMS
     assert itchio_store.get_category() == config.Category.COMPUTER
     assert itchio_store.get_subcategory() == config.Subcategory.COMPUTER_ITCHIO
-    assert itchio_store.get_key() == config.json_key_itchio
+    assert itchio_store.get_key() == config.JSON_KEY_ITCHIO
     assert itchio_store.can_import_purchases() and itchio_store.can_download_purchases()
 
 
@@ -39,7 +39,7 @@ def test_every_identifier_is_the_game_page(itchio_store):
     keys = itchio_store.get_identifier_keys()
 
     assert set(keys) == set(config.StoreIdentifierType.members())
-    assert set(keys.values()) == {config.json_key_store_appurl}
+    assert set(keys.values()) == {config.JSON_KEY_STORE_APPURL}
 
 
 ###########################################################

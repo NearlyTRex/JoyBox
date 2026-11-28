@@ -1,3 +1,6 @@
+# Imports
+import types
+
 # Third-party imports
 import pytest
 
@@ -118,19 +121,14 @@ def test_the_upload_reports_the_sync_result(upload, monkeypatch):
 def every_game(monkeypatch):
     state = {"uploaded": [], "result": True}
 
-    class StubGameInfo:
-        def __init__(self, game_supercategory, game_category, game_subcategory, game_name, **kwargs):
-            self.name = game_name
-
-    def find_json_game_names(game_supercategory, game_category, game_subcategory):
-        return ["Alpha", "Beta"] if game_subcategory == uploading.config.Subcategory.NINTENDO_NES else []
+    def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
+        return iter([types.SimpleNamespace(name = "Alpha"), types.SimpleNamespace(name = "Beta")])
 
     def upload_game_files(game_info, **kwargs):
         state["uploaded"].append(game_info.name)
         return state["result"]
 
-    monkeypatch.setattr(uploading.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(uploading.gamecollection, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(uploading.gamecollection, "iterate_rom_game_infos", iterate_rom_game_infos)
     monkeypatch.setattr(uploading, "upload_game_files", upload_game_files)
     return state
 

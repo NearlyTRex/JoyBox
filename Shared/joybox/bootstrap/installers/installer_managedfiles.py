@@ -2,11 +2,11 @@
 import os
 
 # Local imports
-import joybox.bootstrap as bootstrap
-from . import installer
+from joybox import bootstrap
 from joybox import runoptions
 from joybox import logger
 from joybox import serialization
+from . import installer
 
 # User config files deployed from a folder under Bootstrap
 class ManagedFiles(installer.Installer):
@@ -32,6 +32,7 @@ class ManagedFiles(installer.Installer):
 
     # Contents to deploy for a file, given the text shipped in Bootstrap
     def render(self, name, contents):
+        del name
         return contents
 
     # Destination of a file with the home directory expanded

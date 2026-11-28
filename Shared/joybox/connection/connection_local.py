@@ -11,9 +11,10 @@ from joybox import network, archive
 from joybox import logger, runoptions
 from joybox import systemtools as tools
 from joybox import programs
+from joybox import paths
 from . import connection
-import joybox.paths as paths
 
+# Connection to this machine: commands via subprocess, file operations via the fileops helpers, or system tools under sudo
 class ConnectionLocal(connection.Connection):
     def __init__(
         self,
@@ -32,12 +33,15 @@ class ConnectionLocal(connection.Connection):
             "exit_on_failure": self.flags.exit_on_failure,
         }
 
+    # This machine's user home, from the runtime
     def get_home_directory(self):
         return runtime.get_home_directory()
 
+    # This machine's native separator, so ~ paths resolve with backslashes on Windows
     def get_path_separator(self):
         return os.sep
 
+    # Prefix sudo on Linux only; elsewhere the command is returned unchanged
     def mark_command_as_sudo(self, cmd):
         if platform_info.is_linux_platform():
             return super().mark_command_as_sudo(cmd)
@@ -54,6 +58,7 @@ class ConnectionLocal(connection.Connection):
             cmd = cmdline.create_command_string(cmd, style = "posix")
         return cmd
 
+    # Run via subprocess and return stripped stdout, with stderr merged when the options ask; empty on error
     def run_output(self, cmd, sudo = False):
         try:
             cmd = self._prepare_command(cmd, sudo)
@@ -80,23 +85,20 @@ class ConnectionLocal(connection.Connection):
                         stdout = subprocess.PIPE).stdout
                 return cmdline.clean_command_output(output.strip())
             return ""
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
             return ""
 
+    # Run via subprocess with stdout and stderr sent to the configured streams or files; 1 on error
     def run_return_code(self, cmd, sudo = False):
         try:
             cmd = self._prepare_command(cmd, sudo)
             if not self.flags.pretend_run:
                 with contextlib.ExitStack() as stack:
-                    stdout = self.options.stdout
-                    stderr = self.options.stderr
-                    if paths.is_path_valid(stdout):
-                        stdout = stack.enter_context(open(stdout, "w", encoding = "utf-8"))
-                    if paths.is_path_valid(stderr):
-                        stderr = stack.enter_context(open(stderr, "w", encoding = "utf-8"))
+                    stdout = self._open_output_target(stack, self.options.stdout)
+                    stderr = self._open_output_target(stack, self.options.stderr)
                     return subprocess.call(
                         cmd,
                         shell = self.options.shell,
@@ -106,12 +108,19 @@ class ConnectionLocal(connection.Connection):
                         stdout = stdout,
                         stderr = stderr)
             return 0
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
             return 1
 
+    # A path target opened for writing on the stack; streams and None pass through
+    def _open_output_target(self, stack, target):
+        if paths.is_path_valid(target):
+            return stack.enter_context(open(target, "w", encoding = "utf-8"))
+        return target
+
+    # Run via subprocess, streaming merged stdout and stderr to the log; returns the exit code, 1 on error
     def run_blocking(self, cmd, sudo = False):
         try:
             cmd = self._prepare_command(cmd, sudo)
@@ -128,23 +137,17 @@ class ConnectionLocal(connection.Connection):
                     self.stream_command_output(iter(lambda: process.stdout.read(4096), b""))
                     return process.wait()
             return 0
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
             return 1
 
+    # Same as run_blocking, since a local process already shares the terminal
     def run_interactive(self, cmd, sudo = False):
         return self.run_blocking(cmd, sudo = sudo)
 
-    def run_checked(self, cmd, sudo = False, throw_exception = False):
-        code = self.run_blocking(cmd = cmd, sudo = sudo)
-        if code != 0:
-            if throw_exception:
-                raise ValueError("Unable to run command: %s" % cmd)
-            else:
-                runtime.quit_program(code)
-
+    # Create a local temp directory via fileops; None in a pretend run or on failure
     def make_temporary_directory(self):
         if self.flags.pretend_run:
             return None
@@ -153,6 +156,7 @@ class ConnectionLocal(connection.Connection):
             return self.handle_error("Unable to make temporary directory", temp_dir, return_value = None)
         return temp_dir
 
+    # Whether the local path exists, by os.path.exists
     def does_file_or_directory_exist(self, src):
         try:
             if self.flags.verbose:
@@ -160,42 +164,52 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 return os.path.exists(src)
             return True
-        except Exception as e:
+        except OSError as e:
             return self.handle_error("Error checking existence of %s" % src, e)
 
+    # Copy locally via fileops; under sudo, stage a filtered copy then cp it into place as root
     def transfer_files(self, src, dest, excludes = None, sudo = False):
         excludes = [] if excludes is None else excludes
-        if sudo:
-            try:
-                if self.flags.verbose:
-                    logger.log_info("Transferring files from %s to %s" % (src, dest))
-                if self.flags.skip_existing and os.path.exists(dest):
-                    return True
-                if self.flags.pretend_run:
-                    return True
-                if not os.path.isdir(src):
-                    if self.run_return_code([tools.get_copy_tool(), src, dest], sudo = True) != 0:
-                        return self.handle_error(f"Unable to transfer {src} to {dest}", "copy failed")
-                    return True
-                staged = tempfile.mkdtemp()
-                try:
-                    staged_tree = os.path.join(staged, "tree")
-                    if not fileops.copy_file_or_directory(src, staged_tree, excludes = excludes, **self._io_flags()):
-                        return self.handle_error(f"Unable to stage files from {src}", "copy failed")
-                    for cmd in [[tools.get_make_dir_tool(), "-p", dest], [tools.get_copy_tool(), "-r", staged_tree + "/.", dest]]:
-                        if self.run_return_code(cmd, sudo = True) != 0:
-                            return self.handle_error(f"Unable to transfer files from {src} to {dest}", "copy failed")
-                finally:
-                    fileops.remove_directory(staged)
-                return True
-            except Exception as e:
-                return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
-        return fileops.copy_file_or_directory(
-            src, dest,
-            excludes = excludes,
-            skip_existing = self.flags.skip_existing,
-            **self._io_flags())
+        if not sudo:
+            return fileops.copy_file_or_directory(
+                src, dest,
+                excludes = excludes,
+                skip_existing = self.flags.skip_existing,
+                **self._io_flags())
+        return self._transfer_files_as_root(src, dest, excludes)
 
+    # Copy a file, or stage and copy a tree, into dest as root; existing dest is kept when skipping
+    def _transfer_files_as_root(self, src, dest, excludes):
+        try:
+            if self.flags.verbose:
+                logger.log_info("Transferring files from %s to %s" % (src, dest))
+            if self.flags.skip_existing and os.path.exists(dest):
+                return True
+            if self.flags.pretend_run:
+                return True
+            if not os.path.isdir(src):
+                if self.run_return_code([tools.get_copy_tool(), src, dest], sudo = True) != 0:
+                    return self.handle_error(f"Unable to transfer {src} to {dest}", "copy failed")
+                return True
+            return self._transfer_tree_as_root(src, dest, excludes)
+        except (OSError, ValueError) as e:
+            return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
+
+    # Stage a filtered copy of the tree in a temp directory, then mkdir and cp it into dest as root
+    def _transfer_tree_as_root(self, src, dest, excludes):
+        staged = tempfile.mkdtemp()
+        try:
+            staged_tree = os.path.join(staged, "tree")
+            if not fileops.copy_file_or_directory(src, staged_tree, excludes = excludes, **self._io_flags()):
+                return self.handle_error(f"Unable to stage files from {src}", "copy failed")
+            for cmd in [[tools.get_make_dir_tool(), "-p", dest], [tools.get_copy_tool(), "-r", staged_tree + "/.", dest]]:
+                if self.run_return_code(cmd, sudo = True) != 0:
+                    return self.handle_error(f"Unable to transfer files from {src} to {dest}", "copy failed")
+        finally:
+            fileops.remove_directory(staged)
+        return True
+
+    # Read a local text file via serialization, or by sudo cat when sudo is set
     def read_file(self, src, sudo = False):
         if self.flags.verbose:
             logger.log_info(f"Reading file {src}")
@@ -208,28 +222,35 @@ class ConnectionLocal(connection.Connection):
             return self.handle_error(f"Unable to read file {src}", "read failed", return_value = None)
         return contents
 
+    # Write via fileops; under sudo, write a 644 temp file and cp it into place as root
     def write_file(self, src, contents, sudo = False):
-        if sudo:
-            try:
-                if self.flags.verbose:
-                    logger.log_info(f"Writing file to {src}")
-                if not self.flags.pretend_run:
-                    fd, temp_path = tempfile.mkstemp()
-                    try:
-                        with os.fdopen(fd, "w") as f:
-                            f.write(contents)
-                        code = 1
-                        if fileops.chmod_file_or_directory(temp_path, "644"):
-                            code = self.run_return_code([tools.get_copy_tool(), temp_path, src], sudo = True)
-                    finally:
-                        fileops.remove_file(temp_path)
-                    if code != 0:
-                        return self.handle_error(f"Unable to write file to {src}", "copy failed")
-                return True
-            except Exception as e:
-                return self.handle_error(f"Unable to write file to {src}", e)
-        return fileops.touch_file(src, contents = contents, **self._io_flags())
+        if not sudo:
+            return fileops.touch_file(src, contents = contents, **self._io_flags())
+        try:
+            if self.flags.verbose:
+                logger.log_info(f"Writing file to {src}")
+            if not self.flags.pretend_run:
+                code = self._copy_contents_as_root(src, contents)
+                if code != 0:
+                    return self.handle_error(f"Unable to write file to {src}", "copy failed")
+            return True
+        except (OSError, ValueError) as e:
+            return self.handle_error(f"Unable to write file to {src}", e)
 
+    # Write contents to a 644 temp file and cp it to dest as root; the cp exit code, 1 when chmod fails
+    def _copy_contents_as_root(self, dest, contents):
+        fd, temp_path = tempfile.mkstemp()
+        try:
+            with os.fdopen(fd, "w") as f:
+                f.write(contents)
+            code = 1
+            if fileops.chmod_file_or_directory(temp_path, "644"):
+                code = self.run_return_code([tools.get_copy_tool(), temp_path, dest], sudo = True)
+        finally:
+            fileops.remove_file(temp_path)
+        return code
+
+    # Create the directory and parents via fileops, or by mkdir -p under sudo
     def make_directory(self, src, sudo = False):
         if sudo:
             try:
@@ -238,10 +259,11 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_make_dir_tool(), "-p", src], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to make directory {src}", e)
         return fileops.make_directory(src, **self._io_flags())
 
+    # Delete via fileops, or by rm -rf under sudo
     def remove_file_or_directory(self, src, sudo = False):
         if sudo:
             try:
@@ -250,10 +272,11 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_remove_tool(), "-rf", "--", src], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to remove {src}", e)
         return fileops.remove_file_or_directory(src, **self._io_flags())
 
+    # Copy via fileops, or by cp (recursive for directories) under sudo
     def copy_file_or_directory(self, src, dest, sudo = False):
         if sudo:
             try:
@@ -263,10 +286,11 @@ class ConnectionLocal(connection.Connection):
                     cmd = [tools.get_copy_tool(), "-r", src, dest] if os.path.isdir(src) else [tools.get_copy_tool(), src, dest]
                     self.run_checked(cmd, sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to copy {src} to {dest}", e)
         return fileops.copy_file_or_directory(src, dest, **self._io_flags())
 
+    # Move via fileops, or by mv under sudo
     def move_file_or_directory(self, src, dest, sudo = False):
         if sudo:
             try:
@@ -275,10 +299,11 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_move_tool(), src, dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to move {src} to {dest}", e)
         return fileops.move_file_or_directory(src, dest, **self._io_flags())
 
+    # Symlink via fileops, or by ln -sf under sudo
     def link_file_or_directory(self, src, dest, sudo = False):
         if sudo:
             try:
@@ -287,34 +312,41 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_link_tool(), "-sf", src, dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to link {src} to {dest}", e)
         return fileops.create_symlink(src, dest, **self._io_flags())
 
+    # Download via the network helper; under sudo, fetch to a temp file then move it into place owned by root, mode 644
     def download_file(self, url, dest, sudo = False):
-        if sudo:
-            try:
-                if self.flags.verbose:
-                    logger.log_info(f"Downloading {url} to {dest}")
-                if not self.flags.pretend_run:
-                    fd, temp_path = tempfile.mkstemp()
-                    os.close(fd)
-                    try:
-                        if not network.download_url(url, output_file = temp_path, **self._io_flags()):
-                            return self.handle_error(f"Unable to download {url}", "download failed")
-                        # Leave it as root's curl would: mkstemp's private, user owned file is
-                        # unreadable to apt's sandbox user and writable by the user
-                        if not fileops.chmod_file_or_directory(temp_path, "644"):
-                            return self.handle_error(f"Unable to download {url} to {dest}", "chmod failed")
-                        self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True, throw_exception = True)
-                        self.run_checked([tools.get_change_owner_tool(), "0:0", dest], sudo = True, throw_exception = True)
-                    finally:
-                        fileops.remove_file(temp_path)
-                return True
-            except Exception as e:
-                return self.handle_error(f"Unable to download {url} to {dest}", e)
-        return network.download_url(url, output_file = dest, **self._io_flags())
+        if not sudo:
+            return network.download_url(url, output_file = dest, **self._io_flags())
+        try:
+            if self.flags.verbose:
+                logger.log_info(f"Downloading {url} to {dest}")
+            if not self.flags.pretend_run:
+                return self._download_as_root(url, dest)
+            return True
+        except (OSError, ValueError) as e:
+            return self.handle_error(f"Unable to download {url} to {dest}", e)
 
+    # Fetch to a temp file, then move it into dest owned by root with mode 644
+    def _download_as_root(self, url, dest):
+        fd, temp_path = tempfile.mkstemp()
+        os.close(fd)
+        try:
+            if not network.download_url(url, output_file = temp_path, **self._io_flags()):
+                return self.handle_error(f"Unable to download {url}", "download failed")
+            # Leave it as root's curl would: mkstemp's private, user owned file is
+            # unreadable to apt's sandbox user and writable by the user
+            if not fileops.chmod_file_or_directory(temp_path, "644"):
+                return self.handle_error(f"Unable to download {url} to {dest}", "chmod failed")
+            self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True, throw_exception = True)
+            self.run_checked([tools.get_change_owner_tool(), "0:0", dest], sudo = True, throw_exception = True)
+        finally:
+            fileops.remove_file(temp_path)
+        return True
+
+    # Unpack via the archive helper, or by the Tar tool under sudo
     def extract_tar_archive(self, src, dest, sudo = False):
         if sudo:
             try:
@@ -323,10 +355,11 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to extract {src} to {dest}", e)
         return archive.extract_archive(src, dest, **self._io_flags())
 
+    # Recursive chown on Linux; a no-op returning True on other platforms
     def change_owner(self, src, owner, sudo = False):
         if not platform_info.is_linux_platform():
             return True
@@ -336,9 +369,10 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 self.run_checked([tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo, throw_exception = True)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to change owner of {src}", e)
 
+    # Recursive chmod on Linux; a no-op returning True on other platforms
     def change_permission(self, src, permission, sudo = False):
         if not platform_info.is_linux_platform():
             return True
@@ -348,5 +382,5 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 self.run_checked([tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo, throw_exception = True)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to change permissions of {src}", e)

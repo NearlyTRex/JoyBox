@@ -40,7 +40,7 @@ def test_loopback_and_nginx_site_is_installed(isolated_settings):
 
 def test_nginx_proxies_to_loopback(isolated_settings):
     from joybox.bootstrap.installers import installer_cockpit
-    assert "proxy_pass https://127.0.0.1:" in installer_cockpit.nginx_config_template
+    assert "proxy_pass https://127.0.0.1:" in installer_cockpit.NGINX_CONFIG_TEMPLATE
 
 
 def test_only_remote_ubuntu_is_supported(isolated_settings):
@@ -59,12 +59,13 @@ def test_install_fronts_cockpit_with_nginx(isolated_settings):
     assert "/tmp/cockpit.conf" in connection.removed_paths
 
 
-def test_an_unwritable_site_is_not_installed(isolated_settings, monkeypatch):
+def test_an_unwritable_site_fails_the_install(isolated_settings, monkeypatch):
     cockpit = build([])
     monkeypatch.setattr(cockpit.connection, "write_file", lambda src, contents, sudo = False: False)
 
-    assert cockpit.install()
+    assert cockpit.install() is False
     assert not cockpit.connection.ran("install_conf")
+    assert not cockpit.connection.ran("systemctl restart")
 
 
 def test_uninstall_removes_the_site_then_cockpit(isolated_settings):

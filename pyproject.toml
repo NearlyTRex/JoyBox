@@ -103,7 +103,7 @@ dev = [
     "coverage",
     "pytest",
     "pytest-xdist",
-    "pytest-testrex[shell,lua]>=0.1.7",
+    "pytest-testrex[shell,lua]>=0.1.10",
     "pylint",
 ]
 
@@ -115,7 +115,8 @@ where = ["Shared"]
 include = ["joybox*"]
 
 [tool.setuptools.package-data]
-"joybox.tools" = ["files/**/*"]
+# Each tool's and emulator's program.toml and config-file templates, and each command's help text
+"joybox" = ["programdata/**/*", "clidata/*.toml"]
 
 [tool.coverage.run]
 branch = true
@@ -144,6 +145,8 @@ sealed_programs = [
 pylint_rcfile = "Tests/pylintrc"
 signature_packages = ["joybox"]
 library_targets = ["Shared", "Scripts"]
+# pylint over library_targets: the shared library rcfile with its size and duplication rules on
+pylint_source_rcfile = "Shared/pylintrc"
 # A comment above every public definition, saying more than its name, in at most three lines
 doc_style = "comment"
 doc_max_lines = 3
@@ -152,12 +155,14 @@ command_paths = ["Shared/joybox/cli", "Scripts", "Shared/joybox/runtime.py", "Sh
 standards = [
     "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
     "no-narration", "commented-out-code", "long-functions", "long-modules",
-    "silent-except", "blanket-suppression",
+    "silent-except", "blanket-suppression", "import-cycles",
 ]
 # The helpers carry verbose logging, pretend_run and exit_on_failure, which raw calls skip
 wrapper_modules = [
     "Shared/joybox/fileops.py", "Shared/joybox/serialization.py",
     "Shared/joybox/command.py", "Shared/joybox/commandbase.py",
+    # The runner behind command.py, which prefix setup also calls directly
+    "Shared/joybox/commandrun.py",
     # The local process and file layer behind the connection API
     "Shared/joybox/connection/connection_local.py",
     # Imported by fileops, so it cannot use it
@@ -193,11 +198,11 @@ wrapper_modules = [
 
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
-documented = 801
-doc-paraphrase = 1692
-long-functions = 602
+documented = 0
+doc-paraphrase = 0
+long-functions = 0
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 4721
+pylint-source = 0
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

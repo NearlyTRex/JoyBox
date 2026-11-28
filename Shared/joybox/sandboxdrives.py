@@ -8,11 +8,12 @@ from joybox import config
 from joybox import validation
 from joybox import fileops
 from joybox import paths
-from joybox import sandbox
+from joybox import prefixlayout
+from joybox import chd
 
 ###########################################################
 
-# Find first available real drive path
+# Real path of the first regular drive letter with nothing mounted in the prefix; None when all are taken
 def find_first_available_real_drive_path(options):
 
     # Check params
@@ -22,7 +23,7 @@ def find_first_available_real_drive_path(options):
     for letter in config.drives_regular:
 
         # Get drive path and check if its available
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
         if not paths.does_path_exist(drive_path):
@@ -31,7 +32,7 @@ def find_first_available_real_drive_path(options):
     # Nothing available
     return None
 
-# Find first taken real drive path
+# Real path of the prefix drive whose symlink points at src; None when src is not mounted
 def find_first_taken_real_drive_path(src, options):
 
     # Check params
@@ -42,7 +43,7 @@ def find_first_taken_real_drive_path(src, options):
     for letter in config.drives_regular:
 
         # Get drive path and check if its available
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
         if paths.does_path_exist(drive_path):
@@ -52,7 +53,7 @@ def find_first_taken_real_drive_path(src, options):
     # Nothing found
     return None
 
-# Mount disc image
+# Mount a CHD at mount_dir and link that onto a free prefix drive; unmounts the CHD again if linking fails
 def mount_disc_image(
     src,
     mount_dir,
@@ -60,9 +61,6 @@ def mount_disc_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Imports
-    import joybox.chd as chd
 
     # Check params
     validation.assert_path_exists(src, "src")
@@ -94,7 +92,7 @@ def mount_disc_image(
         return False
     return True
 
-# Unmount disc image
+# Drop the prefix drive link to mount_dir, then unmount the CHD; True only when both succeed
 def unmount_disc_image(
     src,
     mount_dir,
@@ -102,9 +100,6 @@ def unmount_disc_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Imports
-    import joybox.chd as chd
 
     # Check params
     validation.assert_path_exists(src, "src")
@@ -126,7 +121,7 @@ def unmount_disc_image(
         exit_on_failure = exit_on_failure)
     return unmounted_directory and unmounted_disc
 
-# Mount directory
+# Symlink src onto the first free drive letter in the prefix; False when none is free
 def mount_directory(
     src,
     options,
@@ -151,7 +146,7 @@ def mount_directory(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Unmount directory
+# Remove the prefix drive symlink that points at src; False when no drive points there
 def unmount_directory(
     src,
     options,
@@ -175,7 +170,7 @@ def unmount_directory(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Unmount all mounted drives
+# Remove the symlink on every regular drive letter of the prefix; False if any removal fails
 def unmount_all_mounted_drives(
     options,
     verbose = False,
@@ -190,7 +185,7 @@ def unmount_all_mounted_drives(
     for letter in config.drives_regular:
 
         # Get real drive path
-        drive_path = sandbox.get_real_drive_path(
+        drive_path = prefixlayout.get_real_drive_path(
             options = options,
             drive = letter)
 

@@ -38,7 +38,7 @@ def test_the_letter_is_the_uppercased_first_character(name, expected):
 
 @pytest.mark.parametrize("name", ["3D Blast", "007 Goldeneye", "1942"])
 def test_a_leading_digit_uses_the_numeric_folder(name):
-    assert gamenaming.derive_game_letter_from_name(name) == config.general_folder_numeric
+    assert gamenaming.derive_game_letter_from_name(name) == config.GENERAL_FOLDER_NUMERIC
 
 
 def test_an_empty_name_has_no_letter():
@@ -49,7 +49,7 @@ def test_an_empty_name_has_no_letter():
 def test_every_letter_is_one_of_the_expected_folders(name):
     # Names are transliterated to ascii before they reach here, so the folder
     # set stays A-Z plus the numeric one. Anything else is a stray directory.
-    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ") | {config.general_folder_numeric}
+    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ") | {config.GENERAL_FOLDER_NUMERIC}
     letter = gamenaming.derive_game_letter_from_name(paths.replace_invalid_path_characters(name))
 
     assert letter in expected, f"{name!r} derived {letter!r}"
@@ -74,7 +74,7 @@ def test_a_non_letter_platform_uses_the_name_alone():
 def test_a_numeric_name_nests_under_the_numeric_folder():
     derived = gamenaming.derive_game_name_path_from_name("1942", letter_platform())
 
-    assert derived.startswith(config.general_folder_numeric)
+    assert derived.startswith(config.GENERAL_FOLDER_NUMERIC)
 
 
 ###########################################################
@@ -133,9 +133,9 @@ def test_every_platform_derives_a_category(platform):
 
 def test_a_platform_round_trips_through_its_categories():
     platform = letter_platform()
-    _, category, subcategory = gamenaming.derive_game_categories_from_platform(platform)
+    _, _, subcategory = gamenaming.derive_game_categories_from_platform(platform)
 
-    assert gamenaming.derive_game_platform_from_categories(category, subcategory) == platform
+    assert gamenaming.derive_game_platform_from_categories(subcategory) == platform
 
 
 def test_an_unmatched_subcategory_derives_no_platform():
@@ -143,7 +143,7 @@ def test_an_unmatched_subcategory_derives_no_platform():
         def val(self):
             return "No Such Subcategory"
 
-    assert gamenaming.derive_game_platform_from_categories(None, Unmatched()) is None
+    assert gamenaming.derive_game_platform_from_categories(Unmatched()) is None
 
 
 ###########################################################
@@ -264,7 +264,7 @@ def test_a_slug_drops_qualifiers():
 
 
 def test_search_terms_are_url_encoded():
-    terms = gamenaming.derive_game_search_terms_from_name("Chrono Trigger (USA)", None)
+    terms = gamenaming.derive_game_search_terms_from_name("Chrono Trigger (USA)")
 
     assert " " not in terms
     assert "Chrono" in terms

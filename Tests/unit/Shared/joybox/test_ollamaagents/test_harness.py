@@ -187,14 +187,14 @@ def test_aider_keeps_a_variant_window_fixed(harness_command, cache_root):
 
 
 def test_aider_without_a_known_window_gets_no_settings(cache_root):
-    assert ollamaagents.build_aider_args("http://box:11434", "qwen3:8b") == []
+    assert ollamaagents.build_aider_args("qwen3:8b") == []
     assert not (cache_root / "Ollama").exists()
 
 
 def test_unwritable_aider_settings_leave_aider_to_size_it(cache_root, monkeypatch):
     monkeypatch.setattr(ollamaagents.serialization, "write_text_file", lambda src, contents: False)
 
-    assert ollamaagents.build_aider_args("http://box:11434", "m:ctx32k", 32768) == []
+    assert ollamaagents.build_aider_args("m:ctx32k", 32768) == []
 
 
 def test_claude_code_is_told_the_window_built_into_a_variant(harness_command):

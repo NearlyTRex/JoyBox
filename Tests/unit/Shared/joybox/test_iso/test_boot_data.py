@@ -32,7 +32,7 @@ def test_the_block_count_is_taken_from_the_catalogue_not_the_row_number():
     # the line reads the entry number as the length and copies two blocks.
     _, blocks = iso.get_efi_boot_image_extent(BOOT_REPORT)
 
-    assert blocks * iso.iso_block_size == 5271552
+    assert blocks * iso.ISO_BLOCK_SIZE == 5271552
 
 
 def test_a_load_size_is_used_when_no_block_count_is_given():
@@ -174,7 +174,7 @@ SMALL_REPORT = (
 
 @pytest.fixture
 def bootable_image(tmp_path):
-    block = iso.iso_block_size
+    block = iso.ISO_BLOCK_SIZE
     data = bytearray(b"M" * block * EFI_BLOCK)
     data += b"E" * block * EFI_BLOCKS
     data += b"T" * block
@@ -195,9 +195,9 @@ def test_the_boot_data_is_read_out_of_the_image(bootable_image, reported, tmp_pa
     tree.mkdir()
 
     assert iso.extract_iso_boot_images(str(bootable_image), str(tree), verbose = verbose) is True
-    assert (tree / "efi.img").read_bytes() == b"E" * iso.iso_block_size * EFI_BLOCKS
+    assert (tree / "efi.img").read_bytes() == b"E" * iso.ISO_BLOCK_SIZE * EFI_BLOCKS
     mbr = (tree / "mbr.img").read_bytes()
-    assert mbr == b"M" * iso.iso_mbr_sectors * iso.el_torito_sector_size
+    assert mbr == b"M" * iso.ISO_MBR_SECTORS * iso.EL_TORITO_SECTOR_SIZE
 
 
 def test_boot_data_already_extracted_is_kept(installed, recording_command, tmp_path):

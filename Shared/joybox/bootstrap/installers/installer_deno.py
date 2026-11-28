@@ -2,12 +2,12 @@
 import os
 
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
-# Deno
+# Installs Deno into ~/.deno with the official install script
 class Deno(installer.Installer):
     def __init__(
         self,
@@ -18,14 +18,17 @@ class Deno(installer.Installer):
         self.deno_install_dir = os.path.expanduser("~/.deno")
         self.deno_binary_path = os.path.expanduser("~/.deno/bin/deno")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether ~/.deno/bin/deno exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.deno_binary_path)
 
+    # deno as installed or missing, by ~/.deno/bin/deno
     def get_package_status(self):
         installed = []
         missing = []
@@ -35,6 +38,7 @@ class Deno(installer.Installer):
             missing.append("deno")
         return {"installed": installed, "missing": missing}
 
+    # Run deno.land's install.sh, then check the binary landed; False when either fails
     def install(self):
 
         # Start install
@@ -54,6 +58,7 @@ class Deno(installer.Installer):
         logger.log_info("Deno installed successfully")
         return True
 
+    # Delete ~/.deno
     def uninstall(self):
 
         # Start uninstall

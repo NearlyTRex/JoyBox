@@ -23,7 +23,7 @@ def test_a_letter_platform_buckets_by_first_letter():
 
 @letter_platform
 def test_a_console_platform_does_not_bucket():
-    platform = gamenaming.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
+    platform = gamenaming.derive_game_platform_from_categories(SUBCATEGORY)
 
     assert gamenaming.derive_game_name_path_from_name(GAME, platform) == GAME
 

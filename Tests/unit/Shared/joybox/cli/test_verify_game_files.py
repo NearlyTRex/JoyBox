@@ -9,6 +9,10 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
+from joybox import gamecollection
+from joybox import gameinfo
+from joybox import hashing
+from joybox import metadata
 from joybox.cli import verify_game_files
 
 
@@ -46,8 +50,8 @@ class FakeMetadata:
     def import_from_metadata_file(self, metadata_file):
         self.metadata_file = metadata_file
 
-    def verify_files(self):
-        FakeMetadata.verified.append(self.metadata_file)
+    def verify_files(self, verbose = False, exit_on_failure = False):
+        FakeMetadata.verified.append((self.metadata_file, verbose, exit_on_failure))
 
 
 def read_json(path):
@@ -72,10 +76,10 @@ def library(monkeypatch, tmp_path, isolated_settings):
     harness.hashes = hashes_root
     tool_module = verify_game_files
     environment = tool_module.environment
-    monkeypatch.setattr(tool_module.gameinfo, "GameInfo", FakeGameInfo)
-    monkeypatch.setattr(tool_module.metadata, "Metadata", FakeMetadata)
-    monkeypatch.setattr(tool_module.gameinfo, "derive_game_categories_from_file", lambda json_file: SWITCH)
-    monkeypatch.setattr(tool_module.gamecollection, "find_json_game_names",
+    monkeypatch.setattr(gameinfo, "GameInfo", FakeGameInfo)
+    monkeypatch.setattr(metadata, "Metadata", FakeMetadata)
+    monkeypatch.setattr(gameinfo, "derive_game_categories_from_file", lambda json_file: SWITCH)
+    monkeypatch.setattr(gamecollection, "find_json_game_names",
                         lambda supercategory, category, subcategory:
                         sorted(FakeGameInfo.games) if (supercategory, category, subcategory) == SWITCH else [])
     monkeypatch.setattr(environment, "get_game_json_metadata_root_dir", lambda: str(json_root))
@@ -88,7 +92,7 @@ def library(monkeypatch, tmp_path, isolated_settings):
                         lambda category, subcategory: str(metadata_root / (subcategory.val() + ".txt")))
     monkeypatch.setattr(environment, "get_game_hashes_metadata_file",
                         lambda supercategory, category, subcategory: str(hashes_root / (subcategory.val() + ".json")))
-    monkeypatch.setattr(tool_module.hashing, "read_hash_file_json", read_json)
+    monkeypatch.setattr(hashing, "read_hash_file_json", read_json)
 
     def add_game(name, data, stored = ()):
         FakeGameInfo.games[name] = data
@@ -112,7 +116,7 @@ def test_a_consistent_library_passes(library):
     library.run("--no-preview")
 
     assert library.errors == []
-    assert FakeMetadata.verified == [str(library.metadata / "Nintendo Switch.txt")]
+    assert FakeMetadata.verified == [(str(library.metadata / "Nintendo Switch.txt"), False, True)]
 
 
 def test_json_without_a_game_directory_quits(library):
@@ -138,8 +142,8 @@ def test_missing_transform_file_quits(library):
 
 def test_game_whose_json_disappeared_is_skipped(library, monkeypatch):
     library.add_game("Alpha", {"files": ["Alpha.nsp"]}, ["Alpha.nsp"])
-    names = verify_game_files.gamecollection.find_json_game_names
-    monkeypatch.setattr(verify_game_files.gamecollection, "find_json_game_names",
+    names = gamecollection.find_json_game_names
+    monkeypatch.setattr(gamecollection, "find_json_game_names",
                         lambda *args: names(*args) + ["Ghost"] if names(*args) else [])
 
     library.run("--no-preview")

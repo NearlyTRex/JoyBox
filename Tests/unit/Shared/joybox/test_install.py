@@ -76,7 +76,7 @@ def test_an_empty_mount_directory_is_not_mounted(tmp_path):
     mount = tmp_path / "mnt"
     mount.mkdir()
 
-    assert install.is_install_image_mounted(str(tmp_path / "image.7z"), str(mount)) is False
+    assert install.is_install_image_mounted(str(mount)) is False
 
 
 def test_a_populated_mount_directory_is_mounted(tmp_path):
@@ -84,12 +84,12 @@ def test_a_populated_mount_directory_is_mounted(tmp_path):
     mount.mkdir()
     (mount / "game.exe").write_text("content")
 
-    assert install.is_install_image_mounted(str(tmp_path / "image.7z"), str(mount)) is True
+    assert install.is_install_image_mounted(str(mount)) is True
 
 
 def test_a_missing_mount_directory_is_not_mounted(tmp_path):
     assert install.is_install_image_mounted(
-        str(tmp_path / "image.7z"), str(tmp_path / "absent")) is False
+        str(tmp_path / "absent")) is False
 
 
 ###########################################################

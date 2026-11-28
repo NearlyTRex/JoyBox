@@ -4,6 +4,8 @@ import pytest
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
+from joybox import manifest
+from joybox.collection import scanning
 from joybox.cli import scan_game_files
 
 
@@ -38,13 +40,13 @@ def tool(monkeypatch, isolated_settings):
     harness.called = []
     harness.kwargs = {}
     harness.failing = None
-    monkeypatch.setattr(scan_game_files.manifest, "get_manifest_instance", lambda: FakeManifest(harness))
+    monkeypatch.setattr(manifest, "get_manifest_instance", lambda: FakeManifest(harness))
     for name in STEPS:
         def step(name = name, **kwargs):
             harness.called.append(name)
             harness.kwargs[name] = kwargs
             return name != harness.failing
-        monkeypatch.setattr(scan_game_files.collection, name, step)
+        monkeypatch.setattr(scanning, name, step)
     return harness
 
 

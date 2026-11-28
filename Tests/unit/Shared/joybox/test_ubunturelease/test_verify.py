@@ -55,7 +55,7 @@ def test_a_matching_image_verifies(published_checksum, monkeypatch, tmp_path):
     target = tmp_path / "ubuntu.iso"
     target.write_bytes(b"data")
     monkeypatch.setattr(
-        ubunturelease.hashing, "calculate_file_sha256", lambda **kwargs: CHECKSUM)
+        ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: CHECKSUM)
 
     assert ubunturelease.verify_image_checksum(
         str(target), "24.04", image_named("24.04.1")) is True
@@ -65,7 +65,7 @@ def test_a_checksum_comparison_ignores_case(published_checksum, monkeypatch, tmp
     target = tmp_path / "ubuntu.iso"
     target.write_bytes(b"data")
     monkeypatch.setattr(
-        ubunturelease.hashing, "calculate_file_sha256", lambda **kwargs: CHECKSUM.upper())
+        ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: CHECKSUM.upper())
 
     assert ubunturelease.verify_image_checksum(
         str(target), "24.04", image_named("24.04.1")) is True
@@ -75,7 +75,7 @@ def test_an_image_that_does_not_match_is_refused(published_checksum, monkeypatch
     target = tmp_path / "ubuntu.iso"
     target.write_bytes(b"data")
     monkeypatch.setattr(
-        ubunturelease.hashing, "calculate_file_sha256", lambda **kwargs: "0" * 64)
+        ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: "0" * 64)
 
     assert ubunturelease.verify_image_checksum(
         str(target), "24.04", image_named("24.04.1")) is False
@@ -95,7 +95,7 @@ def test_an_unreadable_image_is_refused(published_checksum, monkeypatch, tmp_pat
     target = tmp_path / "ubuntu.iso"
     target.write_bytes(b"data")
     monkeypatch.setattr(
-        ubunturelease.hashing, "calculate_file_sha256", lambda **kwargs: None)
+        ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: None)
 
     assert ubunturelease.verify_image_checksum(
         str(target), "24.04", image_named("24.04.1")) is False
@@ -110,7 +110,7 @@ def test_the_checksums_are_fetched_into_a_directory_that_is_removed(monkeypatch,
 
     monkeypatch.setattr(ubunturelease, "fetch_release_checksums", fetch_release_checksums)
     monkeypatch.setattr(
-        ubunturelease.hashing, "calculate_file_sha256", lambda **kwargs: CHECKSUM)
+        ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: CHECKSUM)
 
     assert ubunturelease.verify_image_checksum(
         str(tmp_path / "ubuntu.iso"), "24.04", image_named("24.04.1")) is True
@@ -147,8 +147,19 @@ def test_a_pretend_run_verifies_without_fetching_anything(monkeypatch, tmp_path)
         raise AssertionError("nothing should be fetched in a pretend run")
 
     monkeypatch.setattr(ubunturelease, "fetch_release_checksums", fail)
-    monkeypatch.setattr(ubunturelease.hashing, "calculate_file_sha256", fail)
+    monkeypatch.setattr(ubunturelease.hashutil, "calculate_file_sha256", fail)
 
     assert ubunturelease.verify_image_checksum(
         str(tmp_path / "ubuntu.iso"), "24.04", image_named("24.04.1"),
         pretend_run = True) is True
+
+
+@pytest.mark.parametrize("actual,expected", [
+    (CHECKSUM.upper(), True),
+    ("0" * 64, False),
+    (None, False),
+])
+def test_a_file_is_checked_against_its_checksum(monkeypatch, actual, expected):
+    monkeypatch.setattr(ubunturelease.hashutil, "calculate_file_sha256", lambda **kwargs: actual)
+
+    assert ubunturelease.does_file_match_checksum("/images/ubuntu.iso", CHECKSUM.lower()) is expected

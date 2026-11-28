@@ -114,7 +114,7 @@ def steps(monkeypatch):
     recorder = Recorder()
     for name in [
         "install_store_game", "install_local_game",
-        "import_store_game_save", "export_store_game_save",
+        "export_store_game_save",
         "import_local_game_save", "export_local_game_save"]:
         monkeypatch.setattr(launching, name, recorder.step(name))
     monkeypatch.setattr(launching, "fileops", types.SimpleNamespace(**{
@@ -138,7 +138,7 @@ def store(monkeypatch):
 @pytest.fixture
 def launcher(monkeypatch):
     fake = FakeLauncher()
-    monkeypatch.setattr(launching, "programs", types.SimpleNamespace(
+    monkeypatch.setattr(launching, "emulators", types.SimpleNamespace(
         get_emulator_by_platform = lambda platform: fake))
     return fake
 
@@ -151,14 +151,13 @@ def test_a_store_game_is_installed_restored_launched_and_saved(steps, store):
     game = FakeGameInfo(platform = "Steam")
 
     assert launching.launch_store_game(game, locker_type = config.LockerType.HETZNER) is True
-    assert steps.names() == ["install_store_game", "import_store_game_save", "export_store_game_save"]
+    assert steps.names() == ["install_store_game", "export_store_game_save"]
     assert store.launches[0][0] == "1145360"
 
 
 def test_a_store_save_is_exported_to_the_launch_locker(steps, store):
     launching.launch_store_game(FakeGameInfo(platform = "Steam"), locker_type = config.LockerType.HETZNER)
 
-    assert steps.kwargs("install_store_game")["locker_type"] == config.LockerType.HETZNER
     assert steps.kwargs("export_store_game_save")["locker_type"] == config.LockerType.HETZNER
 
 
@@ -191,13 +190,6 @@ def test_a_store_game_without_a_store_is_not_launched(steps, store):
 
 def test_a_store_that_cannot_launch_is_not_asked_to(steps, store):
     store.handles_launching = False
-
-    assert launching.launch_store_game(FakeGameInfo(platform = "Steam")) is False
-    assert store.launches == []
-
-
-def test_a_failed_store_save_import_stops_the_launch(steps, store):
-    steps.results["import_store_game_save"] = False
 
     assert launching.launch_store_game(FakeGameInfo(platform = "Steam")) is False
     assert store.launches == []
@@ -271,11 +263,11 @@ def test_the_launcher_config_is_filled_in_and_reverted(steps, store, launcher, t
     filled, reverted = [kwargs["replacements"] for name, kwargs in steps.calls
                         if name == "replace_strings_in_file"]
     assert filled == [
-        {"from": config.token_emulator_setup_root, "to": "/setup"},
-        {"from": config.token_game_save_dir, "to": "/cache/saves/game"}]
+        {"from": config.TOKEN_EMULATOR_SETUP_ROOT, "to": "/setup"},
+        {"from": config.TOKEN_GAME_SAVE_DIR, "to": "/cache/saves/game"}]
     assert reverted == [
-        {"from": "/setup", "to": config.token_emulator_setup_root},
-        {"from": "/cache/saves/game", "to": config.token_game_save_dir}]
+        {"from": "/setup", "to": config.TOKEN_EMULATOR_SETUP_ROOT},
+        {"from": "/cache/saves/game", "to": config.TOKEN_GAME_SAVE_DIR}]
 
 
 def test_a_launcher_without_a_config_or_save_dir_is_left_alone(steps, store, launcher):
@@ -301,7 +293,7 @@ def test_a_failed_local_install_stops_the_launch(steps, store, launcher):
 
 
 def test_a_platform_without_a_launcher_is_reported(steps, store, monkeypatch):
-    monkeypatch.setattr(launching, "programs", types.SimpleNamespace(
+    monkeypatch.setattr(launching, "emulators", types.SimpleNamespace(
         get_emulator_by_platform = lambda platform: None))
 
     assert launching.launch_local_game(FakeGameInfo()) is False
@@ -321,6 +313,19 @@ def test_a_failed_save_dir_link_stops_the_launch(steps, store, launcher, tmp_pat
 
     assert launching.launch_local_game(FakeGameInfo()) is False
     assert launcher.launches == []
+
+
+def test_a_failed_local_launch_still_reverts_the_launcher(steps, store, launcher, tmp_path):
+    config_file = tmp_path / "emulator.cfg"
+    config_file.write_text("setting")
+    launcher.config_file = str(config_file)
+    launcher.save_dir = str(tmp_path / "saves")
+    launcher.result = False
+
+    assert launching.launch_local_game(FakeGameInfo()) is False
+    assert steps.names().count("replace_strings_in_file") == 2
+    assert steps.kwargs("remove_object")["obj"] == launcher.save_dir
+    assert steps.kwargs("make_directory")["src"] == launcher.save_dir
 
 
 def test_a_failed_local_launch_exports_nothing(steps, store, launcher):
@@ -345,6 +350,26 @@ def test_a_local_launch_reports_the_export_result(steps, store, launcher):
     assert launching.launch_local_game(FakeGameInfo()) is False
 
 
+def test_a_launcher_setup_is_applied_and_reverted_on_its_own(steps, tmp_path):
+    config_file = tmp_path / "emulator.cfg"
+    config_file.write_text("setting")
+    launcher = FakeLauncher(config_file = str(config_file), save_dir = str(tmp_path / "saves"))
+    game = FakeGameInfo(save_dir = "/cache/saves/game")
+
+    assert launching.apply_launcher_setup(game, launcher) is True
+    assert launching.revert_launcher_setup(game, launcher) is True
+    assert steps.names() == [
+        "create_symlink", "replace_strings_in_file", "replace_strings_in_file", "remove_object", "make_directory"]
+
+
+def test_a_failed_launcher_setup_stops_before_the_config(steps, tmp_path):
+    steps.results["create_symlink"] = False
+    launcher = FakeLauncher(save_dir = str(tmp_path / "saves"))
+
+    assert launching.apply_launcher_setup(FakeGameInfo(), launcher) is False
+    assert steps.names() == ["create_symlink"]
+
+
 ###########################################################
 # Choosing the launch path
 ###########################################################
@@ -363,3 +388,26 @@ def test_other_platforms_launch_through_their_emulator(steps, store, launcher):
     assert steps.kwargs("export_local_game_save")["locker_type"] == config.LockerType.LOCAL
     assert launcher.launches[0]["capture_type"] == config.CaptureType.SCREENSHOT
     assert store.launches == []
+
+
+###########################################################
+# Choosing a random game
+###########################################################
+
+def test_a_random_subcategory_has_a_launcher():
+    chosen = {launching.choose_random_launchable_subcategory(config.Category.NINTENDO) for _ in range(20)}
+
+    assert chosen <= set(config.subcategory_map[config.Category.NINTENDO])
+    assert config.Subcategory.NINTENDO_AMIIBO not in chosen
+
+
+def test_a_category_without_launchers_has_no_random_subcategory(monkeypatch):
+    monkeypatch.setattr(launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert launching.choose_random_launchable_subcategory(config.Category.NINTENDO) is None
+
+
+def test_a_category_with_nothing_launchable_chooses_no_game(monkeypatch, quiet):
+    monkeypatch.setattr(launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert launching.choose_random_game_json_file(config.Category.NINTENDO) is None

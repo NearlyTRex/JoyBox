@@ -247,3 +247,11 @@ def test_a_failed_download_stops_the_run(diff_dir, transfers, monkeypatch):
     write_diff(diff_dir, "diff_missing_src.txt", "onlyremote.zip")
 
     assert run_diff_sync(diff_dir) is False
+
+
+def test_the_diff_lists_can_be_given_other_names(diff_dir, transfers):
+    write_diff(diff_dir, "dest_only.txt", "new.zip")
+
+    assert run_diff_sync(diff_dir, diff_file_names = ("all.txt", "both.txt", "src_only.txt", "dest_only.txt")) is True
+    assert transfers["upload"]
+    assert transfers["download"] == []

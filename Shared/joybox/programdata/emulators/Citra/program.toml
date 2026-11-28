@@ -1,0 +1,64 @@
+# Citra: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["NINTENDO_3DS", "NINTENDO_3DS_APPS", "NINTENDO_3DS_ESHOP"]
+
+[config.Citra]
+program = { windows = "Citra/windows/citra-qt.exe", linux = "Citra/linux/citra-qt.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Citra.save_dir]
+windows = "Citra/windows/user/sdmc/Nintendo 3DS/00000000000000000000000000000000/00000000000000000000000000000000/title/00040000"
+linux = "Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/sdmc/Nintendo 3DS/00000000000000000000000000000000/00000000000000000000000000000000/title/00040000"
+
+[config.Citra.setup_dir]
+windows = "Citra/windows/user"
+linux = "Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu"
+
+[config.Citra.config_file]
+windows = "Citra/windows/user/config/qt-config.ini"
+linux = "Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"
+
+[[config_files]]
+path = "Citra/windows/user/config/qt-config.ini"
+template = "qt-config.ini"
+
+[[config_files]]
+path = "Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"
+template = "qt-config.ini"
+
+[[system_files]]
+path = "nand.zip"
+md5 = "7c9baaa35b620bbd2b18b4620e2831e1"
+
+[[system_files]]
+path = "sysdata.zip"
+md5 = "dcfa1fbaf7845c735b2c7d1ec9df2ed7"
+
+[[setup]]
+kind = "stored_release"
+platform = "windows"
+search_file = "citra-qt.exe"
+skip_if_missing = true
+
+[[setup]]
+kind = "stored_release"
+platform = "linux"
+search_file = "citra-qt.AppImage"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "citra-qt.exe"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "citra-qt.AppImage"
+skip_if_missing = true
+
+[launch]
+args = ["{game_file}"]

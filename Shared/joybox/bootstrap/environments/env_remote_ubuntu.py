@@ -1,10 +1,9 @@
 # Local imports
-import joybox.bootstrap.constants as constants
+from joybox.bootstrap import constants
 from joybox import connection
-import joybox.bootstrap.installers as installers
-from . import env
+from joybox.bootstrap import installers
 from joybox import runoptions
-from joybox import logger
+from . import env
 
 # Remote Ubuntu
 class RemoteUbuntu(env.Environment):
@@ -40,6 +39,10 @@ class RemoteUbuntu(env.Environment):
         }
 
         # Create components
+        self._create_components()
+
+    # Build every server component's installer over this environment's connection
+    def _create_components(self):
         self.available_components = {
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
@@ -58,55 +61,26 @@ class RemoteUbuntu(env.Environment):
             "oscar": installers.Oscar(**self.installer_options)
         }
 
-        # Get individual installers
-        self.installer_config = self.available_components["config"]
-        self.installer_dotfiles = self.available_components["dotfiles"]
-        self.installer_aptget = self.available_components["aptget"]
-        self.installer_audiobookshelf = self.available_components["audiobookshelf"]
-        self.installer_flatpak = self.available_components["flatpak"]
-        self.installer_nginx = self.available_components["nginx"]
-        self.installer_certbot = self.available_components["certbot"]
-        self.installer_cockpit = self.available_components["cockpit"]
-        self.installer_wordpress = self.available_components["wordpress"]
-        self.installer_filebrowser = self.available_components["filebrowser"]
-        self.installer_fitlog = self.available_components["fitlog"]
-        self.installer_jenkins = self.available_components["jenkins"]
-        self.installer_navidrome = self.available_components["navidrome"]
-        self.installer_kanboard = self.available_components["kanboard"]
-        self.installer_oscar = self.available_components["oscar"]
-
+    # The sorted port strings the components serve through nginx
     def get_public_ports(self):
         ports = set()
         for component in self.available_components.values():
             ports.update(str(port) for port in getattr(component, "nginx_ports", []))
         return sorted(ports)
 
+    # Refresh apt lists, install the selected server components stopping at the
+    # first failure, then autoremove when asked
     def setup(self):
         self.connect()
-
-        # Update package lists
-        if self.should_process_component("aptget"):
-            logger.log_info("Updating package lists for AptGet")
-            self.installer_aptget.update_package_lists()
+        self.refresh_package_lists()
 
         # Process all components
         success = self.process_components("install", force=self.flags.force)
+        return self.finish_with_autoremove(success)
 
-        # Autoremove packages (opt-in: --autoremove, off by default)
-        if self.flags.autoremove and self.should_process_component("aptget") and success:
-            logger.log_info("Auto-removing unused packages")
-            if not self.installer_aptget.auto_remove_packages():
-                return False
-        return success
-
+    # Uninstall the selected components in reverse order, then autoremove when asked
     def teardown(self):
 
         # Process components in reverse order
         success = self.process_components("uninstall", reverse_order=True, force=self.flags.force)
-
-        # Autoremove packages (opt-in: --autoremove, off by default)
-        if self.flags.autoremove and self.should_process_component("aptget") and success:
-            logger.log_info("Auto-removing unused packages")
-            if not self.installer_aptget.auto_remove_packages():
-                return False
-        return success
+        return self.finish_with_autoremove(success)

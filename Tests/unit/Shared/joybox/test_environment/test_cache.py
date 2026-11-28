@@ -24,6 +24,13 @@ def test_each_cache_area_has_its_own_root(roots, accessor, supercategory):
     assert parts(getattr(environment, accessor)())[-1] == str(supercategory)
 
 
+def test_a_game_cache_dir_sits_under_its_supercategory_root(roots):
+    built = environment.get_cache_gaming_game_dir(config.Supercategory.ROMS, CATEGORY, SUBCATEGORY, GAME)
+
+    assert built == environment.get_cache_gaming_rom_dir(CATEGORY, SUBCATEGORY, GAME)
+    assert built.startswith(environment.get_cache_gaming_roms_root_dir())
+
+
 def test_the_cache_areas_are_all_distinct(roots):
     built = [environment.get_cache_gaming_rom_dir(CATEGORY, SUBCATEGORY, GAME),
              environment.get_cache_gaming_install_dir(CATEGORY, SUBCATEGORY, GAME),

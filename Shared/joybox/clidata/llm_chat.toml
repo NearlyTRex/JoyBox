@@ -1,0 +1,48 @@
+# Help text for the llm_chat command, read by joybox/arguments.py
+
+description = "Interactive chat with a local or cloud LLM, seeded with a prompt and files."
+details = """
+Opens a chat in the terminal against one of three backends: `ollama` (the native
+Ollama chat route, at `[Tools.Ollama] ollama_api_base` in `~/JoyBox.ini` unless
+`--endpoint` is given), `openai` (any OpenAI-compatible server such as llama.cpp's,
+`http://localhost:8080` unless `--endpoint` is given), or `claude` (the Anthropic API,
+using the key at `[UserData.Anthropic] anthropic_api_key`). Replies stream as they
+arrive, except with `claude`, which returns each reply whole.
+
+The conversation can be seeded before the first question: a system prompt from
+`--system_file` and `--system`, whole files with `--attach`, and outlines with
+`--outline`. An outline is a map of a file's structure without its body (functions,
+labels, headings or keys, depending on the file type), which keeps a large corpus
+within the context window. `--list_chunkers` shows which file types get a structural
+outline; anything else is outlined by line.
+
+With `--ask`, or with a question piped on standard input, it answers once and exits.
+Otherwise it reads questions interactively. Commands in the chat: `/model [name]`
+switches or lists models, `/attach <file>` and `/outline <file>` add a file,
+`/read <file> [N-M]` adds a line range, `/region <file> <name>` adds one named region
+and `/regions <file>` lists them, `/reset` clears everything but the seed,
+`/save [file]` writes the transcript (`transcript.md` by default), `/tokens` shows
+context use, `/help` lists the commands and `/quit` leaves."""
+section = "AI"
+see_also = [
+    "ollama_tool",
+    "claude_tool",
+    "decompiler_tool",
+]
+notes = [
+    "If the system prompt and attached files plus `--max_tokens` do not fit the context window, it refuses to start rather than let the server truncate silently. Use `--outline` for the large files or raise `--num_ctx`.",
+    "Token counts are estimates (about 3.6 characters per token).",
+    "With `ollama` or `openai`, the model must be one the server lists. With `claude` any model id is accepted and no window check is made.",
+    "`--api_key` defaults to the `LLM_CHAT_API_KEY` environment variable.",
+    "`-o` is `--outline` here, not an output path.",
+]
+examples = [
+    ["Chat with the first model the local Ollama server offers", "llm_chat"],
+    ["Code with the best coding model the Ollama server can hold", "llm_chat --code -a main.py"],
+    ["Ask one question about a file and exit", "llm_chat -m qwen2.5-coder:7b -a main.c --ask \"What does parse_header do?\""],
+    ["Seed a system prompt, one whole file and the outline of a large one", "llm_chat --system_file review.md -a player.cpp -o game.asm"],
+    ["Answer a question piped in on standard input", "llm_chat -a notes.md < question.txt"],
+    ["Use a llama.cpp server, checking the seed against its 32K window", "llm_chat -b openai -e http://localhost:8080 --num_ctx 32768 -o engine.c"],
+    ["Chat with Claude", "llm_chat -b claude -m claude-sonnet-4-20250514"],
+    ["Show which file types get a structural outline", "llm_chat --list_chunkers"],
+]

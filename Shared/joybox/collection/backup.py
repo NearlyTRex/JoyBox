@@ -1,9 +1,7 @@
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
-import joybox.gameinfo as gameinfo
+from joybox import fileops
 from joybox import gamecollection
-import joybox.stores as stores
+from joybox import stores
 from .purchase import download_game_store_purchase
 from .uploading import upload_game_files
 
@@ -41,7 +39,7 @@ def should_backup_store_game_files(
     # Check versions
     return latest_version != store_buildid
 
-# Backup store game files
+# Download the store's latest build into a temp dir and upload it to the locker; True without work when the stored build is current
 def backup_store_game_files(
     game_info,
     locker_type,
@@ -58,55 +56,25 @@ def backup_store_game_files(
     if not should_backup:
         return True
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-    if not tmp_dir_success:
-        return False
-
-    # Download files
-    success = download_game_store_purchase(
-        game_info = game_info,
-        output_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Upload files
-    if success:
-        success = upload_game_files(
+    # Download the files into a temporary directory and upload them from there
+    with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
+        success = download_game_store_purchase(
+            game_info = game_info,
+            output_dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        return bool(upload_game_files(
             game_info = game_info,
             game_root = tmp_dir_result,
             locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return bool(success)
-
-###########################################################
-
-# Determine if local game files should be backed up
-def should_backup_local_game_files(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return False
-
-# Backup local game files
-def backup_local_game_files(
-    game_info,
-    locker_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return True
+            exit_on_failure = exit_on_failure))
 
 ###########################################################
 
@@ -122,14 +90,10 @@ def should_backup_game_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return should_backup_local_game_files(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # A local game's copy is the master, with no upstream to fetch it again from
+    return False
 
-# Backup game files
+# Back up a store game's latest build; local games are the master copy, so they pass with nothing done
 def backup_game_files(
     game_info,
     locker_type,
@@ -143,46 +107,37 @@ def backup_game_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return backup_local_game_files(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # A local game's copy is the master, with no upstream to fetch it again from
+    return True
 
-# Backup all game files
+# Back up every ROM game in the collection; stops at the first failure
 def backup_all_game_files(
     locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = backup_game_files(
-                        game_info = game_info,
-                        locker_type = locker_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
-    return True
+    return gamecollection.run_on_all_rom_games(
+        backup_game_files,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
+
+# Back up each game's latest store build to the locker; quits at the first failure
+def backup_game_infos(
+    game_infos,
+    locker_type,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    for game_info in game_infos:
+        success = backup_game_files(
+            game_info = game_info,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            gamecollection.log_game_error_and_quit(game_info, "Backup of game files failed!")

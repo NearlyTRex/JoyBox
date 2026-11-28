@@ -1,0 +1,98 @@
+# Yuzu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["NINTENDO_SWITCH", "NINTENDO_SWITCH_ESHOP"]
+
+[config.Yuzu]
+program = { windows = "Yuzu/windows/yuzu.exe", linux = "Yuzu/linux/Yuzu.AppImage" }
+setup_dir = { windows = "Yuzu/windows/user", linux = "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu" }
+profile_user_id = "{switch_profile_user_id}"
+profile_account_name = "{switch_profile_account_name}"
+run_sandboxed = { windows = false, linux = false }
+
+[config.Yuzu.save_dir]
+windows = "Yuzu/windows/user/nand/user/save/0000000000000000/{switch_profile_user_id}"
+linux = "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/user/save/0000000000000000/{switch_profile_user_id}"
+
+[config.Yuzu.config_file]
+windows = "Yuzu/windows/user/config/qt-config.ini"
+linux = "Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"
+
+[config.Yuzu.profiles_file]
+windows = "Yuzu/windows/user/nand/system/save/8000000000000010/su/avators/profiles.dat"
+linux = "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/system/save/8000000000000010/su/avators/profiles.dat"
+
+[[config_files]]
+path = "Yuzu/windows/user/config/qt-config.ini"
+template = "qt-config.ini"
+
+[[config_files]]
+path = "Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"
+template = "qt-config.ini"
+
+[[system_files]]
+path = "sysdata/fuses.bin"
+md5 = "15437331fa1cf96fdeb61f39230a9526"
+
+[[system_files]]
+path = "sysdata/BOOT0"
+md5 = "cf9fb34f7702b26aa73be5acf96ee9c6"
+
+[[system_files]]
+path = "sysdata/BCPKG2-1-Normal-Main.bin"
+md5 = "216f85fc652a56391c11f08bd4f79d4b"
+
+[[system_files]]
+path = "sysdata/pkg1_decr.bin"
+md5 = "396fc1f6445e86b75dd521cba1d94d52"
+
+[[system_files]]
+path = "sysdata/PRODINFO.bin"
+md5 = "13ce15ab30e7c2d4ddf3eff40fb31d82"
+
+[[system_files]]
+path = "sysdata/secmon.bin"
+md5 = "45bc865a44a01358c137cda7c6009e21"
+
+[[system_files]]
+path = "keys/console.keys"
+md5 = "67b5b410da0a9bdcb37f92bd32a4c63d"
+
+[[system_files]]
+path = "keys/title.keys"
+md5 = "b5890c3d737880f6dd3751ffec5b128b"
+
+[[system_files]]
+path = "keys/prod.keys"
+md5 = "4ed853d4a52e6b9b9e11954f155ecb8a"
+
+[[setup]]
+kind = "stored_release"
+platform = "windows"
+preferred_archive = "Windows-Yuzu-EA-4176"
+search_file = "yuzu.exe"
+skip_if_missing = true
+
+[[setup]]
+kind = "stored_release"
+platform = "linux"
+preferred_archive = "Linux-Yuzu-EA-4176"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+preferred_archive = "Windows-Yuzu-EA-4176"
+search_file = "yuzu.exe"
+skip_if_missing = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+preferred_archive = "Linux-Yuzu-EA-4176"
+skip_if_missing = true
+
+[launch]
+args = ["-g", "{game_file}"]
+fullscreen_args = ["-f"]

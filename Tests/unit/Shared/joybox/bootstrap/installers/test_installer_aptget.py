@@ -5,7 +5,6 @@ import pytest
 import joybox.bootstrap.installers as installers
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages
-from joybox.bootstrap.installers import installer_aptget
 from joybox import settings
 from fakes import RecordingConnection
 
@@ -18,27 +17,6 @@ def build(packages = None, return_codes = None, command_output = None):
     aptget = installers.AptGet(connection)
     aptget.get_packages = lambda: list(packages or [])
     return aptget, connection
-
-
-###########################################################
-# Package descriptors
-###########################################################
-
-def test_string_package_is_its_own_id_and_name():
-    assert installer_aptget.get_aptget_package_id("vim") == "vim"
-    assert installer_aptget.get_aptget_package_info("vim") == {
-        "id": "vim", "name": "vim", "description": "", "category": ""}
-
-
-def test_dict_package_fields():
-    pkg = {"id": "vim", "name": "Vim", "description": "editor", "category": "dev"}
-    assert installer_aptget.get_aptget_package_id(pkg) == "vim"
-    assert installer_aptget.get_aptget_package_info(pkg) == pkg
-
-
-def test_dict_package_name_defaults_to_id():
-    assert installer_aptget.get_aptget_package_id({}) == ""
-    assert installer_aptget.get_aptget_package_info({"id": "vim"})["name"] == "vim"
 
 
 def test_supported_environments_are_ubuntu(isolated_settings):

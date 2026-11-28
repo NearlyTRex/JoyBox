@@ -1,55 +1,29 @@
 # Imports
-import joybox.system as system
-import joybox.environment as environment
-import joybox.collection as collection
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.prompts as prompts
+from joybox import system
+from joybox import environment
+from joybox import collection
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Rewrite every game hash file with its entries in sorted order.",
-        details = (
-            "Reads each per-subcategory hash file under `Hashes/` in the game metadata repository\n"
-            "and writes it back with entries sorted by path and keys sorted within each entry, so\n"
-            "the files stay stable under version control.\n"
-            "\n"
-            "Reading a file also adds any missing encrypted-field keys (`filename_enc`, `hash_enc`,\n"
-            "`size_enc`), and entries with the same directory and file name collapse into one."),
-        examples = [
-            ("Sort every hash file", "clean_game_hash_files"),
-            ("Sort without the confirmation prompt", "clean_game_hash_files --no-preview"),
-            ("Show which files would be sorted", "clean_game_hash_files -p -v"),
-        ],
-        notes = [
-            "There are no selection options; every hash file for every supercategory is processed.",
-        ],
-        see_also = ["build_game_hash_files", "verify_game_files", "clean_game_json_files", "clean_game_metadata_files"],
-        section = "Game Collection")
+    parser = arguments.ArgumentParser(command = "clean_game_hash_files")
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite every game hash file with its entries sorted
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Show preview
-    if not args.no_preview:
-        details = [environment.get_game_hashes_metadata_root_dir()]
-        if not prompts.prompt_for_preview("Clean game hash files (sort entries)", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = [environment.get_game_hashes_metadata_root_dir()]
+    if not prompts.confirm_preview(args.no_preview, "Clean game hash files (sort entries)", details):
+        return
 
     # Sort hash files
     success = collection.sort_all_hash_files(

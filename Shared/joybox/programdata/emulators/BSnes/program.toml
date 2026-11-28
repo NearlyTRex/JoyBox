@@ -1,0 +1,20 @@
+# BSnes: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BSnes]
+program = { windows = "BSnes/windows/bsnes.exe", linux = "BSnes/windows/bsnes.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "bsnes-emu"
+github_repo = "bsnes"
+starts_with = "bsnes-windows"
+ends_with = ".zip"
+search_file = "bsnes.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "bsnes.exe"

@@ -8,6 +8,7 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import storebase
 from joybox.stores import itchio
 from itchio_helpers import FakeElement, GAME_URL, game_cell
 
@@ -19,9 +20,9 @@ def cache_file(tmp_path):
 
 def summary(purchases):
     return [(
-        purchase.get_value(config.json_key_store_appid),
-        purchase.get_value(config.json_key_store_appurl),
-        purchase.get_value(config.json_key_store_name)) for purchase in purchases]
+        purchase.get_value(config.JSON_KEY_STORE_APPID),
+        purchase.get_value(config.JSON_KEY_STORE_APPURL),
+        purchase.get_value(config.JSON_KEY_STORE_NAME)) for purchase in purchases]
 
 
 def write_cache(cache_file, data, hours_old = 0):
@@ -71,6 +72,18 @@ def test_the_page_is_scrolled_until_everything_has_loaded(itchio_store, browser)
     itchio_store.get_latest_purchases()
 
     assert browser.scrolls == 3
+
+
+def test_a_page_that_never_finishes_loading_gives_up_and_caches_nothing(itchio_store, browser, cache_file, monkeypatch):
+    clock = iter(range(0, 10 * itchio.PURCHASES_LOAD_TIMEOUT_SECONDS, 60))
+    monkeypatch.setattr(itchio.time, "monotonic", lambda: next(clock))
+    browser.add(game_cell())
+    browser.add_loader(scrolls = 10 ** 9)
+
+    assert itchio_store.get_latest_purchases() is None
+    assert browser.scrolls == itchio.PURCHASES_LOAD_TIMEOUT_SECONDS // 60 + 1
+    assert browser.disconnected == [browser.page]
+    assert not cache_file.exists()
 
 
 def test_a_purchase_whose_cover_has_not_loaded_still_counts(itchio_store, browser):
@@ -142,22 +155,22 @@ def test_purchases_are_cached_for_a_day(itchio_store, browser, cache_file, verbo
     again = itchio_store.get_latest_purchases(verbose = verbose)
 
     assert json.loads(cache_file.read_text()) == [{
-        config.json_key_store_appid: "1234",
-        config.json_key_store_appurl: GAME_URL,
-        config.json_key_store_name: "Cool Game"}]
+        config.JSON_KEY_STORE_APPID: "1234",
+        config.JSON_KEY_STORE_APPURL: GAME_URL,
+        config.JSON_KEY_STORE_NAME: "Cool Game"}]
     assert len(browser.connects) == 1
     assert summary(again) == [("1234", GAME_URL, "Cool Game")]
     assert again[0].get_platform() == config.Platform.COMPUTER_ITCHIO
 
 
 def test_a_day_old_cache_is_refreshed(itchio_store, browser, cache_file):
-    write_cache(cache_file, [{config.json_key_store_appid: "1", config.json_key_store_appurl: "old", config.json_key_store_name: "Old"}], hours_old = 25)
+    write_cache(cache_file, [{config.JSON_KEY_STORE_APPID: "1", config.JSON_KEY_STORE_APPURL: "old", config.JSON_KEY_STORE_NAME: "Old"}], hours_old = 25)
     browser.add(game_cell())
 
     purchases = itchio_store.get_latest_purchases()
 
     assert summary(purchases) == [("1234", GAME_URL, "Cool Game")]
-    assert json.loads(cache_file.read_text())[0][config.json_key_store_appid] == "1234"
+    assert json.loads(cache_file.read_text())[0][config.JSON_KEY_STORE_APPID] == "1234"
 
 
 def test_a_cached_empty_library_is_still_a_cache_hit(itchio_store, browser, cache_file):
@@ -184,6 +197,6 @@ def test_an_unusable_cache_is_refetched(itchio_store, browser, cache_file, conte
 @pytest.mark.parametrize("verbose", [False, True])
 def test_a_cache_that_cannot_be_written_still_returns_the_purchases(itchio_store, browser, monkeypatch, verbose):
     browser.add(game_cell())
-    monkeypatch.setattr(itchio.serialization, "write_json_file", lambda **kwargs: False)
+    monkeypatch.setattr(storebase.store.serialization, "write_json_file", lambda **kwargs: False)
 
     assert summary(itchio_store.get_latest_purchases(verbose = verbose)) == [("1234", GAME_URL, "Cool Game")]

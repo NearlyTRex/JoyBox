@@ -1,0 +1,97 @@
+# Dolphin: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["NINTENDO_GAMECUBE", "NINTENDO_WII", "NINTENDO_WIIWARE"]
+
+[config.Dolphin]
+program = { windows = "Dolphin/windows/Dolphin.exe", linux = "Dolphin/linux/Dolphin.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Dolphin.save_base_dir]
+windows = "Dolphin/windows/User"
+linux = "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
+
+[config.Dolphin.save_sub_dirs]
+"Nintendo Gamecube" = "GC"
+"Nintendo Wii" = "Wii/title/00010000"
+"Nintendo WiiWare" = "Wii/title/00010001"
+
+[config.Dolphin.setup_dir]
+windows = "Dolphin/windows/User"
+linux = "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
+
+[config.Dolphin.config_file]
+windows = "Dolphin/windows/User/Config/Dolphin.ini"
+linux = "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"
+
+[[config_files]]
+path = "Dolphin/windows/portable.txt"
+
+[[config_files]]
+path = "Dolphin/windows/User/Config/Dolphin.ini"
+
+[[config_files]]
+path = "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"
+template = "Dolphin.ini"
+
+[[config_files]]
+path = "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GCPadNew.ini"
+template = "GCPadNew.ini"
+
+[[config_files]]
+path = "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GBA.ini"
+template = "GBA.ini"
+
+[[system_files]]
+path = "Wii.zip"
+md5 = "2029efb1ed06ef0cb3679537b803d9ab"
+
+[[setup]]
+kind = "webpage_release"
+platform = "windows"
+webpage_url = "https://dolphin-emu.org/download"
+webpage_base_url = "https://dolphin-emu.org"
+starts_with = "https://dl.dolphin-emu.org/builds"
+ends_with = "x64.7z"
+search_file = "Dolphin.exe"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Dolphin.git"
+output_file = "Dolphin_Emulator-x86_64.AppImage"
+build_cmd = [
+    "cmake",
+    "..",
+    "-DLINUX_LOCAL_DEV=true",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "&&",
+    "make",
+    "-j",
+    "4",
+]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/Dolphin/Build/Binaries/dolphin-emu", to = "AppImage/usr/bin/dolphin-emu" },
+    { from = "Source/Dolphin/Build/Binaries/dolphin-tool", to = "AppImage/usr/bin/dolphin-tool" },
+    { from = "Source/Dolphin/Data/Sys", to = "AppImage/usr/bin/Sys" },
+    { from = "Source/Dolphin/Data/dolphin-emu.desktop", to = "AppImage/dolphin-emu.desktop" },
+    { from = "Source/Dolphin/Data/dolphin-emu.png", to = "AppImage/dolphin-emu.png" },
+]
+internal_symlinks = [{ from = "usr/bin/dolphin-emu", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Dolphin.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["--config", "Dolphin.Display.Fullscreen=True"]

@@ -1,7 +1,15 @@
 from joybox.connection.connection import (
-    Connection as Connection)
+    Connection)
 from joybox.connection.connection_local import (
-    ConnectionLocal as ConnectionLocal)
+    ConnectionLocal)
 from joybox.connection.connection_ssh import (
-    RememberNewHostKeyPolicy as RememberNewHostKeyPolicy,
-    ConnectionSSH as ConnectionSSH)
+    RememberNewHostKeyPolicy,
+    ConnectionSSH)
+
+# The names this package re-exports
+__all__ = [
+    "Connection",
+    "ConnectionLocal",
+    "RememberNewHostKeyPolicy",
+    "ConnectionSSH",
+]

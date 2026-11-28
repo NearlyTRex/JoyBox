@@ -1,0 +1,42 @@
+# Help text for the isoextract command, read by joybox/arguments.py
+
+description = "Extract the files from ISO and Toast images into a folder beside each image."
+details = """
+Finds every `.iso` and `.toast` file under the input path (or takes the one file given)
+and extracts it into a `<name>` folder next to it. An image whose `<name>` folder
+already exists is skipped. A Roxio Toast `.toast` image has the same layout as an ISO;
+Mac-only Toast discs hold no ISO 9660 side, so they need `-f HFS`.
+
+With the default `-e Iso`, 7-Zip is tried first; if it fails, xorriso extracts the
+image instead, and the extracted files are then made readable and writable by
+everyone (666 for files, 777 for folders).
+With `-e Archive`, only 7-Zip is used.
+
+`-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)
+reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the
+Mac HFS or HFS+ volume instead, found through the disc's Apple partition map or at the
+start of the image, and ignores `-e`. Each file's data fork is written as the file;
+when it also has a resource fork, a Finder type and creator or Finder flags, they are
+written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read
+back. `/` in a Mac name becomes `:`. On HFS+, hard links are written as copies of
+their file, symlinks stay symlinks, the journal and other volume internals are left
+out, and files stored compressed (Mac OS X 10.6 and later) are skipped with a warning.
+
+There is no confirmation prompt; the tool starts straight away."""
+section = "Game ROMs & Images"
+see_also = [
+    "make_iso",
+    "decompress_archives",
+    "chdextract",
+]
+notes = [
+    "7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.",
+    "`-f HFS` reads classic HFS volumes with the machfs Python package, holding the volume in memory.",
+]
+examples = [
+    ["Extract every ISO in a folder", "isoextract -i /path/to/isos"],
+    ["Extract and delete the ISOs, previewing first", "isoextract -i /path/to/isos -d -p -v"],
+    ["Extract one image with 7-Zip only", "isoextract -i \"/path/to/Game (USA).iso\" -e Archive"],
+    ["Extract the Mac side of a hybrid disc", "isoextract -i \"/path/to/Game (USA).iso\" -f HFS"],
+    ["Extract the Mac files of every Toast image in a folder", "isoextract -i /path/to/toasts -f HFS"],
+]

@@ -1,0 +1,30 @@
+# Help text for the backup_game_files command, read by joybox/arguments.py
+
+description = "Download store purchases whose build has changed and upload them, encrypted, to a locker."
+details = """
+Selects games from the game JSON metadata, not from the locker. For each game on a
+store platform that supports downloading purchases (Amazon Games, Epic Games, GOG,
+Humble Bundle, Itchio, Legacy Games, Steam), it asks the store for the latest build.
+When that differs from the build recorded in the game's JSON, it downloads the
+purchase to a temporary directory and hands it to the same encrypt, hash and upload
+steps as `upload_game_files`.
+
+Games on other platforms are skipped without doing anything.
+
+In `Standard` mode the games are those in the JSON metadata, narrowed by `-u`, `-c`,
+`-s` and `-n` (an exact game name). In `Custom` mode `-c`, `-s` and `-n` are required
+and name exactly one game."""
+section = "Backups & Lockers"
+see_also = [
+    "upload_game_files",
+    "backup_tool",
+]
+notes = [
+    "Only `Computer` store subcategories do anything; the tool checks every selected game against its store, which can take a while without `-c` and `-s`.",
+    "The first game that fails stops the run.",
+]
+examples = [
+    ["Back up every changed Steam purchase to Hetzner", "backup_game_files -c Computer -s Steam -l Hetzner"],
+    ["Preview a backup without downloading or uploading anything", "backup_game_files -c Computer -s GOG -l Hetzner -p -v"],
+    ["Back up one GOG game", "backup_game_files -c Computer -s GOG -n \"Game Name\" -l Hetzner"],
+]

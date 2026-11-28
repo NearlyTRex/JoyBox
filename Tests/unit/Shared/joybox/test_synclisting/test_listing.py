@@ -291,7 +291,7 @@ def test_a_hash_listing_runs_for_real_on_a_pretend_run(rclone, monkeypatch):
     # Listing only reads; skipping it would make a dry run see an empty remote.
     recorder = hash_listing(monkeypatch, LISTING)
 
-    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True)
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert "Games/Game.zip" in listed
     assert recorder.calls[0]["kwargs"]["pretend_run"] is False

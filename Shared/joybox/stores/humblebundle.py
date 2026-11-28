@@ -1,21 +1,36 @@
 # Imports
+import types
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.fileops as fileops
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.command as command
-import joybox.backup as backup
-import joybox.jsondata as jsondata
-import joybox.storebase as storebase
-import joybox.strings as strings
-import joybox.paths as paths
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import programs
+from joybox import serialization
+from joybox import command
+from joybox import jsondata
+from joybox import storebase
+from joybox import strings
+from joybox import paths
+from joybox import settings
 
 # HumbleBundle store
 class HumbleBundle(storebase.StoreBase):
+
+    TYPE = config.StoreType.HUMBLE_BUNDLE
+    PLATFORM = config.Platform.COMPUTER_HUMBLE_BUNDLE
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_HUMBLE_BUNDLE
+    KEY = config.JSON_KEY_HUMBLE
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME,
+    })
 
     # Constructor
     def __init__(self):
@@ -42,73 +57,27 @@ class HumbleBundle(storebase.StoreBase):
             raise RuntimeError("Ini file does not have a valid auth token")
 
         # Get install dir
-        self.install_dir = settings.get_path_value("UserData.HumbleBundle", "humblebundle_install_dir")
-        if not paths.is_path_valid(self.install_dir):
-            raise RuntimeError("Ini file does not have a valid install dir")
+        self.load_install_dir("UserData.HumbleBundle", "humblebundle_install_dir")
 
     ############################################################
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.HUMBLE_BUNDLE.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.HUMBLE_BUNDLE
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_HUMBLE_BUNDLE
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_HUMBLE_BUNDLE
-
-    # Get key
-    def get_key(self):
-        return config.json_key_humble
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appname,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
-            config.StoreIdentifierType.ASSET: config.json_key_store_name,
-            config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appname
-        }
-
-    # Get preferred platform
+    # The download platform (windows, linux, mac...) from the settings, used to filter listings and builds
     def get_preferred_platform(self):
         return self.platform
 
-    # Get user name
+    # The Humble Bundle username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
 
-    # Get email
+    # The Humble Bundle account email from the settings; the constructor refuses to build without one
     def get_email(self):
         return self.email
 
-    # Get auth token
+    # The _simpleauth_sess session cookie from the settings, which HumbleBundleManager signs in with
     def get_auth_token(self):
         return self.auth_token
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -133,24 +102,13 @@ class HumbleBundle(storebase.StoreBase):
     # Get manager command prefix
     def get_manager_cmd(self):
 
-        # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
-        if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
+        # Get script command
+        script_cmd = programs.get_python_script_command("HumbleBundleManager")
+        if not script_cmd:
             return None
+        return script_cmd + ["--auth", self.get_auth_token()]
 
-        # Get script
-        humble_script = None
-        if programs.is_tool_installed("HumbleBundleManager"):
-            humble_script = programs.get_tool_program("HumbleBundleManager")
-        if not humble_script:
-            logger.log_error("HumbleBundleManager was not found")
-            return None
-        return [python_tool, humble_script, "--auth", self.get_auth_token()]
-
-    # Get purchase details
+    # HumbleBundleManager's JSON description of one purchase as a dict; None when it gives nothing parsable
     def get_purchase_details(
         self,
         manager_cmd,
@@ -171,7 +129,7 @@ class HumbleBundle(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not info_output:
-            logger.log_error(f"Unable to describe humble purchase {appname}")
+            logger.log_error("Unable to describe humble purchase %s" % appname)
             return None
 
         # Get humble json
@@ -182,16 +140,16 @@ class HumbleBundle(storebase.StoreBase):
             return None
         return humble_json
 
-    # Get purchase name
+    # The purchase's display name from its details, stripped; empty when missing
     def get_purchase_name(self, humble_json):
         name = humble_json.get("human_name")
         if not isinstance(name, str):
             return ""
         return name.strip()
 
-    # Get purchase buildid
+    # The last download timestamp for the preferred platform in the purchase details; the default build id when none
     def get_purchase_buildid(self, humble_json):
-        buildid = config.default_buildid
+        buildid = config.DEFAULT_BUILDID
         downloads = humble_json.get("downloads")
         if not isinstance(downloads, list):
             return buildid
@@ -214,7 +172,7 @@ class HumbleBundle(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games for the preferred platform with a generated id, appname and name, from a cache under a day old or else HumbleBundleManager
     def get_latest_purchases(
         self,
         verbose = False,
@@ -225,39 +183,66 @@ class HumbleBundle(storebase.StoreBase):
         cache_dir = self.get_purchases_cache_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "humble_purchases_cache.json")
 
-        # Check if cache exists and is recent (less than 24 hours old)
-        use_cache = False
-        if paths.does_path_exist(cache_file_purchases):
-            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
-            if cache_age_hours < 24:
-                use_cache = True
-                if verbose:
-                    logger.log_info("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
+        # Load from cache if recent
+        cached_data = self.read_purchases_cache(cache_file_purchases, "Humble Bundle", verbose = verbose)
+        if cached_data is not None:
+            return self.make_purchases(cached_data)
 
-        # Load from cache if available
-        if use_cache:
-            cached_data = serialization.read_json_file(
-                src = cache_file_purchases,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
-            else:
-                if verbose:
-                    logger.log_warning("Failed to load Humble Bundle cache, will fetch fresh data")
-                use_cache = False
+        # Fetch purchases from the manager
+        fetched = self._fetch_purchases(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if fetched is None:
+            return None
+
+        # Save to cache
+        purchases, purchases_data = fetched
+        self.write_purchases_cache(
+            cache_dir = cache_dir,
+            cache_file = cache_file_purchases,
+            purchases_data = purchases_data,
+            store_label = "Humble Bundle",
+            verbose = verbose,
+            pretend_run = pretend_run)
+        return purchases
+
+    # Purchases and their cache dicts from the manager's listing and per-game details; None on any failure
+    def _fetch_purchases(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Get manager
         manager_cmd = self.get_manager_cmd()
         if not manager_cmd:
             return None
+
+        # Get library listing
+        list_output = self._fetch_purchase_list(
+            manager_cmd = manager_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not list_output:
+            return None
+
+        # Parse output
+        return self._parse_purchase_list(
+            manager_cmd = manager_cmd,
+            list_output = list_output,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # The manager's appname listing for the preferred platform; None (after logging) when empty
+    def _fetch_purchase_list(
+        self,
+        manager_cmd,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Get list command
         list_cmd = manager_cmd + [
@@ -275,8 +260,17 @@ class HumbleBundle(storebase.StoreBase):
         if not list_output:
             logger.log_error("Unable to find humble purchases")
             return None
+        return list_output
 
-        # Parse output
+    # Purchases and their cacheable dicts for each appname line of the listing; None when a
+    # purchase cannot be described or the output names no games
+    def _parse_purchase_list(
+        self,
+        manager_cmd,
+        list_output,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
         purchases = []
         purchases_data = []
         for line in list_output.split("\n"):
@@ -297,50 +291,45 @@ class HumbleBundle(storebase.StoreBase):
             if humble_json is None:
                 return None
 
-            # Gather info
-            line_appid = strings.generate_unique_id()
-            line_name = self.get_purchase_name(humble_json)
-
             # Create purchase
-            purchase = jsondata.JsonData(json_data = {}, json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_name, line_name)
+            purchase, purchase_data = self._create_purchase(line_appname, humble_json)
             purchases.append(purchase)
-
-            # Store data for caching
-            purchases_data.append({
-                config.json_key_store_appid: line_appid,
-                config.json_key_store_appname: line_appname,
-                config.json_key_store_name: line_name
-            })
+            purchases_data.append(purchase_data)
 
         # Output without any game names is not a library listing
         if not purchases:
             logger.log_error("Unable to find humble purchases")
             logger.log_error("Received output:\n%s" % list_output)
             return None
+        return purchases, purchases_data
 
-        # Save to cache
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved Humble Bundle purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save Humble Bundle cache")
-        return purchases
+    # A purchase with a fresh appid, the appname and the details' name, plus the same values as a cache dict
+    def _create_purchase(self, line_appname, humble_json):
+
+        # Gather info
+        line_appid = strings.generate_unique_id()
+        line_name = self.get_purchase_name(humble_json)
+
+        # Create purchase
+        purchase = jsondata.JsonData(json_data = {}, json_platform = self.get_platform())
+        purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+        purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+        purchase.set_value(config.JSON_KEY_STORE_NAME, line_name)
+
+        # Store data for caching
+        purchase_data = {
+            config.JSON_KEY_STORE_APPID: line_appid,
+            config.JSON_KEY_STORE_APPNAME: line_appname,
+            config.JSON_KEY_STORE_NAME: line_name
+        }
+        return purchase, purchase_data
 
     ############################################################
     # Json
     ############################################################
 
-    # Get latest jsondata
-    def get_latest_jsondata(
+    # Appname, name and build from HumbleBundleManager's details, with a fresh random appid each call; None when unknown
+    def fetch_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -348,12 +337,8 @@ class HumbleBundle(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Check identifier
-        if not self.is_valid_info_identifier(identifier):
-            logger.log_warning("Info identifier '%s' was not valid" % identifier)
-            return None
-
         # Get manager
+        del branch
         manager_cmd = self.get_manager_cmd()
         if not manager_cmd:
             return None
@@ -370,94 +355,27 @@ class HumbleBundle(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, strings.generate_unique_id())
-        json_data.set_value(config.json_key_store_appname, identifier)
-        json_data.set_value(config.json_key_store_name, self.get_purchase_name(humble_json))
-        json_data.set_value(config.json_key_store_buildid, self.get_purchase_buildid(humble_json))
-        return self.augment_jsondata(
-            json_data = json_data,
-            identifier = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        json_data.set_value(config.JSON_KEY_STORE_APPID, strings.generate_unique_id())
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_NAME, self.get_purchase_name(humble_json))
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, self.get_purchase_buildid(humble_json))
+        return json_data
 
     ############################################################
     # Download
     ############################################################
 
-    # Download
-    def download(
-        self,
-        identifier,
-        output_dir,
-        output_name = None,
-        branch = None,
-        clean_output = False,
-        show_progress = False,
-        skip_existing = False,
-        skip_identical = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
+    # HumbleBundleManager's command prefix, the tool download fetches games with; None when it is missing
+    def get_download_tool_cmd(self):
+        return self.get_manager_cmd()
 
-        # Check identifier
-        if not self.is_valid_download_identifier(identifier):
-            logger.log_warning("Download identifier '%s' was not valid" % identifier)
-            return False
-
-        # Get manager
-        manager_cmd = self.get_manager_cmd()
-        if not manager_cmd:
-            return False
-
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-            verbose = verbose,
-            pretend_run = pretend_run)
-        if not tmp_dir_success:
-            return False
+    # The manager command line that fetches the preferred platform's build into download_dir
+    def build_download_cmd(self, tool_cmd, identifier, download_dir):
 
         # Get download command
-        download_cmd = manager_cmd + [
+        return tool_cmd + [
             "--download", identifier,
             "--platform", self.get_preferred_platform(),
-            "--path", tmp_dir_result,
+            "--path", download_dir,
             "--quiet"
         ]
-
-        try:
-
-            # Run download command
-            code = command.run_returncode_command(
-                cmd = download_cmd,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
-                return False
-
-            # Archive downloaded files
-            success = backup.archive_folder(
-                input_path = tmp_dir_result,
-                output_path = output_dir,
-                output_name = output_name,
-                clean_output = clean_output,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-
-        # Check results
-        return paths.does_directory_contain_files(output_dir)

@@ -63,11 +63,11 @@ def render_env(installer):
 def nginx_template_for(app_name, installer):
     # Cockpit and Certbot format the module-level template directly rather than
     # assigning it to the instance, so fall back to the module.
-    template = getattr(installer, "nginx_config_template", "")
+    template = getattr(installer, "NGINX_CONFIG_TEMPLATE", "")
     if template:
         return template
     module = importlib.import_module(f"joybox.bootstrap.installers.installer_{app_name.lower()}")
-    return getattr(module, "nginx_config_template", "")
+    return getattr(module, "NGINX_CONFIG_TEMPLATE", "")
 
 
 ###########################################################

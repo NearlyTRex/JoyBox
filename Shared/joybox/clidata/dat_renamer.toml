@@ -1,0 +1,30 @@
+# Help text for the dat_renamer command, read by joybox/arguments.py
+
+description = "Rename ROM files to the names a DAT file gives them, matching by MD5."
+details = """
+Loads ROM records from either every clrmamepro XML `.dat` file under `-d` (searched
+recursively), or a cache file given with `-c`; `-d` wins when both are given. Records
+without a name, size, CRC and MD5 are ignored.
+
+Then every file under `-i`, recursively, is hashed with MD5. A file whose hash matches
+a record is renamed, in its own directory, to the ROM file name from that record.
+Files with no match are left alone.
+
+With `-d` and `-g`, the collected records are also written to the `-c` path so later
+runs can load them with `-c` alone. The cache holds one ROM per line as
+`game || file || size || crc || md5`."""
+section = "Game ROMs & Images"
+see_also = [
+    "sanitize_filenames",
+    "verify_game_files",
+]
+notes = [
+    "When two DAT records share an MD5, the one read last is used.",
+    "A renamed file replaces any file already at the new name.",
+]
+examples = [
+    ["Rename using a folder of DAT files", "dat_renamer -i ~/Roms/Unsorted -d ~/Dats"],
+    ["Rename and save a cache of the DAT records", "dat_renamer -i ~/Roms/Unsorted -d ~/Dats -g -c ~/Dats/cache.txt"],
+    ["Rename using a saved cache", "dat_renamer -i ~/Roms/Unsorted -c ~/Dats/cache.txt"],
+    ["Dry run", "dat_renamer -i ~/Roms/Unsorted -d ~/Dats -p -v"],
+]

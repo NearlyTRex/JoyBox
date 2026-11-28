@@ -3,13 +3,25 @@ import os
 import os.path
 
 # Local imports
-import joybox.command as command
-import joybox.fileops as fileops
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import command
+from joybox import commandbase
+from joybox import fileops
+from joybox import programs
+from joybox import logger
+from joybox import paths
 
-# Extract Xbox ISO
+# Run an extract-xiso command, blocking until the tool exits; whether it exited cleanly
+def _run_extract_xiso(extract_tool, cmd, verbose, pretend_run, exit_on_failure):
+    code = command.run_returncode_command(
+        cmd = cmd,
+        options = commandbase.create_command_options(
+            blocking_processes = [extract_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Unpack an Xbox ISO's files into extract_dir with extract-xiso, optionally deleting the ISO
 def extract_xbox_iso(
     iso_file,
     extract_dir,
@@ -19,11 +31,8 @@ def extract_xbox_iso(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("ExtractXIso"):
-        extract_tool = programs.get_tool_program("ExtractXIso")
+    extract_tool = programs.find_tool_program("ExtractXIso")
     if not extract_tool:
-        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get extract command
@@ -35,14 +44,7 @@ def extract_xbox_iso(
     ]
 
     # Run extract command
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = command.create_command_options(
-            blocking_processes = [extract_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_extract_xiso(extract_tool, extract_cmd, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
         return False
 
@@ -57,7 +59,7 @@ def extract_xbox_iso(
     # Check result
     return os.path.exists(extract_dir)
 
-# Rewrite Xbox ISO
+# Rebuild an Xbox ISO in place with extract-xiso -r, trimming unused space; -D deletes the original
 def rewrite_xbox_iso(
     iso_file,
     delete_original = False,
@@ -66,11 +68,8 @@ def rewrite_xbox_iso(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("ExtractXIso"):
-        extract_tool = programs.get_tool_program("ExtractXIso")
+    extract_tool = programs.find_tool_program("ExtractXIso")
     if not extract_tool:
-        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get rewrite command
@@ -84,14 +83,7 @@ def rewrite_xbox_iso(
     rewrite_cmd += [iso_file]
 
     # Run rewrite command
-    code = command.run_returncode_command(
-        cmd = rewrite_cmd,
-        options = command.create_command_options(
-            blocking_processes = [extract_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
+    if not _run_extract_xiso(extract_tool, rewrite_cmd, verbose, pretend_run, exit_on_failure):
         logger.log_error("Unable to rewrite xbox iso '%s'" % iso_file)
         return False
 

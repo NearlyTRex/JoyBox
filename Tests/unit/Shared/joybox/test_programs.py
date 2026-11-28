@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, programs
+from joybox import programs
 
 
 ###########################################################
@@ -101,66 +101,6 @@ def test_the_platform_is_honoured_when_resolving_a_path():
 def test_get_program_reads_the_program_key():
     assert programs.get_program(CONFIG, "/base", "Simple") == \
         programs.get_path_config_value(CONFIG, "/base", "Simple", "program")
-
-
-###########################################################
-# Registry consistency
-###########################################################
-
-def test_the_tool_registry_is_populated():
-    assert len(programs.get_tools()) > 0
-
-
-def test_the_emulator_registry_is_populated():
-    assert len(programs.get_emulators()) > 0
-
-
-def test_tool_names_are_unique():
-    names = [tool.get_name() for tool in programs.get_tools()]
-    duplicates = sorted({name for name in names if names.count(name) > 1})
-
-    assert not duplicates, f"duplicate tool names: {duplicates}"
-
-
-def test_emulator_names_are_unique():
-    names = [emulator.get_name() for emulator in programs.get_emulators()]
-    duplicates = sorted({name for name in names if names.count(name) > 1})
-
-    assert not duplicates, f"duplicate emulator names: {duplicates}"
-
-
-def test_every_emulator_declares_known_platforms():
-    known = set(config.Platform.members())
-    unknown = [
-        (emulator.get_name(), platform) for emulator in programs.get_emulators()
-        for platform in emulator.get_platforms() if platform not in known]
-
-    assert not unknown, f"emulators declaring unknown platforms: {unknown}"
-
-
-def test_an_emulator_is_found_by_its_platform():
-    emulator = next(emulator for emulator in programs.get_emulators() if emulator.get_platforms())
-    found = programs.get_emulator_by_platform(emulator.get_platforms()[0])
-
-    assert emulator.get_platforms()[0] in found.get_platforms()
-
-
-def test_an_unhandled_platform_has_no_emulator():
-    assert programs.get_emulator_by_platform("not-a-real-platform") is None
-
-
-def test_the_merged_tool_config_covers_every_tool():
-    merged = programs.get_tool_config()
-
-    assert isinstance(merged, dict)
-    assert len(merged) > 0
-
-
-def test_the_merged_emulator_config_covers_every_emulator():
-    merged = programs.get_emulator_config()
-
-    assert isinstance(merged, dict)
-    assert len(merged) > 0
 
 
 ###########################################################
@@ -265,7 +205,7 @@ def test_a_program_is_the_program_key():
 def known_tool(tmp_path, monkeypatch):
     # The first tool with a program, installed under a scratch tools root
     monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: str(tmp_path))
-    name = next(tool.get_name() for tool in programs.get_tools() if programs.get_tool_program(tool.get_name()))
+    name = next(name for name in programs.get_tool_config() if programs.get_tool_program(name))
     path = programs.get_tool_program(name)
     os.makedirs(os.path.dirname(path), exist_ok = True)
     with open(path, "w", encoding = "utf-8"):
@@ -463,6 +403,19 @@ def test_install_and_backup_dirs_follow_the_program_kind(monkeypatch, fake_regis
     assert programs.get_program_backup_dir("Unknown", "linux") is None
 
 
+def test_install_and_backup_dirs_default_to_the_current_platform(monkeypatch, fake_registry):
+    monkeypatch.setattr(
+        programs.environment, "get_locker_program_tool_dir",
+        lambda name, platform = None: "/locker/Tools/%s/%s" % (name, platform))
+    monkeypatch.setattr(
+        programs.environment, "get_locker_gaming_emulator_binaries_dir",
+        lambda name, platform = None: "/locker/Emulators/%s/%s" % (name, platform))
+
+    assert programs.get_program_install_dir("Packer") == fake_registry["tools_root"] + "/Packer/linux"
+    assert programs.get_program_install_dir("Retro") == fake_registry["emulators_root"] + "/Retro/linux"
+    assert programs.get_program_backup_dir("Retro") == "/locker/Emulators/Retro/linux"
+
+
 def test_a_platform_library_backup_dir_is_nested_by_platform(monkeypatch):
     monkeypatch.setattr(
         programs.environment, "get_locker_program_tool_dir", lambda name, platform = None: "/locker/" + name)
@@ -491,10 +444,15 @@ def test_a_library_is_installed_when_its_directory_is_empty(fake_registry):
     assert programs.should_library_be_installed("Absent") is True
 
 
+def test_a_library_platform_is_installed_when_its_sub_folder_is_empty(fake_registry):
+    # A config file beside the platform folder doesn't count as the library being there.
+    assert programs.should_library_be_installed("Packer", "linux") is False
+    assert programs.should_library_be_installed("Packer", "lib") is True
+
+
 def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registry):
-    import joybox.command as command
     asked = []
-    monkeypatch.setattr(command, "is_runnable_command", lambda path: asked.append(path) or True)
+    monkeypatch.setattr(programs.paths, "is_runnable_command", lambda path: asked.append(path) or True)
 
     assert programs.is_program_installed("Packer", "linux") is True
     assert programs.is_program_installed("Retro", "linux") is True
@@ -505,6 +463,11 @@ def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registr
 def test_program_dirs_are_the_program_parent(fake_registry):
     assert programs.get_tool_program_dir("Packer", "linux") == fake_registry["tools_root"] + "/Packer/linux"
     assert programs.get_emulator_program_dir("Retro", "linux") == fake_registry["emulators_root"] + "/Retro/linux"
+
+
+def test_a_program_without_a_path_has_no_program_dir(fake_registry):
+    assert programs.get_tool_program_dir("Unknown", "linux") is None
+    assert programs.get_emulator_program_dir("Unknown", "linux") is None
 
 
 def test_path_config_values_resolve_under_their_roots(fake_registry):
@@ -537,3 +500,41 @@ def test_a_registry_path_without_sandboxing_is_not_sandboxed(monkeypatch, fake_r
 
     assert programs.is_program_path_sandboxed_tool(fake_registry["packer"], "linux") is False
     assert programs.is_program_path_sandboxed_emulator("/any", "linux") is False
+
+
+###########################################################
+# Installed tool lookup
+###########################################################
+
+@pytest.fixture
+def installed_tools(monkeypatch):
+    installed = {"PythonVenvPython": "/venv/bin/python", "Nile": "/tools/nile/cli.py"}
+    errors = []
+    monkeypatch.setattr(programs, "is_tool_installed", lambda tool_name: tool_name in installed)
+    monkeypatch.setattr(programs, "get_tool_program", lambda tool_name: installed[tool_name])
+    monkeypatch.setattr(programs.logger, "log_error", lambda message, **kwargs: errors.append(message))
+    return installed, errors
+
+
+def test_an_installed_tool_program_is_found(installed_tools):
+    assert programs.find_tool_program("Nile") == "/tools/nile/cli.py"
+
+
+def test_a_missing_tool_is_logged_unless_told_not_to(installed_tools):
+    _, errors = installed_tools
+
+    assert programs.find_tool_program("Legendary") is None
+    assert programs.find_tool_program("Heirloom", log_missing = False) is None
+    assert errors == ["Legendary was not found"]
+
+
+def test_a_python_script_runs_through_the_venv_python(installed_tools):
+    assert programs.get_python_script_command("Nile") == ["/venv/bin/python", "/tools/nile/cli.py"]
+
+
+@pytest.mark.parametrize("missing", ["PythonVenvPython", "Nile"])
+def test_a_python_script_needs_the_venv_python_and_the_script(installed_tools, missing):
+    installed, _ = installed_tools
+    del installed[missing]
+
+    assert programs.get_python_script_command("Nile") is None

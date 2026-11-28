@@ -21,7 +21,7 @@ def test_a_sidecar_listing_is_passed_through(remote, listing):
     assert backend().list_files_with_hashes_from_sidecar(pretend_run = True) == listing
     passed = only(remote, "list_files_with_hashes_from_sidecar")
     assert passed["remote_path"] == REMOTE_PATH
-    assert passed["pretend_run"] is True
+    assert "pretend_run" not in passed
 
 
 def test_a_failed_listing_is_passed_through(remote):
@@ -324,3 +324,93 @@ def test_a_failed_remote_to_remote_conversion_uploads_nothing(remote, cryption):
         source, "Game.zip", "Game.zip", cryption_type = config.CryptionType.DECRYPT) is False
     assert called(remote, "upload_files_to_remote") == []
     assert cryption["removed"] == [cryption["scratch"]]
+
+
+###########################################################
+# Progress
+###########################################################
+
+def other_remote():
+    return lockerbackend.RemoteBackend(FakeLockerInfo(remote_path = "/Other"))
+
+
+def upload_from_local(tmp_path, **kwargs):
+    backend().sync_from(make_locker(tmp_path, {"Game.zip": "data"}), "Game.zip", "Game.zip", **kwargs)
+
+
+def encrypt_from_local(tmp_path, **kwargs):
+    backend().sync_from(
+        make_locker(tmp_path, {"Game.zip": "data"}), "Game.zip", "Game.zip",
+        cryption_type = config.CryptionType.ENCRYPT, passphrase = "example", **kwargs)
+
+
+def copy_from_other_remote(tmp_path, **kwargs):
+    del tmp_path
+    backend().sync_from(other_remote(), "Game.zip", "Game.zip", **kwargs)
+
+
+def convert_from_other_remote(tmp_path, **kwargs):
+    del tmp_path
+    backend().sync_from(
+        other_remote(), "Game.zip", "Game.zip", cryption_type = config.CryptionType.DECRYPT, **kwargs)
+
+
+def copy_in(tmp_path, **kwargs):
+    del tmp_path
+    backend().copy_from("/staging/Game.zip", "Games/Game.zip", **kwargs)
+
+
+def plain_batch(tmp_path, **kwargs):
+    backend().sync_batch_from(make_locker(tmp_path, {"One.zip": "1"}), plain("One.zip"), **kwargs)
+
+
+def encrypt_batch(tmp_path, **kwargs):
+    encrypted_batch(make_locker(tmp_path, {"One.zip": "1"}), plain("One.zip"), **kwargs)
+
+
+TRANSFERS = [
+    (upload_from_local, ["upload_files_to_remote"]),
+    (encrypt_from_local, ["upload_files_to_remote"]),
+    (copy_from_other_remote, ["copy_remote_to_remote"]),
+    (convert_from_other_remote, ["download_files_from_remote", "upload_files_to_remote"]),
+    (copy_in, ["upload_files_to_remote"]),
+    (plain_batch, ["upload_files_to_remote"]),
+    (encrypt_batch, ["upload_files_to_remote"]),
+]
+
+
+@pytest.mark.parametrize("show_progress", [True, False])
+@pytest.mark.parametrize("transfer,names", TRANSFERS)
+def test_show_progress_reaches_every_transfer(remote, cryption, staging, tmp_path, transfer, names, show_progress):
+    transfer(tmp_path, show_progress = show_progress)
+
+    assert [only(remote, name)["show_progress"] for name in names] == [show_progress] * len(names)
+
+
+@pytest.mark.parametrize("transfer,names", [
+    (upload_from_local, ["upload_files_to_remote"]),
+    (copy_from_other_remote, ["copy_remote_to_remote"]),
+    (convert_from_other_remote, ["download_files_from_remote", "upload_files_to_remote"]),
+])
+def test_a_sync_shows_progress_by_default(remote, cryption, tmp_path, transfer, names):
+    transfer(tmp_path)
+
+    assert [only(remote, name)["show_progress"] for name in names] == [True] * len(names)
+
+
+###########################################################
+# Batch planning
+###########################################################
+
+def test_renamed_actions_are_split_from_those_keeping_their_path():
+    same = {"src": "a.zip"}
+    kept = {"src": "b.zip", "dest": "b.zip"}
+    renamed = {"src": "c.zip", "dest": "d.zip"}
+
+    assert lockerbackend.split_renamed_actions([same, renamed, kept]) == ([same, kept], [renamed])
+
+
+def test_a_pretend_encrypted_upload_previews_each_destination():
+    actions = [{"src": "a.zip"}, {"src": "b.zip", "dest": "c.zip"}]
+
+    assert lockerbackend.preview_encrypted_uploads(actions) == ["a.zip", "c.zip"]

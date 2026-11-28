@@ -29,9 +29,10 @@ def test_a_refused_login_is_an_answer_not_an_error(monkeypatch):
 
 def test_a_refused_login_leaves_no_client_behind(monkeypatch):
     fake_paramiko(monkeypatch, RefusingClient())
-    build().try_setup()
+    connection = build()
+    connection.try_setup()
 
-    assert connection_ssh.ConnectionSSH.ssh_client is None
+    assert connection.ssh_client is None
 
 
 def test_an_accepted_login_is_reported(monkeypatch):
@@ -57,23 +58,35 @@ def test_a_live_connection_is_reused(monkeypatch):
     assert len(client.connects) == 1
 
 
+def test_each_connection_logs_in_on_its_own_session(monkeypatch):
+    clients = [AcceptingClient(), AcceptingClient()]
+    fake_paramiko(monkeypatch, None, SSHClient = staticmethod(clients.pop))
+    first = build()
+    second = build()
+    first.connect()
+    second.connect()
+    first.teardown()
+
+    assert first.ssh_client is None
+    assert second.is_connected()
+    assert len(second.ssh_client.connects) == 1
+
+
 def test_teardown_without_a_transport_does_not_fail(monkeypatch):
     errors = []
     monkeypatch.setattr(connection_ssh.logger, "log_error", lambda *a, **k: errors.append(a))
-    build(RefusingClient()).teardown()
+    connection = build(RefusingClient())
+    connection.teardown()
 
     assert errors == []
-    assert connection_ssh.ConnectionSSH.ssh_client is None
+    assert connection.ssh_client is None
 
 
-def test_paramiko_is_imported_on_first_use(monkeypatch):
+def test_paramiko_is_imported_when_asked_for(monkeypatch):
     module = object()
-    monkeypatch.setattr(connection_ssh, "paramiko", None)
     monkeypatch.setitem(sys.modules, "paramiko", module)
 
-    connection_ssh._ensure_paramiko()
-
-    assert connection_ssh.paramiko is module
+    assert connection_ssh._get_paramiko() is module
 
 
 def test_a_login_without_any_credential_is_refused(monkeypatch):
@@ -188,10 +201,11 @@ def test_a_failed_close_is_logged_and_the_client_dropped(monkeypatch):
             raise OSError("broken pipe")
     lines = logged(monkeypatch)
 
-    build(Unclosable()).teardown()
+    connection = build(Unclosable())
+    connection.teardown()
 
     assert lines == ["Failed to close SSH connection", "broken pipe"]
-    assert connection_ssh.ConnectionSSH.ssh_client is None
+    assert connection.ssh_client is None
 
 
 def test_an_unresolvable_remote_home_is_none():
@@ -205,9 +219,10 @@ def test_an_unresolvable_remote_home_is_none():
 
 
 def test_teardown_without_a_client_does_nothing():
-    build().teardown()
+    connection = build()
+    connection.teardown()
 
-    assert connection_ssh.ConnectionSSH.ssh_client is None
+    assert connection.ssh_client is None
 
 
 ###########################################################
@@ -287,7 +302,7 @@ def test_a_missing_ssh_directory_is_made_private(tmp_path):
 
 
 def test_a_key_that_cannot_be_remembered_is_refused(monkeypatch, tmp_path):
-    monkeypatch.setattr(connection_ssh.fileops, "touch_file", lambda *args, **kwargs: False)
+    monkeypatch.setattr(connection_ssh.knownhosts.fileops, "touch_file", lambda *args, **kwargs: False)
     client = HostKeyClient()
 
     with pytest.raises(OSError):

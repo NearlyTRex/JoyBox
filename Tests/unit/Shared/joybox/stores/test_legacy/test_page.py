@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config
+from joybox import config, storebase
 from joybox.stores import legacy
 from legacy_helpers import GAME_URL, SEARCH_URL, result_cell
 
@@ -117,6 +117,14 @@ def test_a_browser_that_will_not_start_is_retried_then_given_up(legacy_store, br
     assert browser.disconnected == []
 
 
+def test_a_pretend_run_without_a_browser_gives_no_url_at_once(legacy_store, browser):
+    browser.failed_connects = 3
+
+    assert legacy_store.get_latest_url("Mystery Case Files", pretend_run = True) is None
+    assert browser.connects == [True]
+    assert browser.disconnected == []
+
+
 def test_a_browser_that_starts_on_retry_is_used_and_closed(legacy_store, browser):
     browser.add(result_cell())
     browser.failed_connects = 1
@@ -173,8 +181,8 @@ def asset_lookups(monkeypatch):
         calls.append(("page", kwargs))
         return "https://www.youtube.com/embed/abc?enablejsapi=1"
 
-    monkeypatch.setattr(legacy.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
-    monkeypatch.setattr(legacy.webfetch, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(storebase.store.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
+    monkeypatch.setattr(storebase.store.webfetch, "get_matching_url", get_matching_url)
     return calls
 
 

@@ -50,6 +50,15 @@ def test_install_adds_the_release_repository_then_the_toolchain(isolated_setting
         f"libc++-{version}-dev", f"libclang-rt-{version}-dev")
 
 
+def test_an_unwritable_source_fails_the_install(isolated_settings, monkeypatch):
+    llvm, connection = make(monkeypatch)
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert llvm.install() is False
+    assert connection.moved == []
+    assert not connection.ran("install -y")
+
+
 def test_install_fails_when_no_compiler_appears(isolated_settings, monkeypatch):
     llvm, _ = make(monkeypatch)
     assert not llvm.install()

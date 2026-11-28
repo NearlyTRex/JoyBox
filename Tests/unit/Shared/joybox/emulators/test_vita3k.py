@@ -161,7 +161,7 @@ def test_launch_runs_an_installed_app_by_title_id(seams, app_dir):
     (app_dir / TITLE_ID).mkdir(parents = True)
     make_content(seams)
 
-    assert launch_cmd(seams, game(seams)) == ["/bin/Vita3K", "-r", config.token_game_name]
+    assert launch_cmd(seams, game(seams)) == ["/bin/Vita3K", "-r", config.TOKEN_GAME_NAME]
 
 
 def test_launch_passes_the_game_and_options_through(seams, app_dir):
@@ -174,7 +174,7 @@ def test_launch_fullscreen_adds_the_fullscreen_flag(seams, app_dir):
     (app_dir / TITLE_ID).mkdir(parents = True)
 
     assert launch_cmd(seams, game(seams), fullscreen = True) == [
-        "/bin/Vita3K", "-F", "-r", config.token_game_name]
+        "/bin/Vita3K", "-F", "-r", config.TOKEN_GAME_NAME]
 
 
 def test_launch_installs_from_the_cached_content_root(seams, app_dir):

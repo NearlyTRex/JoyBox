@@ -1,0 +1,70 @@
+# Help text for the build_autoinstall_iso command, read by joybox/arguments.py
+
+description = "Build an Ubuntu Server image that installs itself."
+details = """
+Downloads the newest point release of the configured Ubuntu Server version, adds a
+cloud-init seed that answers every installer question, and repacks it as an image
+that boots from a USB stick (BIOS and UEFI) or a disc. Write it to a stick, boot the
+target from it, and it installs without anyone at the keyboard.
+
+Everything the installer would ask comes from `[UserData.Autoinstall]` in
+`~/JoyBox.ini`: `autoinstall_version`, `autoinstall_username`, `autoinstall_realname`,
+`autoinstall_hostname`, `autoinstall_ssh_keys` (comma-separated public keys),
+`autoinstall_password_hash`, `autoinstall_locale`, `autoinstall_keyboard`,
+`autoinstall_timezone`, `autoinstall_packages`, `autoinstall_serial_console` and
+`autoinstall_overlay_file`. A build is refused unless there is a username the
+installer accepts, a hostname, and at least one of a password hash or an SSH key.
+Usernames the installer rejects only once it is running on the target, such as
+`admin` or `operator`, are refused here instead.
+
+The generated seed wipes the largest disk and lays it out with the installer's
+`direct` layout, an ext4 root with no LVM plus an EFI partition when booted UEFI or a
+BIOS boot partition when booted legacy, so the stick works in either firmware mode.
+Every wired port (`en*`, `eth*`) gets DHCP, matched by name pattern so a port renamed
+by a card changing slots still comes up. It creates the account with passwordless
+sudo, installs and enables the SSH server with password logins disabled, and
+installs `autoinstall_packages`. When it finishes the machine powers off rather than
+rebooting, so a headless target signals it is done and does not boot the stick again.
+With no password hash the account's password is locked rather than empty.
+
+Anything else the machine is for goes in an overlay: a YAML file merged into the
+generated document, written either as a whole `autoinstall:` document or as just its
+contents. Lists under `packages`, `snaps`, `early-commands`, `late-commands`, `users`,
+`write_files` and `runcmd` are appended to rather than replaced, dictionaries merge key
+by key, and plain values override. Late commands run in the installed system with the
+network up but without a running systemd; anything that needs systemd belongs in
+`user-data` `runcmd`, which runs on first boot. `Scripts/autoinstall/homelab_llm.yaml`
+is a worked example for a GPU LLM server.
+
+The download is checked against the `SHA256SUMS` published beside it, and that listing
+is checked with gpg against `autoinstall_signing_keyring`
+(`/usr/share/keyrings/ubuntu-archive-keyring.gpg` by default), including that the
+signing key is `autoinstall_signing_fingerprint` (the Ubuntu CD image signing key by
+default). A download that fails either check is deleted. The seed goes in `/nocloud`
+on the image, every boot entry gets `autoinstall ds=nocloud;s=/cdrom/nocloud/` before
+its `---` separator, and the boot menu waits 2 seconds."""
+section = "Servers & Machines"
+see_also = [
+    "boot_vm_image",
+    "setup_tools",
+    "testvm",
+]
+notes = [
+    "Booting the image erases the target's largest disk without asking; there are 2 seconds at the boot menu to interrupt.",
+    "Write it to a stick with `sudo dd if=ubuntu-autoinstall.iso of=/dev/sdX bs=4M status=progress conv=fsync`.",
+    "The stock image is kept next to the output as `ubuntu-server-<version>.iso` and re-checked and reused by the next build. An image given with `--source_iso` is used as it is, without any check.",
+    "If gpg or the keyring is missing the build stops rather than going on unverified; `--skip_signature` builds anyway, `--skip_verify` skips both checks.",
+    "Make an SSH key with `ssh-keygen -t ed25519 -f ~/.ssh/joybox_autoinstall` and put the `.pub` contents in `autoinstall_ssh_keys`. Make a password hash with `mkpasswd --method=SHA-512` or `openssl passwd -6`; it only matters at the console.",
+    "With `--user_data` the file is used exactly as written: no account checks, and neither the overlay nor the profile's packages are applied. Only the hostname still goes into `meta-data`.",
+    "Needs Gpg and XorrISO from `setup_tools`. Try the image in `boot_vm_image` before writing it to a stick.",
+]
+examples = [
+    ["Check the seed the configuration produces, without downloading", "build_autoinstall_iso --show_seed"],
+    ["Check the seed with an overlay applied", "build_autoinstall_iso --show_seed -y Scripts/autoinstall/homelab_llm.yaml"],
+    ["Build into the current directory", "build_autoinstall_iso"],
+    ["Build elsewhere, with a name and a hostname for this machine", "build_autoinstall_iso -o ~/Images -n homelab.iso -t homelab"],
+    ["Build the GPU LLM server image", "build_autoinstall_iso -y Scripts/autoinstall/homelab_llm.yaml -t llm -n llm.iso"],
+    ["Build from an image already on disk", "build_autoinstall_iso -s ~/Downloads/ubuntu-24.04.1-live-server-amd64.iso"],
+    ["Build from a complete cloud-init file of your own", "build_autoinstall_iso -d ~/JoyBox/Autoinstall/user-data"],
+    ["Go through the build without downloading or writing anything", "build_autoinstall_iso -o ~/Images -p -v"],
+]

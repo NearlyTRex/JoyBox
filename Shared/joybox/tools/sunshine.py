@@ -6,24 +6,15 @@ import secrets
 import hashlib
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.release as release
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.toolbase as toolbase
-import joybox.desktopentry as desktopentry
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
+from joybox import serialization
+from joybox import toolbase
+from joybox import settings
 
-# Config files
-config_files = {}
-config_files["Sunshine/windows/config/sunshine.conf"] = ""
-config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf"] = ""
-config_files["Sunshine/windows/config/apps.json"] = ""
-config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = ""
 
 # Build the app list a Moonlight client can start from, from config.streaming_apps
 # The Linux AppImage runs with its .home folder as HOME, which its apps would
@@ -54,8 +45,8 @@ state_files = {
 }
 
 # What a login's salt is made of, and how long it is, as Sunshine makes them
-salt_alphabet = string.ascii_letters + string.digits + "!@#$%^&*()"
-salt_length = 16
+SALT_ALPHABET = string.ascii_letters + string.digits + "!@#$%^&*()"
+SALT_LENGTH = 16
 
 # Hash a web page password the way Sunshine checks it: SHA-256 of the password
 # followed by its salt, written as hex with the bytes in reverse order
@@ -77,7 +68,7 @@ def write_login(state_file, username, password, verbose = False, pretend_run = F
             return False
     if is_login_current(state, username, password):
         return True
-    salt = "".join(secrets.choice(salt_alphabet) for _ in range(salt_length))
+    salt = "".join(secrets.choice(SALT_ALPHABET) for _ in range(SALT_LENGTH))
     state.update({"username": username, "salt": salt, "password": hash_password(password, salt)})
     return fileops.touch_file(
         src = state_file,
@@ -87,159 +78,56 @@ def write_login(state_file, username, password, verbose = False, pretend_run = F
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Write the [UserData.Streaming] web login into each platform's state file when both
+# parts are set; False, after logging, at the first failure
+def write_logins(setup_params):
+    username = settings.get_value("UserData.Streaming", "sunshine_user", "", throw_exception = False)
+    password = settings.get_value("UserData.Streaming", "sunshine_pass", "", throw_exception = False)
+    if not username or not password:
+        logger.log_info("No [UserData.Streaming] sunshine_user and sunshine_pass are set, so Sunshine's web page asks for a login")
+        return True
+    for state_file in state_files.values():
+        success = write_login(
+            state_file = paths.join_paths(environment.get_tools_root_dir(), state_file),
+            username = username,
+            password = password,
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup the Sunshine login")
+            return False
+    return True
+
 # Sunshine tool
 class Sunshine(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Sunshine"
+    NAME = "Sunshine"
 
-    # Get config
-    def get_config(self):
-        return {
-            "Sunshine": {
-                "program": {
-                    "windows": "Sunshine/windows/sunshine.exe",
-                    "linux": "Sunshine/linux/Sunshine.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
-
-    # Setup
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Sunshine", "windows"):
-            success = release.download_github_release(
-                github_user = "LizardByte",
-                github_repo = "Sunshine",
-                starts_with = "sunshine",
-                ends_with = "windows.zip",
-                search_file = "sunshine.exe",
-                install_name = "Sunshine",
-                install_dir = programs.get_program_install_dir("Sunshine", "windows"),
-                backups_dir = programs.get_program_backup_dir("Sunshine", "windows"),
-                install_files = ["sunshine.exe", "assets", "scripts", "tools"],
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Sunshine", "linux"):
-            success = release.download_github_release(
-                github_user = "LizardByte",
-                github_repo = "Sunshine",
-                starts_with = "sunshine",
-                ends_with = ".AppImage",
-                search_file = "Sunshine.AppImage",
-                install_name = "Sunshine",
-                install_dir = programs.get_program_install_dir("Sunshine", "linux"),
-                backups_dir = programs.get_program_backup_dir("Sunshine", "linux"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine")
-                return False
-        return True
-
-    # Setup offline
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Sunshine", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Sunshine", "windows"),
-                install_name = "Sunshine",
-                install_dir = programs.get_program_install_dir("Sunshine", "windows"),
-                search_file = "sunshine.exe",
-                install_files = ["sunshine.exe", "assets", "scripts", "tools"],
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Sunshine", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Sunshine", "linux"),
-                install_name = "Sunshine",
-                install_dir = programs.get_program_install_dir("Sunshine", "linux"),
-                search_file = "Sunshine.AppImage",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine")
-                return False
-        return True
-
-    # Configure
+    # Write its config files with each platform's apps.json, the web login from [UserData.Streaming]
+    # when both are set, and its app menu entry by the sunshine_streaming_host setting
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
         # Update app lists
+        config_files = self.get_config_files()
         config_files["Sunshine/windows/config/apps.json"] = build_apps("windows")
         config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = build_apps("linux")
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Sunshine config files")
-                return False
+        if not self.write_config_files(setup_params, config_files):
+            return False
 
         # Write the web page login, so the page never asks for one
-        username = settings.get_value("UserData.Streaming", "sunshine_user", "", throw_exception = False)
-        password = settings.get_value("UserData.Streaming", "sunshine_pass", "", throw_exception = False)
-        if username and password:
-            for state_file in state_files.values():
-                success = write_login(
-                    state_file = paths.join_paths(environment.get_tools_root_dir(), state_file),
-                    username = username,
-                    password = password,
-                    verbose = setup_params.verbose,
-                    pretend_run = setup_params.pretend_run,
-                    exit_on_failure = setup_params.exit_on_failure)
-                if not success:
-                    logger.log_error("Could not setup the Sunshine login")
-                    return False
-        else:
-            logger.log_info("No [UserData.Streaming] sunshine_user and sunshine_pass are set, so Sunshine's web page asks for a login")
+        if not write_logins(setup_params):
+            return False
 
         # Put it in the app menu on a machine whose streaming role uses it
-        success = desktopentry.set_launcher(
+        return self.set_menu_launcher(
             enabled = settings.get_bool_value("Tools.Sunshine", "sunshine_streaming_host", False, throw_exception = False),
             filename = "joybox-sunshine.desktop",
-            name = "Sunshine",
             description = "Stream this machine's games to Moonlight clients",
-            command = "launch_sunshine",
+            command_name = "launch_sunshine",
             icon = "video-display",
-            verbose = setup_params.verbose,
-            pretend_run = setup_params.pretend_run,
-            exit_on_failure = setup_params.exit_on_failure)
-        if not success:
-            logger.log_error("Could not setup the Sunshine launcher")
-            return False
-        return True
+            setup_params = setup_params)

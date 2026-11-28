@@ -1,0 +1,34 @@
+# Help text for the build_game_hash_files command, read by joybox/arguments.py
+
+description = "Record hashes of each selected game's files in the per-subcategory hash file."
+details = """
+For each selected game, hashes every file under the game's directory and merges the
+records into the subcategory's hash file in the game metadata repository
+(`Hashes/<supercategory>/<category>/<subcategory>.json`). Files whose entries are
+unchanged are skipped, so re-running only hashes what is new or modified.
+
+The game directory is taken from `-i` if given, otherwise from the game's place under
+`-b`, otherwise from the gaming folder of the `-l` locker (the Local locker when `-l`
+is omitted). Records include the encrypted name, hash and size computed with that
+locker's passphrase, so they match what an encrypted remote locker holds.
+
+Games are listed from the locker when `-l` or `-b` is given, and from the JSON files
+in the metadata repository otherwise. With `-d`, entries for files that no longer
+exist under the locker's gaming folder are removed afterwards, once per subcategory."""
+section = "Game Collection"
+see_also = [
+    "clean_game_hash_files",
+    "verify_game_files",
+    "build_game_json_files",
+]
+notes = [
+    "Choose the `-l` locker that matches the content being hashed; its passphrase determines the encrypted fields.",
+    "`-i` is used as the directory of every selected game.",
+    "The supercategory defaults to `Roms`; pass `-u` to hash DLC or updates.",
+]
+examples = [
+    ["Hash a platform from the local locker", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -l Local"],
+    ["Hash and drop entries for deleted files", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -l Local -d"],
+    ["Hash from a locker copy mounted elsewhere", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -b /mnt/backup/locker"],
+    ["Show what would be hashed without writing", "build_game_hash_files -c Sony -s \"Sony PlayStation 2\" -l Local -p -v"],
+]

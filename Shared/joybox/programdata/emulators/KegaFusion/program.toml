@@ -1,0 +1,17 @@
+# KegaFusion: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.KegaFusion]
+program = { windows = "KegaFusion/windows/Fusion.exe", linux = "KegaFusion/windows/Fusion.exe" }
+run_sandboxed = { windows = false, linux = true }
+
+[[setup]]
+kind = "general_release"
+platform = "windows"
+archive_url = "https://retrocdn.net/images/6/6c/Fusion364.7z"
+search_file = "Fusion.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "Fusion.exe"

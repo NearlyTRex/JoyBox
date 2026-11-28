@@ -1,0 +1,71 @@
+# PCSX2: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_2"]
+
+[config.PCSX2]
+program = { windows = "PCSX2/windows/pcsx2-qt.exe", linux = "PCSX2/linux/PCSX2.AppImage" }
+setup_dir = { windows = "PCSX2/windows", linux = "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.PCSX2.save_dir]
+windows = "PCSX2/windows/memcards"
+linux = "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/memcards"
+
+[config.PCSX2.config_file]
+windows = "PCSX2/windows/inis/PCSX2.ini"
+linux = "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"
+
+[[config_files]]
+path = "PCSX2/windows/portable.ini"
+
+[[config_files]]
+path = "PCSX2/windows/inis/PCSX2.ini"
+template = "PCSX2.ini"
+
+[[config_files]]
+path = "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"
+template = "PCSX2.ini"
+
+[[system_files]]
+path = "bios/ps2-0170e-20030227.bin"
+md5 = "6e69920fa6eef8522a1d688a11e41bc6"
+
+[[system_files]]
+path = "bios/ps2-0170j-20030206.bin"
+md5 = "312ad4816c232a9606e56f946bc0678a"
+
+[[system_files]]
+path = "bios/ps2-0170a-20030325.bin"
+md5 = "8aa12ce243210128c5074552d3b86251"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "PCSX2"
+github_repo = "pcsx2"
+starts_with = "pcsx2"
+ends_with = "windows-x64-Qt.7z"
+search_file = "pcsx2-qt.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "PCSX2"
+github_repo = "pcsx2"
+starts_with = "pcsx2"
+ends_with = ".AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "pcsx2-qt.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["-fullscreen"]

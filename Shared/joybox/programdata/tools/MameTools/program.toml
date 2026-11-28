@@ -1,0 +1,46 @@
+# MameTools: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.MameChdman]
+program = { windows = "MameChdman/windows/chdman.exe", linux = "MameChdman/linux/MameChdman.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+program = "MameChdman"
+platform = "windows"
+github_user = "mamedev"
+github_repo = "mame"
+starts_with = "mame"
+ends_with = "x64.exe"
+search_file = "chdman.exe"
+install_files = ["chdman.exe"]
+release_type = "ARCHIVE"
+get_latest = true
+
+[[setup]]
+kind = "appimage_build"
+program = "MameChdman"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/Mame.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["make", "TOOLS=1", "EMULATOR=0", "-j5"]
+internal_copies = [
+    { from = "Source/Mame/chdman", to = "AppImage/usr/bin/chdman" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/chdman", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+program = "MameChdman"
+platform = "windows"
+search_file = "chdman.exe"
+install_files = ["chdman.exe"]
+release_type = "ARCHIVE"
+
+[[setup_offline]]
+kind = "stored_release"
+program = "MameChdman"
+platform = "linux"

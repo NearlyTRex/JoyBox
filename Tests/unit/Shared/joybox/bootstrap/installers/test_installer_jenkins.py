@@ -17,14 +17,14 @@ def test_the_env_carries_the_ports_and_repositories(docker_app):
 
 
 def test_both_ports_stay_on_loopback():
-    template = installer_jenkins.docker_compose_template
+    template = installer_jenkins.DOCKER_COMPOSE_TEMPLATE
 
     assert '"127.0.0.1:${JENKINS_PORT_HTTP}:8080"' in template
     assert '"127.0.0.1:${JENKINS_PORT_AGENT}:50000"' in template
 
 
 def test_the_repositories_are_mounted_read_only():
-    assert "${JENKINS_REPOSITORIES_DIR}:/mnt/repositories:ro" in installer_jenkins.docker_compose_template
+    assert "${JENKINS_REPOSITORIES_DIR}:/mnt/repositories:ro" in installer_jenkins.DOCKER_COMPOSE_TEMPLATE
 
 
 def test_the_site_is_served_on_its_subdomain(docker_app):
@@ -60,4 +60,4 @@ def test_a_failed_compose_install_fails_after_the_script_is_written(docker_app, 
 
     assert not app.installer.install()
     assert app.app_dir in app.connection.made_directories
-    assert app.connection.written("joybox-admin.groovy") == installer_jenkins.admin_script
+    assert app.connection.written("joybox-admin.groovy") == installer_jenkins.ADMIN_SCRIPT

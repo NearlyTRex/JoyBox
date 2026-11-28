@@ -11,8 +11,8 @@ from legacy_helpers import HEIRLOOM, heirloom_game, heirloom_list
 
 def summary(purchases):
     return [(
-        purchase.get_value(config.json_key_store_appid),
-        purchase.get_value(config.json_key_store_name)) for purchase in purchases]
+        purchase.get_value(config.JSON_KEY_STORE_APPID),
+        purchase.get_value(config.JSON_KEY_STORE_NAME)) for purchase in purchases]
 
 
 ###########################################################

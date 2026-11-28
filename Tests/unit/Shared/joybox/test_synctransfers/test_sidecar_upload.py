@@ -6,7 +6,7 @@ import pytest
 
 # Local imports
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
 from joybox import logger
 from joybox import synctransfers
 from sync_helpers import REMOTE, REMOTE_TYPE, make_database, read_database
@@ -59,7 +59,7 @@ def test_a_recorded_file_carries_its_hash_size_and_time(tree, remote, temp_dirs)
     upload(tree)
     entry = read_database(remote.store)["Roms/top.zip"]
 
-    assert entry["hash"] == hashing.calculate_file_md5(str(tree / "top.zip"))
+    assert entry["hash"] == hashutil.calculate_file_md5(str(tree / "top.zip"))
     assert entry["size"] == 3
     assert entry["mtime"] > 0
 
@@ -207,14 +207,14 @@ def test_a_failed_database_upload_is_a_failure(tree, remote, temp_dirs):
 
 @pytest.fixture
 def unreadable(monkeypatch):
-    original = hashing.calculate_file_md5
+    original = hashutil.calculate_file_md5
 
     def calculate(src, **kwargs):
         if os.path.basename(src) == "game.zip":
             return ""
         return original(src, **kwargs)
 
-    monkeypatch.setattr(hashing, "calculate_file_md5", calculate)
+    monkeypatch.setattr(hashutil, "calculate_file_md5", calculate)
 
 
 @pytest.fixture
@@ -255,3 +255,22 @@ def test_an_unhashable_file_in_a_large_directory_stops_the_update_when_asked(tre
     assert upload(tree, exit_on_failure = True) is False
     assert remote.uploads == []
     assert not os.path.exists(temp_dirs[0])
+
+
+###########################################################
+# Sidecar entry selection
+###########################################################
+
+def test_only_hashed_files_the_database_lacks_become_entries():
+    hash_data = {"a.zip": {"hash": "aa"}, "b.zip": {"hash": "bb"}}
+
+    entries = synctransfers.get_new_sidecar_entries(hash_data, "Games", {"Games/a.zip"})
+
+    assert entries == [{"hash": "bb", "file_path": "Games/b.zip"}]
+
+
+@pytest.mark.parametrize("subpath, expected", [("", ["b.zip"]), ("Games", ["a.zip"])])
+def test_files_missing_from_the_sidecar_are_matched_under_the_subpath(subpath, expected):
+    sidecar_files = {"a.zip": {}, "Games/b.zip": {}}
+
+    assert synctransfers.get_files_missing_from_sidecar(["a.zip", "b.zip"], sidecar_files, subpath) == expected

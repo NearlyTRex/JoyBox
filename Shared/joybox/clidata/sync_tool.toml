@@ -1,0 +1,65 @@
+# Help text for the sync_tool command, read by joybox/arguments.py
+
+description = "Run an rclone operation between the local locker and a remote locker."
+details = """
+Every action works between the local locker's directory and the remote named by the
+`-l` locker's settings (`locker_<name>_name`, `_type`, `_remote_path` in
+`[UserData.Share]`). Files are transferred as they are: this tool does not apply
+JoyBox encryption, even for a locker marked `encrypted`.
+
+Actions:
+
+- `Init`: check the locker's remote resolves. Remotes are defined by the settings, the
+  JSON in `_config` included, and reach rclone through the environment of each command,
+  so nothing is created and no credential is written to rclone.conf.
+- `Download` / `Upload`: `rclone copy` from remote to local, or local to remote. Files
+  that differ are overwritten; nothing is deleted.
+- `Pull` / `Push`: `rclone sync` from remote to local, or local to remote. The
+  destination is made identical to the source, so files that exist only at the
+  destination are deleted.
+- `Merge`: `rclone bisync --check-access` in both directions.
+- `Diff`: `rclone check` between local and remote, writing the result lists to the
+  `--diff_*_path` files and logging a count of each kind of difference.
+- `DiffSync`: uses a diff to upload local-only files, download remote-only files (or
+  recycle them with `-r`), and copy each changed file in whichever direction has the
+  newer modification time. Without `--diff_dir` it runs a fresh diff first.
+- `EmptyRecycle`: permanently delete the remote's recycle folder.
+- `List`: list every file on the remote with its size.
+- `Mount`: mount the remote at the locker's `_mount_path` with `rclone mount`, in the
+  background on Linux. The locker's `_mount_flags` may contain `no_cache`,
+  `no_checksum`, `no_modtime`, `no_seek` and `read_only`.
+
+The locker's configured `excluded_dirs` are left out of every transfer and diff unless
+`--excludes` replaces them. `Diff` and `DiffSync` also skip dot-directories and the
+recycle folder."""
+section = "Backups & Lockers"
+see_also = [
+    "backup_tool",
+    "upload_game_files",
+    "master_backup",
+    "locker_sync_tool",
+]
+notes = [
+    "`-l` has no default and must name a remote locker; the default action is `Init`.",
+    "The local side is always the `Local` locker's directory, which must exist for the transfer and diff actions.",
+    "`Merge` needs an `RCLONE_TEST` file in both roots (`--check-access`), and the first run for a pair needs `-e`.",
+    "`--excludes` replaces the configured list rather than adding to it. An empty value means the configured list is used.",
+    "`Diff` writes its lists relative to the current directory unless the `--diff_*_path` options give full paths. For `DiffSync` those options are file names inside `--diff_dir`.",
+    "`Mount` does nothing when the mount path already has files in it, since it assumes the remote is mounted. With `-v` rclone logs to `/tmp/rclone.log`.",
+    "Under `-p` no rclone command is run at all, so a pretend run only shows the preview.",
+]
+examples = [
+    ["Check the Hetzner locker's remote resolves", "sync_tool -a Init -l Hetzner"],
+    ["Copy everything from the remote into the local locker", "sync_tool -a Download -l Hetzner"],
+    ["Show the paths an upload would use without running it", "sync_tool -a Upload -l Hetzner -p -v"],
+    ["Make the remote an exact copy of the local locker, deleting remote-only files", "sync_tool -a Push -l Gdrive"],
+    ["Make the local locker an exact copy of the remote, deleting local-only files", "sync_tool -a Pull -l Gdrive"],
+    ["Merge changes both ways, rebuilding bisync's state from scratch", "sync_tool -a Merge -l Gdrive -e"],
+    ["Write difference lists to the current directory, comparing sizes only", "sync_tool -a Diff -l Hetzner -q"],
+    ["Act on difference lists written by an earlier Diff", "sync_tool -a DiffSync -l Hetzner --diff_dir /path/to/diff/files"],
+    ["Diff, upload local-only files and recycle remote-only ones", "sync_tool -a DiffSync -l Hetzner -r"],
+    ["Permanently delete the remote recycle folder", "sync_tool -a EmptyRecycle -l Hetzner"],
+    ["List every file on the remote", "sync_tool -a List -l Hetzner"],
+    ["Mount the remote so other tools can read it", "sync_tool -a Mount -l Hetzner"],
+    ["Download without the locker's configured exclusions", "sync_tool -a Download -l Hetzner --excludes \"Testing/**\""],
+]

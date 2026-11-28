@@ -193,7 +193,7 @@ def test_a_successful_call_is_not_retried():
         calls.append(1)
         return "value"
 
-    assert datautils.retry_with_backoff(succeed, max_retries = 3, initial_delay = 0) == "value"
+    assert datautils.retry_with_backoff(succeed, retry_on = (RuntimeError,), max_retries = 3, initial_delay = 0) == "value"
     assert len(calls) == 1
 
 
@@ -204,7 +204,7 @@ def test_a_first_attempt_returning_none_is_accepted():
     def find_nothing():
         calls.append(1)
 
-    assert datautils.retry_with_backoff(find_nothing, max_retries = 3, initial_delay = 0) is None
+    assert datautils.retry_with_backoff(find_nothing, retry_on = (RuntimeError,), max_retries = 3, initial_delay = 0) is None
     assert len(calls) == 1, "a clean empty result must not trigger a retry storm"
 
 
@@ -217,8 +217,20 @@ def test_an_exception_is_retried_until_it_succeeds():
             raise RuntimeError("boom")
         return "recovered"
 
-    assert datautils.retry_with_backoff(flaky, max_retries = 5, initial_delay = 0) == "recovered"
+    assert datautils.retry_with_backoff(flaky, retry_on = (RuntimeError,), max_retries = 5, initial_delay = 0) == "recovered"
     assert len(attempts) == 3
+
+
+def test_an_error_outside_retry_on_is_not_retried():
+    attempts = []
+
+    def broken():
+        attempts.append(1)
+        raise KeyError("bug")
+
+    with pytest.raises(KeyError):
+        datautils.retry_with_backoff(broken, retry_on = (RuntimeError,), max_retries = 3, initial_delay = 0)
+    assert len(attempts) == 1
 
 
 def test_retries_give_up_and_return_none():
@@ -228,7 +240,7 @@ def test_retries_give_up_and_return_none():
         attempts.append(1)
         raise RuntimeError("boom")
 
-    assert datautils.retry_with_backoff(always_raise, max_retries = 3, initial_delay = 0) is None
+    assert datautils.retry_with_backoff(always_raise, retry_on = (RuntimeError,), max_retries = 3, initial_delay = 0) is None
     assert len(attempts) == 3
 
 
@@ -241,7 +253,7 @@ def test_none_after_an_exception_keeps_retrying():
         if len(attempts) == 1:
             raise RuntimeError("boom")
 
-    assert datautils.retry_with_backoff(raise_then_none, max_retries = 4, initial_delay = 0) is None
+    assert datautils.retry_with_backoff(raise_then_none, retry_on = (RuntimeError,), max_retries = 4, initial_delay = 0) is None
     assert len(attempts) > 2, "a None after a failure should not end the run early"
 
 
@@ -253,6 +265,7 @@ def test_cleanup_runs_after_a_failed_attempt():
 
     datautils.retry_with_backoff(
         always_raise,
+        retry_on = (RuntimeError,),
         cleanup_func = lambda: cleanups.append(1),
         max_retries = 3,
         initial_delay = 0)
@@ -265,6 +278,7 @@ def test_cleanup_does_not_run_when_the_call_succeeds():
 
     datautils.retry_with_backoff(
         lambda: "value",
+        retry_on = (RuntimeError,),
         cleanup_func = lambda: cleanups.append(1),
         max_retries = 3,
         initial_delay = 0)
@@ -287,6 +301,7 @@ def test_a_failing_cleanup_does_not_mask_the_retry():
 
     assert datautils.retry_with_backoff(
         flaky,
+        retry_on = (RuntimeError,),
         cleanup_func = bad_cleanup,
         max_retries = 3,
         initial_delay = 0) == "recovered"
@@ -305,6 +320,7 @@ def test_a_none_retry_cleans_up_and_backs_off(monkeypatch):
 
     assert datautils.retry_with_backoff(
         raise_then_none,
+        retry_on = (RuntimeError,),
         cleanup_func = lambda: cleanups.append(1),
         max_retries = 3,
         initial_delay = 1,
@@ -330,6 +346,7 @@ def test_verbose_retries_report_each_attempt_and_the_final_failure(monkeypatch, 
 
     assert datautils.retry_with_backoff(
         always_raise,
+        retry_on = (RuntimeError,),
         cleanup_func = bad_cleanup,
         max_retries = 2,
         verbose = True,
@@ -343,5 +360,5 @@ def test_verbose_retries_report_each_attempt_and_the_final_failure(monkeypatch, 
 def test_zero_retries_never_calls():
     calls = []
 
-    assert datautils.retry_with_backoff(lambda: calls.append(1), max_retries = 0) is None
+    assert datautils.retry_with_backoff(lambda: calls.append(1), retry_on = (RuntimeError,), max_retries = 0) is None
     assert calls == []

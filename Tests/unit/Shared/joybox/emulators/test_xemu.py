@@ -105,7 +105,7 @@ def test_configure_stops_when_a_system_file_cannot_be_copied(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Xemu", "-dvd_path", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Xemu", "-dvd_path", config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flags(seams):

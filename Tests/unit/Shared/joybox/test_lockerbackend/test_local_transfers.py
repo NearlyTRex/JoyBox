@@ -122,6 +122,20 @@ def test_run_flags_reach_the_download(remote, dest):
     assert (passed["verbose"], passed["pretend_run"], passed["exit_on_failure"]) == (True, True, True)
 
 
+@pytest.mark.parametrize("cryption_type", [config.CryptionType.NONE, config.CryptionType.ENCRYPT])
+@pytest.mark.parametrize("show_progress", [True, False])
+def test_show_progress_reaches_the_download(remote, cryption, dest, cryption_type, show_progress):
+    dest.sync_from(backend(), "Game.zip", "Game.zip", cryption_type = cryption_type, show_progress = show_progress)
+
+    assert only(remote, "download_files_from_remote")["show_progress"] is show_progress
+
+
+def test_a_download_shows_progress_by_default(remote, dest):
+    dest.sync_from(backend(), "Game.zip", "Game.zip")
+
+    assert only(remote, "download_files_from_remote")["show_progress"] is True
+
+
 def test_a_download_is_encrypted_on_its_way_in(remote, cryption, dest):
     assert dest.sync_from(
         backend(), "Games/Game.zip", "Games/Game.zip",

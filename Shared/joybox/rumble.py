@@ -2,9 +2,10 @@
 import re
 
 # Local imports
-import joybox.logger as logger
-import joybox.command as command
-import joybox.programs as programs
+from joybox import logger
+from joybox import command
+from joybox import commandbase
+from joybox import programs
 
 # Browser user agent. Rumble fingerprint-blocks some HTTP clients (python
 # requests gets a 403); curl with a browser user agent is served normally.
@@ -37,18 +38,15 @@ def is_rumble_channel_url(url):
 def fetch_channel_page(page_url, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
-    curl_tool = None
-    if programs.is_tool_installed("Curl"):
-        curl_tool = programs.get_tool_program("Curl")
+    curl_tool = programs.find_tool_program("Curl")
     if not curl_tool:
-        logger.log_error("Curl was not found")
         return None
 
     # Fetch (silent, follow redirects, browser user agent)
     fetch_cmd = [curl_tool, "-s", "-L", "-A", USER_AGENT, page_url]
     return command.run_output_command(
         cmd = fetch_cmd,
-        options = command.create_command_options(blocking_processes = [curl_tool]),
+        options = commandbase.create_command_options(blocking_processes = [curl_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

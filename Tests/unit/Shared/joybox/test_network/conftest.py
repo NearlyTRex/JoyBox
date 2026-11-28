@@ -7,6 +7,9 @@ import pytest
 # Local imports
 from joybox import network
 
+real_requests = pytest.importorskip("requests")
+real_github = pytest.importorskip("github")
+
 # Helpers beside this file are imported by name, so this directory has to be
 # importable; pytest only loads conftest itself. Appended rather than inserted,
 # so this directory's own conftest cannot shadow the suite's top level one.
@@ -31,8 +34,12 @@ def github(monkeypatch):
         def get_user(self):
             return FakeUser(state["login"], state["repos"])
 
+        def get_repo(self, full_name):
+            return types.SimpleNamespace(full_name = full_name)
+
     module = types.ModuleType("github")
     module.Github = FakeGithub
+    module.GithubException = real_github.GithubException
     monkeypatch.setitem(sys.modules, "github", module)
     return state
 
@@ -67,6 +74,7 @@ def requests_module(monkeypatch):
     module = types.ModuleType("requests")
     module.get = record("get")
     module.post = record("post")
+    module.RequestException = real_requests.RequestException
     monkeypatch.setitem(sys.modules, "requests", module)
     return state
 

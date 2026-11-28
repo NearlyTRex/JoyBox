@@ -1,7 +1,14 @@
 # Imports
 from joybox.bootstrap.environments.env_local_ubuntu import (
-    LocalUbuntu as LocalUbuntu)
+    LocalUbuntu)
 from joybox.bootstrap.environments.env_remote_ubuntu import (
-    RemoteUbuntu as RemoteUbuntu)
+    RemoteUbuntu)
 from joybox.bootstrap.environments.env import (
-    Environment as Environment)
+    Environment)
+
+# The names this package re-exports
+__all__ = [
+    "LocalUbuntu",
+    "RemoteUbuntu",
+    "Environment",
+]

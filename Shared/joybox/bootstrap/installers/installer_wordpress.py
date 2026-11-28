@@ -2,20 +2,20 @@
 import os
 
 # Local imports
-import joybox.bootstrap as bootstrap
+from joybox import bootstrap
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
-from . import installer_nginx
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
+from . import installer_nginx
 
 # Apex root snippet template
 #
 # Replaces the static snippet installed by the nginx component, so WordPress
 # serves the apex domain without a second server block claiming the same
 # server_name.
-apex_proxy_snippet_template = """
+APEX_PROXY_SNIPPET_TEMPLATE = """
 location / {{
     proxy_pass http://localhost:{port_http};
     proxy_set_header Host $host;
@@ -29,7 +29,7 @@ location / {{
 # Redirect config template
 #
 # The apex is canonical; www redirects to it.
-nginx_redirect_config_template = """
+NGINX_REDIRECT_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -48,7 +48,7 @@ server {{
 """
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   wordpress:
     image: ${WORDPRESS_IMAGE}
@@ -117,7 +117,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 WORDPRESS_DB_HOST=db
 WORDPRESS_DB_USER={db_user}
 WORDPRESS_DB_PASSWORD={db_password}
@@ -132,7 +132,8 @@ WP_ADMIN_PASS={admin_pass}
 WP_ADMIN_EMAIL={admin_email}
 """
 
-# Wordpress
+# Runs WordPress with MariaDB in docker on the apex domain, redirecting www,
+# and seeds it with wp-cli from the repo unless seeding is turned off
 class Wordpress(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
@@ -148,7 +149,27 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         }
         self.domain_name = serverinfo.get_domain_name()
         self.site_url = f"https://{self.domain_name}"
-        self.env_values = {
+        self.env_values = self._get_env_values()
+        self.seed_enabled = str(settings.get_value("UserData.Wordpress", "wordpress_seed_enabled",
+            default_value = "True", throw_exception = False)).strip().lower() in ["true", "1", "yes"]
+
+        # Templates
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.app_subdirs = ["seed"]
+
+        # Behavior
+        self.required_settings = ["domain", "subdomain", "port_http", "db_user", "db_name", "db_password", "db_root_password",
+            "admin_user", "admin_pass", "admin_email"]
+
+        # Backup
+        self.backup_label = "Wordpress"
+        self.backup_database = "db"
+        self.backup_volumes = ["wp_data"]
+
+    # The .env template values: database credentials, site details and the admin login
+    def _get_env_values(self):
+        return {
             "db_user": settings.get_value("UserData.Wordpress", "wordpress_db_user"),
             "db_password": settings.get_value("UserData.Wordpress", "wordpress_db_pass"),
             "db_name": settings.get_value("UserData.Wordpress", "wordpress_db_name"),
@@ -166,52 +187,38 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
             "admin_email": settings.get_value("UserData.Wordpress", "wordpress_admin_email",
                 default_value = "", throw_exception = False)
         }
-        self.seed_enabled = str(settings.get_value("UserData.Wordpress", "wordpress_seed_enabled",
-            default_value = "True", throw_exception = False)).strip().lower() in ["true", "1", "yes"]
 
-        # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.app_subdirs = ["seed"]
-
-        # Behavior
-        self.required_settings = ["domain", "subdomain", "port_http", "db_user", "db_name", "db_password", "db_root_password",
-            "admin_user", "admin_pass", "admin_email"]
-
-        # Backup
-        self.backup_label = "Wordpress"
-        self.backup_database = "db"
-        self.backup_volumes = ["wp_data"]
-
+    # Replace the apex-root snippet with a proxy to WordPress and install the www
+    # redirect; False when either cannot be staged
     def install_nginx_config(self):
 
         # WordPress serves the apex domain, so it takes over the apex-root
         # snippet rather than adding a server block for the same name.
         logger.log_info("Installing apex root snippet")
-        self.install_nginx_snippet("apex-root.conf",
-            apex_proxy_snippet_template.format(**self.nginx_config_values))
+        if not self.install_nginx_snippet("apex-root.conf",
+                APEX_PROXY_SNIPPET_TEMPLATE.format(**self.nginx_config_values)):
+            return False
 
         # Redirect the www host to the canonical apex
         logger.log_info("Installing www redirect")
-        nginx_tmp_path = f"/tmp/{self.app_name}.conf"
-        if self.connection.write_file(nginx_tmp_path,
-                nginx_redirect_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", nginx_tmp_path], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.remove_file_or_directory(nginx_tmp_path)
-        return True
+        return self.install_nginx_conf(f"{self.app_name}.conf",
+            NGINX_REDIRECT_CONFIG_TEMPLATE.format(**self.nginx_config_values))
 
+    # Put back the static apex-root snippet and remove the www redirect; False when
+    # the snippet cannot be staged, after the redirect is still removed
     def uninstall_nginx_config(self):
 
         # Hand the apex back to the static fallback
         logger.log_info("Restoring static apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", installer_nginx.apex_root_snippet_template)
+        restored = self.install_nginx_snippet("apex-root.conf", installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE)
 
         # Remove the www redirect
         logger.log_info("Removing www redirect")
         self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
-        return True
+        return restored
 
+    # Once WordPress is healthy, copy the repo's seed files to the server and run
+    # seed.sh in the wpcli container; skipped when seeding is off
     def post_install(self):
 
         # Seeding is opt-out

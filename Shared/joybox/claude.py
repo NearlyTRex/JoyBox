@@ -1,13 +1,18 @@
 # Imports
+import importlib
 import os
 import os.path
 
 # Local imports
-import joybox.fileops as fileops
-import joybox.settings as settings
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import fileops
+from joybox import settings
+from joybox import logger
+from joybox import paths
+from joybox import serialization
+
+# Get anthropic, imported on first use
+def _get_anthropic():
+    return importlib.import_module("anthropic")
 
 # Default model
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
@@ -27,7 +32,7 @@ def is_configured():
 # Create Anthropic client
 def create_client():
     try:
-        import anthropic as anthropic_lib
+        anthropic_lib = _get_anthropic()
     except ImportError:
         logger.log_error("Anthropic not installed")
         return None
@@ -36,6 +41,31 @@ def create_client():
         logger.log_error("Anthropic API key not configured in JoyBox.ini")
         return None
     return anthropic_lib.Anthropic(api_key=api_key)
+
+# The messages.create parameters for one user prompt, with the system prompt when given
+def _build_message_params(prompt, model, max_tokens, system_prompt):
+    params = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+    if system_prompt:
+        params["system"] = system_prompt
+    return params
+
+# A friendly warning for an API error: credits, key, rate limit, overload, or the error itself
+def _describe_api_error(error_str):
+    if "credit balance is too low" in error_str:
+        return "Anthropic API: Insufficient credits. Add credits at https://console.anthropic.com/settings/billing"
+    if "invalid_api_key" in error_str or "authentication" in error_str.lower():
+        return "Anthropic API: Invalid API key. Check your key in JoyBox.ini"
+    if "rate_limit" in error_str.lower():
+        return "Anthropic API: Rate limited. Please wait and try again"
+    if "overloaded" in error_str.lower():
+        return "Anthropic API: Service overloaded. Please try again later"
+    return "Anthropic API error: %s" % error_str
 
 # Send message to Claude
 def send_message(
@@ -55,20 +85,11 @@ def send_message(
     client = create_client()
     if not client:
         return None
+    anthropic_lib = _get_anthropic()
 
     try:
         # Build message parameters
-        params = {
-            "model": model,
-            "max_tokens": max_tokens,
-            "messages": [
-                {"role": "user", "content": prompt}
-            ]
-        }
-
-        # Add system prompt if provided
-        if system_prompt:
-            params["system"] = system_prompt
+        params = _build_message_params(prompt, model, max_tokens, system_prompt)
 
         # Send request
         if verbose:
@@ -81,18 +102,8 @@ def send_message(
         return None
 
     # Extract friendly error message from API errors
-    except Exception as e:
-        error_str = str(e)
-        if "credit balance is too low" in error_str:
-            logger.log_warning("Anthropic API: Insufficient credits. Add credits at https://console.anthropic.com/settings/billing")
-        elif "invalid_api_key" in error_str or "authentication" in error_str.lower():
-            logger.log_warning("Anthropic API: Invalid API key. Check your key in JoyBox.ini")
-        elif "rate_limit" in error_str.lower():
-            logger.log_warning("Anthropic API: Rate limited. Please wait and try again")
-        elif "overloaded" in error_str.lower():
-            logger.log_warning("Anthropic API: Service overloaded. Please try again later")
-        else:
-            logger.log_warning("Anthropic API error: %s" % error_str)
+    except anthropic_lib.APIError as e:
+        logger.log_warning(_describe_api_error(str(e)))
         return None
 
 # Process a file with a prompt template
@@ -136,6 +147,70 @@ def process_file(
         system_prompt = system_prompt,
         verbose = verbose)
 
+# The files under input_path to process, only those with the given extensions when there are any
+def _get_files_to_process(input_path, extensions):
+    if extensions:
+        return paths.build_file_list_by_extensions(input_path, extensions = extensions)
+    return paths.build_file_list(input_path)
+
+# Write Claude's result to the output file, making its directory first; whether the write worked
+def _write_result_file(output_file, result, verbose):
+    output_dir = os.path.dirname(output_file)
+    if not paths.does_path_exist(output_dir):
+        fileops.make_directory(
+            src = output_dir,
+            verbose = verbose)
+    return serialization.write_text_file(
+        src = output_file,
+        contents = result,
+        verbose = verbose)
+
+# Process one file into the same relative spot under output_path; "success", "skip" or "error"
+def _process_one_file(input_file, input_path, output_path, prompt_template, model, max_tokens, system_prompt, skip_existing, verbose, pretend_run):
+
+    # Calculate relative path and output path
+    rel_path = os.path.relpath(input_file, input_path)
+    output_file = os.path.join(output_path, rel_path)
+
+    # Skip if exists and skip_existing is set
+    if skip_existing and paths.does_path_exist(output_file):
+        if verbose:
+            logger.log_info("Skipping (exists): %s" % rel_path)
+        return "skip"
+
+    # Start processing file
+    logger.log_info("Processing: %s" % rel_path)
+    if pretend_run:
+        logger.log_info("  Would write to: %s" % output_file)
+        return "success"
+
+    # Process file with Claude
+    result = process_file(
+        input_file = input_file,
+        prompt_template = prompt_template,
+        input_dir = input_path,
+        output_dir = output_path,
+        model = model,
+        max_tokens = max_tokens,
+        system_prompt = system_prompt,
+        verbose = verbose)
+    if result is None:
+        logger.log_warning("Failed to process: %s" % rel_path)
+        return "error"
+
+    # Write output file
+    return "success" if _write_result_file(output_file, result, verbose) else "error"
+
+# Process each file in turn; (success, skip, error) counts
+def _process_each_file(files_to_process, input_path, output_path, prompt_template, model, max_tokens, system_prompt, skip_existing, verbose, pretend_run):
+    counts = {"success": 0, "skip": 0, "error": 0}
+    for input_file in files_to_process:
+        status = _process_one_file(
+            input_file, input_path, output_path, prompt_template, model, max_tokens, system_prompt,
+            skip_existing, verbose, pretend_run)
+        counts[status] += 1
+    return (counts["success"], counts["skip"], counts["error"])
+
 # Process multiple files with a prompt file
 def process_files(
     input_path,
@@ -159,10 +234,7 @@ def process_files(
         return (0, 0, 0)
 
     # Build file list
-    if extensions:
-        files_to_process = paths.build_file_list_by_extensions(input_path, extensions = extensions)
-    else:
-        files_to_process = paths.build_file_list(input_path)
+    files_to_process = _get_files_to_process(input_path, extensions)
     if not files_to_process:
         logger.log_warning("No files found to process")
         return (0, 0, 0)
@@ -175,58 +247,63 @@ def process_files(
             pretend_run = pretend_run)
 
     # Process files
-    success_count = 0
-    skip_count = 0
-    error_count = 0
-    for input_file in files_to_process:
+    return _process_each_file(
+        files_to_process, input_path, output_path, prompt_template, model, max_tokens, system_prompt,
+        skip_existing, verbose, pretend_run)
 
-        # Calculate relative path and output path
-        rel_path = os.path.relpath(input_file, input_path)
-        output_file = os.path.join(output_path, rel_path)
-        output_dir = os.path.dirname(output_file)
+# Quit unless the prompt file is given and exists, and, outside a pretend run, an API key is set
+def check_process_requirements(prompt_file, pretend_run = False):
+    if not prompt_file:
+        logger.log_error("Prompt file is required (-f/--prompt_file)", quit_program = True)
+    if not paths.does_path_exist(prompt_file):
+        logger.log_error("Prompt file not found: %s" % prompt_file, quit_program = True)
+    if not pretend_run and not is_configured():
+        logger.log_error("Anthropic API key not configured", quit_program = True)
 
-        # Skip if exists and skip_existing is set
-        if skip_existing and paths.does_path_exist(output_file):
-            if verbose:
-                logger.log_info("Skipping (exists): %s" % rel_path)
-            skip_count += 1
-            continue
+# The comma-separated extensions as a list, blanks dropped and each starting with a dot
+def parse_extensions(extensions_text):
+    if not extensions_text:
+        return []
+    extensions = [ext.strip() for ext in extensions_text.split(",") if ext.strip()]
+    return [ext if ext.startswith(".") else "." + ext for ext in extensions]
 
-        # Start processing file
-        logger.log_info("Processing: %s" % rel_path)
-        if pretend_run:
-            logger.log_info("  Would write to: %s" % output_file)
-            success_count += 1
-            continue
+# The preview lines for a process_files run, counting the files it would send
+def get_process_preview_details(input_path, output_path, prompt_file, model, extensions):
+    file_count = len(_get_files_to_process(input_path, extensions))
+    details = [
+        "Input: %s" % input_path,
+        "Output: %s" % output_path,
+        "Prompt: %s" % prompt_file,
+        "Model: %s" % model,
+        "Files: %d" % file_count
+    ]
+    if extensions:
+        details.append("Extensions: %s" % ", ".join(extensions))
+    return details
 
-        # Process file with Claude
-        result = process_file(
-            input_file = input_file,
-            prompt_template = prompt_template,
-            input_dir = input_path,
-            output_dir = output_path,
-            model = model,
-            max_tokens = max_tokens,
-            system_prompt = system_prompt,
-            verbose = verbose)
-        if result is None:
-            logger.log_warning("Failed to process: %s" % rel_path)
-            error_count += 1
-            continue
-
-        # Create output directory if needed
-        if not paths.does_path_exist(output_dir):
-            fileops.make_directory(
-                src = output_dir,
-                verbose = verbose)
-
-        # Write output file
-        success = serialization.write_text_file(
-            src = output_file,
-            contents = result,
-            verbose = verbose)
-        if success:
-            success_count += 1
-        else:
-            error_count += 1
-    return (success_count, skip_count, error_count)
+# Run process_files and log its counts, as a warning when any file failed
+def process_files_with_summary(
+    input_path,
+    output_path,
+    prompt_file,
+    extensions = None,
+    model = None,
+    max_tokens = None,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False):
+    success_count, skip_count, error_count = process_files(
+        input_path = input_path,
+        output_path = output_path,
+        prompt_file = prompt_file,
+        extensions = extensions,
+        model = model,
+        max_tokens = max_tokens,
+        skip_existing = skip_existing,
+        verbose = verbose,
+        pretend_run = pretend_run)
+    summary = "Completed: %d success, %d skipped, %d errors" % (success_count, skip_count, error_count)
+    if error_count > 0:
+        logger.log_warning(summary)
+    else:
+        logger.log_info(summary)

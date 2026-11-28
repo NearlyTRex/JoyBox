@@ -1,0 +1,35 @@
+# BalenaEtcher: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BalenaEtcher]
+run_sandboxed = { windows = false, linux = false }
+
+[config.BalenaEtcher.program]
+windows = "BalenaEtcher/windows/balenaEtcher.exe"
+linux = "BalenaEtcher/linux/BalenaEtcher.AppImage"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "balena-io"
+github_repo = "etcher"
+starts_with = "balenaEtcher-win32-x64"
+ends_with = ".zip"
+search_file = "balenaEtcher.exe"
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "balena-io"
+github_repo = "etcher"
+starts_with = "balenaEtcher"
+ends_with = ".AppImage"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "balenaEtcher.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

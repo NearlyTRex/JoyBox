@@ -1,0 +1,21 @@
+# Help text for the clean_exif_data command, read by joybox/arguments.py
+
+description = "Strip all EXIF and other embedded metadata from image files."
+details = """
+Runs ExifTool with `-All=` over the input, removing every writable metadata tag
+(camera, GPS location, timestamps, thumbnails and so on). A directory is processed
+recursively. Files are rewritten in place with `-overwrite_original`, so no backup
+copies are left behind."""
+section = "Files & Archives"
+see_also = [
+    "setup_tools",
+]
+notes = [
+    "The change cannot be undone; copy anything whose metadata you want to keep first.",
+    "ExifTool must be installed with `setup_tools -k ExifTool`.",
+]
+examples = [
+    ["Strip metadata from one photo", "clean_exif_data -i ~/Pictures/photo.jpg"],
+    ["Strip metadata from every file in a directory tree", "clean_exif_data -i ~/Pictures/ToShare"],
+    ["Dry run, leaving every file untouched", "clean_exif_data -i ~/Pictures/ToShare -p -v"],
+]

@@ -3,21 +3,21 @@ import os
 import os.path
 import argparse
 import enum
+import functools
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 
 # Enum parser
 def parse_enum_value(enum_type, enum_value):
     if isinstance(enum_value, enum_type):
         return enum_value
-    else:
-        try:
-            return enum_type.from_string(enum_value)
-        except Exception:
-            return None
+    if not hasattr(enum_type, "from_string"):
+        return None
+    return enum_type.from_string(enum_value)
 
 # Enum argparse action
 class EnumArgparseAction(argparse.Action):
@@ -41,28 +41,51 @@ class HelpFormatter(argparse.RawDescriptionHelpFormatter, argparse.ArgumentDefau
             return action.help
         return super()._get_help_string(action)
 
+# The folder holding each command's help text, one <command>.toml per command
+def get_command_help_dir():
+    return paths.join_paths(os.path.dirname(os.path.abspath(__file__)), "clidata")
+
+# A command's help text from its data file: description, details, examples as
+# [summary, command line] pairs, notes, see_also and section; read once per command
+@functools.cache
+def load_command_help(command):
+    data = serialization.read_toml_file(paths.join_paths(get_command_help_dir(), command + ".toml"), exit_on_failure = True)
+    return {
+        "description": data.get("description"),
+        "details": data.get("details"),
+        "examples": [tuple(example) for example in data.get("examples", [])],
+        "notes": list(data.get("notes", [])),
+        "see_also": list(data.get("see_also", [])),
+        "section": data.get("section"),
+    }
+
 # Argument parser
 class ArgumentParser:
+    # The help text is given directly, or read from the command's data file when
+    # command names one; a value given directly wins over the file's
     def __init__(
         self,
-        description,
+        description = None,
         details = None,
         examples = None,
         notes = None,
         see_also = None,
-        section = None):
-        self.description = description
-        self.details = details
-        self.examples = list(examples or [])
-        self.notes = list(notes or [])
-        self.see_also = list(see_also or [])
-        self.section = section
+        section = None,
+        command = None):
+        written = load_command_help(command) if command else {}
+        self.description = description or written.get("description")
+        self.details = details or written.get("details")
+        self.examples = list(examples or written.get("examples") or [])
+        self.notes = list(notes or written.get("notes") or [])
+        self.see_also = list(see_also or written.get("see_also") or [])
+        self.section = section or written.get("section")
         self.parser = argparse.ArgumentParser(
-            description = description,
+            description = self.description,
             epilog = self._build_epilog(),
             formatter_class = HelpFormatter)
         self._target = self.parser
         self._groups = []
+        self._added = []
         self._warned_unknown = set()
 
     #################################################
@@ -119,6 +142,7 @@ class ArgumentParser:
         action = self._target.add_argument(*self._expand_arg_aliases(declared), **kwargs)
         action.joybox_flags = declared
         action.joybox_description = description
+        self._added.append((action, self._target))
         return action
 
     #################################################
@@ -139,7 +163,7 @@ class ArgumentParser:
 
     # Check if the given name is a known argument
     def is_known_argument(self, name):
-        return any(action.dest == name for action in self.parser._actions)
+        return any(action.dest == name for action, _ in self._added)
 
     #################################################
 
@@ -162,18 +186,13 @@ class ArgumentParser:
                 "default": default,
                 "choices": getattr(action, "joybox_choices", None) or ([str(choice) for choice in action.choices] if action.choices else None),
             }
-        def is_documented(action):
-            return not isinstance(action, argparse._HelpAction)
-        groups = [{
-            "title": None,
-            "options": [describe_action(action) for action in self.parser._actions
-                if is_documented(action) and not any(action in group._group_actions for group in self._groups)],
-        }]
-        for group in self._groups:
-            groups.append({
-                "title": group.title,
-                "options": [describe_action(action) for action in group._group_actions if is_documented(action)],
-            })
+        def describe_target(title, target):
+            return {
+                "title": title,
+                "options": [describe_action(action) for action, added_to in self._added if added_to is target],
+            }
+        groups = [describe_target(None, self.parser)]
+        groups += [describe_target(group.title, group) for group in self._groups]
         return {
             "description": self.description,
             "details": self.details,
@@ -186,21 +205,18 @@ class ArgumentParser:
 
     #################################################
 
-    # Get path
+    # Resolved real path given for the named option; None when the option is undeclared or unset
     def get_path(self, argname):
         if not self.is_known_argument(argname):
             return None
-        args, unknown = self.parse_known_args()
-        args_dict = vars(args)
-        if argname not in args_dict.keys():
+        args, _ = self.parse_known_args()
+        virt_path = vars(args).get(argname)
+        if not virt_path:
             return None
-        if not args_dict[argname]:
-            return None
-        virt_path = args_dict[argname]
         real_path = os.path.realpath(virt_path)
         return real_path
 
-    # Get checked path
+    # Resolved path given for the named option, quitting with an error when it does not exist
     def get_checked_path(self, argname):
         path = self.get_path(argname)
         if not paths.does_path_exist(path):
@@ -209,25 +225,29 @@ class ArgumentParser:
 
     #################################################
 
-    # Add string argument
+    # Declare an option converted by value_type; a positional one becomes optional when it has a default
+    def _add_typed_argument(self, args, value_type, default, required, description):
+        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
+        if is_positional:
+            return self._add_argument(args, description,
+                default = default,
+                nargs = "?" if default is not None else None,
+                type = value_type,
+                help = description)
+        return self._add_argument(args, description,
+            default = default,
+            required = required,
+            type = value_type,
+            help = description)
+
+    # Declare a text option; a positional one becomes optional when it has a default
     def add_string_argument(
         self,
         args,
         default = None,
         required = False,
         description = None):
-        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
-        if is_positional:
-            return self._add_argument(args, description,
-                default = default,
-                nargs = "?" if default is not None else None,
-                type = str,
-                help = description)
-        return self._add_argument(args, description,
-            default = default,
-            required = required,
-            type = str,
-            help = description)
+        return self._add_typed_argument(args, str, default, required, description)
 
     # Add string list argument
     # With several_per_flag, "-c a b" and "-c a -c b" both give ["a", "b"]
@@ -246,27 +266,16 @@ class ArgumentParser:
             type = str,
             help = description)
 
-    # Add integer argument
+    # Declare a whole-number option; a positional one becomes optional when it has a default
     def add_integer_argument(
         self,
         args,
         default = None,
         required = False,
         description = None):
-        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
-        if is_positional:
-            return self._add_argument(args, description,
-                default = default,
-                nargs = "?" if default is not None else None,
-                type = int,
-                help = description)
-        return self._add_argument(args, description,
-            default = default,
-            required = required,
-            type = int,
-            help = description)
+        return self._add_typed_argument(args, int, default, required, description)
 
-    # Add boolean argument
+    # Declare an on/off flag that is False unless passed
     def add_boolean_argument(
         self,
         args,
@@ -275,7 +284,7 @@ class ArgumentParser:
             action = "store_true",
             help = description)
 
-    # Add enum argument
+    # Declare an option parsed into a member of the enum, listing allowed values in help; allow_multiple takes several
     def add_enum_argument(
         self,
         args,
@@ -311,7 +320,7 @@ class ArgumentParser:
             required = required,
             metavar = metavar)
 
-    # Add enum list argument
+    # Declare a comma-delimited option whose allowed values come from the enum; the value stays an unparsed string
     def add_enum_list_argument(
         self,
         args,
@@ -328,7 +337,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add input path argument
+    # Declare -i/--input_path, or the given flags, as a text option
     def add_input_path_argument(self, args = ("-i", "--input_path"), default = None, required = False, description = "Input path"):
         self.add_string_argument(
             args = args,
@@ -336,7 +345,7 @@ class ArgumentParser:
             required = required,
             description = description)
 
-    # Add output path argument
+    # Declare -o/--output_path, or the given flags, as a text option
     def add_output_path_argument(self, args = ("-o", "--output_path"), default = None, required = False, description = "Output path"):
         self.add_string_argument(
             args = args,
@@ -344,13 +353,13 @@ class ArgumentParser:
             required = required,
             description = description)
 
-    # Get input path
+    # Resolved --input_path value, quitting when it is missing on disk unless check_exists is False
     def get_input_path(self, check_exists = True):
         if check_exists:
             return self.get_checked_path("input_path")
         return self.get_path("input_path")
 
-    # Get output path
+    # Resolved --output_path value, quitting when it is missing on disk unless check_exists is False
     def get_output_path(self, check_exists = True):
         if check_exists:
             return self.get_checked_path("output_path")
@@ -358,7 +367,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add game supercategory argument
+    # Declare -u/--game_supercategory, defaulting to roms
     def add_game_supercategory_argument(self, args = ("-u", "--game_supercategory"), description = "Game supercategory type"):
         self.add_enum_argument(
             args = args,
@@ -366,35 +375,45 @@ class ArgumentParser:
             default = config.Supercategory.ROMS,
             description = description)
 
-    # Add game category argument
+    # Declare -c/--game_category as a Category choice with no default
     def add_game_category_argument(self, args = ("-c", "--game_category"), description = "Game category type"):
         self.add_enum_argument(
             args = args,
             arg_type = config.Category,
             description = description)
 
-    # Add game subcategory argument
+    # Declare -s/--game_subcategory as a Subcategory choice with no default
     def add_game_subcategory_argument(self, args = ("-s", "--game_subcategory"), description = "Game subcategory type"):
         self.add_enum_argument(
             args = args,
             arg_type = config.Subcategory,
             description = description)
 
-    # Add game name argument
+    # Declare -n/--game_name as a text option
     def add_game_name_argument(self, args = ("-n", "--game_name"), description = "Game name"):
         self.add_string_argument(
             args = args,
             description = description)
 
-    # Add game offset argument
+    # Declare -g/--game_offset as a text option
     def add_game_offset_argument(self, args = ("-g", "--game_offset"), description = "Game offset"):
         self.add_string_argument(
             args = args,
             description = description)
 
-    # Get selected supercategories
+    # Declare -m/--generation_mode, defaulting to walking the selected categories
+    def add_generation_mode_argument(
+        self,
+        description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory"):
+        self.add_enum_argument(
+            args = ("-m", "--generation_mode"),
+            arg_type = config.GenerationModeType,
+            default = config.GenerationModeType.STANDARD,
+            description = description)
+
+    # The one supercategory passed on the command line, or every supercategory when none was
     def get_selected_supercategories(self, argname = "game_supercategory"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         supercategories = []
         supercategory_arg = getattr(args, argname, None)
         if supercategory_arg:
@@ -403,9 +422,9 @@ class ArgumentParser:
             supercategories = config.Supercategory.members()
         return supercategories
 
-    # Get selected categories
+    # The one category passed on the command line, or every category when none was
     def get_selected_categories(self, argname = "game_category"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         categories = []
         category_arg = getattr(args, argname, None)
         if category_arg:
@@ -414,26 +433,84 @@ class ArgumentParser:
             categories = config.Category.members()
         return categories
 
-    # Get selected subcategories
+    # Map of each selected category to the subcategory passed, or to all of its subcategories when none was;
+    # a subcategory passed without a category selects only the categories that hold it
     def get_selected_subcategories(
         self,
         category_argname = "game_category",
         subcategory_argname = "game_subcategory"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
+        category_arg = getattr(args, category_argname, None)
+        subcategory_arg = getattr(args, subcategory_argname, None)
         subcategory_map = {}
         for category in self.get_selected_categories(argname = category_argname):
-            subcategories = []
-            subcategory_arg = getattr(args, subcategory_argname, None)
+            subcategories = config.subcategory_map.get(category, [])
             if subcategory_arg:
+                if not category_arg and subcategory_arg not in subcategories:
+                    continue
                 subcategories = [subcategory_arg]
-            else:
-                subcategories = config.subcategory_map.get(category, [])
             subcategory_map[category] = subcategories
         return subcategory_map
 
     #################################################
 
-    # Add common arguments
+    # Declare a package setup command's "Selection" options, worded for its kind of package and
+    # the root dir they install under, then its "Backup" options for downloaded releases
+    def add_package_setup_arguments(self, package_word, root_name, example):
+        self.add_group("Selection")
+        self.add_boolean_argument(args = ("-e", "--offline"), description = "Install from the copies backed up in the locker instead of downloading")
+        self.add_boolean_argument(args = ("-c", "--configure"), description = "Run each %s's configuration step after installing it" % package_word)
+        self.add_boolean_argument(args = ("--clean",), description = "Remove the entire %s directory before installing anything" % root_name)
+        self.add_boolean_argument(args = ("-f", "--force"), description = "Remove each selected %s's install directory and reinstall it, even if already installed" % package_word)
+        self.add_string_argument(
+            args = ("-k", "--packages"),
+            description = "Comma-separated %s names to install, e.g. `\"%s\"`; all %ss when omitted" % (package_word, example, package_word))
+        self.add_group("Backup")
+        self.add_enum_argument(
+            args = ("-l", "--locker_type"),
+            arg_type = config.LockerType,
+            default = config.LockerType.ALL,
+            description = "Locker to back downloaded release files up to")
+        self.add_boolean_argument(args = ("-s", "--skip_autobackup"), description = "Do not back downloaded release files up to the locker")
+
+    # The names given by --packages, or None for every package; quits naming any that is not
+    # among the known names
+    def get_selected_packages(self, known_packages, package_type, argname = "packages"):
+        args, _ = self.parse_known_args()
+        packages_arg = getattr(args, argname, None)
+        if not packages_arg:
+            return None
+        packages = [p.strip() for p in packages_arg.split(",") if p.strip()]
+        unknown_packages = [package for package in packages if package not in known_packages]
+        if unknown_packages:
+            logger.log_error("Unknown %s packages: %s" % (package_type, ", ".join(unknown_packages)), quit_program = True)
+        return packages
+
+    # Declare the archive format, password, volume size and delete-originals options of a command
+    # that creates archives, describing what -d deletes
+    def add_archive_creation_arguments(self, delete_description):
+        self.add_enum_argument(
+            args = ("-a", "--archive_type"),
+            arg_type = config.ArchiveFileType,
+            default = config.ArchiveFileType.ZIP,
+            description = "Archive format to create; only `ZIP` and `7Z` are supported")
+        self.add_string_argument(args = ("-w", "--password"), description = "Password to encrypt the archives with; none when omitted")
+        self.add_string_argument(
+            args = ("-s", "--volume_size"),
+            description = "Split archives into volumes of this size, in 7-Zip's `-v` format such as `100m` or `4g`; not split when omitted")
+        self.add_boolean_argument(args = ("-d", "--delete_originals"), description = delete_description)
+
+    # The archive format, password, volume size and delete-originals choice given, as keyword
+    # arguments for the archive functions
+    def get_archive_creation_options(self):
+        args, _ = self.parse_known_args()
+        return {
+            "archive_type": args.archive_type,
+            "password": args.password,
+            "volume_size": args.volume_size,
+            "delete_originals": args.delete_originals}
+
+    # Declare the verbose, pretend-run, exit-on-failure and no-preview flags in a "Common options" group
     def add_common_arguments(self):
         previous_target = self._target
         self.add_group("Common options")

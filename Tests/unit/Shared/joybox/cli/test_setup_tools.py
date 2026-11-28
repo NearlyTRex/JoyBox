@@ -27,7 +27,7 @@ def tool(monkeypatch, isolated_settings):
     harness = CommandHarness(monkeypatch, setup_tools)
     harness.installed = []
     harness.result = True
-    monkeypatch.setattr(setup_tools.programs, "get_tools", lambda: [FakePackage("Alpha"), FakePackage("Beta")])
+    monkeypatch.setattr(setup_tools.tools, "get_tool_list", lambda: [FakePackage("Alpha"), FakePackage("Beta")])
 
     def install(**kwargs):
         harness.installed.append(kwargs["packages"])

@@ -1,146 +1,64 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.release as release
-import joybox.programs as programs
-import joybox.toolbase as toolbase
-import joybox.desktopentry as desktopentry
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import toolbase
+from joybox import settings
 
-# Config files
-config_files = {}
-config_files["Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Streaming Project/Moonlight.conf"] = ""
 
 # Moonlight tool
 class Moonlight(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Moonlight"
+    NAME = "Moonlight"
 
-    # Get config
-    def get_config(self):
-        return {
-            "Moonlight": {
-                "program": {
-                    "windows": "Moonlight/windows/Moonlight.exe",
-                    "linux": "Moonlight/linux/Moonlight.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
-
-    # Setup
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download windows program
-        if programs.should_program_be_installed("Moonlight", "windows"):
-            success = release.download_github_release(
-                github_user = "moonlight-stream",
-                github_repo = "moonlight-qt",
-                starts_with = "MoonlightPortable-x64",
-                ends_with = ".zip",
-                search_file = "Moonlight.exe",
-                install_name = "Moonlight",
-                install_dir = programs.get_program_install_dir("Moonlight", "windows"),
-                backups_dir = programs.get_program_backup_dir("Moonlight", "windows"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight")
-                return False
-
-        # Download linux program
-        if programs.should_program_be_installed("Moonlight", "linux"):
-            success = release.download_github_release(
-                github_user = "moonlight-stream",
-                github_repo = "moonlight-qt",
-                starts_with = "Moonlight",
-                ends_with = "x86_64.AppImage",
-                install_name = "Moonlight",
-                install_dir = programs.get_program_install_dir("Moonlight", "linux"),
-                backups_dir = programs.get_program_backup_dir("Moonlight", "linux"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight")
-                return False
-        return True
-
-    # Setup offline
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup windows program
-        if programs.should_program_be_installed("Moonlight", "windows"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Moonlight", "windows"),
-                install_name = "Moonlight",
-                install_dir = programs.get_program_install_dir("Moonlight", "windows"),
-                search_file = "Moonlight.exe",
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight")
-                return False
-
-        # Setup linux program
-        if programs.should_program_be_installed("Moonlight", "linux"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_program_backup_dir("Moonlight", "linux"),
-                install_name = "Moonlight",
-                install_dir = programs.get_program_install_dir("Moonlight", "linux"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight")
-                return False
-        return True
-
-    # Configure
+    # Write its config files under the tools root, and add or remove its app menu
+    # entry by the Tools.Moonlight moonlight_client setting
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
-            success = fileops.touch_file(
-                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup Moonlight config files")
-                return False
+        if not self.write_config_files(setup_params):
+            return False
 
         # Put it in the app menu on a machine whose streaming role uses it
-        success = desktopentry.set_launcher(
+        return self.set_menu_launcher(
             enabled = settings.get_bool_value("Tools.Moonlight", "moonlight_client", False, throw_exception = False),
             filename = "joybox-moonlight.desktop",
-            name = "Moonlight",
             description = "Play games streamed from the Sunshine host",
-            command = "launch_moonlight",
+            command_name = "launch_moonlight",
             icon = "input-gaming",
-            verbose = setup_params.verbose,
-            pretend_run = setup_params.pretend_run,
-            exit_on_failure = setup_params.exit_on_failure)
-        if not success:
-            logger.log_error("Could not setup the Moonlight launcher")
-            return False
-        return True
+            setup_params = setup_params)
+
+
+###########################################################
+# Launching
+###########################################################
+
+# The Moonlight command line: pair with or list the host, stream the app from it when both are
+# known, or else open Moonlight's host list
+def build_moonlight_command(moonlight_tool, host = None, app = None, pair = False, list_apps = False):
+    launch_cmd = [moonlight_tool]
+    if pair:
+        launch_cmd += ["pair", host]
+    elif list_apps:
+        launch_cmd += ["list", host]
+    elif host and app:
+        launch_cmd += ["stream", host, app]
+    return launch_cmd
+
+# Start Moonlight streaming the given or configured host and app, or pair with or list the host;
+# quits when the options conflict, a host is needed but missing, or Moonlight fails
+def launch_moonlight(host = None, app = None, pair = False, list_apps = False, verbose = False, pretend_run = False, exit_on_failure = False):
+    moonlight_tool = Moonlight().get_installed_program()
+    host = host or settings.get_value("Tools.Moonlight", "moonlight_host", "", throw_exception = False)
+    app = app or settings.get_value("Tools.Moonlight", "moonlight_app", "", throw_exception = False)
+    if pair and list_apps:
+        logger.log_error("--pair and --list cannot be combined", quit_program = True)
+    if (pair or list_apps) and not host:
+        logger.log_error("%s needs a host, from --host or [Tools.Moonlight] moonlight_host" % (
+            "Pairing" if pair else "Listing apps"), quit_program = True)
+    Moonlight().run_launch_command(
+        build_moonlight_command(moonlight_tool, host, app, pair = pair, list_apps = list_apps),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

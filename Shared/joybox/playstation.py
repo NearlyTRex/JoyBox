@@ -6,29 +6,73 @@ import zlib
 import base64
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import command
+from joybox import programs
+from joybox import logger
+from joybox import paths
 from joybox import serialization
 from joybox import fileops
 from joybox import fileedits
-import joybox.iso as iso
-import joybox.chd as chd
+from joybox import iso
+from joybox import chd
 from joybox import runtime
 
 ######################################################
 # Sony PlayStation 3
 ######################################################
 
-# Get decryption key
+# Files a decrypted ps3 iso holds, and the header each starts with when the decryption held
+PS3_DECRYPTED_HEADERS = [
+    (("PS3_GAME", "LICDIR", "LIC.DAT"), "PS3LICDA"),
+    (("PS3_GAME", "USRDIR", "EBOOT.BIN"), "SCE")
+]
+
+# Hex key text from a .dkey file, stripped; empty when the file is missing or unreadable
 def get_ps3_decryption_key(dkey_file):
     if not os.path.exists(dkey_file):
         return ""
     return (serialization.read_text_file(dkey_file) or "").strip()
 
-# Encrypt ps3 iso
+# Run a conversion command, logging the failure given when it does not succeed
+def run_conversion_command(cmd, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
+    code = command.run_returncode_command(
+        cmd = cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        if exit_on_failure:
+            logger.log_error(failure_message, quit_program = True)
+        return False
+    return True
+
+# Finish a conversion: remove its source when asked, and check its result exists
+def finish_conversion(src, dest, delete_original = False, verbose = False, pretend_run = False, exit_on_failure = False):
+    if delete_original:
+        fileops.remove_file(
+            src = src,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return os.path.exists(dest)
+
+# Encrypt or decrypt a ps3 iso with PS3Dec, in mode "e" or "d", using the key in a key file
+def crypt_ps3_iso(mode, src_iso_file, dest_iso_file, dkey_file, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
+    crypt_tool = programs.find_tool_program("PS3Dec")
+    if not crypt_tool:
+        return False
+    key = get_ps3_decryption_key(dkey_file)
+    if len(key) == 0:
+        if exit_on_failure:
+            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
+        return False
+    if not run_conversion_command(
+        [crypt_tool, mode, "key", key, src_iso_file, dest_iso_file], failure_message, verbose, pretend_run, exit_on_failure):
+        return False
+    return os.path.exists(dest_iso_file)
+
+# Re-encrypt a decrypted ps3 iso with PS3Dec and the .dkey key; True when the output exists
 def encrypt_ps3_iso(
     iso_file_dec,
     iso_file_enc,
@@ -36,46 +80,12 @@ def encrypt_ps3_iso(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    return crypt_ps3_iso(
+        "e", iso_file_dec, iso_file_enc, dkey_file,
+        "Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc),
+        verbose, pretend_run, exit_on_failure)
 
-    # Get tool
-    encrypt_tool = None
-    if programs.is_tool_installed("PS3Dec"):
-        encrypt_tool = programs.get_tool_program("PS3Dec")
-    if not encrypt_tool:
-        logger.log_error("PS3Dec was not found")
-        return False
-
-    # Get encryption key
-    encryption_key = get_ps3_decryption_key(dkey_file)
-    if len(encryption_key) == 0:
-        if exit_on_failure:
-            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
-        return False
-
-    # Get encrypt command
-    encrypt_cmd = [
-        encrypt_tool,
-        "e",
-        "key", encryption_key,
-        iso_file_dec,
-        iso_file_enc
-    ]
-
-    # Run encrypt command
-    code = command.run_returncode_command(
-        cmd = encrypt_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc), quit_program = True)
-        return False
-
-    # Check result
-    return os.path.exists(iso_file_enc)
-
-# Decrypt ps3 iso
+# Decrypt a ps3 iso with PS3Dec and the .dkey key; True when the output exists
 def decrypt_ps3_iso(
     iso_file_enc,
     iso_file_dec,
@@ -83,46 +93,25 @@ def decrypt_ps3_iso(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    return crypt_ps3_iso(
+        "d", iso_file_enc, iso_file_dec, dkey_file,
+        "Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec),
+        verbose, pretend_run, exit_on_failure)
 
-    # Get tool
-    decrypt_tool = None
-    if programs.is_tool_installed("PS3Dec"):
-        decrypt_tool = programs.get_tool_program("PS3Dec")
-    if not decrypt_tool:
-        logger.log_error("PS3Dec was not found")
-        return False
+# Check a file extracted from a decrypted ps3 iso, when there, has the header it should;
+# a wrong one means the decryption key did not fit the iso
+def is_ps3_file_decrypted(extract_dir, rel_path, header, dkey_file, iso_file, exit_on_failure = False):
+    file_path = paths.join_paths(extract_dir, *rel_path)
+    if not os.path.exists(file_path) or fileedits.is_file_correctly_headered(file_path, header):
+        return True
+    if exit_on_failure:
+        logger.log_error("Decryption failure, %s '%s' has the wrong header (expected %s)." % (rel_path[-1], file_path, header))
+        logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file))
+        runtime.quit_program()
+    return False
 
-    # Get decryption key
-    decryption_key = get_ps3_decryption_key(dkey_file)
-    if len(decryption_key) == 0:
-        if exit_on_failure:
-            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
-        return False
-
-    # Get decrypt command
-    decrypt_cmd = [
-        decrypt_tool,
-        "d",
-        "key", decryption_key,
-        iso_file_enc,
-        iso_file_dec
-    ]
-
-    # Run decrypt command
-    code = command.run_returncode_command(
-        cmd = decrypt_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec), quit_program = True)
-        return False
-
-    # Check result
-    return os.path.exists(iso_file_dec)
-
-# Extract ps3 iso
+# Decrypt to a .dec.iso beside the source, extract it, and check the LIC.DAT and EBOOT.BIN headers prove the key fit;
+# the .dec.iso is always removed, and delete_original removes the input iso after a successful extraction
 def extract_ps3_iso(
     iso_file,
     dkey_file,
@@ -132,15 +121,24 @@ def extract_ps3_iso(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get file info
-    iso_file_basename = paths.get_filename_basename(iso_file)
-    iso_file_directory = paths.get_filename_directory(iso_file)
-    iso_file_enc = iso_file
-    iso_file_dec = paths.join_paths(iso_file_directory, iso_file_basename + ".dec.iso")
+    # Decrypt and extract, removing the decrypted scratch copy whatever the outcome
+    iso_file_dec = paths.change_filename_extension(iso_file, ".dec.iso")
+    try:
+        success = decrypt_and_extract_ps3_iso(iso_file, iso_file_dec, dkey_file, extract_dir, verbose, pretend_run, exit_on_failure)
+    finally:
+        fileops.remove_file(
+            src = iso_file_dec,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return finish_conversion(iso_file, extract_dir, delete_original, verbose, pretend_run, exit_on_failure)
 
-    # Decrypt iso
+# Decrypt a ps3 iso to iso_file_dec, extract that copy, and check the extracted headers prove the key fit
+def decrypt_and_extract_ps3_iso(iso_file, iso_file_dec, dkey_file, extract_dir, verbose = False, pretend_run = False, exit_on_failure = False):
     success = decrypt_ps3_iso(
-        iso_file_enc = iso_file_enc,
+        iso_file_enc = iso_file,
         iso_file_dec = iso_file_dec,
         dkey_file = dkey_file,
         verbose = verbose,
@@ -148,110 +146,63 @@ def extract_ps3_iso(
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-
-    # Extract decrypted iso
     success = iso.extract_iso(
         iso_file = iso_file_dec,
         extract_dir = extract_dir,
-        delete_original = delete_original,
+        delete_original = False,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-
-    # Check license file
-    license_file = paths.join_paths(extract_dir, "PS3_GAME", "LICDIR", "LIC.DAT")
-    if os.path.exists(license_file):
-        if not fileedits.is_file_correctly_headered(license_file, "PS3LICDA"):
-            if exit_on_failure:
-                logger.log_error("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
-                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
-                runtime.quit_program()
+    for rel_path, header in PS3_DECRYPTED_HEADERS:
+        if not is_ps3_file_decrypted(extract_dir, rel_path, header, dkey_file, iso_file, exit_on_failure):
             return False
+    return True
 
-    # Check eboot file
-    eboot_file = paths.join_paths(extract_dir, "PS3_GAME", "USRDIR", "EBOOT.BIN")
-    if os.path.exists(eboot_file):
-        if not fileedits.is_file_correctly_headered(eboot_file, "SCE"):
-            if exit_on_failure:
-                logger.log_error("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
-                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
-                runtime.quit_program()
-            return False
-
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = iso_file_dec,
+# Extract a ps3 chd within a scratch directory and decrypt it, checking the decryption held
+def extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    iso_tmp_dir = paths.join_paths(tmp_dir, "iso")
+    raw_tmp_dir = paths.join_paths(tmp_dir, "raw")
+    chd_basename = paths.get_filename_basename(chd_file)
+    iso_bin_file = paths.join_paths(iso_tmp_dir, chd_basename + config.DiscImageFileType.ISO.cval())
+    for directory in (iso_tmp_dir, raw_tmp_dir):
+        fileops.make_directory(
+            src = directory,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+    success = chd.extract_disc_chd(
+        chd_file = chd_file,
+        binary_file = iso_bin_file,
+        toc_file = paths.join_paths(iso_tmp_dir, chd_basename + ".toc"),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    return extract_ps3_iso(
+        iso_file = iso_bin_file,
+        dkey_file = paths.join_paths(paths.get_filename_directory(chd_file), chd_basename + ".dkey"),
+        extract_dir = raw_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
-    # Check result
-    return os.path.exists(extract_dir)
-
-# Verify ps3 chd
+# Whether a ps3 chd extracts and decrypts cleanly with the .dkey beside it, working in a temporary directory
 def verify_ps3_chd(
     chd_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Get rom file info
-    iso_tmp_dir = paths.join_paths(tmp_dir_result, "iso")
-    raw_tmp_dir = paths.join_paths(tmp_dir_result, "raw")
-    input_chd_file = chd_file
-    input_chd_dir = paths.get_filename_directory(input_chd_file)
-    input_chd_basename = paths.get_filename_basename(input_chd_file)
-    input_dkey_file = paths.join_paths(input_chd_dir, input_chd_basename + ".dkey")
-    output_iso_bin_file = paths.join_paths(iso_tmp_dir, input_chd_basename + config.DiscImageFileType.ISO.cval())
-    output_iso_toc_file = paths.join_paths(iso_tmp_dir, input_chd_basename + ".toc")
-
-    # Make directories
-    fileops.make_directory(
-        src = iso_tmp_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = raw_tmp_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Extract chd and decrypt it, removing the scratch copies either way
-    try:
-        success = chd.extract_disc_chd(
-            chd_file = input_chd_file,
-            binary_file = output_iso_bin_file,
-            toc_file = output_iso_toc_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
+    # Extract and decrypt in a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
             return False
-        return extract_ps3_iso(
-            iso_file = output_iso_bin_file,
-            dkey_file = input_dkey_file,
-            extract_dir = raw_tmp_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run)
+        return extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose, pretend_run, exit_on_failure)
 
-# Extract psn pkg
+# Unpack a psn pkg's content into extract_dir with PSNGetPkgInfo; True when the directory exists after
 def extract_psn_pkg(
     pkg_file,
     extract_dir,
@@ -259,52 +210,15 @@ def extract_psn_pkg(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
-    if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
+    script_cmd = programs.get_python_script_command("PSNGetPkgInfo")
+    if not script_cmd:
         return False
-
-    # Get script
-    extract_script = None
-    if programs.is_tool_installed("PSNGetPkgInfo"):
-        extract_script = programs.get_tool_program("PSNGetPkgInfo")
-    if not extract_script:
-        logger.log_error("PSNGetPkgInfo was not found")
+    if not run_conversion_command(
+        script_cmd + ["--content", extract_dir, pkg_file],
+        "Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir),
+        verbose, pretend_run, exit_on_failure):
         return False
-
-    # Get extract command
-    extract_cmd = [
-        python_tool,
-        extract_script,
-        "--content", extract_dir,
-        pkg_file
-    ]
-
-    # Run extract command
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        if exit_on_failure:
-            logger.log_error("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
-        return False
-
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = pkg_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(extract_dir)
+    return finish_conversion(pkg_file, extract_dir, delete_original, verbose, pretend_run, exit_on_failure)
 
 ######################################################
 # Sony PlayStation Vita
@@ -318,44 +232,15 @@ def strip_psv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    strip_tool = None
-    if programs.is_tool_installed("PSVStrip"):
-        strip_tool = programs.get_tool_program("PSVStrip")
+    strip_tool = programs.find_tool_program("PSVStrip")
     if not strip_tool:
-        logger.log_error("PSVStrip was not found")
         return False
-
-    # Get strip command
-    strip_cmd = [
-        strip_tool,
-        "-psvstrip",
-        src_psv_file,
-        dest_psv_file
-    ]
-
-    # Run strip command
-    code = command.run_returncode_command(
-        cmd = strip_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to strip psv file '%s'" % src_psv_file, quit_program = True)
+    if not run_conversion_command(
+        [strip_tool, "-psvstrip", src_psv_file, dest_psv_file],
+        "Unable to strip psv file '%s'" % src_psv_file,
+        verbose, pretend_run, exit_on_failure):
         return False
-
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = src_psv_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_psv_file)
+    return finish_conversion(src_psv_file, dest_psv_file, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Unstrip psv file
 def unstrip_psv(
@@ -366,45 +251,22 @@ def unstrip_psv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    unstrip_tool = None
-    if programs.is_tool_installed("PSVStrip"):
-        unstrip_tool = programs.get_tool_program("PSVStrip")
+    unstrip_tool = programs.find_tool_program("PSVStrip")
     if not unstrip_tool:
-        logger.log_error("PSVStrip was not found")
         return False
-
-    # Get unstrip command
-    unstrip_cmd = [
-        unstrip_tool,
-        "-applypsve",
-        src_psv_file,
-        dest_psv_file,
-        src_psve_file
-    ]
-
-    # Run unstrip command
-    code = command.run_returncode_command(
-        cmd = unstrip_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to unstrip psv file '%s'" % src_psv_file, quit_program = True)
+    if not run_conversion_command(
+        [unstrip_tool, "-applypsve", src_psv_file, dest_psv_file, src_psve_file],
+        "Unable to unstrip psv file '%s'" % src_psv_file,
+        verbose, pretend_run, exit_on_failure):
         return False
+    return finish_conversion(src_psv_file, dest_psv_file, delete_original, verbose, pretend_run, exit_on_failure)
 
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = src_psv_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_psv_file)
+# Run PSVTools with the arguments given, logging the failure given when it does not succeed
+def run_psv_tools(args, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
+    script_cmd = programs.get_python_script_command("PSVTools")
+    if not script_cmd:
+        return False
+    return run_conversion_command(script_cmd + args, failure_message, verbose, pretend_run, exit_on_failure)
 
 # Trim psv file
 def trim_psv(
@@ -414,53 +276,12 @@ def trim_psv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
-    if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
+    if not run_psv_tools(
+        ["--trim", "-o", dest_psv_file, src_psv_file],
+        "Unable to trim psv file '%s'" % src_psv_file,
+        verbose, pretend_run, exit_on_failure):
         return False
-
-    # Get script
-    trim_script = None
-    if programs.is_tool_installed("PSVTools"):
-        trim_script = programs.get_tool_program("PSVTools")
-    if not trim_script:
-        logger.log_error("PSVTools was not found")
-        return False
-
-    # Get trim command
-    trim_cmd = [
-        python_tool,
-        trim_script,
-        "--trim",
-        "-o", dest_psv_file,
-        src_psv_file
-    ]
-
-    # Run trim command
-    code = command.run_returncode_command(
-        cmd = trim_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to trim psv file '%s'" % src_psv_file, quit_program = True)
-        return False
-
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = src_psv_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_psv_file)
+    return finish_conversion(src_psv_file, dest_psv_file, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Untrim psv file
 def untrim_psv(
@@ -470,53 +291,12 @@ def untrim_psv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
-    if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
+    if not run_psv_tools(
+        ["--expand", "-o", dest_psv_file, src_psv_file],
+        "Unable to untrim psv file '%s'" % src_psv_file,
+        verbose, pretend_run, exit_on_failure):
         return False
-
-    # Get script
-    untrim_script = None
-    if programs.is_tool_installed("PSVTools"):
-        untrim_script = programs.get_tool_program("PSVTools")
-    if not untrim_script:
-        logger.log_error("PSVTools was not found")
-        return False
-
-    # Get untrim command
-    untrim_cmd = [
-        python_tool,
-        untrim_script,
-        "--expand",
-        "-o", dest_psv_file,
-        src_psv_file
-    ]
-
-    # Run untrim command
-    code = command.run_returncode_command(
-        cmd = untrim_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to untrim psv file '%s'" % src_psv_file, quit_program = True)
-        return False
-
-    # Clean up
-    if delete_original:
-        fileops.remove_file(
-            src = src_psv_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_psv_file)
+    return finish_conversion(src_psv_file, dest_psv_file, delete_original, verbose, pretend_run, exit_on_failure)
 
 # Verify psv file
 def verify_psv(
@@ -524,44 +304,10 @@ def verify_psv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
-    if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
-        return False
-
-    # Get script
-    verify_script = None
-    if programs.is_tool_installed("PSVTools"):
-        verify_script = programs.get_tool_program("PSVTools")
-    if not verify_script:
-        logger.log_error("PSVTools was not found")
-        return False
-
-    # Get verify command
-    verify_cmd = [
-        python_tool,
-        verify_script,
-        "--verify",
-        psv_file
-    ]
-
-    # Run verify command
-    code = command.run_returncode_command(
-        cmd = verify_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if (code != 0):
-        if exit_on_failure:
-            logger.log_error("Unable to verify psv file '%s'" % psv_file, quit_program = True)
-        return False
-
-    # Must be good
-    return True
+    return run_psv_tools(
+        ["--verify", psv_file],
+        "Unable to verify psv file '%s'" % psv_file,
+        verbose, pretend_run, exit_on_failure)
 
 # Read param.sfo values
 def read_param_sfo(sfo_file):
@@ -606,6 +352,21 @@ def find_psv_content_root(search_dir, title_id):
 # Sony PlayStation Network
 ######################################################
 
+# The psn package info fields kept, by the name PSNGetPkgInfo prints them under
+PSN_PACKAGE_INFO_FIELDS = {
+    "NPS Type": "nps_type",
+    "Title ID": "title_id",
+    "Title": "title",
+    "Region": "region",
+    "Content ID": "content_id",
+    "Content Type": "content_type",
+    "DRM Type": "drm_type",
+    "Min FW": "min_fw",
+    "Version": "version",
+    "App Ver": "app_ver",
+    "Size": "size"
+}
+
 # Get psn work.bin bytes from zrif string
 def get_psn_workbin_bytes_from_zrif_string(zrif_str):
     try:
@@ -628,7 +389,7 @@ def decode_content_id(data):
     except UnicodeDecodeError:
         return None
 
-# Get psn package content id
+# Content id stored at offset 0x30 of a pkg file; None when unreadable or not text
 def get_psn_package_content_id(pkg_file):
     return decode_content_id(serialization.read_binary_file(pkg_file, offset = 0x30, length = 0x24))
 
@@ -640,78 +401,35 @@ def get_psn_workbin_content_id(workbin_file):
 def get_psn_fakerif_content_id(fakerif_file):
     return decode_content_id(serialization.read_binary_file(fakerif_file, offset = 0x50, length = 0x24))
 
-# Get psn package info
+# Parse the "Field: value" lines of a psn package's info, keeping the fields it knows
+def parse_psn_package_info(info_output):
+    info = {}
+    for line in info_output.split("\n"):
+        line_field, separator, line_value = line.partition(":")
+        info_key = PSN_PACKAGE_INFO_FIELDS.get(line_field.strip())
+        if separator and info_key:
+            info[info_key] = line_value.strip()
+    return info
+
+# Title, region, content id and the other fields PSNGetPkgInfo reports for a pkg; None when it fails
 def get_psn_package_info(
     pkg_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
-    if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
+    script_cmd = programs.get_python_script_command("PSNGetPkgInfo")
+    if not script_cmd:
         return None
-
-    # Get script
-    extract_script = None
-    if programs.is_tool_installed("PSNGetPkgInfo"):
-        extract_script = programs.get_tool_program("PSNGetPkgInfo")
-    if not extract_script:
-        logger.log_error("PSNGetPkgInfo was not found")
-        return None
-
-    # Get info command
-    info_cmd = [
-        python_tool,
-        extract_script,
-        pkg_file
-    ]
-
-    # Run info command
     info_output = command.run_output_command(
-        cmd = info_cmd,
+        cmd = script_cmd + [pkg_file],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not info_output or len(info_output) == 0:
+    if not info_output:
         return None
+    return parse_psn_package_info(info_output)
 
-    # Parse info
-    info = {}
-    for line in info_output.split("\n"):
-        line_tokens = line.split(":", 1)
-        if len(line_tokens) < 2:
-            continue
-        line_field = line_tokens[0].strip()
-        line_value = line_tokens[1].strip()
-        if line_field == "NPS Type":
-            info["nps_type"] = line_value
-        elif line_field == "Title ID":
-            info["title_id"] = line_value
-        elif line_field == "Title":
-            info["title"] = line_value
-        elif line_field == "Region":
-            info["region"] = line_value
-        elif line_field == "Content ID":
-            info["content_id"] = line_value
-        elif line_field == "Content Type":
-            info["content_type"] = line_value
-        elif line_field == "DRM Type":
-            info["drm_type"] = line_value
-        elif line_field == "Min FW":
-            info["min_fw"] = line_value
-        elif line_field == "Version":
-            info["version"] = line_value
-        elif line_field == "App Ver":
-            info["app_ver"] = line_value
-        elif line_field == "Size":
-            info["size"] = line_value
-    return info
-
-# Rename psn package file
+# Rename a pkg to <content id>.pkg in place, leaving an existing target alone; False without an id
 def rename_psn_package_file(
     pkg_file,
     verbose = False,
@@ -728,13 +446,13 @@ def rename_psn_package_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Rename psn rap file
+# Rename a rap to <content id>.rap using the pkg of the same base name beside it; False without that pkg
 def rename_psn_rap_file(
     rap_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    pkg_file = paths.join_paths(paths.get_filename_directory(rap_file), paths.get_filename_basename(rap_file) + ".pkg")
+    pkg_file = paths.change_filename_extension(rap_file, ".pkg")
     if not paths.is_path_file(pkg_file):
         return False
     content_id = get_psn_package_content_id(pkg_file)
@@ -781,3 +499,86 @@ def rename_psn_fakerif_file(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+
+######################################################
+# Rom folders
+######################################################
+
+# The psv tool actions, in the order a flag set picks the one it names
+PSV_ACTION_NAMES = [
+    ("strip", "Strip"),
+    ("unstrip", "Unstrip"),
+    ("trim", "Trim"),
+    ("untrim", "Untrim"),
+    ("verify", "Verify"),
+]
+
+# The name of the first psv tool action set; None when none is
+def get_psv_action_name(strip = False, unstrip = False, trim = False, untrim = False, verify = False):
+    selected = {"strip": strip, "unstrip": unstrip, "trim": trim, "untrim": untrim, "verify": verify}
+    for action, name in PSV_ACTION_NAMES:
+        if selected[action]:
+            return name
+    return None
+
+# The single-source psv conversions by action name: each one's function and the suffix of
+# the file it writes beside the source
+def _get_psv_conversions():
+    return {
+        "Strip": (strip_psv, "_stripped.psv"),
+        "Trim": (trim_psv, "_trimmed.psv"),
+        "Untrim": (untrim_psv, "_untrimmed.psv"),
+    }
+
+# Strip, unstrip, trim, untrim or verify one psv file by its action name, writing any
+# result beside it with a suffix naming the action
+def _process_psv_file(psv_file, action, delete_originals, flags):
+    psv_dir = paths.get_filename_directory(psv_file)
+    psv_basename = paths.get_filename_basename(psv_file)
+    conversion = _get_psv_conversions().get(action)
+    if conversion:
+        convert, suffix = conversion
+        convert(
+            src_psv_file = psv_file,
+            dest_psv_file = paths.join_paths(psv_dir, psv_basename + suffix),
+            delete_original = delete_originals,
+            **flags)
+    elif action == "Unstrip":
+        unstrip_psv(
+            src_psv_file = psv_file,
+            src_psve_file = paths.join_paths(psv_dir, psv_basename + ".psve"),
+            dest_psv_file = paths.join_paths(psv_dir, psv_basename + "_unstripped.psv"),
+            delete_original = delete_originals,
+            **flags)
+    elif action == "Verify":
+        verify_psv(psv_file = psv_file, **flags)
+
+# Run a psv tool action, named as get_psv_action_name names it, on every .psv under input_path
+def process_psv_files(
+    input_path,
+    action,
+    delete_originals = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    for psv_file in paths.build_file_list_by_extensions(input_path, extensions = [".psv"]):
+        _process_psv_file(psv_file, action, delete_originals, flags)
+
+# Rename every psn .rap, .pkg, .work.bin and .fake.rif under input_path to the content id it holds
+def rename_psn_files(
+    input_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    for rap_file in paths.build_file_list_by_extensions(input_path, extensions = [".rap"]):
+        rename_psn_rap_file(rap_file = rap_file, **flags)
+    for pkg_file in paths.build_file_list_by_extensions(input_path, extensions = [".pkg"]):
+        rename_psn_package_file(pkg_file = pkg_file, **flags)
+    for bin_file in paths.build_file_list_by_extensions(input_path, extensions = [".bin"]):
+        if bin_file.endswith(".work.bin"):
+            rename_psn_workbin_file(workbin_file = bin_file, **flags)
+    for rif_file in paths.build_file_list_by_extensions(input_path, extensions = [".rif"]):
+        if rif_file.endswith(".fake.rif"):
+            rename_psn_fakerif_file(fakerif_file = rif_file, **flags)

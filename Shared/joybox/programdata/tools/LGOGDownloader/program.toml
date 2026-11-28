@@ -1,0 +1,27 @@
+# LGOGDownloader: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.LGOGDownloader]
+program = { windows = "<none>", linux = "LGOGDownloader/linux/LGOGDownloader.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "LGOGDownloader/linux/LGOGDownloader.AppImage.home/.config/lgogdownloader/config.cfg"
+
+[[setup]]
+kind = "appimage_build"
+platform = "linux"
+release_url = "https://github.com/NearlyTRex/LGOGDownloader.git"
+output_file = "App-x86_64.AppImage"
+build_cmd = ["cmake", "..", "&&", "make", "-j", "4"]
+build_dir = "Build"
+internal_copies = [
+    { from = "Source/LGOGDownloader/Build/lgogdownloader", to = "AppImage/usr/bin/lgogdownloader" },
+    { from = "AppImageTool/linux/app.desktop", to = "AppImage/app.desktop" },
+    { from = "AppImageTool/linux/icon.svg", to = "AppImage/icon.svg" },
+]
+internal_symlinks = [{ from = "usr/bin/lgogdownloader", to = "AppRun" }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"

@@ -1,10 +1,10 @@
 # Local imports
-import joybox.bootstrap.constants as constants
-from . import installer
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
-# Brave
+# Installs the Brave browser from Brave's apt repository
 class Brave(installer.Installer):
     def __init__(
         self,
@@ -21,14 +21,18 @@ class Brave(installer.Installer):
         # Where earlier installs wrote a one-line source for the same repository
         self.legacy_sources_list_path = "/etc/apt/sources.list.d/brave-browser-release.list"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/bin/brave-browser exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/brave-browser")
 
+    # Fetch Brave's keyring and deb822 source, drop the legacy .list source, then
+    # apt-get install brave-browser; False when a download fails
     def install(self):
         logger.log_info("Installing Brave")
 
@@ -44,6 +48,7 @@ class Brave(installer.Installer):
         self.connection.run_checked([self.aptget_tool, "install", "-y", "brave-browser"], sudo = True)
         return True
 
+    # apt-get remove brave-browser and delete its source files and keyring
     def uninstall(self):
         logger.log_info("Uninstalling Brave")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "brave-browser"], sudo = True)

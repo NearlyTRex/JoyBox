@@ -242,8 +242,8 @@ def test_an_empty_file_slices_to_nothing(tmp_path):
 # Base chunker
 ###########################################################
 
-def test_the_base_chunker_finds_no_marks():
-    assert chunkers.Chunker().marks(["anything"]) == []
+def test_every_chunker_must_say_where_its_marks_are():
+    assert chunkers.Chunker.__abstractmethods__ == {"marks"}
 
 
 def test_a_region_runs_to_the_next_mark():
@@ -263,23 +263,23 @@ def test_colliding_region_names_stay_addressable():
 
 
 def test_a_label_without_word_characters_is_named_by_line():
-    assert chunkers.Chunker().region_name("!!!", 7) == "line_7"
+    assert chunkers.LineChunker().region_name("!!!", 7) == "line_7"
 
 
 def test_a_long_region_name_is_truncated():
-    assert len(chunkers.Chunker().region_name("x" * 100, 1)) == 48
+    assert len(chunkers.LineChunker().region_name("x" * 100, 1)) == 48
 
 
 def test_a_short_map_is_not_thinned():
     found = [(n, "x") for n in range(chunkers.MAX_MARKS)]
 
-    assert chunkers.Chunker().thin(found) == found
+    assert chunkers.LineChunker().thin(found) == found
 
 
 def test_a_long_map_is_thinned_to_the_limit():
     found = [(n, "x") for n in range(chunkers.MAX_MARKS * 3 + 5)]
 
-    thinned = chunkers.Chunker().thin(found)
+    thinned = chunkers.LineChunker().thin(found)
 
     assert len(thinned) <= chunkers.MAX_MARKS
     assert thinned[0] == found[0]
@@ -473,6 +473,9 @@ def test_a_registered_chunker_takes_precedence(monkeypatch):
     class Custom(chunkers.Chunker):
         name = "custom"
         extensions = (".py",)
+
+        def marks(self, lines):
+            return [(1, lines[0])] if lines else []
 
     assert chunkers.register_chunker(Custom) is Custom
     assert chunkers.get_chunker("x.py").name == "custom"

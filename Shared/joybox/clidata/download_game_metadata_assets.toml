@@ -1,0 +1,31 @@
+# Help text for the download_game_metadata_assets command, read by joybox/arguments.py
+
+description = "Download one kind of artwork or video for each selected game and back it up to the lockers."
+details = """
+For each selected game with a JSON file, finds a URL for the `-t` asset type. Store
+games ask their store. Other games are searched on Google Images, YouTube, Steam and
+SteamGridDB, the candidates are listed, and you pick one by number or paste your own
+URL.
+
+The file is downloaded to a temporary directory, converted and cleaned to the asset
+type's format (`.jpg` for images, `.png` for labels, `.mp4` for video), then backed up
+to `Gaming/Assets/<category>/<subcategory>/<asset type>/<game name><ext>` in the `-l`
+locker, or in every configured locker with `All`."""
+section = "Game Collection"
+see_also = [
+    "find_missing_game_assets",
+    "build_game_metadata_files",
+    "login_game_stores",
+    "scan_game_files",
+]
+notes = [
+    "Non-store games need a choice for each asset, so expect a prompt per game.",
+    "`-e` looks for the asset in the Local locker's assets folder, whichever locker `-l` names.",
+    "Log in with `login_game_stores` first if a store session has expired.",
+]
+examples = [
+    ["Download box fronts for a platform to the local locker", "download_game_metadata_assets -c Nintendo -s \"Nintendo Switch\" -t BoxFront -l Local"],
+    ["Download one game's screenshot", "download_game_metadata_assets -c Computer -s Steam -n \"Hades (World)\" -t Screenshot -l Local"],
+    ["Download only the box fronts that are missing", "download_game_metadata_assets -c Sony -s \"Sony PlayStation 2\" -t BoxFront -e -l Local"],
+    ["Dry run for a platform", "download_game_metadata_assets -c Nintendo -s \"Nintendo Switch\" -t BoxFront -p -v"],
+]

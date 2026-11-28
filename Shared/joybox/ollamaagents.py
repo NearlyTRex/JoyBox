@@ -9,6 +9,8 @@ import shutil
 
 # Local imports
 from joybox import command
+from joybox import commandbase
+from joybox import dispatch
 from joybox import environment
 from joybox import logger
 from joybox import network
@@ -72,7 +74,7 @@ def prepare_git_for_aider():
 # Write aider's settings for a model on the Ollama server, returning its arguments;
 # num_ctx is fixed at the variant's window, since ollama reloads the model, a minute
 # or more, whenever aider's per-request num_ctx changes
-def build_aider_args(api_base, model_name, context_tokens = None):
+def build_aider_args(model_name, context_tokens = None):
     if not context_tokens:
         return []
     settings_file = os.path.join(
@@ -95,8 +97,8 @@ def build_aider_args(api_base, model_name, context_tokens = None):
 #   command, env    how to start it and point it at the server
 #   context_args,   added only when the model is a -ctxNNk variant, so its
 #   context_env     window is known
-#   arg_builders,   called with (api_base, model, context) for what a
-#   env_builders    template cannot express
+#   arg_builders,   for what a template cannot express; each is given whichever
+#   env_builders    of api_base, model_name and context_tokens it names
 #   preflight       checks run in its working directory before it starts;
 #                   one returning False stops the launch
 #   coding_context  the window the code action builds a variant with
@@ -245,7 +247,7 @@ def launch_harness(model_name, harness = DEFAULT_HARNESS):
     if context_tokens:
         cmd += [fill(part) for part in spec.get("context_args", [])]
     for build in spec.get("arg_builders", []):
-        cmd += build(api_base, model_name, context_tokens)
+        cmd += dispatch.call_with_options(build, api_base = api_base, model_name = model_name, context_tokens = context_tokens)
 
     # Require the harness binary to be installed
     if not shutil.which(cmd[0]):
@@ -259,11 +261,11 @@ def launch_harness(model_name, harness = DEFAULT_HARNESS):
         if not check():
             return False
 
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     for key, value in spec.get("env", {}).items():
         options.set_env_var(key, fill(value))
     for key, build in spec.get("env_builders", {}).items():
-        options.set_env_var(key, build(api_base, model_name, context_tokens))
+        options.set_env_var(key, dispatch.call_with_options(build, api_base = api_base, model_name = model_name, context_tokens = context_tokens))
     if context_tokens and spec.get("context_env"):
         options.set_env_var(spec["context_env"], str(context_tokens))
     options.set_passthrough(True)
@@ -378,7 +380,7 @@ def is_loaded_on_gpu(model_name):
     for entry in running.get("models", []):
         if entry.get("name") == model_name or entry.get("model") == model_name:
             size = entry.get("size", 0)
-            return size > 0 and entry.get("size_vram", 0) >= size
+            return 0 < size <= entry.get("size_vram", 0)
     return False
 
 # Prepare a named model for coding: pulled, its context built in, and on the GPUs

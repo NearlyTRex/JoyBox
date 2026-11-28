@@ -3,8 +3,9 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox import release
 from joybox.emulators import retroarch
-from emulator_helpers import ConfigureSeams
+from emulator_helpers import ConfigureSeams, Release
 
 
 ###########################################################
@@ -16,16 +17,6 @@ from emulator_helpers import ConfigureSeams
 ###########################################################
 
 PLATFORMS = ["windows", "linux"]
-
-
-class Release:
-    def __init__(self):
-        self.calls = []
-        self.failures = set()
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return len(self.calls) not in self.failures
 
 
 @pytest.fixture
@@ -45,14 +36,14 @@ def program_paths(monkeypatch):
 @pytest.fixture
 def download(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(retroarch.release, "download_general_release", fake)
+    monkeypatch.setattr(release, "download_general_release", fake)
     return fake
 
 
 @pytest.fixture
 def stored(monkeypatch, program_paths):
     fake = Release()
-    monkeypatch.setattr(retroarch.release, "setup_stored_release", fake)
+    monkeypatch.setattr(release, "setup_stored_release", fake)
     return fake
 
 
@@ -145,8 +136,8 @@ def configure(monkeypatch):
 def test_configure_writes_configs_and_copies_system_files_to_each_platform(configure):
     assert retroarch.RetroArch().configure() is True
 
-    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in retroarch.config_files]
-    assert len(configure.copied) == 2 * len(retroarch.system_files)
+    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in retroarch.RetroArch().get_config_files()]
+    assert len(configure.copied) == 2 * len(retroarch.RetroArch().get_system_files())
     assert configure.copied[:2] == [
         ("/locker/RetroArch/system/panafz1.bin", "/emu/setup_dir/windows/system/panafz1.bin"),
         ("/locker/RetroArch/system/panafz1.bin", "/emu/setup_dir/linux/system/panafz1.bin"),
@@ -177,7 +168,7 @@ def test_configure_fails_when_a_system_file_cannot_be_copied(configure):
 
 def test_a_pretend_configure_succeeds_without_real_hashes(configure):
     assert retroarch.RetroArch().configure(config.SetupParams(pretend_run = True)) is True
-    assert len(configure.copied) == 2 * len(retroarch.system_files)
+    assert len(configure.copied) == 2 * len(retroarch.RetroArch().get_system_files())
 
 
 ###########################################################
@@ -221,7 +212,7 @@ def launcher(monkeypatch, tmp_path):
         lambda name, key, platform = None: values[key])
     monkeypatch.setattr(retroarch.programs, "get_emulator_program", lambda name: "/bin/retroarch")
     monkeypatch.setattr(retroarch.gui, "display_error_popup", popup)
-    monkeypatch.setattr(retroarch.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(retroarch.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "popups": popups, "cores_dir": cores_dir}
 
 
@@ -238,7 +229,7 @@ def test_launch_loads_the_core_mapped_to_the_platform(launcher):
     assert retroarch.RetroArch().launch(game, capture_type = "video", capture_file = "/cap.mp4") is True
 
     launched = launcher["launched"]
-    assert launched["launch_cmd"] == ["/bin/retroarch", "-L", core, config.token_game_file]
+    assert launched["launch_cmd"] == ["/bin/retroarch", "-L", core, config.TOKEN_GAME_FILE]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"]) == ("video", "/cap.mp4")
 

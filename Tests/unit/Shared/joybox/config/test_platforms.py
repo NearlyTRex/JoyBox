@@ -9,21 +9,21 @@ from joybox.config import types
 
 ALL_PLATFORMS = config.Platform.members()
 PLATFORM_IDS = [platform.name for platform in ALL_PLATFORMS]
-COMPUTER_PLATFORMS = [platform for platform in ALL_PLATFORMS if config.platforms[platform][keys.platform_key_category] == categories.Category.COMPUTER]
+COMPUTER_PLATFORMS = [platform for platform in ALL_PLATFORMS if config.platforms[platform][keys.PLATFORM_KEY_CATEGORY] == categories.Category.COMPUTER]
 COMPUTER_IDS = [platform.name for platform in COMPUTER_PLATFORMS]
 CONSOLE_PLATFORMS = [platform for platform in ALL_PLATFORMS if platform not in COMPUTER_PLATFORMS]
 CONSOLE_IDS = [platform.name for platform in CONSOLE_PLATFORMS]
 SECTION_FIELDS = {
-    keys.platform_key_supercategory,
-    keys.platform_key_category,
-    keys.platform_key_subcategory,
-    keys.platform_key_addons,
-    keys.platform_key_launcher,
-    keys.platform_key_autofill_json,
-    keys.platform_key_fillonce_json,
-    keys.platform_key_merge_json
+    keys.PLATFORM_KEY_SUPERCATEGORY,
+    keys.PLATFORM_KEY_CATEGORY,
+    keys.PLATFORM_KEY_SUBCATEGORY,
+    keys.PLATFORM_KEY_ADDONS,
+    keys.PLATFORM_KEY_LAUNCHER,
+    keys.PLATFORM_KEY_AUTOFILL_JSON,
+    keys.PLATFORM_KEY_FILLONCE_JSON,
+    keys.PLATFORM_KEY_MERGE_JSON
 }
-JSON_FIELDS = [keys.platform_key_autofill_json, keys.platform_key_fillonce_json, keys.platform_key_merge_json]
+JSON_FIELDS = [keys.PLATFORM_KEY_AUTOFILL_JSON, keys.PLATFORM_KEY_FILLONCE_JSON, keys.PLATFORM_KEY_MERGE_JSON]
 KNOWN_JSON_KEYS = set(keys.persistent_json_keys) | set(keys.json_keys_store_subdata)
 PLATFORM_LISTS = ["transform_platforms", "letter_platforms", "manual_import_platforms"]
 
@@ -46,8 +46,8 @@ def test_there_is_one_platform_per_subcategory():
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_platform_value_is_derived_from_its_categories(platform):
-    category = section(platform)[keys.platform_key_category]
-    subcategory = section(platform)[keys.platform_key_subcategory]
+    category = section(platform)[keys.PLATFORM_KEY_CATEGORY]
+    subcategory = section(platform)[keys.PLATFORM_KEY_SUBCATEGORY]
     expected = category + " - " + subcategory if category == categories.Category.COMPUTER else subcategory.val()
     assert platform.val() == expected
 
@@ -67,27 +67,27 @@ def test_section_has_exactly_the_platform_fields(platform):
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_section_names_its_own_subcategory_under_its_category(platform):
-    category = section(platform)[keys.platform_key_category]
-    subcategory = section(platform)[keys.platform_key_subcategory]
+    category = section(platform)[keys.PLATFORM_KEY_CATEGORY]
+    subcategory = section(platform)[keys.PLATFORM_KEY_SUBCATEGORY]
     assert subcategory.name == platform.name
     assert subcategory in categories.subcategory_map[category]
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_section_is_a_rom_platform(platform):
-    assert section(platform)[keys.platform_key_supercategory] == categories.Supercategory.ROMS
+    assert section(platform)[keys.PLATFORM_KEY_SUPERCATEGORY] == categories.Supercategory.ROMS
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_addons_are_unique_addon_types(platform):
-    addons = section(platform)[keys.platform_key_addons]
+    addons = section(platform)[keys.PLATFORM_KEY_ADDONS]
     assert all(isinstance(addon, types.AddonType) for addon in addons)
     assert len(addons) == len(set(addons))
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_launcher_is_a_single_launch_type(platform):
-    launcher = section(platform)[keys.platform_key_launcher]
+    launcher = section(platform)[keys.PLATFORM_KEY_LAUNCHER]
     assert len(launcher) == 1
     assert launcher[0] in types.LaunchType.members()
 
@@ -106,12 +106,12 @@ def test_json_fields_do_not_overlap(platform):
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_files_are_always_autofilled(platform):
-    assert keys.json_key_files in section(platform)[keys.platform_key_autofill_json]
+    assert keys.JSON_KEY_FILES in section(platform)[keys.PLATFORM_KEY_AUTOFILL_JSON]
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_transform_file_is_autofilled_exactly_for_transform_platforms(platform):
-    autofills_transform = keys.json_key_transform_file in section(platform)[keys.platform_key_autofill_json]
+    autofills_transform = keys.JSON_KEY_TRANSFORM_FILE in section(platform)[keys.PLATFORM_KEY_AUTOFILL_JSON]
     assert autofills_transform == (platform in config.transform_platforms)
 
 
@@ -123,16 +123,16 @@ def test_transform_file_is_autofilled_exactly_for_transform_platforms(platform):
 def test_console_launcher_has_the_json_key_it_launches_by(platform):
     launch_keys = {
         types.LaunchType.NO_LAUNCHER: set(),
-        types.LaunchType.LAUNCH_FILE: {keys.json_key_launch_file},
-        types.LaunchType.LAUNCH_NAME: {keys.json_key_launch_name}
-    }[section(platform)[keys.platform_key_launcher][0]]
-    filled = set(section(platform)[keys.platform_key_autofill_json]) | set(section(platform)[keys.platform_key_fillonce_json])
-    assert filled & {keys.json_key_launch_file, keys.json_key_launch_name} == launch_keys
+        types.LaunchType.LAUNCH_FILE: {keys.JSON_KEY_LAUNCH_FILE},
+        types.LaunchType.LAUNCH_NAME: {keys.JSON_KEY_LAUNCH_NAME}
+    }[section(platform)[keys.PLATFORM_KEY_LAUNCHER][0]]
+    filled = set(section(platform)[keys.PLATFORM_KEY_AUTOFILL_JSON]) | set(section(platform)[keys.PLATFORM_KEY_FILLONCE_JSON])
+    assert filled & {keys.JSON_KEY_LAUNCH_FILE, keys.JSON_KEY_LAUNCH_NAME} == launch_keys
 
 
 @pytest.mark.parametrize("platform", CONSOLE_PLATFORMS, ids = CONSOLE_IDS)
 def test_console_platforms_merge_nothing(platform):
-    assert section(platform)[keys.platform_key_merge_json] == []
+    assert section(platform)[keys.PLATFORM_KEY_MERGE_JSON] == []
 
 
 ###########################################################
@@ -141,25 +141,25 @@ def test_console_platforms_merge_nothing(platform):
 
 @pytest.mark.parametrize("platform", COMPUTER_PLATFORMS, ids = COMPUTER_IDS)
 def test_computer_platform_uses_the_shared_computer_keys(platform):
-    assert section(platform)[keys.platform_key_autofill_json] == config.json_keys_autofill_computer
-    assert section(platform)[keys.platform_key_fillonce_json] == config.json_keys_fillonce_computer
-    assert section(platform)[keys.platform_key_merge_json][:-1] == config.json_keys_merge_computer
+    assert section(platform)[keys.PLATFORM_KEY_AUTOFILL_JSON] == config.json_keys_autofill_computer
+    assert section(platform)[keys.PLATFORM_KEY_FILLONCE_JSON] == config.json_keys_fillonce_computer
+    assert section(platform)[keys.PLATFORM_KEY_MERGE_JSON][:-1] == config.json_keys_merge_computer
 
 
 @pytest.mark.parametrize("platform", COMPUTER_PLATFORMS, ids = COMPUTER_IDS)
 def test_computer_platform_merges_one_store_key(platform):
-    store_keys = [json_key for json_key in section(platform)[keys.platform_key_merge_json] if json_key in keys.json_keys_store]
-    assert store_keys == [section(platform)[keys.platform_key_merge_json][-1]]
+    store_keys = [json_key for json_key in section(platform)[keys.PLATFORM_KEY_MERGE_JSON] if json_key in keys.json_keys_store]
+    assert store_keys == [section(platform)[keys.PLATFORM_KEY_MERGE_JSON][-1]]
 
 
 def test_each_store_key_belongs_to_one_computer_platform():
-    store_keys = [section(platform)[keys.platform_key_merge_json][-1] for platform in COMPUTER_PLATFORMS]
+    store_keys = [section(platform)[keys.PLATFORM_KEY_MERGE_JSON][-1] for platform in COMPUTER_PLATFORMS]
     assert sorted(store_keys) == sorted(keys.json_keys_store)
 
 
 def test_computer_merge_keys_are_store_subdata():
     assert set(config.json_keys_merge_computer) <= set(keys.json_keys_store_subdata)
-    assert set(config.json_keys_fillonce_computer) <= set(keys.json_keys_store_appdata) | {keys.json_key_store_branchid}
+    assert set(config.json_keys_fillonce_computer) <= set(keys.json_keys_store_appdata) | {keys.JSON_KEY_STORE_BRANCHID}
 
 
 ###########################################################

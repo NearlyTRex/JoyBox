@@ -90,6 +90,15 @@ def test_a_missing_file_falls_back_to_its_extension(tmp_path, name, expected):
     assert image.get_image_format(str(tmp_path / name)) == expected
 
 
+@pytest.mark.parametrize("name,expected", [
+    ("art.JPEG", config.ImageFileType.JPEG),
+    ("art.png", config.ImageFileType.PNG),
+    ("art.gif", None),
+])
+def test_a_destination_extension_names_its_format(name, expected):
+    assert image.get_image_format_from_extension(name) == expected
+
+
 ###########################################################
 # Conversion
 ###########################################################
@@ -173,6 +182,15 @@ def test_an_undeterminable_format_reports_failure(tmp_path):
     assert not target.exists()
 
 
+def test_an_undeterminable_format_is_logged_when_failures_matter(tmp_path, monkeypatch):
+    errors = []
+    monkeypatch.setattr(image.logger, "log_error", errors.append)
+    source = make_image(tmp_path / "art.png")
+
+    assert image.convert_image(source, str(tmp_path / "art.dat"), exit_on_failure = True) is False
+    assert any("art.dat" in message for message in errors)
+
+
 def test_the_source_survives_conversion(tmp_path):
     source = make_image(tmp_path / "art.jpg")
     original = pathlib.Path(source).read_bytes()
@@ -204,9 +222,13 @@ def test_an_unwritable_target_reports_failure(tmp_path):
 def test_pretending_does_not_write_an_image(tmp_path):
     source = make_image(tmp_path / "art.jpg")
     target = tmp_path / "art.png"
-    image.convert_image_to_png(source, str(target), pretend_run = True)
+    assert image.convert_image_to_png(source, str(target), pretend_run = True) is True
 
     assert not target.exists()
+
+
+def test_pretending_a_conversion_reports_success(tmp_path):
+    assert image.convert_image(str(tmp_path / "absent.jpg"), str(tmp_path / "art.png"), pretend_run = True) is True
 
 
 ###########################################################

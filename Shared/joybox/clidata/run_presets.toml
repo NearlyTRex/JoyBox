@@ -1,0 +1,28 @@
+# Help text for the run_presets command, read by joybox/arguments.py
+
+description = "Run another JoyBox tool once per platform of a named preset group."
+details = """
+A preset group, defined in `Shared/joybox/config/presets.py`, names a game
+supercategory, a category and optionally a list of subcategories, such as the Nintendo
+handheld and console platforms in `Backup_NintendoGen`. This command runs the chosen
+tool (only `backup_tool` so far) once per subcategory, or once for the whole category
+when the group lists none, passing `-u`, `-c` and `-s` for each run along with `-o`,
+`--skip_existing`, `--skip_identical`, `--verbose` and `--exit_on_failure` as given
+here.
+
+Groups: `Backup_Microsoft` and `Backup_OtherGen` (a whole category each),
+`Backup_NintendoGen`, `Backup_NintendoSwitch`, `Backup_SonyGen`, `Backup_SonyPS3`,
+`Backup_SonyPS4` and `Backup_SonyPSN` (one run per platform)."""
+section = "Backups & Lockers"
+see_also = [
+    "backup_tool",
+]
+notes = [
+    "A failing run is logged and the remaining runs still go ahead.",
+    "`--pretend_run` is not passed on; it stops the runs from starting at all.",
+]
+examples = [
+    ["Back up every Nintendo generation platform to a drive", "run_presets -g Backup_NintendoGen -o /mnt/Backup"],
+    ["Back up the Sony PSN platforms, skipping files already there", "run_presets -g Backup_SonyPSN -o /mnt/Backup -e"],
+    ["Dry run without starting any backup", "run_presets -g Backup_SonyGen -o /mnt/Backup -p -v"],
+]

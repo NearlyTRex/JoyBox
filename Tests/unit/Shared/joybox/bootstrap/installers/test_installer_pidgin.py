@@ -89,6 +89,15 @@ def test_install_supplies_the_private_headers(isolated_settings):
     assert "#define ENABLE_NLS 1" in config_header
 
 
+def test_an_unwritable_config_header_fails_the_install(isolated_settings, monkeypatch):
+    pidgin, connection = make_verified()
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert pidgin.install() is False
+    assert not connection.ran("gcc")
+    assert connection.removed_paths[-2:] == [pidgin.archive_path, pidgin.build_dir]
+
+
 def test_install_needs_the_libpurple_headers(isolated_settings):
     pidgin, connection = make_verified(return_codes = {"--exists purple": 1})
 

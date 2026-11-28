@@ -1,0 +1,40 @@
+# NDecrypt: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.NDecrypt]
+program = { windows = "NDecrypt/windows/NDecrypt.exe", linux = "NDecrypt/linux/NDecrypt" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "SabreTools"
+github_repo = "NDecrypt"
+starts_with = "NDecrypt"
+ends_with = "win-x64.zip"
+search_file = "NDecrypt.exe"
+install_files = ["NDecrypt.exe"]
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "SabreTools"
+github_repo = "NDecrypt"
+starts_with = "NDecrypt"
+ends_with = "linux-x64.zip"
+search_file = "NDecrypt"
+install_files = ["NDecrypt"]
+chmod_files = [{ file = "NDecrypt", perms = 755 }]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "NDecrypt.exe"
+install_files = ["NDecrypt.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "NDecrypt"
+install_files = ["NDecrypt"]
+chmod_files = [{ file = "NDecrypt", perms = 755 }]

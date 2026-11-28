@@ -8,9 +8,9 @@
 import os
 
 # Local imports
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.paths as paths
+from joybox import environment
+from joybox import fileops
+from joybox import paths
 from joybox import platform_info
 
 # Build the text of a desktop entry that runs a JoyBox command

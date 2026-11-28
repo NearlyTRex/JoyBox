@@ -1,4 +1,5 @@
 # Imports
+import inspect
 import runpy
 import sys
 
@@ -76,12 +77,16 @@ class CommandHarness:
 class Recorder:
 
     # Stands in for a joybox function, keeping each call's keyword arguments;
-    # positional arguments, if any, are kept under "_args"
-    def __init__(self, result = None):
+    # positional arguments, if any, are kept under "_args". Given the real
+    # function as spec, a call it would refuse fails the same way.
+    def __init__(self, result = None, spec = None):
         self.calls = []
         self.result = result
+        self.signature = inspect.signature(spec) if spec else None
 
     def __call__(self, *args, **kwargs):
+        if self.signature:
+            self.signature.bind(*args, **kwargs)
         self.calls.append(dict(kwargs, _args = args) if args else kwargs)
         return self.result(*args, **kwargs) if callable(self.result) else self.result
 

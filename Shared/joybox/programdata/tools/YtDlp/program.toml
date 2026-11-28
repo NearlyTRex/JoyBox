@@ -1,0 +1,44 @@
+# YtDlp: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.YtDlp]
+program = { windows = "YtDlp/windows/yt-dlp.exe", linux = "YtDlp/linux/yt-dlp_linux" }
+run_sandboxed = { windows = false, linux = false }
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "yt-dlp"
+github_repo = "yt-dlp"
+starts_with = "yt-dlp"
+ends_with = ".exe"
+search_file = "yt-dlp.exe"
+install_files = ["yt-dlp.exe"]
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "yt-dlp"
+github_repo = "yt-dlp"
+starts_with = "yt-dlp"
+ends_with = "_linux"
+search_file = "yt-dlp_linux"
+install_files = ["yt-dlp_linux"]
+release_type = "PROGRAM"
+chmod_files = [{ file = "yt-dlp_linux", perms = 755 }]
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "yt-dlp.exe"
+install_files = ["yt-dlp.exe"]
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+search_file = "yt-dlp_linux"
+install_files = ["yt-dlp_linux"]
+release_type = "PROGRAM"
+chmod_files = [{ file = "yt-dlp_linux", perms = 755 }]

@@ -1,17 +1,13 @@
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
+from joybox import config
+from joybox import fileops
 from joybox import filebulk
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.release as release
-import joybox.programs as programs
-import joybox.toolbase as toolbase
+from joybox import paths
+from joybox import programs
+from joybox import toolbase
 
-# Config files
-config_files = {}
 
-# Get libs
+# Files under the GoldbergEmu lib dir whose names end with an entry of the given tool config list
 def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("GoldbergEmu", "lib")
@@ -29,7 +25,7 @@ def get_libs32():
 def get_libs64():
     return get_libs("lib64")
 
-# Generate base path
+# The Goldberg SteamEmu Saves dir under a prefix's roaming AppData
 def generate_base_path(prefix_dir):
     return paths.join_paths(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
 
@@ -41,19 +37,19 @@ def generate_username_file(prefix_dir):
 def generate_userid_file(prefix_dir):
     return paths.join_paths(generate_base_path(prefix_dir), "settings", "user_steam_id.txt")
 
-# Convert from native path
+# Rewrite a path in the Steam userdata dir for a user to the matching Goldberg saves path
 def convert_from_native_path(path, user_id):
-    src_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
-    dest_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    src_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
+    dest_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
-# Convert to native path
+# Rewrite a path in the Goldberg saves dir to the matching Steam userdata path for a user
 def convert_to_native_path(path, user_id):
-    src_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    dest_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    src_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
+    dest_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
-# Setup user files
+# Write the account name and Steam id files Goldberg reads from a prefix's settings dir
 def setup_user_files(
     prefix_dir,
     user_name,
@@ -85,35 +81,41 @@ def setup_user_files(
     # Must have succeeded
     return True
 
-# Convert to native save
-def convert_to_native_save(
+# Move each save file under the search path but outside the ignore path to the replace
+# path; False at the first failed move
+def move_save_files(
     save_dir,
-    user_id,
+    search_path,
+    ignore_path,
+    replace_path,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get relative paths
-    roaming_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming")
-    search_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    ignore_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
-    replace_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
-
-    # Move save files
     for save_file in paths.build_file_list(save_dir):
-        if search_path in save_file and ignore_path not in save_file:
-            success = filebulk.smart_move(
-                src = save_file,
-                dest = save_file.replace(search_path, replace_path),
-                show_progress = True,
-                skip_existing = False,
-                skip_identical = False,
-                case_sensitive_paths = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+        if search_path not in save_file or ignore_path in save_file:
+            continue
+        success = filebulk.smart_move(
+            src = save_file,
+            dest = save_file.replace(search_path, replace_path),
+            show_progress = True,
+            skip_existing = False,
+            skip_identical = False,
+            case_sensitive_paths = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+    return True
+
+# Remove the save dir's Goldberg dir, then its roaming dir when that holds no files; False at the first failure
+def remove_emptied_dirs(
+    save_dir,
+    search_path,
+    roaming_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
     # Clean search path
     full_search_path = paths.join_paths(save_dir, search_path)
@@ -135,6 +137,45 @@ def convert_to_native_save(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
+    return True
+
+# Move Goldberg save files in a save dir, minus its settings, into the Steam userdata layout,
+# then remove the emptied Goldberg and roaming dirs
+def convert_to_native_save(
+    save_dir,
+    user_id,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get relative paths
+    roaming_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming")
+    search_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
+    ignore_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves", "settings")
+    replace_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
+
+    # Move save files
+    success = move_save_files(
+        save_dir,
+        search_path,
+        ignore_path,
+        replace_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Clean search and roaming dirs
+    success = remove_emptied_dirs(
+        save_dir,
+        search_path,
+        roaming_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Should be successful
     return True
@@ -142,62 +183,4 @@ def convert_to_native_save(
 # GoldbergEmu tool
 class GoldbergEmu(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "GoldbergEmu"
-
-    # Get config
-    def get_config(self):
-        return {
-            "GoldbergEmu": {
-                "lib32": [
-                    "steam_api.dll"
-                ],
-                "lib64": [
-                    "steam_api64.dll"
-                ]
-            }
-        }
-
-    # Setup
-    def setup(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Download library
-        if programs.should_library_be_installed("GoldbergEmu"):
-            success = release.download_webpage_release(
-                webpage_url = "https://mr_goldberg.gitlab.io/goldberg_emulator/",
-                webpage_base_url = "https://gitlab.com",
-                starts_with = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/",
-                ends_with = "/artifacts/download",
-                install_name = "GoldbergEmu",
-                install_dir = programs.get_library_install_dir("GoldbergEmu", "lib"),
-                backups_dir = programs.get_library_backup_dir("GoldbergEmu", "lib"),
-                locker_type = setup_params.locker_type,
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup GoldbergEmu")
-                return False
-        return True
-
-    # Setup offline
-    def setup_offline(self, setup_params = None):
-        if not setup_params:
-            setup_params = config.SetupParams()
-
-        # Setup library
-        if programs.should_library_be_installed("GoldbergEmu"):
-            success = release.setup_stored_release(
-                archive_dir = programs.get_library_backup_dir("GoldbergEmu", "lib"),
-                install_name = "GoldbergEmu",
-                install_dir = programs.get_library_install_dir("GoldbergEmu", "lib"),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            if not success:
-                logger.log_error("Could not setup GoldbergEmu")
-                return False
-        return True
+    NAME = "GoldbergEmu"

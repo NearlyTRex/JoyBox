@@ -1,58 +1,33 @@
 # Imports
-import joybox.system as system
-import joybox.chd as chd
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
+from joybox import system
+from joybox import chd
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import paths
+from joybox import prompts
 
 # Build the argument parser
 def build_parser():
-    parser = arguments.ArgumentParser(
-        description = "Check CHD files against their internal SHA-1 checksums with chdman.",
-        details = (
-            "Finds every `.chd` file under the input path (or takes the one file given) and runs\n"
-            "`chdman verify` on it. A CHD passes when chdman reports that the overall SHA-1\n"
-            "verification succeeded. The run stops with an error at the first CHD that fails.\n"
-            "\n"
-            "Nothing is written or changed."),
-        examples = [
-            ("Verify every CHD in a folder", "chdverify -i /path/to/chds"),
-            ("Verify one CHD without the confirmation prompt", "chdverify -i \"/path/to/Game (USA).chd\" --no-preview"),
-        ],
-        notes = [
-            "`-p` does not skip the check; chdman still reads every CHD.",
-            "chdman (MameChdman) must be installed as a JoyBox tool.",
-        ],
-        see_also = ["chdconvert", "chdextract", "ps3_rom_tool", "verify_archives"],
-        section = "Game ROMs & Images")
+    parser = arguments.ArgumentParser(command = "chdverify")
     parser.add_input_path_argument(description = "A `.chd` file, or a directory searched recursively for them; must exist")
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, verify each CHD under the input against its SHA-1; stops at the first that fails
 def main():
 
-    # Parse arguments
+    # Parse arguments, check requirements and set up logging
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
+    args = setup.start_command(parser)
 
     # Get input path
     input_path = parser.get_input_path()
 
     # Show preview
-    if not args.no_preview:
-        details = ["Path: %s" % input_path]
-        if not prompts.prompt_for_preview("Verify CHD", details):
-            logger.log_warning("Operation cancelled by user")
-            return
+    details = ["Path: %s" % input_path]
+    if not prompts.confirm_preview(args.no_preview, "Verify CHD", details):
+        return
 
     # Convert disc image files
     for file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):

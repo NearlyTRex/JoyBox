@@ -3,6 +3,8 @@ import os
 
 # Local imports
 from joybox import config
+from joybox import programs as program_paths
+from joybox import release
 from joybox import sourcebuild
 from joybox import filebulk
 
@@ -59,6 +61,17 @@ class Recorder:
         return [tuple(call.get(key) for key in keys) for call in self.calls]
 
 
+# A release download or restore that records its call; the calls numbered in failures fail
+class Release:
+    def __init__(self):
+        self.calls = []
+        self.failures = set()
+
+    def __call__(self, **kwargs):
+        self.calls.append(kwargs)
+        return len(self.calls) not in self.failures
+
+
 class PopupQuit(Exception):
     pass
 
@@ -73,17 +86,17 @@ class Seams:
         self.locker_root = tmp_path / "locker"
         self.cache_dir = tmp_path / "cache"
         self.cache_dir.mkdir()
-        self.hashes = dict(getattr(module, "system_files", {}))
+        self.hashes = dict(self.emulator_class().get_system_files())
         self.popups = []
 
         # Releases share one recorder so their order across functions is kept
         self.releases = Recorder()
         for name in RELEASE_FUNCTIONS:
-            monkeypatch.setattr(module.release, name, self.releases.tagged(name))
+            monkeypatch.setattr(release, name, self.releases.tagged(name))
         monkeypatch.setattr(
             sourcebuild, "build_appimage_from_source", self.releases.tagged("build_appimage_from_source"))
 
-        programs = module.programs
+        programs = program_paths
         monkeypatch.setattr(programs, "should_program_be_installed",
             lambda name, platform: platform in self.wanted)
         monkeypatch.setattr(programs, "get_program_install_dir",
@@ -97,21 +110,17 @@ class Seams:
         environment = module.emulatorbase.environment
         monkeypatch.setattr(environment, "get_emulators_root_dir", lambda: "/emulators")
         monkeypatch.setattr(environment, "get_locker_gaming_emulator_setup_dir", self.locker)
-        monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
+        monkeypatch.setattr(module.emulatorbase.hashutil, "calculate_file_md5", self.md5)
 
         self.touched = Recorder()
         self.copied = Recorder()
         self.extracted = Recorder()
         self.launched = Recorder()
-        if hasattr(module, "fileops"):
-            monkeypatch.setattr(module.fileops, "touch_file", self.touched)
-            monkeypatch.setattr(filebulk, "smart_copy", self.copied)
-        if hasattr(module, "archive"):
-            monkeypatch.setattr(module.archive, "extract_archive", self.extracted)
-        if hasattr(module, "emulatorcommon"):
-            monkeypatch.setattr(module.emulatorcommon, "simple_launch", self.launched)
-        if hasattr(module, "gui"):
-            monkeypatch.setattr(module.gui, "display_error_popup", self.popup)
+        monkeypatch.setattr(module.emulatorbase.fileops, "touch_file", self.touched)
+        monkeypatch.setattr(filebulk, "smart_copy", self.copied)
+        monkeypatch.setattr(module.emulatorbase.archive, "extract_archive", self.extracted)
+        monkeypatch.setattr(module.emulatorbase.emulatorcommon, "simple_launch", self.launched)
+        monkeypatch.setattr(module.emulatorbase.gui, "display_error_popup", self.popup)
 
     def fake(self, owner, name):
         # Replaces owner.name with a fresh recorder, for collaborators one module uses alone
@@ -252,15 +261,15 @@ class ConfigureSeams:
         self.copied = []
         self.touch_ok = True
         self.copy_ok = True
-        self.hashes = dict(module.system_files)
-        monkeypatch.setattr(module.environment, "get_emulators_root_dir", lambda: "/emulators")
-        monkeypatch.setattr(module.environment, "get_locker_gaming_emulator_setup_dir",
+        self.hashes = dict(find_emulator_class(module)().get_system_files())
+        monkeypatch.setattr(module.emulatorbase.environment, "get_emulators_root_dir", lambda: "/emulators")
+        monkeypatch.setattr(module.emulatorbase.environment, "get_locker_gaming_emulator_setup_dir",
             lambda name: "/locker/%s" % name)
-        monkeypatch.setattr(module.programs, "get_emulator_path_config_value",
+        monkeypatch.setattr(program_paths, "get_emulator_path_config_value",
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
-        monkeypatch.setattr(module.fileops, "touch_file", self.touch)
+        monkeypatch.setattr(module.emulatorbase.fileops, "touch_file", self.touch)
         monkeypatch.setattr(filebulk, "smart_copy", self.copy)
-        monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
+        monkeypatch.setattr(module.emulatorbase.hashutil, "calculate_file_md5", self.md5)
 
     def touch(self, src, contents, **kwargs):
         self.touched.append((src, contents))
@@ -280,7 +289,7 @@ def check_writes_every_config_file(seams):
     assert seams.emulator().configure() is True
 
     assert seams.touched.values("src", "contents") == [
-        ("/emulators/%s" % name, contents.strip()) for name, contents in seams.module.config_files.items()]
+        ("/emulators/%s" % name, contents.strip()) for name, contents in seams.emulator().get_config_files().items()]
 
 
 def check_stops_when_a_config_file_cannot_be_written(seams):
@@ -303,7 +312,7 @@ def check_copies_system_files_to_each_platform(seams):
 
     assert seams.copied.values("src", "dest") == [
         (seams.locker(seams.name) + "/" + filename, "/emu/%s/setup_dir/%s/%s" % (seams.name, platform, filename))
-        for filename in seams.module.system_files for platform in PLATFORMS]
+        for filename in seams.emulator().get_system_files() for platform in PLATFORMS]
 
 
 def check_refuses_a_system_file_with_the_wrong_hash(seams):

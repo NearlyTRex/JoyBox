@@ -31,7 +31,7 @@ def fake_locker(monkeypatch):
 def fake_hashing(monkeypatch):
     from saves_helpers import FakeHashing
     fake = FakeHashing()
-    monkeypatch.setattr(saves, "hashing", fake)
+    monkeypatch.setattr(saves, "hashutil", fake)
     return fake
 
 
@@ -42,7 +42,7 @@ def temp_dirs(tmp_path, monkeypatch):
     root = tmp_path / "tmp"
     root.mkdir()
 
-    def create_temporary_directory(verbose = False, pretend_run = False):
+    def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
         if pretend_run:
             path = str(root / "pretend")
         else:

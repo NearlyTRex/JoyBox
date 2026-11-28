@@ -143,7 +143,7 @@ def test_filebrowser_refuses_an_admin_name_yaml_would_misread(isolated_settings,
 
 
 def filebrowser_compose():
-    return yaml.safe_load(installer_filebrowser.docker_compose_template)
+    return yaml.safe_load(installer_filebrowser.DOCKER_COMPOSE_TEMPLATE)
 
 
 def filebrowser_config():
@@ -168,11 +168,11 @@ def test_filebrowser_takes_its_secrets_from_the_environment():
 
 def test_filebrowser_throttles_logins_by_the_address_nginx_saw():
     assert filebrowser_config()["http"]["trustedHeaders"] == ["X-Real-IP"]
-    assert "proxy_set_header X-Real-IP $remote_addr;" in installer_filebrowser.nginx_config_template
+    assert "proxy_set_header X-Real-IP $remote_addr;" in installer_filebrowser.NGINX_CONFIG_TEMPLATE
 
 
 def test_filebrowser_is_not_behind_basic_auth():
-    assert "auth_basic" not in installer_filebrowser.nginx_config_template
+    assert "auth_basic" not in installer_filebrowser.NGINX_CONFIG_TEMPLATE
 
 
 ###########################################################
@@ -180,7 +180,7 @@ def test_filebrowser_is_not_behind_basic_auth():
 ###########################################################
 
 def test_kanboard_keeps_its_data_in_named_volumes():
-    template = installer_kanboard.docker_compose_template
+    template = installer_kanboard.DOCKER_COMPOSE_TEMPLATE
     assert "kanboard_data:/var/www/app/data" in template
     assert "./data" not in template
 
@@ -214,7 +214,7 @@ def test_kanboard_waits_for_a_healthy_container(isolated_settings):
 
 def test_jenkins_home_is_a_named_volume_with_backups(isolated_settings):
     jenkins, _ = make(installers.Jenkins)
-    assert "jenkins_home:/var/jenkins_home" in installer_jenkins.docker_compose_template
+    assert "jenkins_home:/var/jenkins_home" in installer_jenkins.DOCKER_COMPOSE_TEMPLATE
     assert jenkins.backup_volumes == ["jenkins_home"]
 
 
@@ -233,7 +233,7 @@ def test_jenkins_writes_a_readable_admin_script_before_compose(isolated_settings
     script_path = f"{app_dir('jenkins')}/joybox-admin.groovy"
 
     assert jenkins.install()
-    assert connection.written(script_path) == installer_jenkins.admin_script
+    assert connection.written(script_path) == installer_jenkins.ADMIN_SCRIPT
     assert (script_path, "644") in connection.permissions
 
 

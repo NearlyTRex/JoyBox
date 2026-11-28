@@ -27,14 +27,14 @@ def test_every_action_is_callable():
     assert not uncallable, uncallable
 
 
-def test_every_action_accepts_the_shared_signature():
-    # Dispatch passes all four keywords, so a missing one raises at call time.
-    missing = [
-        (action, keyword) for action, handler in ollamaactions.ACTIONS.items()
-        for keyword in ["model_name", "purpose", "harness", "show_all"]
-        if keyword not in inspect.signature(handler).parameters]
+def test_every_action_names_only_options_dispatch_offers():
+    # Dispatch passes each action the options it names, so one it never offers raises at call time.
+    unknown = [
+        (action, name) for action, handler in ollamaactions.ACTIONS.items()
+        for name in inspect.signature(handler).parameters
+        if name not in {"model_name", "purpose", "harness", "show_all"}]
 
-    assert not missing, missing
+    assert not unknown, unknown
 
 
 def test_an_unknown_action_fails_rather_than_raising():

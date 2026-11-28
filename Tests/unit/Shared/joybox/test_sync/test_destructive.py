@@ -199,6 +199,35 @@ def test_a_move_with_a_file_list_passes_it(rclone, monkeypatch, file_list):
     assert recorder.value_after("--files-from") == file_list
 
 
+UNSAFE_RECYCLE_FOLDERS = ["", None, ".", "./", "/", "..", "../Other", "Bin/../..", "/abs"]
+
+
+@pytest.mark.parametrize("recycle_folder", UNSAFE_RECYCLE_FOLDERS)
+def test_emptying_a_bin_outside_the_path_is_refused(rclone, quiet, monkeypatch, recycle_folder):
+    # An empty folder would purge the whole remote locker.
+    purged = []
+    monkeypatch.setattr(sync, "purge_path_on_remote", lambda **kwargs: purged.append(kwargs) or True)
+
+    assert sync.empty_recycle_bin(REMOTE, REMOTE_TYPE, "/Gaming/Roms", recycle_folder = recycle_folder) is False
+    assert purged == []
+
+
+@pytest.mark.parametrize("recycle_folder", UNSAFE_RECYCLE_FOLDERS)
+def test_recycling_into_a_bin_outside_the_path_is_refused(rclone, quiet, recorded_move, file_list, recycle_folder):
+    assert sync.recycle_files_on_remote(
+        REMOTE, REMOTE_TYPE, "/Gaming/Roms", file_list, recycle_folder = recycle_folder) is False
+    assert recorded_move == []
+
+
+@pytest.mark.parametrize("recycle_folder, expected", [
+    (".recycle_bin", "/Gaming/Roms/.recycle_bin"),
+    ("Trash/Bin/", "/Gaming/Roms/Trash/Bin"),
+    ("Trash\\Bin", "/Gaming/Roms/Trash/Bin"),
+    ("./Trash", "/Gaming/Roms/Trash")])
+def test_a_recycle_bin_path_is_inside_the_remote_path(recycle_folder, expected):
+    assert sync.get_recycle_bin_path("/Gaming/Roms", recycle_folder) == expected
+
+
 def test_emptying_the_bin_purges_only_the_bin(rclone, monkeypatch):
     purged = []
     monkeypatch.setattr(

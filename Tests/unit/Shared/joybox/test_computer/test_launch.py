@@ -87,7 +87,8 @@ def launch(monkeypatch, tmp_path):
     options = FakeLaunchOptions()
     windows = []
     tokens = []
-    monkeypatch.setattr(computer.command, "create_command_options", lambda: options)
+    monkeypatch.setattr(computer.commandbase, "create_command_options", lambda: options)
+    monkeypatch.setattr(computer.sandboxprefix, "create_prefix", lambda options, **kwargs: options.create_prefix(**kwargs))
     monkeypatch.setattr(computer.platform_info, "is_linux_platform", lambda: True)
     monkeypatch.setattr(computer.platform_info, "is_windows_platform", lambda: False)
 
@@ -97,7 +98,7 @@ def launch(monkeypatch, tmp_path):
 
     monkeypatch.setattr(computer.gui, "display_loading_window", loading_window)
     monkeypatch.setattr(
-        computer.sandbox, "build_token_map",
+        computer.prefixlayout, "build_token_map",
         lambda **kwargs: tokens.append(kwargs) or {"$TOKEN": "x"})
     return game, options, windows, tokens
 

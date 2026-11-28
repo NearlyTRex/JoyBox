@@ -46,10 +46,13 @@ class RecordingStep:
     def __init__(self, log, name):
         self.log = log
         self.name = name
+        self.result = True
 
     def run(self, **kwargs):
         self.log.append((self.name, kwargs))
-        return True
+        return self.result
+
+    run_setup = run
 
 
 class FakeGameInfo:
@@ -99,17 +102,18 @@ class SetupWorld:
         monkeypatch.setattr(
             computer.environment, "get_cache_gaming_setup_dir",
             lambda category, subcategory, name: self.setup_dir)
-        monkeypatch.setattr(computer.command, "create_command_options", lambda: self.options)
+        monkeypatch.setattr(computer.commandbase, "create_command_options", lambda: self.options)
+        monkeypatch.setattr(computer.sandboxprefix, "create_prefix", lambda options, **kwargs: options.create_prefix(**kwargs))
         monkeypatch.setattr(computer.platform_info, "is_wine_platform", lambda: True)
         monkeypatch.setattr(computer.platform_info, "is_sandboxie_platform", lambda: False)
         monkeypatch.setattr(
             computer.paths, "build_file_list_by_extensions",
             lambda root, extensions: list(self.discs))
         monkeypatch.setattr(
-            computer.sandbox, "build_token_map",
+            computer.prefixlayout, "build_token_map",
             lambda **kwargs: self.record("build_token_map", kwargs) or {"$TOKEN": "x"})
         monkeypatch.setattr(
-            computer.sandbox, "get_public_profile_path", lambda options: str(self.public))
+            computer.prefixlayout, "get_public_profile_path", lambda options: str(self.public))
         for owner, name in [
             (computer.fileops, "make_directory"),
             (filebulk, "copy_contents"),
@@ -307,3 +311,19 @@ def test_a_failed_step_stops_the_setup(world, failing, keep_discs):
 
     assert world.run() is False
     assert world.named("remove_directory") == []
+
+
+@pytest.mark.parametrize("stage", ["preinstall", "postinstall"])
+def test_a_failed_setup_step_stops_before_packing(world, stage):
+    getattr(world.game, stage)[0].result = False
+
+    assert world.run() is False
+    assert world.named("pack_install_image") == []
+
+
+def test_a_failed_setup_program_stops_before_packing(world):
+    world.game.install[0].result = False
+
+    assert world.run() is False
+    assert world.named("pack_install_image") == []
+    assert [name for name, _ in world.order if name == "post"] == []

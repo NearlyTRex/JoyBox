@@ -1,0 +1,91 @@
+# DuckStation: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION"]
+
+[config.DuckStation]
+run_sandboxed = { windows = false, linux = false }
+
+[config.DuckStation.program]
+windows = "DuckStation/windows/duckstation-qt-x64-ReleaseLTCG.exe"
+linux = "DuckStation/linux/DuckStation.AppImage"
+
+[config.DuckStation.save_dir]
+windows = "DuckStation/windows/memcards"
+linux = "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/memcards"
+
+[config.DuckStation.setup_dir]
+windows = "DuckStation/windows"
+linux = "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation"
+
+[config.DuckStation.config_file]
+windows = "DuckStation/windows/settings.ini"
+linux = "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"
+
+[[config_files]]
+path = "DuckStation/windows/portable.txt"
+
+[[config_files]]
+path = "DuckStation/windows/settings.ini"
+template = "settings.ini"
+
+[[config_files]]
+path = "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"
+template = "settings.ini"
+
+[[system_files]]
+path = "bios/scph5500.bin"
+md5 = "8dd7d5296a650fac7319bce665a6a53c"
+
+[[system_files]]
+path = "bios/scph7001.bin"
+md5 = "1e68c231d0896b7eadcad1d7d8e76129"
+
+[[system_files]]
+path = "bios/scph1001.bin"
+md5 = "924e392ed05558ffdb115408c263dccf"
+
+[[system_files]]
+path = "bios/scph5501.bin"
+md5 = "490f666e1afb15b7362b406ed1cea246"
+
+[[system_files]]
+path = "bios/scph5502.bin"
+md5 = "32736f17079d0b2b7024407c39bd3050"
+
+[[system_files]]
+path = "bios/scph7502.bin"
+md5 = "b9d9a0286c33dc6b7237bb13cd46fdee"
+
+[[setup]]
+kind = "github_release"
+platform = "windows"
+github_user = "stenzek"
+github_repo = "duckstation"
+starts_with = "duckstation"
+ends_with = "windows-x64-release.zip"
+search_file = "duckstation-qt-x64-ReleaseLTCG.exe"
+get_latest = true
+
+[[setup]]
+kind = "github_release"
+platform = "linux"
+github_user = "stenzek"
+github_repo = "duckstation"
+starts_with = "DuckStation"
+ends_with = ".AppImage"
+get_latest = true
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "windows"
+search_file = "duckstation-qt-x64-ReleaseLTCG.exe"
+
+[[setup_offline]]
+kind = "stored_release"
+platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["-fullscreen"]

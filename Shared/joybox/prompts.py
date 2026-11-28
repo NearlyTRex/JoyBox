@@ -4,9 +4,9 @@
 import os
 
 # Local imports
-import joybox.network as network
-import joybox.logger as logger
-import joybox.reports as reports
+from joybox import network
+from joybox import logger
+from joybox import reports
 
 ###########################################################
 # Basic prompts
@@ -72,7 +72,7 @@ def prompt_for_confirmation(description, default_yes = False):
 # Rich prompts
 ###########################################################
 
-# Prompt for url
+# Ask until the answer is a URL that responds, then return it
 def prompt_for_url(description, default_value = None):
     while True:
         value = prompt_for_value(description, default_value)
@@ -94,6 +94,14 @@ def prompt_for_preview(operation, details = None, default_yes = True, max_detail
         logger.log_info("Total items: %d" % total_count)
     logger.log_info("=" * 60)
     return prompt_for_confirmation("Proceed?", default_yes = default_yes)
+
+# Whether to go ahead: at once when no preview is wanted, else once the preview is confirmed;
+# a refusal is logged
+def confirm_preview(no_preview, operation, details = None):
+    if no_preview or prompt_for_preview(operation, details):
+        return True
+    logger.log_warning("Operation cancelled by user")
+    return False
 
 # Prompt for selection from a numbered list
 def prompt_for_selection(description, options, display_func = None, allow_cancel = True):

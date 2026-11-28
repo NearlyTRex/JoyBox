@@ -9,9 +9,9 @@ import pytest
 # Local imports
 from joybox.config import general
 
-TOKEN_NAMES = sorted(name for name, value in vars(general).items() if name.startswith("token_") and isinstance(value, str))
-ROOT_TOKEN_NAMES = [name for name in TOKEN_NAMES if name not in ("token_command_split", "token_glob")]
-DISC_TOKEN_NAMES = [name for name in TOKEN_NAMES if name.startswith("token_disc_")]
+TOKEN_NAMES = sorted(name for name, value in vars(general).items() if name.startswith("TOKEN_") and isinstance(value, str))
+ROOT_TOKEN_NAMES = [name for name in TOKEN_NAMES if name not in ("TOKEN_COMMAND_SPLIT", "TOKEN_GLOB")]
+DISC_TOKEN_NAMES = [name for name in TOKEN_NAMES if name.startswith("TOKEN_DISC_")]
 MIME_LISTS = sorted(name for name in vars(general) if name.startswith("mime_types_"))
 REPLACEMENT_TABLES = ["rich_text_replacements", "web_text_replacements", "path_text_replacements"]
 
@@ -22,9 +22,9 @@ REPLACEMENT_TABLES = ["rich_text_replacements", "web_text_replacements", "path_t
 
 def test_minimum_python_version_is_built_from_its_parts():
     assert general.minimum_python_version == (
-        general.minimum_python_major_version,
-        general.minimum_python_minor_version,
-        general.minimum_python_patch_version)
+        general.MINIMUM_PYTHON_MAJOR_VERSION,
+        general.MINIMUM_PYTHON_MINOR_VERSION,
+        general.MINIMUM_PYTHON_PATCH_VERSION)
 
 
 def test_running_interpreter_meets_the_minimum():
@@ -37,7 +37,7 @@ def test_running_interpreter_meets_the_minimum():
 
 @pytest.mark.parametrize("name", ROOT_TOKEN_NAMES)
 def test_token_value_is_its_upper_cased_name(name):
-    assert getattr(general, name) == name.removeprefix("token_").upper()
+    assert getattr(general, name) == name.removeprefix("TOKEN_").upper()
 
 
 def test_token_values_are_unique():
@@ -47,11 +47,11 @@ def test_token_values_are_unique():
 
 def test_disc_token_list_holds_every_disc_token():
     assert sorted(general.tokens_disc) == sorted(getattr(general, name) for name in DISC_TOKEN_NAMES)
-    assert general.tokens_disc[0] == general.token_disc_main_root
+    assert general.tokens_disc[0] == general.TOKEN_DISC_MAIN_ROOT
 
 
 def test_disc_names_cover_every_disc_token_but_the_main_root():
-    assert set(general.token_disc_names) == set(general.tokens_disc) - {general.token_disc_main_root}
+    assert set(general.token_disc_names) == set(general.tokens_disc) - {general.TOKEN_DISC_MAIN_ROOT}
 
 
 def test_disc_names_are_unique():
@@ -65,7 +65,7 @@ def test_no_disc_name_contains_another(disc_name):
 
 
 def test_command_split_token_cannot_appear_in_a_path():
-    assert not set(general.token_command_split) & set(string.ascii_letters + string.digits + "/\\. ")
+    assert not set(general.TOKEN_COMMAND_SPLIT) & set(string.ascii_letters + string.digits + "/\\. ")
 
 
 ###########################################################
@@ -73,8 +73,8 @@ def test_command_split_token_cannot_appear_in_a_path():
 ###########################################################
 
 def test_regular_drives_run_from_start_up_to_but_excluding_end():
-    assert general.drives_regular[0] == general.drive_available_start
-    assert chr(ord(general.drives_regular[-1]) + 1) == general.drive_available_end
+    assert general.drives_regular[0] == general.DRIVE_AVAILABLE_START
+    assert chr(ord(general.drives_regular[-1]) + 1) == general.DRIVE_AVAILABLE_END
     assert general.drives_regular == sorted(general.drives_regular)
 
 
@@ -93,8 +93,8 @@ def test_there_is_a_regular_drive_for_every_disc_token():
 ###########################################################
 
 def test_user_folders_hold_every_computer_folder_but_dos_and_scumm():
-    folder_names = {name for name in vars(general) if name.startswith("computer_folder_")}
-    expected = {getattr(general, name) for name in folder_names - {"computer_folder_dos", "computer_folder_scumm"}}
+    folder_names = {name for name in vars(general) if name.startswith("COMPUTER_FOLDER_")}
+    expected = {getattr(general, name) for name in folder_names - {"COMPUTER_FOLDER_DOS", "COMPUTER_FOLDER_SCUMM"}}
     assert set(general.computer_user_folders) == expected
     assert len(general.computer_user_folders) == len(expected)
 
@@ -104,27 +104,27 @@ def test_user_folders_hold_every_computer_folder_but_dos_and_scumm():
 ###########################################################
 
 def test_byte_units_scale_by_1024():
-    assert general.bytes_per_megabyte == general.bytes_per_kilobyte * 1024
-    assert general.bytes_per_gigabyte == general.bytes_per_megabyte * 1024
+    assert general.BYTES_PER_MEGABYTE == general.BYTES_PER_KILOBYTE * 1024
+    assert general.BYTES_PER_GIGABYTE == general.BYTES_PER_MEGABYTE * 1024
 
 
 @pytest.mark.parametrize("limit, capacity_gb", [
-    (general.max_disc_data_size_25gb, 25),
-    (general.max_disc_data_size_50gb, 50),
-    (general.max_disc_data_size_100gb, 100)
+    (general.MAX_DISC_DATA_SIZE_25GB, 25),
+    (general.MAX_DISC_DATA_SIZE_50GB, 50),
+    (general.MAX_DISC_DATA_SIZE_100GB, 100)
 ], ids = ["25gb", "50gb", "100gb"])
 def test_disc_data_limits_leave_headroom_below_capacity(limit, capacity_gb):
     assert 0 < limit < capacity_gb * 1000 * 1000 * 1000
 
 
 def test_chunk_sizes_are_whole_kilobytes():
-    assert general.hash_chunk_size % general.bytes_per_kilobyte == 0
-    assert general.transfer_chunk_size % general.bytes_per_kilobyte == 0
-    assert general.transfer_chunk_size > 0
+    assert general.HASH_CHUNK_SIZE % general.BYTES_PER_KILOBYTE == 0
+    assert general.TRANSFER_CHUNK_SIZE % general.BYTES_PER_KILOBYTE == 0
+    assert general.TRANSFER_CHUNK_SIZE > 0
 
 
 def test_boxfront_dimensions_are_built_from_its_parts():
-    assert general.asset_boxfront_dimensions == (general.asset_boxfront_width, general.asset_boxfront_height)
+    assert general.asset_boxfront_dimensions == (general.ASSET_BOXFRONT_WIDTH, general.ASSET_BOXFRONT_HEIGHT)
 
 
 ###########################################################
@@ -151,7 +151,7 @@ def test_ignored_registry_keys_sit_under_an_exported_key(export_keys, ignored_ke
 
 
 def test_registry_filenames_are_distinct_reg_files():
-    filenames = [general.registry_filename_setup, general.registry_filename_game, general.registry_filename_user]
+    filenames = [general.REGISTRY_FILENAME_SETUP, general.REGISTRY_FILENAME_GAME, general.REGISTRY_FILENAME_USER]
     assert len(set(filenames)) == 3
     assert all(filename.endswith(".reg") for filename in filenames)
 

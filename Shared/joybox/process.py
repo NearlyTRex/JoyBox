@@ -1,11 +1,16 @@
 # Imports
+import importlib
 import signal
 import time
 import ntpath
 
 # Local imports
-import joybox.logger as logger
+from joybox import logger
 from joybox import runtime
+
+# Get psutil, imported on first use
+def _get_psutil():
+    return importlib.import_module("psutil")
 
 ###########################################################
 # Process management
@@ -13,7 +18,7 @@ from joybox import runtime
 
 # The errors psutil raises for a process that has exited or cannot be read
 def get_process_errors():
-    import psutil
+    psutil = _get_psutil()
     return (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess)
 
 # Whether a process has one of the names, exactly or by basename; one that has
@@ -26,16 +31,16 @@ def has_process_name(proc, process_names):
     return any(process_name == name or ntpath.basename(process_name) == ntpath.basename(name)
                for process_name in process_names)
 
-# Find active processes
+# Running psutil processes whose name or basename matches one given; empty when they cannot be listed
 def find_active_named_processes(process_names = ()):
-    import psutil
+    psutil = _get_psutil()
     try:
         candidates = list(psutil.process_iter())
     except get_process_errors():
         return []
     return [proc for proc in candidates if has_process_name(proc, process_names)]
 
-# Kill active processes
+# Send a kill to every running process with a matching name, logging any that refuse
 def kill_active_named_processes(process_names = ()):
     for proc in find_active_named_processes(process_names):
         try:
@@ -43,7 +48,7 @@ def kill_active_named_processes(process_names = ()):
         except get_process_errors() as e:
             logger.log_error(e)
 
-# Interrupt active processes
+# Send Ctrl+C (SIGINT off Windows) to every running process with a matching name
 def interrupt_active_named_processes(process_names = ()):
     number = signal.CTRL_C_EVENT if hasattr(signal, "CTRL_C_EVENT") else signal.SIGINT
     for proc in find_active_named_processes(process_names):
@@ -62,9 +67,9 @@ def wait_for_process(proc, start_time, timeout):
         runtime.sleep_program(1)
     logger.log_info("Process (pid=%d) finished" % proc.pid)
 
-# Wait for processes
+# Block until each matching process exits, sharing one timeout in seconds counted from the call
 def wait_for_named_processes(process_names = (), timeout = 1200):
-    import psutil
+    psutil = _get_psutil()
     start_time = time.time()
     for proc in find_active_named_processes(process_names):
         try:

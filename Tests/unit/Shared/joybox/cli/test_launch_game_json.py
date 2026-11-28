@@ -54,7 +54,7 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     harness.result = True
     harness.choices = []
     monkeypatch.setattr(FakeGameInfo, "playable", True)
-    monkeypatch.setattr(launch_game_json.gameinfo, "GameInfo", FakeGameInfo)
+    monkeypatch.setattr(launch_game_json.collection.launching.gameinfo, "GameInfo", FakeGameInfo)
 
     def launch(**kwargs):
         harness.launched.append(kwargs)
@@ -67,10 +67,10 @@ def tool(monkeypatch, isolated_settings, tmp_path):
                 return preferred
         return options[0]
 
-    monkeypatch.setattr(launch_game_json.collection, "launch_game", launch)
-    monkeypatch.setattr(launch_game_json, "random", types.SimpleNamespace(choice = choice))
+    monkeypatch.setattr(launch_game_json.collection.launching, "launch_game", launch)
+    monkeypatch.setattr(launch_game_json.collection.launching, "random", types.SimpleNamespace(choice = choice))
     pegasus = make_file(str(tmp_path / "metadata.pegasus.txt"), PEGASUS_SWITCH)
-    monkeypatch.setattr(launch_game_json.environment, "get_game_metadata_file", lambda category, subcategory: pegasus)
+    monkeypatch.setattr(launch_game_json.collection.launching.environment, "get_game_metadata_file", lambda category, subcategory: pegasus)
     return harness
 
 
@@ -121,9 +121,18 @@ def test_random_selection_keeps_a_given_category_and_subcategory(tool):
 
 
 def test_random_selection_without_an_entry_launches_nothing(tool, monkeypatch):
-    monkeypatch.setattr(launch_game_json.metadata.Metadata, "get_random_entry", lambda self: None)
+    monkeypatch.setattr(launch_game_json.collection.launching.metadata.Metadata, "get_random_entry", lambda self: None)
 
     assert tool.exit_code("-r", "-c", "Nintendo", "-s", "Nintendo Switch") != 0
+
+    assert tool.popups == ["No json file specified"]
+    assert tool.launched == []
+
+
+def test_random_selection_without_a_launchable_platform_launches_nothing(tool, monkeypatch):
+    monkeypatch.setattr(launch_game_json.collection.launching.platforms, "has_no_launcher", lambda platform: True)
+
+    assert tool.exit_code("-r", "-c", "Nintendo") != 0
 
     assert tool.popups == ["No json file specified"]
     assert tool.launched == []

@@ -1,3 +1,6 @@
+# Imports
+import types
+
 # Third-party imports
 import pytest
 
@@ -128,6 +131,10 @@ def test_sorting_a_game_without_a_hash_file_fails(hash_files):
     assert hashing.sort_hash_file(SubcategoryGameInfo("Nintendo SNES")) is False
 
 
+def test_only_existing_hash_files_are_iterated(hash_files):
+    assert list(hashing.iterate_existing_hash_files()) == [hash_files["present"]] * len(hashing.config.Supercategory.members())
+
+
 def test_sorting_everything_visits_only_existing_hash_files(hash_files):
     assert hashing.sort_all_hash_files() is True
     assert [kwargs["src"] for name, kwargs in hash_files["calls"]] == [hash_files["present"]] * len(hashing.config.Supercategory.members())
@@ -148,19 +155,14 @@ def test_sorting_everything_stops_at_a_failure(hash_files):
 def every_game(monkeypatch):
     state = {"built": [], "result": True}
 
-    class StubGameInfo:
-        def __init__(self, game_supercategory, game_category, game_subcategory, game_name, **kwargs):
-            self.name = game_name
-
-    def find_json_game_names(game_supercategory, game_category, game_subcategory):
-        return ["Alpha", "Beta"] if game_subcategory == hashing.config.Subcategory.NINTENDO_NES else []
+    def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
+        return iter([types.SimpleNamespace(name = "Alpha"), types.SimpleNamespace(name = "Beta")])
 
     def build_hash_files(game_info, **kwargs):
         state["built"].append(game_info.name)
         return state["result"]
 
-    monkeypatch.setattr(hashing.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(hashing.gamecollection, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(hashing.gamecollection, "iterate_rom_game_infos", iterate_rom_game_infos)
     monkeypatch.setattr(hashing, "build_hash_files", build_hash_files)
     return state
 

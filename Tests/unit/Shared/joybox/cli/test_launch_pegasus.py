@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import toolbase
 from joybox.cli import launch_pegasus
 
 
@@ -25,14 +26,14 @@ def tool(monkeypatch, isolated_settings):
     harness.commands = []
     harness.code = 0
     harness.installed = True
-    monkeypatch.setattr(launch_pegasus.programs, "is_tool_installed", lambda name: harness.installed)
-    monkeypatch.setattr(launch_pegasus.programs, "get_tool_program", lambda name: PEGASUS_PATH)
+    monkeypatch.setattr(toolbase.programs, "is_tool_installed", lambda name: harness.installed)
+    monkeypatch.setattr(toolbase.programs, "get_tool_program", lambda name: PEGASUS_PATH)
 
     def run_command(cmd, options, **kwargs):
         harness.commands.append((cmd, options))
         return harness.code
 
-    monkeypatch.setattr(launch_pegasus.command, "run_returncode_command", run_command)
+    monkeypatch.setattr(toolbase.command, "run_returncode_command", run_command)
     return harness
 
 
